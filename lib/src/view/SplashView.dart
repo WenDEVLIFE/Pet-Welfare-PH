@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../utils/AppColors.dart';
+import '../utils/ImageUtils.dart';
 import '../view_model/SplashViewModel.dart';
 
 class SplashScreen extends StatefulWidget {
@@ -23,7 +25,7 @@ class _SplashScreenState extends State<SplashScreen> {
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
-          color: Color.fromARGB(255, 66, 66, 66),
+          color: AppColors.orange,
         ),
         child: Center(
           child: Column(
@@ -31,26 +33,13 @@ class _SplashScreenState extends State<SplashScreen> {
             children: <Widget>[
               Center(
                 child: Container(
-                  height: 200,
-                  width: 200,
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    image: const DecorationImage(
-                      image: AssetImage('assets/images/logo2.jpg'),
+                  height: 300,
+                  width: 300,
+                  decoration: const BoxDecoration(
+                    image: DecorationImage(
+                      image: AssetImage(ImageUtils.logoPath),
                       fit: BoxFit.fill,
                     ),
-                    border: Border.all(
-                      color: Colors.grey,
-                      width: 2,
-                    ),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withOpacity(0.5),
-                        spreadRadius: 2,
-                        blurRadius: 5,
-                        offset: const Offset(0, 3), // Changes position of shadow
-                      ),
-                    ],
                   ),
                 ),
               ),
@@ -59,7 +48,7 @@ class _SplashScreenState extends State<SplashScreen> {
                 text: const TextSpan(
                   children: [
                     TextSpan(
-                      text: 'MINANDAYA ',
+                      text: 'PET ',
                       style: TextStyle(
                         fontSize: 40,
                         color: Colors.white,
@@ -68,7 +57,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       ),
                     ),
                     TextSpan(
-                      text: 'MOBILE ',
+                      text: 'WELFARE ',
                       style: TextStyle(
                         fontSize: 40,
                         color: Colors.white,
@@ -77,7 +66,7 @@ class _SplashScreenState extends State<SplashScreen> {
                       ),
                     ),
                     TextSpan(
-                      text: 'TRANSLATOR',
+                      text: 'PH',
                       style: TextStyle(
                         fontSize: 40,
                         color: Colors.white,
