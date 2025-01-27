@@ -60,3 +60,16 @@ flutter:
   assets:
     - assets/icon/
 
+  fonts:
+    - family: SmoochSans
+      fonts:
+        - asset: assets/fonts/SmoochSans-Regular.ttf
+          weight: 400
+        - asset: assets/fonts/SmoochSans-Bold.ttf
+          weight: 700
+        - asset: assets/fonts/SmoochSans-Medium.ttf
+          weight: 500
+        - asset: assets/fonts/SmoochSans-Light.ttf
+          weight: 300
+
+
