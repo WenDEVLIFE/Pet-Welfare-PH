@@ -1,15 +1,25 @@
-// views/splash_screen.dart
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../view_model/SplashViewModel.dart';
 
+class SplashScreen extends StatefulWidget {
+  @override
+  _SplashScreenState createState() => _SplashScreenState();
+}
 
-class SplashScreen extends StatelessWidget {
+class _SplashScreenState extends State<SplashScreen> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<SplashViewModel>(context, listen: false).startLoading(context);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final splashViewModel = Provider.of<SplashViewModel>(context, listen: true);
-
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
