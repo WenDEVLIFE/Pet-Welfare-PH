@@ -1,6 +1,8 @@
 
 import 'package:flutter/material.dart';
 
+import '../helpers/Route.dart';
+
 class SplashViewModel extends ChangeNotifier {
   bool _isLoading = false;
 
@@ -13,7 +15,11 @@ class SplashViewModel extends ChangeNotifier {
     Future.delayed(const Duration(seconds: 5), () {
       _isLoading = false;
       notifyListeners();
-      Navigator.pushReplacementNamed(context, '/splashscreen1');
+      Navigator.pushNamed(
+        context,
+        AppRoutes.splashScreen1,
+        arguments: {'key': 'value'}, // Pass a map or any data
+      );
     });
   }
 }
