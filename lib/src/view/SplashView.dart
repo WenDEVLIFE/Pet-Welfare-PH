@@ -27,23 +27,40 @@ class _SplashScreenState extends State<SplashScreen> {
         decoration: const BoxDecoration(
           color: AppColors.orange,
         ),
-        child: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              Center(
-                child: Container(
-                  height: 300,
-                  width: 300,
-                  decoration: const BoxDecoration(
-                    image: DecorationImage(
-                      image: AssetImage(ImageUtils.logoPath),
-                      fit: BoxFit.fill,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: <Widget>[
+            const SizedBox(), // Empty space at the top
+            Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: <Widget>[
+                  Container(
+                    height: 300,
+                    width: 300,
+                    decoration: const BoxDecoration(
+                      image: DecorationImage(
+                        image: AssetImage(ImageUtils.logoPath),
+                        fit: BoxFit.fill,
+                      ),
                     ),
                   ),
-                ),
+                  const SizedBox(height: 10),
+                  splashViewModel.isLoading
+                      ? const SizedBox(
+                    width: 80,
+                    height: 80,
+                    child: CircularProgressIndicator(
+                      color: Colors.white,
+                    ),
+                  )
+                      : const Text(''),
+                ],
               ),
-              RichText(
+            ),
+            Padding(
+              padding: const EdgeInsets.only(bottom: 20.0),
+              child: RichText(
                 textAlign: TextAlign.center,
                 text: const TextSpan(
                   children: [
@@ -52,8 +69,8 @@ class _SplashScreenState extends State<SplashScreen> {
                       style: TextStyle(
                         fontSize: 40,
                         color: Colors.white,
-                        fontFamily: 'OpenSans',
-                        fontWeight: FontWeight.w900,
+                        fontFamily: 'SmoochSans',
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     TextSpan(
@@ -61,8 +78,8 @@ class _SplashScreenState extends State<SplashScreen> {
                       style: TextStyle(
                         fontSize: 40,
                         color: Colors.white,
-                        fontFamily: 'LeagueSpartan',
-                        fontWeight: FontWeight.w900,
+                        fontFamily: 'SmoochSans',
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                     TextSpan(
@@ -70,25 +87,15 @@ class _SplashScreenState extends State<SplashScreen> {
                       style: TextStyle(
                         fontSize: 40,
                         color: Colors.white,
-                        fontFamily: 'OpenSans',
-                        fontWeight: FontWeight.w900,
+                        fontFamily: 'SmoochSans',
+                        fontWeight: FontWeight.w700,
                       ),
                     ),
                   ],
                 ),
               ),
-              const SizedBox(height: 10),
-              splashViewModel.isLoading
-                  ? const SizedBox(
-                width: 80,
-                height: 80,
-                child: CircularProgressIndicator(
-                  color: Colors.white,
-                ),
-              )
-                  : const Text(''),
-            ],
-          ),
+            ),
+          ],
         ),
       ),
     );
