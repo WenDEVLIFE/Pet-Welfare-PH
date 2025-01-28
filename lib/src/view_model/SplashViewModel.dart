@@ -16,7 +16,7 @@ class SplashViewModel extends ChangeNotifier {
     Future.delayed(const Duration(seconds: 5), () {
       _isLoading = false;
       notifyListeners();
-      Navigator.pushNamed(
+      Navigator.pushReplacementNamed(
         context,
         AppRoutes.loginScreen,
         arguments: {'key': 'value'}, // Pass a map or any data
