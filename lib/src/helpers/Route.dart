@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../view/LoginView.dart';
+import '../view/SplashView2.dart';
 import '../view/SplashView.dart';
 
 class AppRoutes {
@@ -10,6 +10,6 @@ class AppRoutes {
   // Assign routes to the screens
   static Map<String, WidgetBuilder> routes = {
     splashScreen1: (context) => SplashScreen(), // Replace with actual screen
-    loginScreen: (context) => LoginView(), // Replace with actual screen
+    loginScreen: (context) => SplashView2(), // Replace with actual screen
   };
 }

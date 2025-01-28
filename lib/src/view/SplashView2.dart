@@ -2,12 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 
-class LoginView extends StatefulWidget {
+class SplashView2 extends StatefulWidget {
   @override
-  _LoginScreenState createState() => _LoginScreenState();
+  SplashViewState createState() => SplashViewState();
 }
 
-class _LoginScreenState extends State<LoginView> {
+class SplashViewState extends State<SplashView2> {
   // initializing video player
   final VideoPlayerController videoPlayerController =
   VideoPlayerController.asset("assets/dogcat.mp4");
@@ -47,19 +47,6 @@ class _LoginScreenState extends State<LoginView> {
                 controller: chewieController!,
               )),
           Container(color: Colors.black54),
-          Positioned(
-            top: 70,
-            left: 10,
-            height: 80,
-            width: 80,
-            child: ClipRRect(
-              borderRadius: BorderRadius.circular(8),
-              child: Image.asset(
-                'assets/icon/Logo.png',
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
           Center(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -71,7 +58,7 @@ class _LoginScreenState extends State<LoginView> {
                     height: 40,
                   ),
                   Text(
-                    'FLUTTER\nFIREBASE\nJAVASCRIPT\nREACT'.toUpperCase(),
+                    'WELCOME, USER'.toUpperCase(),
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -81,7 +68,7 @@ class _LoginScreenState extends State<LoginView> {
                     ),
                   ),
                   const Text(
-                    'Please log in to\nenter a new world\nof opportunities',
+                    'Looking for a pet? You are in the right place!',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w300,
@@ -107,11 +94,11 @@ class _LoginScreenState extends State<LoginView> {
                       width: double.maxFinite,
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.red,
+                          backgroundColor: Colors.black,
                         ),
                         onPressed: () {},
                         child: const Text(
-                          'Become a programmer',
+                          'Login',
                           style: TextStyle(
                             color: Colors.white,
                             letterSpacing: 0.5,
@@ -121,12 +108,12 @@ class _LoginScreenState extends State<LoginView> {
                   SizedBox(
                     width: double.maxFinite,
                     child: ElevatedButton(
-                      style: ElevatedButton.styleFrom(backgroundColor: Colors.white),
+                      style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
                       onPressed: () {},
                       child: const Text(
-                        'Login',
+                        'Register',
                         style: TextStyle(
-                          color: Colors.black87,
+                          color: Colors.white,
                           letterSpacing: 0.5,
                         ),
                       ),
