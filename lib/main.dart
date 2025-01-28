@@ -1,4 +1,3 @@
-// main.dart
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/helpers/Route.dart';
 import 'package:pet_welfrare_ph/src/view_model/LoginViewModel.dart';
