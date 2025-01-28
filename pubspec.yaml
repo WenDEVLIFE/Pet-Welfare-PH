@@ -45,6 +45,8 @@ dependencies:
   permission_handler: ^10.2.0
   convex_bottom_bar: ^3.2.0
   curved_navigation_bar: ^1.0.6
+  video_player: ^2.7.0
+  chewie: ^1.4.0
 
 dev_dependencies:
   flutter_test:
@@ -59,6 +61,7 @@ flutter:
 
   assets:
     - assets/icon/
+    - assets/video/
 
   fonts:
     - family: SmoochSans
