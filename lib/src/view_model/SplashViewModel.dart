@@ -18,7 +18,7 @@ class SplashViewModel extends ChangeNotifier {
       notifyListeners();
       Navigator.pushNamed(
         context,
-        AppRoutes.splashScreen1,
+        AppRoutes.loginScreen,
         arguments: {'key': 'value'}, // Pass a map or any data
       );
 
