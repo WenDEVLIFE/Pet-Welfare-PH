@@ -10,3 +10,4 @@ class LoginViewModel extends ChangeNotifier {
     notifyListeners();
   }
 }
+
