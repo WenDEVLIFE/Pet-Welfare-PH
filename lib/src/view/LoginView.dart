@@ -1,7 +1,8 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
-import 'package:pet_welfrare_ph/src/utils/ImageUtils.dart';
+import 'package:provider/provider.dart';
+import '../utils/AppColors.dart';
+import '../view_model/LoginViewModel.dart';
+
 
 class Loginview extends StatefulWidget {
   const Loginview({Key? key}) : super(key: key);
@@ -14,13 +15,6 @@ class _LoginScreenState extends State<Loginview> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
-  bool obscureText1 = true;
-  void togglePasswordVisibility1() {
-    setState(() {
-      obscureText1 = !obscureText1;
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -31,14 +25,14 @@ class _LoginScreenState extends State<Loginview> {
           Flexible(
             flex: 3,
             child: Container(
-              color: AppColors.orange,
+              color: Colors.orange,
               child: Center(
                 child: Container(
                   width: 200,
                   height: 200,
                   decoration: const BoxDecoration(
                     image: DecorationImage(
-                      image: AssetImage(ImageUtils.logoPath),
+                      image: AssetImage('assets/icon/Logo.png'),
                       fit: BoxFit.cover,
                     ),
                   ),
@@ -63,16 +57,16 @@ class _LoginScreenState extends State<Loginview> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               const Center(
-                                child: Text('LOGIN', style: TextStyle(fontSize: 30, fontFamily: 'SmoochSans', fontWeight: FontWeight.w700, color: AppColors.black)),
+                                child: Text('LOGIN', style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900, color: Colors.black)),
                               ),
                               const SizedBox(height: 20),
-                              const Text('EMAIL', style: TextStyle(fontSize: 18, fontFamily: 'SmoochSans', fontWeight: FontWeight.w700, color: AppColors.black)),
+                              const Text('EMAIL', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.black)),
                               const SizedBox(height: 10),
                               TextField(
                                 controller: emailController,
                                 decoration: const InputDecoration(
                                   filled: true,
-                                  fillColor: AppColors.white,
+                                  fillColor: AppColors.gray,
                                   border: OutlineInputBorder(),
                                   hintText: 'Enter your email',
                                   hintStyle: TextStyle(
@@ -80,42 +74,45 @@ class _LoginScreenState extends State<Loginview> {
                                   ),
                                 ),
                                 style: const TextStyle(
-                                  fontFamily: 'SmoochSans',
                                   color: Colors.black,
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
                               const SizedBox(height: 20),
-                              const Text('PASSWORD', style: TextStyle(fontSize: 18,
-                                  fontFamily: 'SmoochSans',
-                                  fontWeight: FontWeight.w700,
-                                  color: AppColors.black)),
+                              const Text('PASSWORD', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Colors.black)),
                               const SizedBox(height: 10),
-                              TextField(
-                                controller: passwordController,
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: AppColors.white,
-                                  border: const OutlineInputBorder(),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      obscureText1 ? Icons.visibility : Icons.visibility_off,
+
+                              // Consumer widget
+                              Consumer<LoginViewModel>(
+                                builder: (context, loginViewModel, child) {
+                                  return TextField(
+                                    controller: passwordController,
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: AppColors.gray,
+                                      border: const OutlineInputBorder(),
+                                      suffixIcon: IconButton(
+                                        icon: Icon(
+                                          loginViewModel.obscureText1 ? Icons.visibility : Icons.visibility_off,
+                                        ),
+                                        onPressed: () {
+                                          loginViewModel.togglePasswordVisibility1();
+                                        },
+                                      ),
+                                      hintText: 'Enter your password',
+                                      hintStyle: const TextStyle(
+                                        color: Colors.black,
+                                      ),
                                     ),
-                                    onPressed: togglePasswordVisibility1,
-                                  ),
-                                  hintText: 'Enter your password',
-                                  hintStyle: const TextStyle(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                obscureText: obscureText1,
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'SmoochSans',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                    obscureText: loginViewModel.obscureText1,
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  );
+                                },
                               ),
                               const SizedBox(height: 20),
                               Center(
@@ -131,14 +128,13 @@ class _LoginScreenState extends State<Loginview> {
                                       // call the controller
                                     },
                                     style: ElevatedButton.styleFrom(
-                                      backgroundColor: AppColors.black,
+                                      backgroundColor: Colors.black,
                                     ),
                                     child: const Text('Sign In',
                                       style: TextStyle(
                                         fontSize: 20,
-                                        color: AppColors.white,
-                                        fontFamily: 'SmoochSans',
-                                        fontWeight: FontWeight.w700,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
                                       ),
                                     ),
                                   ),
@@ -155,9 +151,8 @@ class _LoginScreenState extends State<Loginview> {
                                       'Don\'t have an account?',
                                       style: TextStyle(
                                         fontSize: 18,
-                                        color: AppColors.black,
-                                        fontWeight: FontWeight.w700,
-                                        fontFamily: 'SmoochSans',
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
                                       ),
                                     ),
                                   ),
@@ -173,9 +168,8 @@ class _LoginScreenState extends State<Loginview> {
                                       'Sign up here',
                                       style: TextStyle(
                                         fontSize: 18,
-                                        color: AppColors.black,
-                                        fontWeight: FontWeight.w700,
-                                        fontFamily: 'SmoochSans',
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
                                       ),
                                     ),
                                   ),
