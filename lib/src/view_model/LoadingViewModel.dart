@@ -4,7 +4,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 
 import '../helpers/Route.dart';
 
-class SplashViewModel extends ChangeNotifier {
+class LoadingViewModel extends ChangeNotifier {
   bool _isLoading = false;
 
   bool get isLoading => _isLoading;
