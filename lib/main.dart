@@ -4,7 +4,7 @@ import 'package:pet_welfrare_ph/src/view_model/SplashViewModel2.dart';
 import 'package:pet_welfrare_ph/src/view_model/SplashViewModel.dart';
 import 'package:provider/provider.dart';
 
-void main() {
+void main() async {
   runApp(MyApp());
 }
 

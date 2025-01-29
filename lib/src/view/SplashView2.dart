@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 
@@ -8,15 +9,14 @@ class SplashView2 extends StatefulWidget {
 }
 
 class SplashViewState extends State<SplashView2> {
-  // initializing video player
   final VideoPlayerController videoPlayerController =
   VideoPlayerController.asset("assets/dogcat.mp4");
 
   ChewieController? chewieController;
 
-  // init State
   @override
   void initState() {
+    super.initState();
     chewieController = ChewieController(
       videoPlayerController: videoPlayerController,
       aspectRatio: 9 / 20,
@@ -25,13 +25,12 @@ class SplashViewState extends State<SplashView2> {
       autoInitialize: true,
       showControls: false,
     );
-    super.initState();
   }
 
   @override
   void dispose() {
     videoPlayerController.dispose();
-    chewieController!.dispose();
+    chewieController?.dispose();
     super.dispose();
   }
 
@@ -42,11 +41,12 @@ class SplashViewState extends State<SplashView2> {
       body: Stack(
         fit: StackFit.expand,
         children: <Widget>[
-          Expanded(
-              child: Chewie(
-                controller: chewieController!,
-              )),
-          Container(color: Colors.black54),
+          SizedBox.expand(
+            child: Chewie(
+              controller: chewieController!,
+            ),
+          ),
+          Container(color: AppColors.orange.withOpacity(0.8)),
           Center(
             child: Padding(
               padding: const EdgeInsets.all(16.0),
@@ -58,7 +58,7 @@ class SplashViewState extends State<SplashView2> {
                     height: 40,
                   ),
                   Text(
-                    'WELCOME, USER'.toUpperCase(),
+                    'WELCOME!'.toUpperCase(),
                     style: const TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.bold,
@@ -68,7 +68,7 @@ class SplashViewState extends State<SplashView2> {
                     ),
                   ),
                   const Text(
-                    'Looking for a pet? You are in the right place!',
+                    'Do you adore pets? Do you have one you take care of? Maybe more? This pet community warmly welcomes you in our midst.',
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w300,
