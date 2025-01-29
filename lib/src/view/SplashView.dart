@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
+import 'package:pet_welfrare_ph/src/view_model/SplashViewModel.dart';
+import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 
@@ -14,6 +16,8 @@ class SplashViewState extends State<SplashView2> {
 
   ChewieController? chewieController;
 
+  late SplashViewModel2 splashViewModel;
+
   @override
   void initState() {
     super.initState();
@@ -25,6 +29,8 @@ class SplashViewState extends State<SplashView2> {
       autoInitialize: true,
       showControls: false,
     );
+
+    splashViewModel = Provider.of<SplashViewModel2>(context, listen: false);
   }
 
   @override
@@ -36,6 +42,7 @@ class SplashViewState extends State<SplashView2> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       backgroundColor: Colors.black,
       body: Stack(
@@ -96,7 +103,10 @@ class SplashViewState extends State<SplashView2> {
                         style: ElevatedButton.styleFrom(
                           backgroundColor: Colors.black,
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          Provider.of<SplashViewModel2>(context, listen: false).navigateLogin(context);
+
+                                                  },
                         child: const Text(
                           'Login',
                           style: TextStyle(

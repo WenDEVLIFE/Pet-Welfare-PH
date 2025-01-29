@@ -1,7 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:pet_welfrare_ph/src/view/LoginView.dart';
 
-import '../view/SplashView2.dart';
+import '../view/SplashView.dart';
 import '../view/LoadingView.dart';
 
 class AppRoutes {
