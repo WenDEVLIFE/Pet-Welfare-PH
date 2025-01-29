@@ -5,14 +5,14 @@ import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 import 'package:pet_welfrare_ph/src/utils/ImageUtils.dart';
 
-class LoginScreen extends StatefulWidget {
-  const LoginScreen({Key? key}) : super(key: key);
+class Loginview extends StatefulWidget {
+  const Loginview({Key? key}) : super(key: key);
 
   @override
   _LoginScreenState createState() => _LoginScreenState();
 }
 
-class _LoginScreenState extends State<LoginScreen> {
+class _LoginScreenState extends State<Loginview> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
 
