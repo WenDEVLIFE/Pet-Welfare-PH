@@ -68,7 +68,8 @@ class SplashViewState extends State<SplashView2> {
                     'WELCOME!'.toUpperCase(),
                     style: const TextStyle(
                       color: Colors.white,
-                      fontWeight: FontWeight.bold,
+                      fontFamily: 'SmoochSans',
+                      fontWeight: FontWeight.w700,
                       fontSize: 40,
                       letterSpacing: 0.2,
                       height: 1.2,
@@ -79,6 +80,7 @@ class SplashViewState extends State<SplashView2> {
                     style: TextStyle(
                       color: Colors.white,
                       fontWeight: FontWeight.w300,
+                      fontFamily: 'SmoochSans',
                       fontSize: 22,
                       letterSpacing: 0.2,
                       wordSpacing: 0.2,
@@ -111,6 +113,7 @@ class SplashViewState extends State<SplashView2> {
                           'Login',
                           style: TextStyle(
                             color: Colors.white,
+                            fontFamily: 'SmoochSans',
                             letterSpacing: 0.5,
                           ),
                         ),
@@ -123,6 +126,7 @@ class SplashViewState extends State<SplashView2> {
                       child: const Text(
                         'Register',
                         style: TextStyle(
+                          fontFamily: 'SmoochSans',
                           color: Colors.white,
                           letterSpacing: 0.5,
                         ),
