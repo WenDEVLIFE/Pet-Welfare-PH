@@ -35,13 +35,16 @@ class _SelectViewState extends State<SelectView> {
                         ),
                       ),
                       const SizedBox(height: 20),
-                      const Text(
-                        'Select a registeration type',
-                        style: TextStyle(
-                          fontSize: 40,
-                          color: AppColors.white,
-                          fontFamily: 'SmoochSans',
-                          fontWeight: FontWeight.bold,
+                      const Center(
+                        child: Text(
+                          'SELECT YOUR USER CLASSIFICATION FOR REGISTRATION',
+                          style: TextStyle(
+                            fontSize: 35,
+                            color: AppColors.white,
+                            fontFamily: 'SmoochSans',
+                            fontWeight: FontWeight.bold,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
                       ),
                       const SizedBox(height: 20),
@@ -82,26 +85,6 @@ class _SelectViewState extends State<SelectView> {
 
                                   },
                                   child: const Text(
-                                    'Affiliated to Legal Firms',
-                                    style: TextStyle(
-                                      fontFamily: 'SmoochSans',
-                                      color: Colors.white,
-                                      fontSize: 20,
-                                      letterSpacing: 0.5,
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              SizedBox(
-                                width: double.maxFinite,
-                                child: ElevatedButton(
-                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
-                                  onPressed: () {
-
-
-                                  },
-                                  child: const Text(
                                     'Pet Rescuer & Shelter',
                                     style: TextStyle(
                                       fontFamily: 'SmoochSans',
@@ -122,7 +105,27 @@ class _SelectViewState extends State<SelectView> {
 
                                   },
                                   child: const Text(
-                                    'Vet Clinic',
+                                    'Vet Clinic Personnel',
+                                    style: TextStyle(
+                                      fontFamily: 'SmoochSans',
+                                      color: Colors.white,
+                                      fontSize: 20,
+                                      letterSpacing: 0.5,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              SizedBox(
+                                width: double.maxFinite,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
+                                  onPressed: () {
+
+
+                                  },
+                                  child: const Text(
+                                    'Affiliated to Legal Firms',
                                     style: TextStyle(
                                       fontFamily: 'SmoochSans',
                                       color: Colors.white,

@@ -79,7 +79,7 @@ class SplashViewState extends State<SplashView2> {
                     'Do you adore pets? Do you have one you take care of? Maybe more? This pet community warmly welcomes you in our midst.',
                     style: TextStyle(
                       color: Colors.white,
-                      fontWeight: FontWeight.w300,
+                      fontWeight: FontWeight.w400,
                       fontFamily: 'SmoochSans',
                       fontSize: 22,
                       letterSpacing: 0.2,
@@ -113,6 +113,7 @@ class SplashViewState extends State<SplashView2> {
                           'Login',
                           style: TextStyle(
                             color: Colors.white,
+                            fontSize: 20,
                             fontFamily: 'SmoochSans',
                             letterSpacing: 0.5,
                           ),
@@ -131,6 +132,7 @@ class SplashViewState extends State<SplashView2> {
                         style: TextStyle(
                           fontFamily: 'SmoochSans',
                           color: Colors.white,
+                          fontSize: 20,
                           letterSpacing: 0.5,
                         ),
                       ),
