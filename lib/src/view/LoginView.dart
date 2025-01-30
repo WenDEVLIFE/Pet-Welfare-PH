@@ -57,10 +57,16 @@ class _LoginScreenState extends State<Loginview> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               const Center(
-                                child: Text('LOGIN', style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900, color: Colors.black)),
+                                child: Text('LOGIN', style: TextStyle(fontSize: 30,
+                                    fontWeight: FontWeight.w900,
+                                    fontFamily: 'SmoochSans',
+                                    color: Colors.black)),
                               ),
                               const SizedBox(height: 20),
-                              const Text('EMAIL', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.black)),
+                              const Text('EMAIL', style: TextStyle(fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'SmoochSans',
+                                  color: Colors.black)),
                               const SizedBox(height: 10),
                               TextField(
                                 controller: emailController,
@@ -71,16 +77,22 @@ class _LoginScreenState extends State<Loginview> {
                                   hintText: 'Enter your email',
                                   hintStyle: TextStyle(
                                     color: Colors.black,
+                                    fontFamily: 'SmoochSans',
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 16,
+                                  fontFamily: 'SmoochSans',
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
                               const SizedBox(height: 20),
-                              const Text('PASSWORD', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Colors.black)),
+                              const Text('PASSWORD', style: TextStyle(fontSize: 18,
+                                  fontWeight: FontWeight.w900,
+                                  fontFamily: 'SmoochSans',
+                                  color: Colors.black)),
                               const SizedBox(height: 10),
 
                               // Consumer widget
@@ -109,6 +121,7 @@ class _LoginScreenState extends State<Loginview> {
                                     style: const TextStyle(
                                       color: Colors.black,
                                       fontSize: 16,
+                                      fontFamily: 'SmoochSans',
                                       fontWeight: FontWeight.w600,
                                     ),
                                   );
@@ -133,6 +146,7 @@ class _LoginScreenState extends State<Loginview> {
                                     child: const Text('Sign In',
                                       style: TextStyle(
                                         fontSize: 20,
+                                        fontFamily: 'SmoochSans',
                                         color: Colors.white,
                                         fontWeight: FontWeight.w600,
                                       ),
@@ -168,6 +182,7 @@ class _LoginScreenState extends State<Loginview> {
                                       'Sign up here',
                                       style: TextStyle(
                                         fontSize: 18,
+                                        fontFamily: 'SmoochSans',
                                         color: Colors.black,
                                         fontWeight: FontWeight.w600,
                                       ),
