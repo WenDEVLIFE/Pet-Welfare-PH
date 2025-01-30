@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/helpers/Route.dart';
 import 'package:pet_welfrare_ph/src/view_model/LoginViewModel.dart';
+import 'package:pet_welfrare_ph/src/view_model/SelectViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/SplashViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/LoadingViewModel.dart';
 import 'package:provider/provider.dart';
@@ -19,6 +20,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => LoadingViewModel()),
         ChangeNotifierProvider(create: (_) => SplashViewModel2()),
         ChangeNotifierProvider(create: (_) => LoginViewModel()),
+        ChangeNotifierProvider(create: (_) => SelectViewModel()),
       ],
       child: MaterialApp(
         key: GlobalKey(), //
