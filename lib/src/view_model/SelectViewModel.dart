@@ -5,7 +5,7 @@ class SelectViewModel extends ChangeNotifier {
 
   void navigateToFuRegistration(BuildContext context) {
     notifyListeners();
-    Navigator.pushNamed(
+    Navigator.pushReplacementNamed(
       context,
       AppRoutes.furRegistrationScreen,
       arguments: {'key': 'value'}, // Pass a map or any data
@@ -14,6 +14,12 @@ class SelectViewModel extends ChangeNotifier {
 
   void navigateToShelterRegistration(BuildContext context) {
     // Implement navigation logic
+    notifyListeners();
+    Navigator.pushReplacementNamed(
+      context,
+      AppRoutes.shelterRegistrationScreen,
+      arguments: {'key': 'value'}, // Pass a map or any data
+    );
   }
 
   void navigateToClinicRegistration(BuildContext context) {

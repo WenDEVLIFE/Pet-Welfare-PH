@@ -20,7 +20,7 @@ class RegisterState extends State<PetrShelterRegisterview> {
   TextEditingController addressController = TextEditingController();
 
   var role = ['Pet Shelter', 'Pet Rescuer'];
-  var selectedRole;
+  var selectedRole = 'Pet Shelter';
 
   late RegisterViewModel viewModel;
 
@@ -133,11 +133,11 @@ class RegisterState extends State<PetrShelterRegisterview> {
                                   color: Colors.black)),
                               const SizedBox(height: 10),
                               Container(
-                                width: 300,
-                                height: 50,
+                                width: 380,
+                                height: 60,
                                 decoration: BoxDecoration(
-                                  color: Colors.grey[800],
-                                  border: Border.all(color: Colors.grey, width: 2),
+                                  color: AppColors.gray,
+                                  border: Border.all(color: AppColors.gray, width: 2),
                                   borderRadius: BorderRadius.circular(10),
                                 ),
                                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
@@ -146,31 +146,39 @@ class RegisterState extends State<PetrShelterRegisterview> {
                                     canvasColor: Colors.grey[800], // Set dropdown background color to black
                                   ),
                                   child: DropdownButton<String>(
-                                    value: role[0],
-                                    items: role
-                                        .map<DropdownMenuItem<String>>((String value) {
+                                    value: selectedRole,
+                                    items: role.map<DropdownMenuItem<String>>((String value) {
                                       return DropdownMenuItem<String>(
                                         value: value,
                                         child: Text(
                                           value,
-                                          style: const TextStyle(color: Colors.black), // Change text color here
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontFamily: 'SmoochSans',
+                                            fontWeight: FontWeight.w600,
+                                          ), // Change text color here
                                         ),
                                       );
                                     }).toList(),
                                     onChanged: (String? newValue) {
                                       setState(() {
-                                        selectedRole = newValue;
+                                        selectedRole = newValue!;
                                       });
                                     },
-                                    dropdownColor: Colors.grey[800], // Set dropdown background color to black
-                                    iconEnabledColor: Colors.white,
+                                    dropdownColor: AppColors.gray, // Set dropdown background color to black
+                                    iconEnabledColor: Colors.grey,
                                     style: const TextStyle(color: Colors.white), // Change text color here
                                     selectedItemBuilder: (BuildContext context) {
                                       return role.map<Widget>((String item) {
-                                        return Center(
+                                        return Align(
+                                          alignment: Alignment.centerLeft,
                                           child: Text(
                                             item,
-                                            style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'SmoochSans'),
+                                            style: const TextStyle(
+                                              color: Colors.black,
+                                              fontFamily: 'SmoochSans',
+                                              fontWeight: FontWeight.w600,
+                                            ), // Change text color here
                                           ),
                                         );
                                       }).toList();

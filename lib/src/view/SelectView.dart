@@ -93,7 +93,7 @@ class _SelectViewState extends State<SelectView> {
                                   style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
                                   onPressed: () {
 
-
+                                    Provider.of<SelectViewModel>(context, listen: false).navigateToShelterRegistration(context);
                                   },
                                   child: const Text(
                                     'Pet Rescuer & Shelter',
