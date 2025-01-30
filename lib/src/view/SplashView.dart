@@ -122,7 +122,10 @@ class SplashViewState extends State<SplashView2> {
                     width: double.maxFinite,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
-                      onPressed: () {},
+                      onPressed: () {
+
+                        Provider.of<SplashViewModel2>(context, listen: false).navigateToRegister(context);
+                      },
                       child: const Text(
                         'Register',
                         style: TextStyle(
