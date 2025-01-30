@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:pet_welfrare_ph/src/view/FurParentRegisterView.dart';
+import 'package:pet_welfrare_ph/src/view/LegalFirmRegisterView.dart';
 import 'package:pet_welfrare_ph/src/view/LoginView.dart';
 import 'package:pet_welfrare_ph/src/view/PetR_Shelter_RegisterView.dart';
 import 'package:pet_welfrare_ph/src/view/SelectView.dart';
@@ -16,6 +17,7 @@ class AppRoutes {
   static const String furRegistrationScreen = '/furRegistrationScreen';
   static const String shelterRegistrationScreen = '/shelterRegistrationScreen';
   static const String clinicRegistrationScreen = '/clinicRegistrationScreen';
+  static const String legalScreen = '/legalScreen';
 
   // Assign routes to the screens
   static Map<String, WidgetBuilder> routes = {
@@ -26,5 +28,6 @@ class AppRoutes {
     furRegistrationScreen: (context) => const FurParentRegisterView(), // Replace with actual screen
     shelterRegistrationScreen: (context) => const PetrShelterRegisterview(), // Replace with actual screen
     clinicRegistrationScreen: (context) => const VetClinicRegisterView(), // Replace with actual screen
+    legalScreen: (context) => const LegalFirmRegisterView(), // Replace with actual screen
   };
 }
