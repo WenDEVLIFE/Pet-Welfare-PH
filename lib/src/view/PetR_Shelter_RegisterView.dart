@@ -17,6 +17,10 @@ class RegisterState extends State<PetrShelterRegisterview> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
+  TextEditingController addressController = TextEditingController();
+
+  var role = ['Pet Shelter', 'Pet Rescuer'];
+  var selectedRole;
 
   late RegisterViewModel viewModel;
 
@@ -68,7 +72,7 @@ class RegisterState extends State<PetrShelterRegisterview> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               const Center(
-                                child: Text('SIGN UP FOR FUR',
+                                child: Text('SIGN UP FOR PET SHELTER & RESCUE',
                                     style: TextStyle(fontSize: 30,
                                         fontWeight: FontWeight.w700,
                                         fontFamily: 'SmoochSans',
@@ -122,6 +126,87 @@ class RegisterState extends State<PetrShelterRegisterview> {
                                 ),
                               ),
                               const SizedBox(height: 20),
+                              const Text('SELECT YOUR USER CLASSIFICATION',
+                                  style: TextStyle(fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: 'SmoochSans',
+                                  color: Colors.black)),
+                              const SizedBox(height: 10),
+                              Container(
+                                width: 300,
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[800],
+                                  border: Border.all(color: Colors.grey, width: 2),
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                                child: Theme(
+                                  data: Theme.of(context).copyWith(
+                                    canvasColor: Colors.grey[800], // Set dropdown background color to black
+                                  ),
+                                  child: DropdownButton<String>(
+                                    value: role[0],
+                                    items: role
+                                        .map<DropdownMenuItem<String>>((String value) {
+                                      return DropdownMenuItem<String>(
+                                        value: value,
+                                        child: Text(
+                                          value,
+                                          style: const TextStyle(color: Colors.black), // Change text color here
+                                        ),
+                                      );
+                                    }).toList(),
+                                    onChanged: (String? newValue) {
+                                      setState(() {
+                                        selectedRole = newValue;
+                                      });
+                                    },
+                                    dropdownColor: Colors.grey[800], // Set dropdown background color to black
+                                    iconEnabledColor: Colors.white,
+                                    style: const TextStyle(color: Colors.white), // Change text color here
+                                    selectedItemBuilder: (BuildContext context) {
+                                      return role.map<Widget>((String item) {
+                                        return Center(
+                                          child: Text(
+                                            item,
+                                            style: const TextStyle(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600, fontFamily: 'SmoochSans'),
+                                          ),
+                                        );
+                                      }).toList();
+                                    },
+                                    isExpanded: true, // Ensure the dropdown button is expanded
+                                    alignment: Alignment.bottomLeft, // Align the text to the left
+                                  ),
+                                ),
+                              ),
+                              const SizedBox(height: 20),
+                              const Text('ADDRESS', style: TextStyle(fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: 'SmoochSans',
+                                  color: Colors.black)),
+                              const SizedBox(height: 10),
+                              TextField(
+                                controller: addressController,
+                                decoration: const InputDecoration(
+                                  filled: true,
+                                  fillColor: AppColors.gray,
+                                  border: OutlineInputBorder(),
+                                  hintText: 'Enter your address',
+                                  hintStyle: TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'SmoochSans',
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: 'SmoochSans',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                              const SizedBox(height: 20),
                               const Text('PASSWORD', style:
                               TextStyle(fontSize: 18,
                                   fontWeight: FontWeight.w700,
@@ -129,7 +214,6 @@ class RegisterState extends State<PetrShelterRegisterview> {
                                   color: Colors.black
                               )),
                               const SizedBox(height: 10),
-
                               // Consumer widget
                               Consumer<RegisterViewModel>(
                                 builder: (context, viewmodel, child) {
