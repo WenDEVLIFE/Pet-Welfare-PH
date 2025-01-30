@@ -24,6 +24,12 @@ class SelectViewModel extends ChangeNotifier {
 
   void navigateToClinicRegistration(BuildContext context) {
     // Implement navigation logic
+    notifyListeners();
+    Navigator.pushReplacementNamed(
+      context,
+      AppRoutes.clinicRegistrationScreen,
+      arguments: {'key': 'value'}, // Pass a map or any data
+    );
   }
 
   void navigateToAffiliateLaw(BuildContext context) {

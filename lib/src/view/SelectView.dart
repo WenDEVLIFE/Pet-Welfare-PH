@@ -113,6 +113,7 @@ class _SelectViewState extends State<SelectView> {
                                   style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
                                   onPressed: () {
 
+                                    Provider.of<SelectViewModel>(context, listen: false).navigateToClinicRegistration(context);
 
                                   },
                                   child: const Text(
