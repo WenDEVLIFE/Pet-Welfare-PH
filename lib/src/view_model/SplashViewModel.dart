@@ -24,7 +24,7 @@ class SplashViewModel2 extends ChangeNotifier {
 
   void navigateToRegister(BuildContext context) {
     notifyListeners();
-    Navigator.pushReplacementNamed(
+    Navigator.pushNamed(
       context,
       AppRoutes.selectScreen,
       arguments: {'key': 'value'}, // Pass a map or any data
