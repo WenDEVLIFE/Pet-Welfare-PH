@@ -3,6 +3,7 @@ import 'package:pet_welfrare_ph/src/view/FurParentRegisterView.dart';
 import 'package:pet_welfrare_ph/src/view/LoginView.dart';
 import 'package:pet_welfrare_ph/src/view/PetR_Shelter_RegisterView.dart';
 import 'package:pet_welfrare_ph/src/view/SelectView.dart';
+import 'package:pet_welfrare_ph/src/view/VetClinicRegisterView.dart';
 
 import '../view/SplashView.dart';
 import '../view/LoadingView.dart';
@@ -14,6 +15,7 @@ class AppRoutes {
   static const String selectScreen = '/selectScreen';
   static const String furRegistrationScreen = '/furRegistrationScreen';
   static const String shelterRegistrationScreen = '/shelterRegistrationScreen';
+  static const String clinicRegistrationScreen = '/clinicRegistrationScreen';
 
   // Assign routes to the screens
   static Map<String, WidgetBuilder> routes = {
@@ -23,5 +25,6 @@ class AppRoutes {
     selectScreen: (context) => const SelectView(), // Replace with actual screen
     furRegistrationScreen: (context) => const FurParentRegisterView(), // Replace with actual screen
     shelterRegistrationScreen: (context) => const PetrShelterRegisterview(), // Replace with actual screen
+    clinicRegistrationScreen: (context) => const VetClinicRegisterView(), // Replace with actual screen
   };
 }
