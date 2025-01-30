@@ -4,16 +4,25 @@ import '../utils/AppColors.dart';
 import '../view_model/LoginViewModel.dart';
 
 
-class RegisterView extends StatefulWidget {
-  const RegisterView({Key? key}) : super(key: key);
+class FurParentRegisterView extends StatefulWidget {
+  const FurParentRegisterView({Key? key}) : super(key: key);
 
   @override
   RegisterState createState() => RegisterState();
 }
 
-class RegisterState extends State<RegisterView> {
+class RegisterState extends State<FurParentRegisterView> {
   TextEditingController emailController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
+  TextEditingController confirmPasswordController = TextEditingController();
+
+  late LoginViewModel loginViewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    loginViewModel = Provider.of<LoginViewModel>(context, listen: false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,10 +66,17 @@ class RegisterState extends State<RegisterView> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               const Center(
-                                child: Text('Register', style: TextStyle(fontSize: 30, fontWeight: FontWeight.w900, color: Colors.black)),
+                                child: Text('SIGN UP FOR FUR ADOPTER, FOSTER, & PET LOVER',
+                                    style: TextStyle(fontSize: 30,
+                                        fontWeight: FontWeight.w700,
+                                        fontFamily: 'SmoochSans',
+                                        color: Colors.black)),
                               ),
                               const SizedBox(height: 20),
-                              const Text('EMAIL', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w600, color: Colors.black)),
+                              const Text('EMAIL', style: TextStyle(fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: 'SmoochSans',
+                                  color: Colors.black)),
                               const SizedBox(height: 10),
                               TextField(
                                 controller: emailController,
@@ -71,16 +87,24 @@ class RegisterState extends State<RegisterView> {
                                   hintText: 'Enter your email',
                                   hintStyle: TextStyle(
                                     color: Colors.black,
+                                    fontFamily: 'SmoochSans',
+                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
                                 style: const TextStyle(
                                   color: Colors.black,
+                                  fontFamily: 'SmoochSans',
                                   fontSize: 16,
                                   fontWeight: FontWeight.w600,
                                 ),
                               ),
                               const SizedBox(height: 20),
-                              const Text('PASSWORD', style: TextStyle(fontSize: 18, fontWeight: FontWeight.w900, color: Colors.black)),
+                              const Text('PASSWORD', style:
+                              TextStyle(fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: 'SmoochSans',
+                                  color: Colors.black
+                              )),
                               const SizedBox(height: 10),
 
                               // Consumer widget
@@ -103,6 +127,8 @@ class RegisterState extends State<RegisterView> {
                                       hintText: 'Enter your password',
                                       hintStyle: const TextStyle(
                                         color: Colors.black,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: 'SmoochSans',
                                       ),
                                     ),
                                     obscureText: loginViewModel.obscureText1,
@@ -110,6 +136,46 @@ class RegisterState extends State<RegisterView> {
                                       color: Colors.black,
                                       fontSize: 16,
                                       fontWeight: FontWeight.w600,
+                                    ),
+                                  );
+                                },
+                              ),
+                              const SizedBox(height: 20),
+                              const Text('CONFIRM PASSWORD', style: TextStyle(fontSize: 18,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'SmoochSans',
+                                  color: Colors.black)),
+                              const SizedBox(height: 10),
+                              // Consumer widget
+                              Consumer<LoginViewModel>(
+                                builder: (context, loginViewModel, child) {
+                                  return TextField(
+                                    controller: passwordController,
+                                    decoration: InputDecoration(
+                                      filled: true,
+                                      fillColor: AppColors.gray,
+                                      border: const OutlineInputBorder(),
+                                      suffixIcon: IconButton(
+                                        icon: Icon(
+                                          loginViewModel.obscureText1 ? Icons.visibility : Icons.visibility_off,
+                                        ),
+                                        onPressed: () {
+                                          loginViewModel.togglePasswordVisibility1();
+                                        },
+                                      ),
+                                      hintText: 'Enter confirm password',
+                                      hintStyle: const TextStyle(
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: 'SmoochSans',
+                                      ),
+                                    ),
+                                    obscureText: loginViewModel.obscureText1,
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      fontFamily: 'SmoochSans',
                                     ),
                                   );
                                 },
@@ -130,11 +196,12 @@ class RegisterState extends State<RegisterView> {
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.black,
                                     ),
-                                    child: const Text('Sign In',
+                                    child: const Text('Proceed',
                                       style: TextStyle(
                                         fontSize: 20,
                                         color: Colors.white,
                                         fontWeight: FontWeight.w600,
+                                        fontFamily: 'SmoochSans',
                                       ),
                                     ),
                                   ),
@@ -148,11 +215,12 @@ class RegisterState extends State<RegisterView> {
                                   child: GestureDetector(
                                     onTap: () {},
                                     child: const Text(
-                                      'Don\'t have an account?',
+                                      'Already have an account?',
                                       style: TextStyle(
                                         fontSize: 18,
                                         color: Colors.black,
                                         fontWeight: FontWeight.w600,
+                                        fontFamily: 'SmoochSans',
                                       ),
                                     ),
                                   ),
@@ -165,11 +233,12 @@ class RegisterState extends State<RegisterView> {
                                   child: GestureDetector(
                                     onTap: () {},
                                     child: const Text(
-                                      'Sign up here',
+                                      'Sign in',
                                       style: TextStyle(
                                         fontSize: 18,
                                         color: Colors.black,
                                         fontWeight: FontWeight.w600,
+                                        fontFamily: 'SmoochSans',
                                       ),
                                     ),
                                   ),

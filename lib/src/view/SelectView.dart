@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pet_welfrare_ph/src/view_model/SelectViewModel.dart';
+import 'package:provider/provider.dart';
 
 import '../utils/AppColors.dart';
 
@@ -11,8 +13,17 @@ class SelectView extends StatefulWidget {
 }
 
 class _SelectViewState extends State<SelectView> {
+
+  late SelectViewModel selectViewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    selectViewModel = Provider.of<SelectViewModel>(context, listen: false);
+  }
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -63,7 +74,7 @@ class _SelectViewState extends State<SelectView> {
                                     ),
                                     onPressed: () {
 
-
+                                        Provider.of<SelectViewModel>(context, listen: false).navigateToFuRegistration(context);
                                     },
                                     child: const Text(
                                       'Adopter, Foster, & Pet lover',
