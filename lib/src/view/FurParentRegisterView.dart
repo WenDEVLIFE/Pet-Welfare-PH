@@ -14,6 +14,7 @@ class FurParentRegisterView extends StatefulWidget {
 
 class RegisterState extends State<FurParentRegisterView> {
   TextEditingController emailController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
@@ -72,6 +73,32 @@ class RegisterState extends State<FurParentRegisterView> {
                                         fontWeight: FontWeight.w700,
                                         fontFamily: 'SmoochSans',
                                         color: Colors.black)),
+                              ),
+                              const SizedBox(height: 20),
+                              const Text('NAME', style: TextStyle(fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: 'SmoochSans',
+                                  color: Colors.black)),
+                              const SizedBox(height: 10),
+                              TextField(
+                                controller: nameController,
+                                decoration: const InputDecoration(
+                                  filled: true,
+                                  fillColor: AppColors.gray,
+                                  border: OutlineInputBorder(),
+                                  hintText: 'Enter your name',
+                                  hintStyle: TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'SmoochSans',
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: 'SmoochSans',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                               const SizedBox(height: 20),
                               const Text('EMAIL', style: TextStyle(fontSize: 18,
