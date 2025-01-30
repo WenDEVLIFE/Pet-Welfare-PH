@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:pet_welfrare_ph/src/view_model/FurRegisterViewModel.dart';
+import 'package:pet_welfrare_ph/src/view_model/RegisterViewModel.dart';
 import 'package:provider/provider.dart';
 import '../utils/AppColors.dart';
 import '../view_model/LoginViewModel.dart';
@@ -17,12 +17,12 @@ class RegisterState extends State<FurParentRegisterView> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
-  late FurRegisterViewModel viewModel;
+  late RegisterViewModel viewModel;
 
   @override
   void initState() {
     super.initState();
-    viewModel = Provider.of<FurRegisterViewModel>(context, listen: false);
+    viewModel = Provider.of<RegisterViewModel>(context, listen: false);
   }
 
   @override
@@ -109,7 +109,7 @@ class RegisterState extends State<FurParentRegisterView> {
                               const SizedBox(height: 10),
 
                               // Consumer widget
-                              Consumer<FurRegisterViewModel>(
+                              Consumer<RegisterViewModel>(
                                 builder: (context, viewmodel, child) {
                                   return TextField(
                                     controller: passwordController,
@@ -148,7 +148,7 @@ class RegisterState extends State<FurParentRegisterView> {
                                   color: Colors.black)),
                               const SizedBox(height: 10),
                               // Consumer widget
-                              Consumer<FurRegisterViewModel>(
+                              Consumer<RegisterViewModel>(
                                 builder: (context, viewmodel, child) {
                                   return TextField(
                                     controller: confirmPasswordController,

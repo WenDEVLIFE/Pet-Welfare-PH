@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-class FurRegisterViewModel extends ChangeNotifier {
+class RegisterViewModel extends ChangeNotifier {
 
 
   // Password Visibility
