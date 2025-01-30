@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pet_welfrare_ph/src/view_model/FurRegisterViewModel.dart';
 import 'package:provider/provider.dart';
 import '../utils/AppColors.dart';
 import '../view_model/LoginViewModel.dart';
@@ -16,12 +17,12 @@ class RegisterState extends State<FurParentRegisterView> {
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
 
-  late LoginViewModel loginViewModel;
+  late FurRegisterViewModel viewModel;
 
   @override
   void initState() {
     super.initState();
-    loginViewModel = Provider.of<LoginViewModel>(context, listen: false);
+    viewModel = Provider.of<FurRegisterViewModel>(context, listen: false);
   }
 
   @override
@@ -66,7 +67,7 @@ class RegisterState extends State<FurParentRegisterView> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: <Widget>[
                               const Center(
-                                child: Text('SIGN UP FOR FUR ADOPTER, FOSTER, & PET LOVER',
+                                child: Text('SIGN UP FOR FUR',
                                     style: TextStyle(fontSize: 30,
                                         fontWeight: FontWeight.w700,
                                         fontFamily: 'SmoochSans',
@@ -108,8 +109,8 @@ class RegisterState extends State<FurParentRegisterView> {
                               const SizedBox(height: 10),
 
                               // Consumer widget
-                              Consumer<LoginViewModel>(
-                                builder: (context, loginViewModel, child) {
+                              Consumer<FurRegisterViewModel>(
+                                builder: (context, viewmodel, child) {
                                   return TextField(
                                     controller: passwordController,
                                     decoration: InputDecoration(
@@ -118,10 +119,10 @@ class RegisterState extends State<FurParentRegisterView> {
                                       border: const OutlineInputBorder(),
                                       suffixIcon: IconButton(
                                         icon: Icon(
-                                          loginViewModel.obscureText1 ? Icons.visibility : Icons.visibility_off,
+                                          viewmodel.obscureText1 ? Icons.visibility : Icons.visibility_off,
                                         ),
                                         onPressed: () {
-                                          loginViewModel.togglePasswordVisibility1();
+                                          viewmodel.togglePasswordVisibility1();
                                         },
                                       ),
                                       hintText: 'Enter your password',
@@ -131,7 +132,7 @@ class RegisterState extends State<FurParentRegisterView> {
                                         fontFamily: 'SmoochSans',
                                       ),
                                     ),
-                                    obscureText: loginViewModel.obscureText1,
+                                    obscureText: viewmodel.obscureText1,
                                     style: const TextStyle(
                                       color: Colors.black,
                                       fontSize: 16,
@@ -147,20 +148,20 @@ class RegisterState extends State<FurParentRegisterView> {
                                   color: Colors.black)),
                               const SizedBox(height: 10),
                               // Consumer widget
-                              Consumer<LoginViewModel>(
-                                builder: (context, loginViewModel, child) {
+                              Consumer<FurRegisterViewModel>(
+                                builder: (context, viewmodel, child) {
                                   return TextField(
-                                    controller: passwordController,
+                                    controller: confirmPasswordController,
                                     decoration: InputDecoration(
                                       filled: true,
                                       fillColor: AppColors.gray,
                                       border: const OutlineInputBorder(),
                                       suffixIcon: IconButton(
                                         icon: Icon(
-                                          loginViewModel.obscureText1 ? Icons.visibility : Icons.visibility_off,
+                                          viewmodel.obscureText2 ? Icons.visibility : Icons.visibility_off,
                                         ),
                                         onPressed: () {
-                                          loginViewModel.togglePasswordVisibility1();
+                                          viewmodel.togglePasswordVisibility2();
                                         },
                                       ),
                                       hintText: 'Enter confirm password',
@@ -170,7 +171,7 @@ class RegisterState extends State<FurParentRegisterView> {
                                         fontFamily: 'SmoochSans',
                                       ),
                                     ),
-                                    obscureText: loginViewModel.obscureText1,
+                                    obscureText: viewmodel.obscureText2,
                                     style: const TextStyle(
                                       color: Colors.black,
                                       fontSize: 16,
