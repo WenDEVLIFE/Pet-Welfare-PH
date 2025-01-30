@@ -75,6 +75,11 @@ class RegisterState extends State<LegalFirmRegisterView> {
                                         color: Colors.black)),
                               ),
                               const SizedBox(height: 20),
+                              const Text('NAME', style: TextStyle(fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: 'SmoochSans',
+                                  color: Colors.black)),
+                              const SizedBox(height: 10),
                               TextField(
                                 controller: nameController,
                                 decoration: const InputDecoration(

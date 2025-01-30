@@ -134,7 +134,7 @@ class _SelectViewState extends State<SelectView> {
                                   style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
                                   onPressed: () {
 
-
+                                    Provider.of<SelectViewModel>(context, listen: false).navigateToAffiliateLaw(context);
                                   },
                                   child: const Text(
                                     'Affiliated to Legal Firms',

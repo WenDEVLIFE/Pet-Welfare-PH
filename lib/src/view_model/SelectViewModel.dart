@@ -35,7 +35,8 @@ class SelectViewModel extends ChangeNotifier {
   void navigateToAffiliateLaw(BuildContext context) {
     // Implement navigation logic
     notifyListeners();
-    Navigator.pushReplacementNamed(context,
+    Navigator.pushReplacementNamed(
+      context,
         AppRoutes.legalScreen,
         arguments: {'key': 'value'}, // Pass a map or any data
     );
