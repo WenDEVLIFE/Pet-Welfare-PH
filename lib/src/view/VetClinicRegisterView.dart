@@ -17,7 +17,6 @@ class RegisterState extends State<VetClinicRegisterView> {
   TextEditingController nameController = TextEditingController();
   TextEditingController passwordController = TextEditingController();
   TextEditingController confirmPasswordController = TextEditingController();
-  TextEditingController addressController = TextEditingController();
 
   late RegisterViewModel viewModel;
 
@@ -109,32 +108,6 @@ class RegisterState extends State<VetClinicRegisterView> {
                                   fillColor: AppColors.gray,
                                   border: OutlineInputBorder(),
                                   hintText: 'Enter your email',
-                                  hintStyle: TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: 'SmoochSans',
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'SmoochSans',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              const Text('ADDRESS', style: TextStyle(fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                  fontFamily: 'SmoochSans',
-                                  color: Colors.black)),
-                              const SizedBox(height: 10),
-                              TextField(
-                                controller: addressController,
-                                decoration: const InputDecoration(
-                                  filled: true,
-                                  fillColor: AppColors.gray,
-                                  border: OutlineInputBorder(),
-                                  hintText: 'Enter your address',
                                   hintStyle: TextStyle(
                                     color: Colors.black,
                                     fontFamily: 'SmoochSans',
