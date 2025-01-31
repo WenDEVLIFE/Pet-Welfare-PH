@@ -29,6 +29,10 @@ class RegisterViewModel extends ChangeNotifier {
   void proceedLogin(BuildContext context) {
     Navigator.pushReplacementNamed(context, AppRoutes.loginScreen);
   }
+
+  void proceedUploadID(BuildContext context) {
+    Navigator.pushNamed(context, AppRoutes.uploadIDScreen);
+  }
   void setChecked(bool value) {
     _isChecked = value;
     notifyListeners();

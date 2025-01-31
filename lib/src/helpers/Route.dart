@@ -31,6 +31,6 @@ class AppRoutes {
     shelterRegistrationScreen: (context) => const PetrShelterRegisterview(), // Replace with actual screen
     clinicRegistrationScreen: (context) => const VetClinicRegisterView(), // Replace with actual screen
     legalScreen: (context) => const LegalFirmRegisterView(), // Replace with actual screen
-    uploadIDScreen: (context) => const Uploadidview(), // Replace with actual screen
+    uploadIDScreen: (context) => const UploadIDView(), // Replace with actual screen
   };
 }

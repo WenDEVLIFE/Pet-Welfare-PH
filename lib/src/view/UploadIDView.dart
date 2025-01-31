@@ -9,43 +9,48 @@ import 'package:provider/provider.dart';
 import '../utils/AppColors.dart';
 import '../view_model/LoginViewModel.dart';
 
-
-class Uploadidview extends StatefulWidget {
-  const Uploadidview({Key? key}) : super(key: key);
+class UploadIDView extends StatefulWidget {
+  const UploadIDView({Key? key}) : super(key: key);
 
   @override
   RegisterState createState() => RegisterState();
 }
 
-class RegisterState extends State<Uploadidview> {
-
+class RegisterState extends State<UploadIDView> {
   late UploadIDViewModel viewModel;
 
-  var idType = ['Passport', 'Driver\'s License', 'SSS ID', 'UMID', 'Voter\'s ID', 'Postal ID', 'PRC ID',
+  var idType = [
+    'Passport', 'Driver\'s License', 'SSS ID', 'UMID', 'Voter\'s ID', 'Postal ID', 'PRC ID',
     'OFW ID', 'Senior Citizen ID', 'PWD ID', 'Student ID', 'Company ID', 'Police Clearance', 'NBI Clearance',
-    'Barangay Clearance', 'Health Card', 'PhilHealth ID', 'TIN ID', 'GSIS ID', 'Pag-IBIG ID', 'DFA ID'];
+    'Barangay Clearance', 'Health Card', 'PhilHealth ID', 'TIN ID', 'GSIS ID', 'Pag-IBIG ID', 'DFA ID'
+  ];
 
-  var selectedIdType='Select ID Type';
+  var selectedIdType = 'Passport';
 
   final ImagePicker imagePicker = ImagePicker();
 
-  String ImagePath = '';
-
+  String frontImagePath = '';
+  String backImagePath = '';
 
   @override
   void initState() {
     super.initState();
     viewModel = Provider.of<UploadIDViewModel>(context, listen: false);
   }
-  Future<void> _pickImage() async {
-    // Open the image picker
+
+  Future<void> _pickImage(bool isFront) async {
     final XFile? pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       setState(() {
-        ImagePath = pickedFile.path; // Update new image path to the selected file
+        if (isFront) {
+          frontImagePath = pickedFile.path;
+        } else {
+          backImagePath = pickedFile.path;
+        }
       });
     }
   }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -115,7 +120,7 @@ class RegisterState extends State<Uploadidview> {
                                 padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                                 child: Theme(
                                   data: Theme.of(context).copyWith(
-                                    canvasColor: Colors.grey[800], // Set dropdown background color to black
+                                    canvasColor: Colors.grey[800],
                                   ),
                                   child: DropdownButton<String>(
                                     value: selectedIdType,
@@ -128,18 +133,18 @@ class RegisterState extends State<Uploadidview> {
                                             color: Colors.black,
                                             fontFamily: 'SmoochSans',
                                             fontWeight: FontWeight.w600,
-                                          ), // Change text color here
+                                          ),
                                         ),
                                       );
                                     }).toList(),
                                     onChanged: (String? newValue) {
                                       setState(() {
-                                       selectedIdType = newValue!;
+                                        selectedIdType = newValue!;
                                       });
                                     },
-                                    dropdownColor: AppColors.gray, // Set dropdown background color to black
+                                    dropdownColor: AppColors.gray,
                                     iconEnabledColor: Colors.grey,
-                                    style: const TextStyle(color: Colors.white), // Change text color here
+                                    style: const TextStyle(color: Colors.white),
                                     selectedItemBuilder: (BuildContext context) {
                                       return idType.map<Widget>((String item) {
                                         return Align(
@@ -150,13 +155,13 @@ class RegisterState extends State<Uploadidview> {
                                               color: Colors.black,
                                               fontFamily: 'SmoochSans',
                                               fontWeight: FontWeight.w600,
-                                            ), // Change text color here
+                                            ),
                                           ),
                                         );
                                       }).toList();
                                     },
-                                    isExpanded: true, // Ensure the dropdown button is expanded
-                                    alignment: Alignment.bottomLeft, // Align the text to the left
+                                    isExpanded: true,
+                                    alignment: Alignment.bottomLeft,
                                   ),
                                 ),
                               ),
@@ -169,35 +174,37 @@ class RegisterState extends State<Uploadidview> {
                                   color: Colors.black,
                                 ),
                               ),
-                              Stack(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 100,
-                                    backgroundColor: Colors.white,
-                                    child: CircleAvatar(
-                                      radius: 95,
-                                      backgroundImage: ImagePath.isNotEmpty
-                                          ? FileImage(File(ImagePath)) // Use FileImage for local files
-                                          : ImagePath.isNotEmpty
-                                          ? CachedNetworkImageProvider(ImagePath)
-                                          : const AssetImage('assets/fufu.png') as ImageProvider,
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: 0,
-                                    right: 0,
-                                    child: Container(
-                                      decoration: const BoxDecoration(
-                                        color: Colors.white,
-                                        shape: BoxShape.circle,
+                              Center(
+                                child: Container(
+                                  child:  Stack(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 100,
+                                        backgroundColor: Colors.white,
+                                        child: CircleAvatar(
+                                          radius: 95,
+                                          backgroundImage: frontImagePath.isNotEmpty
+                                              ? FileImage(File(frontImagePath))
+                                              : const AssetImage('assets/fufu.png') as ImageProvider,
+                                        ),
                                       ),
-                                      child: IconButton(
-                                        icon: const Icon(Icons.photo_camera),
-                                        onPressed: _pickImage,
+                                      Positioned(
+                                        bottom: 0,
+                                        right: 0,
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: IconButton(
+                                            icon: const Icon(Icons.photo_camera),
+                                            onPressed: () => _pickImage(true),
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
                               const SizedBox(height: 20),
                               const Text('ID Back',
@@ -208,35 +215,37 @@ class RegisterState extends State<Uploadidview> {
                                   color: Colors.black,
                                 ),
                               ),
-                              Stack(
-                                children: [
-                                  CircleAvatar(
-                                    radius: 100,
-                                    backgroundColor: Colors.white,
-                                    child: CircleAvatar(
-                                      radius: 95,
-                                      backgroundImage: ImagePath.isNotEmpty
-                                          ? FileImage(File(ImagePath)) // Use FileImage for local files
-                                          : ImagePath.isNotEmpty
-                                          ? CachedNetworkImageProvider(ImagePath)
-                                          : const AssetImage('assets/fufu.png') as ImageProvider,
-                                    ),
-                                  ),
-                                  Positioned(
-                                    bottom: 0,
-                                    right: 0,
-                                    child: Container(
-                                      decoration: const BoxDecoration(
-                                        color: Colors.white,
-                                        shape: BoxShape.circle,
+                              Center(
+                                child: Container(
+                                  child:  Stack(
+                                    children: [
+                                      CircleAvatar(
+                                        radius: 100,
+                                        backgroundColor: Colors.white,
+                                        child: CircleAvatar(
+                                          radius: 95,
+                                          backgroundImage: frontImagePath.isNotEmpty
+                                              ? FileImage(File(frontImagePath))
+                                              : const AssetImage('assets/fufu.png') as ImageProvider,
+                                        ),
                                       ),
-                                      child: IconButton(
-                                        icon: const Icon(Icons.photo_camera),
-                                        onPressed: _pickImage,
+                                      Positioned(
+                                        bottom: 0,
+                                        right: 0,
+                                        child: Container(
+                                          decoration: const BoxDecoration(
+                                            color: Colors.white,
+                                            shape: BoxShape.circle,
+                                          ),
+                                          child: IconButton(
+                                            icon: const Icon(Icons.photo_camera),
+                                            onPressed: () => _pickImage(true),
+                                          ),
+                                        ),
                                       ),
-                                    ),
+                                    ],
                                   ),
-                                ],
+                                ),
                               ),
                               Center(
                                 child: Container(

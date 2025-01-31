@@ -220,6 +220,7 @@ class RegisterState extends State<FurParentRegisterView> {
                                   child: ElevatedButton(
                                     onPressed: () {
                                       // call the controller
+                                      Provider.of<RegisterViewModel>(context, listen: false).proceedUploadID(context);
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.black,
@@ -241,7 +242,9 @@ class RegisterState extends State<FurParentRegisterView> {
                                 child: Align(
                                   alignment: const Alignment(0.0, 0.0),
                                   child: GestureDetector(
-                                    onTap: () {},
+                                    onTap: () {
+                                      Provider.of<RegisterViewModel>(context, listen: false).proceedLogin(context);
+                                    },
                                     child: const Text(
                                       'Already have an account?',
                                       style: TextStyle(
