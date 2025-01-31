@@ -1,13 +1,9 @@
 import 'dart:io';
-
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:pet_welfrare_ph/src/view_model/RegisterViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/UploadIDViewModel.dart';
 import 'package:provider/provider.dart';
 import '../utils/AppColors.dart';
-import '../view_model/LoginViewModel.dart';
 
 class UploadIDView extends StatefulWidget {
   const UploadIDView({Key? key}) : super(key: key);
@@ -17,8 +13,6 @@ class UploadIDView extends StatefulWidget {
 }
 
 class RegisterState extends State<UploadIDView> {
-  late UploadIDViewModel viewModel;
-
   var idType = [
     'Passport', 'Driver\'s License', 'SSS ID', 'UMID', 'Voter\'s ID', 'Postal ID', 'PRC ID',
     'OFW ID', 'Senior Citizen ID', 'PWD ID', 'Student ID', 'Company ID', 'Police Clearance', 'NBI Clearance',
@@ -26,30 +20,6 @@ class RegisterState extends State<UploadIDView> {
   ];
 
   var selectedIdType = 'Passport';
-
-  final ImagePicker imagePicker = ImagePicker();
-
-  String frontImagePath = '';
-  String backImagePath = '';
-
-  @override
-  void initState() {
-    super.initState();
-    viewModel = Provider.of<UploadIDViewModel>(context, listen: false);
-  }
-
-  Future<void> _pickImage(bool isFront) async {
-    final XFile? pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
-    if (pickedFile != null) {
-      setState(() {
-        if (isFront) {
-          frontImagePath = pickedFile.path;
-        } else {
-          backImagePath = pickedFile.path;
-        }
-      });
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -176,17 +146,21 @@ class RegisterState extends State<UploadIDView> {
                               ),
                               Center(
                                 child: Container(
-                                  child:  Stack(
+                                  child: Stack(
                                     children: [
-                                      CircleAvatar(
-                                        radius: 100,
-                                        backgroundColor: Colors.white,
-                                        child: CircleAvatar(
-                                          radius: 95,
-                                          backgroundImage: frontImagePath.isNotEmpty
-                                              ? FileImage(File(frontImagePath))
-                                              : const AssetImage('assets/fufu.png') as ImageProvider,
-                                        ),
+                                      Consumer<UploadIDViewModel>(
+                                        builder: (context, viewModel, child) {
+                                          return CircleAvatar(
+                                            radius: 100,
+                                            backgroundColor: Colors.white,
+                                            child: CircleAvatar(
+                                              radius: 95,
+                                              backgroundImage: viewModel.frontImagePath.isNotEmpty
+                                                  ? FileImage(File(viewModel.frontImagePath))
+                                                  : const AssetImage('assets/fufu.png') as ImageProvider,
+                                            ),
+                                          );
+                                        },
                                       ),
                                       Positioned(
                                         bottom: 0,
@@ -198,7 +172,7 @@ class RegisterState extends State<UploadIDView> {
                                           ),
                                           child: IconButton(
                                             icon: const Icon(Icons.photo_camera),
-                                            onPressed: () => _pickImage(true),
+                                            onPressed: () => context.read<UploadIDViewModel>().pickImage(true),
                                           ),
                                         ),
                                       ),
@@ -217,17 +191,21 @@ class RegisterState extends State<UploadIDView> {
                               ),
                               Center(
                                 child: Container(
-                                  child:  Stack(
+                                  child: Stack(
                                     children: [
-                                      CircleAvatar(
-                                        radius: 100,
-                                        backgroundColor: Colors.white,
-                                        child: CircleAvatar(
-                                          radius: 95,
-                                          backgroundImage: frontImagePath.isNotEmpty
-                                              ? FileImage(File(frontImagePath))
-                                              : const AssetImage('assets/fufu.png') as ImageProvider,
-                                        ),
+                                      Consumer<UploadIDViewModel>(
+                                        builder: (context, viewModel, child) {
+                                          return CircleAvatar(
+                                            radius: 100,
+                                            backgroundColor: Colors.white,
+                                            child: CircleAvatar(
+                                              radius: 95,
+                                              backgroundImage: viewModel.backImagePath.isNotEmpty
+                                                  ? FileImage(File(viewModel.backImagePath))
+                                                  : const AssetImage('assets/fufu.png') as ImageProvider,
+                                            ),
+                                          );
+                                        },
                                       ),
                                       Positioned(
                                         bottom: 0,
@@ -239,7 +217,7 @@ class RegisterState extends State<UploadIDView> {
                                           ),
                                           child: IconButton(
                                             icon: const Icon(Icons.photo_camera),
-                                            onPressed: () => _pickImage(true),
+                                            onPressed: () => context.read<UploadIDViewModel>().pickImage(false),
                                           ),
                                         ),
                                       ),
