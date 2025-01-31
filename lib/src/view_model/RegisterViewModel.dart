@@ -8,10 +8,12 @@ class RegisterViewModel extends ChangeNotifier {
   // Password Visibility
   bool _obscureText1 = true;
   bool _obscureText2 = true;
+  bool _isChecked = false;
 
   // Getter
   bool get obscureText1 => _obscureText1;
   bool get obscureText2 => _obscureText2;
+  bool get isChecked => _isChecked;
 
   // Setter
   void togglePasswordVisibility1() {
@@ -27,4 +29,9 @@ class RegisterViewModel extends ChangeNotifier {
   void proceedLogin(BuildContext context) {
     Navigator.pushReplacementNamed(context, AppRoutes.loginScreen);
   }
+  void setChecked(bool value) {
+    _isChecked = value;
+    notifyListeners();
+  }
+
 }

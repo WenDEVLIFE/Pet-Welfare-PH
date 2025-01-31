@@ -296,6 +296,28 @@ class RegisterState extends State<PetrShelterRegisterview> {
                                 },
                               ),
                               const SizedBox(height: 20),
+                              Consumer<RegisterViewModel>(
+                                builder: (context, viewmodel, child) {
+                                  return CheckboxListTile(
+                                    title: const Text(
+                                      'I agree to the terms and conditions',
+                                      style: TextStyle(
+                                        fontSize: 18,
+                                        color: Colors.black,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: 'SmoochSans',
+                                      ),
+                                    ),
+                                    value: viewmodel.isChecked,
+                                    onChanged: (bool? value) {
+                                      viewmodel.setChecked(value!);
+                                    },
+                                    controlAffinity: ListTileControlAffinity.leading,
+                                    activeColor: Colors.black,
+                                  );
+                                },
+                              ),
+                              const SizedBox(height: 20),
                               Center(
                                 child: Container(
                                   width: screenWidth * 0.8,
