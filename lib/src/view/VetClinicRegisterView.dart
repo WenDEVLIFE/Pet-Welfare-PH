@@ -253,7 +253,9 @@ class RegisterState extends State<VetClinicRegisterView> {
                                 child: Align(
                                   alignment: const Alignment(0.0, 0.0),
                                   child: GestureDetector(
-                                    onTap: () {},
+                                    onTap: () {
+                                      Provider.of<RegisterViewModel>(context, listen: false).proceedLogin(context);
+                                    },
                                     child: const Text(
                                       'Sign in',
                                       style: TextStyle(

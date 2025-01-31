@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../helpers/Route.dart';
+
 class RegisterViewModel extends ChangeNotifier {
 
 
@@ -20,5 +22,9 @@ class RegisterViewModel extends ChangeNotifier {
   void togglePasswordVisibility2() {
     _obscureText2 = !_obscureText2;
     notifyListeners();
+  }
+
+  void proceedLogin(BuildContext context) {
+    Navigator.pushReplacementNamed(context, AppRoutes.loginScreen);
   }
 }
