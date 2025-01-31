@@ -152,7 +152,7 @@ class RegisterState extends State<UploadIDView> {
                                         builder: (context, viewModel, child) {
                                           return CircleAvatar(
                                             radius: 100,
-                                            backgroundColor: Colors.white,
+                                            backgroundColor: AppColors.orange,
                                             child: CircleAvatar(
                                               radius: 95,
                                               backgroundImage: viewModel.frontImagePath.isNotEmpty
@@ -167,7 +167,7 @@ class RegisterState extends State<UploadIDView> {
                                         right: 0,
                                         child: Container(
                                           decoration: const BoxDecoration(
-                                            color: Colors.white,
+                                            color: Colors.black,
                                             shape: BoxShape.circle,
                                           ),
                                           child: IconButton(
@@ -197,7 +197,7 @@ class RegisterState extends State<UploadIDView> {
                                         builder: (context, viewModel, child) {
                                           return CircleAvatar(
                                             radius: 100,
-                                            backgroundColor: Colors.white,
+                                            backgroundColor: AppColors.orange,
                                             child: CircleAvatar(
                                               radius: 95,
                                               backgroundImage: viewModel.backImagePath.isNotEmpty
@@ -212,7 +212,7 @@ class RegisterState extends State<UploadIDView> {
                                         right: 0,
                                         child: Container(
                                           decoration: const BoxDecoration(
-                                            color: Colors.white,
+                                            color: Colors.black,
                                             shape: BoxShape.circle,
                                           ),
                                           child: IconButton(
