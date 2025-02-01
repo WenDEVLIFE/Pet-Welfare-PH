@@ -13,7 +13,6 @@ class SelectView extends StatefulWidget {
 }
 
 class _SelectViewState extends State<SelectView> {
-
   late SelectViewModel selectViewModel;
 
   @override
@@ -21,15 +20,18 @@ class _SelectViewState extends State<SelectView> {
     super.initState();
     selectViewModel = Provider.of<SelectViewModel>(context, listen: false);
   }
+
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
           color: AppColors.orange,
         ),
-        child:  Column(
+        child: Column(
           children: <Widget>[
             Expanded(
               child: SingleChildScrollView(
@@ -38,14 +40,14 @@ class _SelectViewState extends State<SelectView> {
                   child: Column(
                     mainAxisAlignment: MainAxisAlignment.start,
                     children: <Widget>[
-                      const SizedBox(
-                        width: 200,
-                        height: 200,
-                        child: Image(
+                      SizedBox(
+                        width: screenWidth * 0.5,
+                        height: screenHeight * 0.25,
+                        child: const Image(
                           image: AssetImage('assets/icon/Logo.png'),
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: screenHeight * 0.02),
                       const Center(
                         child: Text(
                           'SELECT YOUR USER CLASSIFICATION FOR REGISTRATION',
@@ -58,41 +60,40 @@ class _SelectViewState extends State<SelectView> {
                           textAlign: TextAlign.center,
                         ),
                       ),
-                      const SizedBox(height: 20),
+                      SizedBox(height: screenHeight * 0.02),
                       Align(
                         alignment: Alignment.bottomCenter,
                         child: Padding(
-                          padding: const EdgeInsets.all(16.0),
+                          padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
                           child: Column(
                             mainAxisAlignment: MainAxisAlignment.end,
                             children: <Widget>[
                               SizedBox(
-                                  width: double.maxFinite,
-                                  child: ElevatedButton(
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.black,
+                                width: double.maxFinite,
+                                child: ElevatedButton(
+                                  style: ElevatedButton.styleFrom(
+                                    backgroundColor: Colors.black,
+                                  ),
+                                  onPressed: () {
+                                    Provider.of<SelectViewModel>(context, listen: false).navigateToFuRegistration(context);
+                                  },
+                                  child: const Text(
+                                    'Adopter, Foster, & Pet lover',
+                                    style: TextStyle(
+                                      color: Colors.white,
+                                      fontFamily: 'SmoochSans',
+                                      fontSize: 20,
+                                      letterSpacing: 0.5,
                                     ),
-                                    onPressed: () {
-
-                                        Provider.of<SelectViewModel>(context, listen: false).navigateToFuRegistration(context);
-                                    },
-                                    child: const Text(
-                                      'Adopter, Foster, & Pet lover',
-                                      style: TextStyle(
-                                        color: Colors.white,
-                                        fontFamily: 'SmoochSans',
-                                        fontSize: 20,
-                                        letterSpacing: 0.5,
-                                      ),
-                                    ),
-                                  )),
-                              const SizedBox(height: 20),
+                                  ),
+                                ),
+                              ),
+                              SizedBox(height: screenHeight * 0.02),
                               SizedBox(
                                 width: double.maxFinite,
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
                                   onPressed: () {
-
                                     Provider.of<SelectViewModel>(context, listen: false).navigateToShelterRegistration(context);
                                   },
                                   child: const Text(
@@ -106,15 +107,13 @@ class _SelectViewState extends State<SelectView> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 20),
+                              SizedBox(height: screenHeight * 0.02),
                               SizedBox(
                                 width: double.maxFinite,
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
                                   onPressed: () {
-
                                     Provider.of<SelectViewModel>(context, listen: false).navigateToClinicRegistration(context);
-
                                   },
                                   child: const Text(
                                     'Vet Clinic Personnel',
@@ -127,13 +126,12 @@ class _SelectViewState extends State<SelectView> {
                                   ),
                                 ),
                               ),
-                              const SizedBox(height: 20),
+                              SizedBox(height: screenHeight * 0.02),
                               SizedBox(
                                 width: double.maxFinite,
                                 child: ElevatedButton(
                                   style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
                                   onPressed: () {
-
                                     Provider.of<SelectViewModel>(context, listen: false).navigateToAffiliateLaw(context);
                                   },
                                   child: const Text(

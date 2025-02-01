@@ -3,7 +3,6 @@ import 'package:provider/provider.dart';
 import '../utils/AppColors.dart';
 import '../view_model/LoginViewModel.dart';
 
-
 class Loginview extends StatefulWidget {
   const Loginview({Key? key}) : super(key: key);
 
@@ -18,6 +17,7 @@ class _LoginScreenState extends State<Loginview> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       body: Column(
@@ -28,8 +28,8 @@ class _LoginScreenState extends State<Loginview> {
               color: Colors.orange,
               child: Center(
                 child: Container(
-                  width: 200,
-                  height: 200,
+                  width: screenWidth * 0.5,
+                  height: screenHeight * 0.25,
                   decoration: const BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage('assets/icon/Logo.png'),
@@ -47,154 +47,151 @@ class _LoginScreenState extends State<Loginview> {
               child: Align(
                 alignment: Alignment.topCenter,
                 child: SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      FractionallySizedBox(
-                        widthFactor: 0.9,
-                        child: Container(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              const Center(
-                                child: Text('LOGIN', style: TextStyle(fontSize: 30,
-                                    fontWeight: FontWeight.w900,
-                                    fontFamily: 'SmoochSans',
-                                    color: Colors.black)),
+                  child: FractionallySizedBox(
+                    widthFactor: 0.9,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          const Center(
+                            child: Text('LOGIN', style: TextStyle(
+                                fontSize: 30,
+                                fontWeight: FontWeight.w900,
+                                fontFamily: 'SmoochSans',
+                                color: Colors.black)),
+                          ),
+                          SizedBox(height: screenHeight * 0.02),
+                          const Text('EMAIL', style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'SmoochSans',
+                              color: Colors.black)),
+                          SizedBox(height: screenHeight * 0.01),
+                          TextField(
+                            controller: emailController,
+                            decoration: const InputDecoration(
+                              filled: true,
+                              fillColor: AppColors.gray,
+                              border: OutlineInputBorder(),
+                              hintText: 'Enter your email',
+                              hintStyle: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'SmoochSans',
+                                fontWeight: FontWeight.w600,
                               ),
-                              const SizedBox(height: 20),
-                              const Text('EMAIL', style: TextStyle(fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: 'SmoochSans',
-                                  color: Colors.black)),
-                              const SizedBox(height: 10),
-                              TextField(
-                                controller: emailController,
-                                decoration: const InputDecoration(
+                            ),
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontFamily: 'SmoochSans',
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(height: screenHeight * 0.02),
+                          const Text('PASSWORD', style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w900,
+                              fontFamily: 'SmoochSans',
+                              color: Colors.black)),
+                          SizedBox(height: screenHeight * 0.01),
+                          Consumer<LoginViewModel>(
+                            builder: (context, loginViewModel, child) {
+                              return TextField(
+                                controller: passwordController,
+                                decoration: InputDecoration(
                                   filled: true,
                                   fillColor: AppColors.gray,
-                                  border: OutlineInputBorder(),
-                                  hintText: 'Enter your email',
-                                  hintStyle: TextStyle(
+                                  border: const OutlineInputBorder(),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      loginViewModel.obscureText1 ? Icons.visibility : Icons.visibility_off,
+                                    ),
+                                    onPressed: () {
+                                      loginViewModel.togglePasswordVisibility1();
+                                    },
+                                  ),
+                                  hintText: 'Enter your password',
+                                  hintStyle: const TextStyle(
                                     color: Colors.black,
-                                    fontFamily: 'SmoochSans',
-                                    fontWeight: FontWeight.w600,
                                   ),
                                 ),
+                                obscureText: loginViewModel.obscureText1,
                                 style: const TextStyle(
                                   color: Colors.black,
                                   fontSize: 16,
                                   fontFamily: 'SmoochSans',
                                   fontWeight: FontWeight.w600,
                                 ),
-                              ),
-                              const SizedBox(height: 20),
-                              const Text('PASSWORD', style: TextStyle(fontSize: 18,
-                                  fontWeight: FontWeight.w900,
-                                  fontFamily: 'SmoochSans',
-                                  color: Colors.black)),
-                              const SizedBox(height: 10),
-
-                              // Consumer widget
-                              Consumer<LoginViewModel>(
-                                builder: (context, loginViewModel, child) {
-                                  return TextField(
-                                    controller: passwordController,
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: AppColors.gray,
-                                      border: const OutlineInputBorder(),
-                                      suffixIcon: IconButton(
-                                        icon: Icon(
-                                          loginViewModel.obscureText1 ? Icons.visibility : Icons.visibility_off,
-                                        ),
-                                        onPressed: () {
-                                          loginViewModel.togglePasswordVisibility1();
-                                        },
-                                      ),
-                                      hintText: 'Enter your password',
-                                      hintStyle: const TextStyle(
-                                        color: Colors.black,
-                                      ),
-                                    ),
-                                    obscureText: loginViewModel.obscureText1,
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontFamily: 'SmoochSans',
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  );
-                                },
-                              ),
-                              const SizedBox(height: 20),
-                              Center(
-                                child: Container(
-                                  width: screenWidth * 0.8,
-                                  decoration: BoxDecoration(
-                                    color: Colors.transparent,
-                                    borderRadius: BorderRadius.circular(5),
-                                    border: Border.all(color: Colors.transparent),
-                                  ),
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      // call the controller
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.black,
-                                    ),
-                                    child: const Text('Sign In',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        fontFamily: 'SmoochSans',
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20.0),
-                                child: Align(
-                                  alignment: const Alignment(0.0, 0.0),
-                                  child: GestureDetector(
-                                    onTap: () {},
-                                    child: const Text(
-                                      'Don\'t have an account?',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20.0),
-                                child: Align(
-                                  alignment: const Alignment(0.0, 0.0),
-                                  child: GestureDetector(
-                                    onTap: () {},
-                                    child: const Text(
-                                      'Sign up here',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        fontFamily: 'SmoochSans',
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                              );
+                            },
                           ),
-                        ),
+                          SizedBox(height: screenHeight * 0.02),
+                          Center(
+                            child: Container(
+                              width: screenWidth * 0.8,
+                              decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(color: Colors.transparent),
+                              ),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  // call the controller
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.black,
+                                ),
+                                child: const Text('Sign In',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    fontFamily: 'SmoochSans',
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: screenHeight * 0.02),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20.0),
+                            child: Align(
+                              alignment: const Alignment(0.0, 0.0),
+                              child: GestureDetector(
+                                onTap: () {},
+                                child: const Text(
+                                  'Don\'t have an account?',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20.0),
+                            child: Align(
+                              alignment: const Alignment(0.0, 0.0),
+                              child: GestureDetector(
+                                onTap: () {},
+                                child: const Text(
+                                  'Sign up here',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    fontFamily: 'SmoochSans',
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),

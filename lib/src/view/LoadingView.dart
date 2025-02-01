@@ -22,6 +22,9 @@ class LoadingState extends State<LoadingView> {
   @override
   Widget build(BuildContext context) {
     final splashViewModel = Provider.of<LoadingViewModel>(context, listen: true);
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: Container(
         decoration: const BoxDecoration(
@@ -36,8 +39,8 @@ class LoadingState extends State<LoadingView> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                    height: 300,
-                    width: 300,
+                    height: screenHeight * 0.4,
+                    width: screenWidth * 0.8,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage(ImageUtils.logoPath),
@@ -59,7 +62,7 @@ class LoadingState extends State<LoadingView> {
               ),
             ),
             Padding(
-              padding: const EdgeInsets.only(bottom: 20.0),
+              padding: EdgeInsets.only(bottom: screenHeight * 0.02),
               child: RichText(
                 textAlign: TextAlign.center,
                 text: const TextSpan(

@@ -42,6 +42,8 @@ class SplashViewState extends State<SplashView2> {
 
   @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       backgroundColor: Colors.black,
@@ -56,14 +58,12 @@ class SplashViewState extends State<SplashView2> {
           Container(color: AppColors.orange.withOpacity(0.8)),
           Center(
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  const SizedBox(
-                    height: 40,
-                  ),
+                  SizedBox(height: screenHeight * 0.05),
                   Text(
                     'WELCOME!'.toUpperCase(),
                     style: const TextStyle(
@@ -95,36 +95,35 @@ class SplashViewState extends State<SplashView2> {
           Align(
             alignment: Alignment.bottomCenter,
             child: Padding(
-              padding: const EdgeInsets.all(16.0),
+              padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04, vertical: screenHeight * 0.02),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
                 children: <Widget>[
                   SizedBox(
-                      width: double.maxFinite,
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          backgroundColor: Colors.black,
+                    width: double.maxFinite,
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                      ),
+                      onPressed: () {
+                        Provider.of<SplashViewModel2>(context, listen: false).navigateLogin(context);
+                      },
+                      child: const Text(
+                        'Login',
+                        style: TextStyle(
+                          color: Colors.white,
+                          fontSize: 20,
+                          fontFamily: 'SmoochSans',
+                          letterSpacing: 0.5,
                         ),
-                        onPressed: () {
-                          Provider.of<SplashViewModel2>(context, listen: false).navigateLogin(context);
-
-                                                  },
-                        child: const Text(
-                          'Login',
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontSize: 20,
-                            fontFamily: 'SmoochSans',
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                      )),
+                      ),
+                    ),
+                  ),
                   SizedBox(
                     width: double.maxFinite,
                     child: ElevatedButton(
                       style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
                       onPressed: () {
-
                         Provider.of<SplashViewModel2>(context, listen: false).navigateToRegister(context);
                       },
                       child: const Text(
@@ -138,7 +137,7 @@ class SplashViewState extends State<SplashView2> {
                       ),
                     ),
                   ),
-                  const SizedBox(height: 20)
+                  SizedBox(height: screenHeight * 0.02),
                 ],
               ),
             ),

@@ -4,7 +4,6 @@ import 'package:provider/provider.dart';
 import '../utils/AppColors.dart';
 import '../view_model/LoginViewModel.dart';
 
-
 class LegalFirmRegisterView extends StatefulWidget {
   const LegalFirmRegisterView({Key? key}) : super(key: key);
 
@@ -29,6 +28,7 @@ class RegisterState extends State<LegalFirmRegisterView> {
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       body: Column(
@@ -58,229 +58,222 @@ class RegisterState extends State<LegalFirmRegisterView> {
               child: Align(
                 alignment: Alignment.topCenter,
                 child: SingleChildScrollView(
-                  child: Column(
-                    children: <Widget>[
-                      FractionallySizedBox(
-                        widthFactor: 0.9,
-                        child: Container(
-                          padding: const EdgeInsets.all(16.0),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: <Widget>[
-                              const Center(
-                                child: Text('SIGN UP FOR LEGAL FIRM PERSONNEL',
-                                    style: TextStyle(fontSize: 30,
-                                        fontWeight: FontWeight.w700,
-                                        fontFamily: 'SmoochSans',
-                                        color: Colors.black)),
-                              ),
-                              const SizedBox(height: 20),
-                              const Text('NAME', style: TextStyle(fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                  fontFamily: 'SmoochSans',
-                                  color: Colors.black)),
-                              const SizedBox(height: 10),
-                              TextField(
-                                controller: nameController,
-                                decoration: const InputDecoration(
-                                  filled: true,
-                                  fillColor: AppColors.gray,
-                                  border: OutlineInputBorder(),
-                                  hintText: 'Enter your name',
-                                  hintStyle: TextStyle(
-                                    color: Colors.black,
+                  child: FractionallySizedBox(
+                    widthFactor: 0.9,
+                    child: Container(
+                      padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          const Center(
+                            child: Text('SIGN UP FOR LEGAL FIRM PERSONNEL',
+                                style: TextStyle(fontSize: 30,
+                                    fontWeight: FontWeight.w700,
                                     fontFamily: 'SmoochSans',
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'SmoochSans',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              const Text('EMAIL', style: TextStyle(fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                  fontFamily: 'SmoochSans',
-                                  color: Colors.black)),
-                              const SizedBox(height: 10),
-                              TextField(
-                                controller: emailController,
-                                decoration: const InputDecoration(
-                                  filled: true,
-                                  fillColor: AppColors.gray,
-                                  border: OutlineInputBorder(),
-                                  hintText: 'Enter your email',
-                                  hintStyle: TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: 'SmoochSans',
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'SmoochSans',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              const Text('PASSWORD', style:
-                              TextStyle(fontSize: 18,
-                                  fontWeight: FontWeight.w700,
-                                  fontFamily: 'SmoochSans',
-                                  color: Colors.black
-                              )),
-                              const SizedBox(height: 10),
-                              // Consumer widget
-                              Consumer<RegisterViewModel>(
-                                builder: (context, viewmodel, child) {
-                                  return TextField(
-                                    controller: passwordController,
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: AppColors.gray,
-                                      border: const OutlineInputBorder(),
-                                      suffixIcon: IconButton(
-                                        icon: Icon(
-                                          viewmodel.obscureText1 ? Icons.visibility : Icons.visibility_off,
-                                        ),
-                                        onPressed: () {
-                                          viewmodel.togglePasswordVisibility1();
-                                        },
-                                      ),
-                                      hintText: 'Enter your password',
-                                      hintStyle: const TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600,
-                                        fontFamily: 'SmoochSans',
-                                      ),
-                                    ),
-                                    obscureText: viewmodel.obscureText1,
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  );
-                                },
-                              ),
-                              const SizedBox(height: 20),
-                              const Text('CONFIRM PASSWORD', style: TextStyle(fontSize: 18,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: 'SmoochSans',
-                                  color: Colors.black)),
-                              const SizedBox(height: 10),
-                              // Consumer widget
-                              Consumer<RegisterViewModel>(
-                                builder: (context, viewmodel, child) {
-                                  return TextField(
-                                    controller: confirmPasswordController,
-                                    decoration: InputDecoration(
-                                      filled: true,
-                                      fillColor: AppColors.gray,
-                                      border: const OutlineInputBorder(),
-                                      suffixIcon: IconButton(
-                                        icon: Icon(
-                                          viewmodel.obscureText2 ? Icons.visibility : Icons.visibility_off,
-                                        ),
-                                        onPressed: () {
-                                          viewmodel.togglePasswordVisibility2();
-                                        },
-                                      ),
-                                      hintText: 'Enter confirm password',
-                                      hintStyle: const TextStyle(
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600,
-                                        fontFamily: 'SmoochSans',
-                                      ),
-                                    ),
-                                    obscureText: viewmodel.obscureText2,
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: 'SmoochSans',
-                                    ),
-                                  );
-                                },
-                              ),
-                              const SizedBox(height: 20),
-                              Center(
-                                child: Container(
-                                  width: screenWidth * 0.8,
-                                  decoration: BoxDecoration(
-                                    color: Colors.transparent,
-                                    borderRadius: BorderRadius.circular(5),
-                                    border: Border.all(color: Colors.transparent),
-                                  ),
-                                  child: ElevatedButton(
-                                    onPressed: () {
-                                      // call the controller
-                                      Provider.of<RegisterViewModel>(context, listen: false).proceedUploadID(context);
-                                    },
-                                    style: ElevatedButton.styleFrom(
-                                      backgroundColor: Colors.black,
-                                    ),
-                                    child: const Text('Proceed',
-                                      style: TextStyle(
-                                        fontSize: 20,
-                                        color: Colors.white,
-                                        fontWeight: FontWeight.w600,
-                                        fontFamily: 'SmoochSans',
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              const SizedBox(height: 20),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20.0),
-                                child: Align(
-                                  alignment: const Alignment(0.0, 0.0),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Provider.of<RegisterViewModel>(context, listen: false).proceedLogin(context);
-                                    },
-                                    child: const Text(
-                                      'Already have an account?',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600,
-                                        fontFamily: 'SmoochSans',
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.only(left: 20.0),
-                                child: Align(
-                                  alignment: const Alignment(0.0, 0.0),
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      Provider.of<RegisterViewModel>(context, listen: false).proceedLogin(context);
-                                    },
-                                    child: const Text(
-                                      'Sign in',
-                                      style: TextStyle(
-                                        fontSize: 18,
-                                        color: Colors.black,
-                                        fontWeight: FontWeight.w600,
-                                        fontFamily: 'SmoochSans',
-                                      ),
-                                    ),
-                                  ),
-                                ),
-                              ),
-                            ],
+                                    color: Colors.black)),
                           ),
-                        ),
+                          SizedBox(height: screenHeight * 0.02),
+                          const Text('NAME', style: TextStyle(fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'SmoochSans',
+                              color: Colors.black)),
+                          SizedBox(height: screenHeight * 0.01),
+                          TextField(
+                            controller: nameController,
+                            decoration: const InputDecoration(
+                              filled: true,
+                              fillColor: AppColors.gray,
+                              border: OutlineInputBorder(),
+                              hintText: 'Enter your name',
+                              hintStyle: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'SmoochSans',
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'SmoochSans',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(height: screenHeight * 0.02),
+                          const Text('EMAIL', style: TextStyle(fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'SmoochSans',
+                              color: Colors.black)),
+                          SizedBox(height: screenHeight * 0.01),
+                          TextField(
+                            controller: emailController,
+                            decoration: const InputDecoration(
+                              filled: true,
+                              fillColor: AppColors.gray,
+                              border: OutlineInputBorder(),
+                              hintText: 'Enter your email',
+                              hintStyle: TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'SmoochSans',
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'SmoochSans',
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          SizedBox(height: screenHeight * 0.02),
+                          const Text('PASSWORD', style:
+                          TextStyle(fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'SmoochSans',
+                              color: Colors.black
+                          )),
+                          SizedBox(height: screenHeight * 0.01),
+                          Consumer<RegisterViewModel>(
+                            builder: (context, viewmodel, child) {
+                              return TextField(
+                                controller: passwordController,
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: AppColors.gray,
+                                  border: const OutlineInputBorder(),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      viewmodel.obscureText1 ? Icons.visibility : Icons.visibility_off,
+                                    ),
+                                    onPressed: () {
+                                      viewmodel.togglePasswordVisibility1();
+                                    },
+                                  ),
+                                  hintText: 'Enter your password',
+                                  hintStyle: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'SmoochSans',
+                                  ),
+                                ),
+                                obscureText: viewmodel.obscureText1,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              );
+                            },
+                          ),
+                          SizedBox(height: screenHeight * 0.02),
+                          const Text('CONFIRM PASSWORD', style: TextStyle(fontSize: 18,
+                              fontWeight: FontWeight.w600,
+                              fontFamily: 'SmoochSans',
+                              color: Colors.black)),
+                          SizedBox(height: screenHeight * 0.01),
+                          Consumer<RegisterViewModel>(
+                            builder: (context, viewmodel, child) {
+                              return TextField(
+                                controller: confirmPasswordController,
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: AppColors.gray,
+                                  border: const OutlineInputBorder(),
+                                  suffixIcon: IconButton(
+                                    icon: Icon(
+                                      viewmodel.obscureText2 ? Icons.visibility : Icons.visibility_off,
+                                    ),
+                                    onPressed: () {
+                                      viewmodel.togglePasswordVisibility2();
+                                    },
+                                  ),
+                                  hintText: 'Enter confirm password',
+                                  hintStyle: const TextStyle(
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'SmoochSans',
+                                  ),
+                                ),
+                                obscureText: viewmodel.obscureText2,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  fontFamily: 'SmoochSans',
+                                ),
+                              );
+                            },
+                          ),
+                          SizedBox(height: screenHeight * 0.02),
+                          Center(
+                            child: Container(
+                              width: screenWidth * 0.8,
+                              decoration: BoxDecoration(
+                                color: Colors.transparent,
+                                borderRadius: BorderRadius.circular(5),
+                                border: Border.all(color: Colors.transparent),
+                              ),
+                              child: ElevatedButton(
+                                onPressed: () {
+                                  Provider.of<RegisterViewModel>(context, listen: false).proceedUploadID(context);
+                                },
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.black,
+                                ),
+                                child: const Text('Proceed',
+                                  style: TextStyle(
+                                    fontSize: 20,
+                                    color: Colors.white,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'SmoochSans',
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: screenHeight * 0.02),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20.0),
+                            child: Align(
+                              alignment: const Alignment(0.0, 0.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Provider.of<RegisterViewModel>(context, listen: false).proceedLogin(context);
+                                },
+                                child: const Text(
+                                  'Already have an account?',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'SmoochSans',
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20.0),
+                            child: Align(
+                              alignment: const Alignment(0.0, 0.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Provider.of<RegisterViewModel>(context, listen: false).proceedLogin(context);
+                                },
+                                child: const Text(
+                                  'Sign in',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'SmoochSans',
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
