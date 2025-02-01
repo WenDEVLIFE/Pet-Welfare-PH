@@ -325,6 +325,7 @@ class RegisterState extends State<PetrShelterRegisterview> {
                               alignment: const Alignment(0.0, 0.0),
                               child: GestureDetector(
                                 onTap: () {
+                                  Provider.of<RegisterViewModel>(context, listen: false).showTermsAndConditionDialog(context);
 
                                 },
                                 child: const Text(

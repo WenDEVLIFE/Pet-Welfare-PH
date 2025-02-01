@@ -3,15 +3,19 @@ import 'package:flutter/material.dart';
 class TermsAndConditionDialog extends StatelessWidget {
   final String title;
   final String content;
-  final String buttonText;
+  final String buttonText1;
+  final String buttonText2;
   final Function onAccept;
+  final Function onDecline;
   final String imagePath;
 
-  TermsAndConditionDialog({
+  const TermsAndConditionDialog({
     required this.title,
     required this.content,
-    required this.buttonText,
+    required this.buttonText1,
+    required this.buttonText2,
     required this.onAccept,
+    required this.onDecline,
     required this.imagePath,
   });
 
@@ -22,16 +26,20 @@ class TermsAndConditionDialog extends StatelessWidget {
       content: SingleChildScrollView(
         child: Column(
           children: <Widget>[
-            Image.asset(imagePath),
-            SizedBox(height: 20),
+            Image.asset(imagePath, height: 80, width: 80),
+            const SizedBox(height: 20),
             Text(content),
           ],
         ),
       ),
       actions: <Widget>[
         TextButton(
-          child: Text(buttonText),
+          child: Text(buttonText1),
           onPressed: () => onAccept(),
+        ),
+        TextButton(
+          child: Text(buttonText2),
+          onPressed: () => onDecline(),
         ),
       ],
     );

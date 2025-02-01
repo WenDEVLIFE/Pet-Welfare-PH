@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import '../helpers/Route.dart';
+import '../utils/TermsAndConditionDialog.dart';
 
 class RegisterViewModel extends ChangeNotifier {
 
@@ -36,6 +37,37 @@ class RegisterViewModel extends ChangeNotifier {
   void setChecked(bool value) {
     _isChecked = value;
     notifyListeners();
+  }
+
+  void showTermsAndConditionDialog(BuildContext context) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return TermsAndConditionDialog(
+          title: 'Terms and Conditions',
+          content: 'By clicking "Accept", you agree to the following:\n\n'
+              '- You must be 13 years old or older to use this service\n'
+              '- You must be a pet shelter or pet rescuer\n'
+              '- You must agree to the terms and conditions\n'
+              '- You must agree to the privacy policy\n'
+              '- You must agree to the cookie policy\n'
+              '- You must agree to the GDPR policy\n'
+              '- You must agree to the terms of service\n',
+          buttonText1: 'Accept',
+          buttonText2: 'Cancel',
+          onAccept: () {
+            Navigator.of(context).pop();
+            // Handle the accept action here
+            setChecked(true);
+          },
+          onDecline: () {
+            Navigator.of(context).pop();
+            // Handle the decline action here
+          },
+          imagePath: 'assets/icon/Logo.png',
+        );
+      },
+    );
   }
 
 
