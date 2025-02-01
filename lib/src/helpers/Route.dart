@@ -7,6 +7,7 @@ import 'package:pet_welfrare_ph/src/view/SelectView.dart';
 import 'package:pet_welfrare_ph/src/view/UploadIDView.dart';
 import 'package:pet_welfrare_ph/src/view/VetClinicRegisterView.dart';
 
+import '../view/OTPView.dart';
 import '../view/SplashView.dart';
 import '../view/LoadingView.dart';
 
@@ -20,6 +21,7 @@ class AppRoutes {
   static const String clinicRegistrationScreen = '/clinicRegistrationScreen';
   static const String legalScreen = '/legalScreen';
   static const String uploadIDScreen = '/uploadIDScreen';
+  static const String otpScreen = '/otpScreen';
 
   // Assign routes to the screens
   static Map<String, WidgetBuilder> routes = {
@@ -32,5 +34,6 @@ class AppRoutes {
     clinicRegistrationScreen: (context) => const VetClinicRegisterView(), // Replace with actual screen
     legalScreen: (context) => const LegalFirmRegisterView(), // Replace with actual screen
     uploadIDScreen: (context) => const UploadIDView(), // Replace with actual screen
+    otpScreen: (context) => const OTPView(), // Replace with actual screen
   };
 }
