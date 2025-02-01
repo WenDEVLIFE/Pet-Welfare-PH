@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/view_model/RegisterViewModel.dart';
 import 'package:provider/provider.dart';
 import '../utils/AppColors.dart';
+import '../utils/TermsAndConditionDialog.dart';
 import '../view_model/LoginViewModel.dart';
 
 class PetrShelterRegisterview extends StatefulWidget {
@@ -324,7 +325,7 @@ class RegisterState extends State<PetrShelterRegisterview> {
                               alignment: const Alignment(0.0, 0.0),
                               child: GestureDetector(
                                 onTap: () {
-                                  Provider.of<RegisterViewModel>(context, listen: false).proceedLogin(context);
+
                                 },
                                 child: const Text(
                                   'Click here to view terms and conditions',
