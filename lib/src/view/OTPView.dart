@@ -20,7 +20,7 @@ class RegisterState extends State<OTPView> {
     super.initState();
     _viewModel = Provider.of<OTPViewModel>(context, listen: false);
     _viewModel.startTimer();
-    _viewModel.generateOTP();
+    _viewModel.generateOTP(context);
   }
 
   @override
@@ -136,7 +136,7 @@ class RegisterState extends State<OTPView> {
                               child: ElevatedButton(
                                 onPressed: () {
                                   if (_viewModel.time == 0) {
-                                    _viewModel.generateOTP();
+                                    _viewModel.generateOTP(context);
                                     _viewModel.resetTimer();
                                     _viewModel.startTimer();
                                   } else {

@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pet_welfrare_ph/src/utils/YahooServices.dart';
 
 class OTPViewModel extends ChangeNotifier {
   int time = 60;
@@ -19,7 +20,7 @@ class OTPViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void generateOTP() {
+  void generateOTP(BuildContext context) {
     int min = 234563;
     int max = 999999;
     otp = min + (DateTime.now().millisecond % (max - min));
@@ -36,8 +37,9 @@ class OTPViewModel extends ChangeNotifier {
         fontSize: 16.0,
       );
     }
+
     // Send the OTP via email
-    // YahooMail().sendEmail(otp, email, setLoading, context);
+    YahooMail().sendEmail(otp, "medinajrfrouen@gmail.com", setLoading, context);
   }
 
   void startTimer() {
