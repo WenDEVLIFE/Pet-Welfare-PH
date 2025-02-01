@@ -1,12 +1,10 @@
-import 'dart:io';
-import 'package:cached_network_image/cached_network_image.dart';
+import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:pet_welfrare_ph/src/view_model/UploadIDViewModel.dart';
+import 'package:pet_welfrare_ph/src/view_model/OTPViewModel.dart';
 import 'package:provider/provider.dart';
 import '../utils/AppColors.dart';
+import '../utils/OTPField.dart';
 
-
-// TODO : Unifished OTPView
 class OTPView extends StatefulWidget {
   const OTPView({Key? key}) : super(key: key);
 
@@ -15,8 +13,18 @@ class OTPView extends StatefulWidget {
 }
 
 class RegisterState extends State<OTPView> {
+  final List<TextEditingController> _controllers = List.generate(6, (index) => TextEditingController());
+  late OTPViewModel _viewModel;
+  // late Map<String, dynamic> extra;
 
-  var time = 0;
+  @override
+  void initState() {
+    super.initState();
+    _viewModel = Provider.of<OTPViewModel>(context, listen: false);
+    //extra = widget.extra;
+    _viewModel.startTimer();
+    _viewModel.generateOTP();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -82,6 +90,22 @@ class RegisterState extends State<OTPView> {
                                   color: Colors.black,
                                 ),
                               ),
+                              OTPField(controllers: _controllers),
+                              const SizedBox(height: 10),
+                              Consumer(builder: (context, OTPViewModel viewModel, child) {
+                                return Center(
+                                  child: Text(
+                                    viewModel.time == 0 ? 'Resend the verification code' : 'Resend verification code in ${viewModel.time} seconds',
+                                    style: const TextStyle(
+                                    fontSize: 16,
+                                    color: AppColors.black, // Color for "ANCHOR"
+                                    fontFamily: 'SmoochSans',
+                                    fontWeight: FontWeight.w900,
+                                ),
+                                  ),
+                                );
+                              }),
+                              const SizedBox(height: 20),
                               Center(
                                 child: Container(
                                   width: screenWidth * 0.8,
