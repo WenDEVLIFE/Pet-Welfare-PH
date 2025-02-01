@@ -12,7 +12,7 @@ class SplashView2 extends StatefulWidget {
 
 class SplashViewState extends State<SplashView2> {
   final VideoPlayerController videoPlayerController =
-  VideoPlayerController.asset("assets/dogcat.mp4");
+  VideoPlayerController.asset("assets/video/dogcat.mp4");
 
   ChewieController? chewieController;
 

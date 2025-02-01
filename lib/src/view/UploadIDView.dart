@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
+import 'package:pet_welfrare_ph/src/utils/ImageUtils.dart';
 import 'package:pet_welfrare_ph/src/view_model/UploadIDViewModel.dart';
 import 'package:provider/provider.dart';
 import '../utils/AppColors.dart';
@@ -156,7 +157,7 @@ class RegisterState extends State<UploadIDView> {
                                           radius: 95,
                                           backgroundImage: viewModel.frontImagePath.isNotEmpty
                                               ? FileImage(File(viewModel.frontImagePath))
-                                              : const AssetImage('assets/fufu.png') as ImageProvider,
+                                              : const AssetImage(ImageUtils.catPath) as ImageProvider,
                                         ),
                                       );
                                     },
@@ -201,7 +202,7 @@ class RegisterState extends State<UploadIDView> {
                                           radius: 95,
                                           backgroundImage: viewModel.backImagePath.isNotEmpty
                                               ? FileImage(File(viewModel.backImagePath))
-                                              : const AssetImage('assets/fufu.png') as ImageProvider,
+                                              : const AssetImage(ImageUtils.catPath) as ImageProvider,
                                         ),
                                       );
                                     },

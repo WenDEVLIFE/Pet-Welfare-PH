@@ -52,8 +52,9 @@ flutter:
 
   assets:
     - assets/icon/
-    - assets/boy.mp4
-    - assets/dogcat.mp4
+    - assets/images/
+    - assets/video/boy.mp4
+    - assets/video/dogcat.mp4
 
   fonts:
     - family: SmoochSans
