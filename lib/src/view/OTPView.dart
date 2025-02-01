@@ -13,7 +13,6 @@ class OTPView extends StatefulWidget {
 }
 
 class RegisterState extends State<OTPView> {
-  final List<TextEditingController> _controllers = List.generate(6, (index) => TextEditingController());
   late OTPViewModel _viewModel;
   // late Map<String, dynamic> extra;
 
@@ -83,12 +82,12 @@ class RegisterState extends State<OTPView> {
                                   color: Colors.black,
                                 ),
                               ),
-                              OTPField(controllers: _controllers),
+                              OTPField(controllers: _viewModel.controllers),
                               const SizedBox(height: 10),
                               Consumer(builder: (context, OTPViewModel viewModel, child) {
                                 return Center(
                                   child: Text(
-                                    viewModel.time == 0 ? 'Resend the verification code' : 'Resend verification code in ${viewModel.time} seconds',
+                                    viewModel.time == 0 ? '' : 'Resend verification code in ${viewModel.time} seconds',
                                     style: const TextStyle(
                                     fontSize: 16,
                                     color: AppColors.black, // Color for "ANCHOR"
@@ -110,6 +109,7 @@ class RegisterState extends State<OTPView> {
                                   child: ElevatedButton(
                                     onPressed: () {
                                       // call the controller
+                                      Provider.of<OTPViewModel>(context, listen: false).checkOTP(int.parse(_viewModel.controllers.map((controller) => controller.text).join()));
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.black,
@@ -137,6 +137,15 @@ class RegisterState extends State<OTPView> {
                                   child: ElevatedButton(
                                     onPressed: () {
                                       // call the controller
+                                     if(_viewModel.time == 0) {
+                                       _viewModel.generateOTP();
+                                       _viewModel.resetTimer();
+                                       _viewModel.startTimer();
+                                     }
+                                     else{
+                                        // show snackbar
+
+                                     }
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.black,

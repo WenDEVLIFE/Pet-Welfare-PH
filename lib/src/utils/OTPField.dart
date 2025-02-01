@@ -45,18 +45,4 @@ class OTPField extends StatelessWidget {
     );
   }
 
-  void OTPVerification(int otp, BuildContext context, Map<String, dynamic> extra) {
-    String enteredOTP = controllers.map((controller) => controller.text).join();
-    if (enteredOTP == otp.toString()) {
-      print('OTP is correct');
-
-    } else {
-
-    }
-  }
-  void clearData() {
-    for (var controller in controllers) {
-      controller.clear();
-    }
-  }
 }

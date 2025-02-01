@@ -1,11 +1,16 @@
 import 'dart:async';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class OTPViewModel extends ChangeNotifier {
   int time = 60;
   Timer? _timer;
   int otp = 0;
   bool _isLoading = false;
+
+  final List<TextEditingController> controllers = List.generate(6, (index) => TextEditingController());
 
   bool get isLoading => _isLoading;
 
@@ -18,7 +23,19 @@ class OTPViewModel extends ChangeNotifier {
     int min = 234563;
     int max = 999999;
     otp = min + (DateTime.now().millisecond % (max - min));
-    print('OTP: $otp');
+    if (kDebugMode) {
+      print('OTP: $otp');
+
+      Fluttertoast.showToast(
+        msg: 'OTP: $otp',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.black,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
     // Send the OTP via email
     // YahooMail().sendEmail(otp, email, setLoading, context);
   }
@@ -38,4 +55,24 @@ class OTPViewModel extends ChangeNotifier {
     time = 60;
     notifyListeners();
   }
+
+  void checkOTP(int enteredOTP) {
+    String enteredOTP = controllers.map((controller) => controller.text).join();
+    if (enteredOTP == otp.toString()) {
+      if (kDebugMode) {
+        print('OTP is correct');
+      }
+    } else {
+      if (kDebugMode) {
+        print('OTP is incorrect');
+      }
+    }
+  }
+
+  void clearData() {
+    for (var controller in controllers) {
+      controller.clear();
+    }
+  }
+
 }
