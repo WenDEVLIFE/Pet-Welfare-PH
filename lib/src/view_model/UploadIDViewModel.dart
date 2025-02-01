@@ -1,6 +1,7 @@
 import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pet_welfrare_ph/src/helpers/Route.dart';
 
 class UploadIDViewModel extends ChangeNotifier {
   final ImagePicker imagePicker = ImagePicker();
@@ -17,5 +18,9 @@ class UploadIDViewModel extends ChangeNotifier {
       }
       notifyListeners();
     }
+  }
+
+  void navigateToOTP(BuildContext context) {
+    Navigator.pushNamed(context, AppRoutes.otpScreen);
   }
 }
