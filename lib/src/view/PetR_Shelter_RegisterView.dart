@@ -313,9 +313,30 @@ class RegisterState extends State<PetrShelterRegisterview> {
                                   viewmodel.setChecked(value!);
                                 },
                                 controlAffinity: ListTileControlAffinity.leading,
-                                activeColor: Colors.black,
+                                activeColor: Colors.red,
                               );
                             },
+                          ),
+                          SizedBox(height: screenHeight * 0.02),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20.0),
+                            child: Align(
+                              alignment: const Alignment(0.0, 0.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Provider.of<RegisterViewModel>(context, listen: false).proceedLogin(context);
+                                },
+                                child: const Text(
+                                  'Click here to view terms and conditions',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'SmoochSans',
+                                  ),
+                                ),
+                              ),
+                            ),
                           ),
                           SizedBox(height: screenHeight * 0.02),
                           Center(
