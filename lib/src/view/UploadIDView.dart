@@ -236,6 +236,7 @@ class RegisterState extends State<UploadIDView> {
                                   child: ElevatedButton(
                                     onPressed: () {
                                       // call the controller
+                                      context.read<UploadIDViewModel>().navigateToOTP(context);
                                     },
                                     style: ElevatedButton.styleFrom(
                                       backgroundColor: Colors.black,

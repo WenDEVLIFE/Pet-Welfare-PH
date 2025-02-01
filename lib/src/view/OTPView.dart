@@ -74,13 +74,6 @@ class RegisterState extends State<OTPView> {
                                         fontFamily: 'SmoochSans',
                                         color: Colors.black)),
                               ),
-                              const Center(
-                                child: Text('Verification Code has been sent to your email',
-                                    style: TextStyle(fontSize: 30,
-                                        fontWeight: FontWeight.w700,
-                                        fontFamily: 'SmoochSans',
-                                        color: Colors.black)),
-                              ),
                               const SizedBox(height: 20),
                               const Text('Enter the Verification Code',
                                 style: TextStyle(
@@ -133,6 +126,32 @@ class RegisterState extends State<OTPView> {
                                 ),
                               ),
                               const SizedBox(height: 20),
+                              Center(
+                                child: Container(
+                                  width: screenWidth * 0.8,
+                                  decoration: BoxDecoration(
+                                    color: Colors.transparent,
+                                    borderRadius: BorderRadius.circular(5),
+                                    border: Border.all(color: Colors.transparent),
+                                  ),
+                                  child: ElevatedButton(
+                                    onPressed: () {
+                                      // call the controller
+                                    },
+                                    style: ElevatedButton.styleFrom(
+                                      backgroundColor: Colors.black,
+                                    ),
+                                    child: const Text('Resend Code',
+                                      style: TextStyle(
+                                        fontSize: 20,
+                                        color: Colors.white,
+                                        fontWeight: FontWeight.w600,
+                                        fontFamily: 'SmoochSans',
+                                      ),
+                                    ),
+                                  ),
+                                ),
+                              ),
                             ],
                           ),
                         ),
