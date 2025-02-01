@@ -25,12 +25,18 @@ class RegisterState extends State<VetClinicRegisterView> {
     viewModel = Provider.of<RegisterViewModel>(context, listen: false);
   }
 
+  Future<bool> _onWillPop() async {
+    return true;
+  }
+
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: _onWillPop,
+        child: Scaffold(
       body: Column(
         children: <Widget>[
           Flexible(
@@ -319,6 +325,7 @@ class RegisterState extends State<VetClinicRegisterView> {
           )
         ],
       ),
+    ),
     );
   }
 }

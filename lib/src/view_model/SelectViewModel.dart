@@ -5,7 +5,7 @@ class SelectViewModel extends ChangeNotifier {
 
   void navigateToFuRegistration(BuildContext context) {
     notifyListeners();
-    Navigator.pushReplacementNamed(
+    Navigator.pushNamed(
       context,
       AppRoutes.furRegistrationScreen,
       arguments: {'key': 'value'}, // Pass a map or any data
@@ -15,7 +15,7 @@ class SelectViewModel extends ChangeNotifier {
   void navigateToShelterRegistration(BuildContext context) {
     // Implement navigation logic
     notifyListeners();
-    Navigator.pushReplacementNamed(
+    Navigator.pushNamed(
       context,
       AppRoutes.shelterRegistrationScreen,
       arguments: {'key': 'value'}, // Pass a map or any data
@@ -25,7 +25,7 @@ class SelectViewModel extends ChangeNotifier {
   void navigateToClinicRegistration(BuildContext context) {
     // Implement navigation logic
     notifyListeners();
-    Navigator.pushReplacementNamed(
+    Navigator.pushNamed(
       context,
       AppRoutes.clinicRegistrationScreen,
       arguments: {'key': 'value'}, // Pass a map or any data
@@ -35,7 +35,7 @@ class SelectViewModel extends ChangeNotifier {
   void navigateToAffiliateLaw(BuildContext context) {
     // Implement navigation logic
     notifyListeners();
-    Navigator.pushReplacementNamed(
+    Navigator.pushNamed(
       context,
         AppRoutes.legalScreen,
         arguments: {'key': 'value'}, // Pass a map or any data
