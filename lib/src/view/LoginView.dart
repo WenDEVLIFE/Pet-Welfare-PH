@@ -176,7 +176,9 @@ class _LoginScreenState extends State<Loginview> {
                             child: Align(
                               alignment: const Alignment(0.0, 0.0),
                               child: GestureDetector(
-                                onTap: () {},
+                                onTap: () {
+                                  Provider.of<LoginViewModel>(context, listen: false).navigateToSelectView(context);
+                                },
                                 child: const Text(
                                   'Sign up here',
                                   style: TextStyle(

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import '../helpers/Route.dart';
+
 class LoginViewModel extends ChangeNotifier {
 
   // Password Visibility
@@ -12,5 +14,9 @@ class LoginViewModel extends ChangeNotifier {
   void togglePasswordVisibility1() {
     _obscureText1 = !_obscureText1;
     notifyListeners();
+  }
+
+  void navigateToSelectView(BuildContext context) {
+    Navigator.pushNamed(context, AppRoutes.selectScreen);
   }
 }
