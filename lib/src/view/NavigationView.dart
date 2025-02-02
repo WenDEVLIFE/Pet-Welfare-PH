@@ -2,6 +2,8 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/CustomPageView.dart';
+
 
 class Navigationcomponent extends StatefulWidget {
   const Navigationcomponent({Key? key}) : super(key: key);
@@ -100,27 +102,3 @@ class _NavControllerState extends State<Navigationcomponent> {
   }
 }
 
-class CustomPageView extends StatelessWidget {
-  final PageController controller;
-  final ValueChanged<int> onPageChanged;
-  final List<Widget> children;
-
-  const CustomPageView({
-    required this.controller,
-    required this.onPageChanged,
-    required this.children,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return PageView.builder(
-      controller: controller,
-      onPageChanged: onPageChanged,
-      itemCount: children.length,
-      itemBuilder: (context, index) {
-        return children[index];
-      },
-      physics: const NeverScrollableScrollPhysics(), // Disable swipe gesture
-    );
-  }
-}
