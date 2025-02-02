@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../helpers/Route.dart';
+import '../utils/Route.dart';
 import '../utils/TermsAndConditionDialog.dart';
 
 class RegisterViewModel extends ChangeNotifier {

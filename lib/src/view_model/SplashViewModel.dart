@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import '../helpers/Route.dart';
+import '../utils/Route.dart';
 
 class SplashViewModel2 extends ChangeNotifier {
   bool _isLoading = true;

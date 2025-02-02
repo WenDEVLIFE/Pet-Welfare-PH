@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
-import '../helpers/Route.dart';
+import '../utils/Route.dart';
 
 class LoadingViewModel extends ChangeNotifier {
   bool _isLoading = false;

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 
-import '../helpers/Route.dart';
+import '../utils/Route.dart';
 
 class LoginViewModel extends ChangeNotifier {
 
