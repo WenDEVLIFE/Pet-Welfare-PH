@@ -16,7 +16,9 @@ class LoginViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void FetchData(){
+  void FetchData(BuildContext context){
+
+    Navigator.pushReplacementNamed(context, AppRoutes.user);
 
 
   }

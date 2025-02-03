@@ -141,7 +141,7 @@ class _LoginScreenState extends State<Loginview> {
                                   // call the controller
 
                                   if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-                                    Provider.of<LoginViewModel>(context, listen: false).FetchData();
+                                    Provider.of<LoginViewModel>(context, listen: false).FetchData(context);
                                   }
 
                                   else {

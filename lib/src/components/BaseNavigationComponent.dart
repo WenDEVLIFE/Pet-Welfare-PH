@@ -57,7 +57,7 @@ abstract class BaseNavigationComponentState<T extends BaseNavigationComponent> e
         children: [
           CurvedNavigationBar(
             backgroundColor: const Color.fromARGB(255, 245, 245, 245),
-            color: const Color.fromARGB(255, 66, 66, 66),
+            color: AppColors.orange,
             items: getNavBarItems(),
             index: _currentIndex,
             onTap: (index) {
