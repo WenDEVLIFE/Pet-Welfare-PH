@@ -1,4 +1,5 @@
 import 'package:flutter/cupertino.dart';
+import 'package:pet_welfrare_ph/src/components/UserNavigationComponent.dart';
 import 'package:pet_welfrare_ph/src/view/FurParentRegisterView.dart';
 import 'package:pet_welfrare_ph/src/view/LegalFirmRegisterView.dart';
 import 'package:pet_welfrare_ph/src/view/LoginView.dart';
@@ -7,6 +8,7 @@ import 'package:pet_welfrare_ph/src/view/SelectView.dart';
 import 'package:pet_welfrare_ph/src/view/UploadIDView.dart';
 import 'package:pet_welfrare_ph/src/view/VetClinicRegisterView.dart';
 
+import '../components/AdminNavigationComponent.dart';
 import '../view/OTPView.dart';
 import '../view/SplashView.dart';
 import '../view/LoadingView.dart';
@@ -22,6 +24,8 @@ class AppRoutes {
   static const String legalScreen = '/legalScreen';
   static const String uploadIDScreen = '/uploadIDScreen';
   static const String otpScreen = '/otpScreen';
+  static const String user = '/UserNaview';
+  static const String admin = '/AdminNaview';
 
   // Assign routes to the screens
   static Map<String, WidgetBuilder> routes = {
@@ -35,5 +39,7 @@ class AppRoutes {
     legalScreen: (context) => const LegalFirmRegisterView(), // Replace with actual screen
     uploadIDScreen: (context) => const UploadIDView(), // Replace with actual screen
     otpScreen: (context) => const OTPView(), // Replace with actual screen
+    user: (context) => const UserNavigationComponent(), // Replace with actual screen
+    admin: (context) => const AdminNavigationComponent(), // Replace with actual screen
   };
 }
