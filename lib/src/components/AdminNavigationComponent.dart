@@ -16,8 +16,8 @@ class _AdminNavigationComponentState extends BaseNavigationComponentState<AdminN
   List<Widget> getNavBarItems() {
     return [
       buildNavItem(0, Icons.dashboard, "Dashboard"),
-      buildNavItem(1, Icons.settings , "Settings"),
-      buildNavItem(2, Icons.admin_panel_settings , "Panel"),
+      buildNavItem(1, Icons.person , "Users"),
+      buildNavItem(2, Icons.menu , "Menu"),
     ];
   }
 
