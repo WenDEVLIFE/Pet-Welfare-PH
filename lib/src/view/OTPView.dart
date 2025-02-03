@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/view_model/OTPViewModel.dart';
 import 'package:provider/provider.dart';
 import '../utils/AppColors.dart';
-import '../utils/OTPField.dart';
+import 'OTPField.dart';
 
 class OTPView extends StatefulWidget {
   const OTPView({Key? key}) : super(key: key);
