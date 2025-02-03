@@ -1,4 +1,8 @@
-import 'base_navigation_component.dart';
+import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
+
+import 'BaseNavigationComponent.dart';
+
 
 class AdminNavigationComponent extends BaseNavigationComponent {
   const AdminNavigationComponent({Key? key}) : super(key: key);
