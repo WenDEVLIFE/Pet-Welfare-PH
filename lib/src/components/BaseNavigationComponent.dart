@@ -2,6 +2,8 @@ import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../utils/AppColors.dart';
+
 abstract class BaseNavigationComponent extends StatefulWidget {
   const BaseNavigationComponent({Key? key}) : super(key: key);
 }
@@ -14,18 +16,18 @@ abstract class BaseNavigationComponentState<T extends BaseNavigationComponent> e
   List<Widget> getNavBarItems();
   List<Widget> getPageViewChildren();
 
-  Widget buildNavItem(int index, IconData icon) {
-    return InkWell(
-      onHover: (hovering) {
-        setState(() {
-          _isHovering[index] = hovering;
-        });
-      },
-      child: Icon(
-        icon,
-        color: _isHovering[index] ? Colors.grey : Colors.white,
-        size: 30,
-      ),
+  Widget buildNavItem(int index, IconData icon, String label) {
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        Icon(icon),
+        Text(label, style: const TextStyle(fontSize: 12,
+            fontFamily: 'SmoochSans'
+            , fontWeight: FontWeight.w600,
+            color: AppColors.white,),
+        ),
+      ],
     );
   }
 
