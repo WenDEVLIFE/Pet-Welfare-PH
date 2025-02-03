@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:provider/provider.dart';
 import '../utils/AppColors.dart';
 import '../view_model/LoginViewModel.dart';
@@ -138,6 +139,22 @@ class _LoginScreenState extends State<Loginview> {
                               child: ElevatedButton(
                                 onPressed: () {
                                   // call the controller
+
+                                  if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
+                                    Provider.of<LoginViewModel>(context, listen: false).FetchData();
+                                  }
+
+                                  else {
+                                    Fluttertoast.showToast(
+                                      msg: 'Please fill all the fields',
+                                      toastLength: Toast.LENGTH_SHORT,
+                                      gravity: ToastGravity.BOTTOM,
+                                      timeInSecForIosWeb: 1,
+                                      backgroundColor: Colors.black,
+                                      textColor: Colors.white,
+                                      fontSize: 16.0,
+                                    );
+                                  }
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.black,
