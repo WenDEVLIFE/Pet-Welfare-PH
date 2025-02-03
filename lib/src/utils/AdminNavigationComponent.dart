@@ -1,0 +1,28 @@
+import 'base_navigation_component.dart';
+
+class AdminNavigationComponent extends BaseNavigationComponent {
+  const AdminNavigationComponent({Key? key}) : super(key: key);
+
+  @override
+  _AdminNavigationComponentState createState() => _AdminNavigationComponentState();
+}
+
+class _AdminNavigationComponentState extends BaseNavigationComponentState<AdminNavigationComponent> {
+  @override
+  List<Widget> getNavBarItems() {
+    return [
+      buildNavItem(0, Icons.dashboard),
+      buildNavItem(1, Icons.settings),
+      buildNavItem(2, Icons.admin_panel_settings),
+    ];
+  }
+
+  @override
+  List<Widget> getPageViewChildren() {
+    return [
+      Container(color: Colors.red), // Admin Dashboard
+      Container(color: Colors.green), // Admin Settings
+      Container(color: Colors.blue), // Admin Panel
+    ];
+  }
+}
