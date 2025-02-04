@@ -39,6 +39,6 @@ class SelectViewModel extends ChangeNotifier {
       context,
         AppRoutes.legalScreen,
         arguments: {'key': 'value'}, // Pass a map or any data
-    );
+    );                                                                                    
   }
 }
