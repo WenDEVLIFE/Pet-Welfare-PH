@@ -19,7 +19,7 @@ class HomeState extends State<HomeScreen> {
       body: const Center(
         child: Text('Welcome to the Home Screen'),
       ),
-    )
+    );
   }
 
 }
