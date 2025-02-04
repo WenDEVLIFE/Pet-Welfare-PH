@@ -12,6 +12,8 @@ class UserNavigationComponent extends BaseNavigationComponent {
 
 class _UserNavigationComponentState extends BaseNavigationComponentState<UserNavigationComponent> {
   @override
+
+  // List of navigation items
   List<Widget> getNavBarItems() {
     return [
       buildNavItem(0, Icons.home, "Home"),
@@ -21,6 +23,7 @@ class _UserNavigationComponentState extends BaseNavigationComponentState<UserNav
     ];
   }
 
+  // List of page view children
   @override
   List<Widget> getPageViewChildren() {
     return [
