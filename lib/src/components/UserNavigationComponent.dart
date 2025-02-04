@@ -25,9 +25,9 @@ class _UserNavigationComponentState extends BaseNavigationComponentState<UserNav
   List<Widget> getPageViewChildren() {
     return [
       const HomeScreen(), // User Home
-      Container(color: Colors.orange), // User Search
-      Container(color: Colors.purple), // User Profile
-      Container(color: Colors.green), // User Menu
+      const HomeScreen(), // User Search
+      const HomeScreen(), // User Profile
+      const HomeScreen(), // User Menu
     ];
   }
 }
