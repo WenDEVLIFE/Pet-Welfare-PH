@@ -17,7 +17,8 @@ class _AdminNavigationComponentState extends BaseNavigationComponentState<AdminN
     return [
       buildNavItem(0, Icons.dashboard, "Dashboard"),
       buildNavItem(1, Icons.person , "Users"),
-      buildNavItem(2, Icons.menu , "Menu"),
+      buildNavItem(2, Icons.menu , "Home"),
+      buildNavItem(3, Icons.menu , "Menu"),
     ];
   }
 
