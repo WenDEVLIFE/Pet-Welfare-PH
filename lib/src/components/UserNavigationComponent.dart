@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pet_welfrare_ph/src/view/HomeScreen.dart';
 
 import 'BaseNavigationComponent.dart';
 
@@ -23,7 +24,7 @@ class _UserNavigationComponentState extends BaseNavigationComponentState<UserNav
   @override
   List<Widget> getPageViewChildren() {
     return [
-      Container(color: Colors.yellow), // User Home
+      const HomeScreen(), // User Home
       Container(color: Colors.orange), // User Search
       Container(color: Colors.purple), // User Profile
       Container(color: Colors.green), // User Menu

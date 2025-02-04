@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 
 
 class HomeScreen extends StatefulWidget {
@@ -14,7 +15,13 @@ class HomeState extends State<HomeScreen> {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home Screen'),
+        title: const Text('Home', style: TextStyle(
+          color: AppColors.white,
+          fontSize: 20,
+          fontFamily: 'SmoochSans',
+          fontWeight: FontWeight.w600
+        ),),
+        backgroundColor: AppColors.orange,
       ),
       body: const Center(
         child: Text('Welcome to the Home Screen'),
