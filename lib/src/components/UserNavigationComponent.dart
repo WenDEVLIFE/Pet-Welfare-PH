@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/view/HomeScreen.dart';
 import 'package:pet_welfrare_ph/src/view/Mapview.dart';
+import 'package:pet_welfrare_ph/src/view/MenuView.dart';
 
 import 'BaseNavigationComponent.dart';
 
@@ -32,7 +33,7 @@ class _UserNavigationComponentState extends BaseNavigationComponentState<UserNav
       const HomeScreen(), // User Home
       const MapView(), // User Search
       const HomeScreen(), // User Profile
-      const HomeScreen(), // User Menu
+      const MenuView(), // User Menu
       const HomeScreen(), // User Notifications
     ];
   }
