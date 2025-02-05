@@ -4,7 +4,9 @@ import 'package:pet_welfrare_ph/src/view/FurParentRegisterView.dart';
 import 'package:pet_welfrare_ph/src/view/LegalFirmRegisterView.dart';
 import 'package:pet_welfrare_ph/src/view/LoginView.dart';
 import 'package:pet_welfrare_ph/src/view/PetR_Shelter_RegisterView.dart';
+import 'package:pet_welfrare_ph/src/view/PrivacyView.dart';
 import 'package:pet_welfrare_ph/src/view/SelectView.dart';
+import 'package:pet_welfrare_ph/src/view/TermsAndConditionView.dart';
 import 'package:pet_welfrare_ph/src/view/UploadIDView.dart';
 import 'package:pet_welfrare_ph/src/view/VetClinicRegisterView.dart';
 
@@ -26,6 +28,8 @@ class AppRoutes {
   static const String otpScreen = '/otpScreen';
   static const String user = '/UserNaview';
   static const String admin = '/AdminNaview';
+  static const String termsAndConditions = '/termsAndConditions';
+  static const String privacyPolicy = '/privacyPolicy';
 
   // Assign routes to the screens
   static Map<String, WidgetBuilder> routes = {
@@ -41,5 +45,7 @@ class AppRoutes {
     otpScreen: (context) => const OTPView(), // Replace with actual screen
     user: (context) => const UserNavigationComponent(), // Replace with actual screen
     admin: (context) => const AdminNavigationComponent(), // Replace with actual screen
+    termsAndConditions: (context) => TermsAndConditionView(), // Replace with actual screen
+    privacyPolicy: (context) => Privacyview(), // Replace with actual screen
   };
 }

@@ -17,8 +17,6 @@ class MenuView extends StatefulWidget {
 
 class MenuViewState extends State<MenuView> {
 
-
-
   @override
   Widget build(BuildContext context) {
 
@@ -27,7 +25,7 @@ class MenuViewState extends State<MenuView> {
 
     return CupertinoPageScaffold(
       navigationBar: const CupertinoNavigationBar(
-        middle: Text('Menu', style: TextStyle(
+        leading: Text('Menu', style: TextStyle(
           color: Colors.white,
           fontSize: 20,
           fontFamily: 'SmoochSans',
