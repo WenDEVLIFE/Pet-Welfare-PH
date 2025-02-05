@@ -28,6 +28,7 @@ class _AdminNavigationComponentState extends BaseNavigationComponentState<AdminN
       Container(color: Colors.red), // Admin Dashboard
       Container(color: Colors.green), // Admin Settings
       Container(color: Colors.blue), // Admin Panel
+      Container(color: Colors.yellow), // Admin Menu
     ];
   }
 }
