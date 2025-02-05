@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import '../model/MenuList.dart';
+import '../utils/AppColors.dart';
 
 class MenuListWidget extends StatelessWidget {
   final List<MenuItem> menuItems = [
-    MenuItem(icon: Icons.home, title: 'User Information'),
-    MenuItem(icon: Icons.person, title: 'Change Password'),
-    MenuItem(icon: Icons.notifications, title: 'Terms and Conditions'),
+    MenuItem(icon: Icons.perm_device_information, title: 'User Information'),
+    MenuItem(icon: Icons.password, title: 'Change Password'),
+    MenuItem(icon: Icons.check, title: 'Terms and Conditions'),
+    MenuItem(icon: Icons.privacy_tip_outlined, title: 'Privacy Policy'),
+    MenuItem(icon: Icons.privacy_tip_outlined, title: 'About Us'),
     MenuItem(icon: Icons.logout, title: 'Logout'),
   ];
 
@@ -15,8 +18,13 @@ class MenuListWidget extends StatelessWidget {
       itemCount: menuItems.length,
       itemBuilder: (context, index) {
         return ListTile(
-          leading: Icon(menuItems[index].icon),
-          title: Text(menuItems[index].title),
+          leading: Icon(menuItems[index].icon, color: AppColors.black,),
+          title: Text(menuItems[index].title,
+            style: const TextStyle(fontSize: 18,
+              fontFamily: 'SmoochSans',
+              fontWeight: FontWeight.w600,
+          ),
+          ),
           onTap: () {
             // Handle menu item tap
             if (index == 0) {
