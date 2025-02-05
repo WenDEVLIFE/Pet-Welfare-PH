@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/view/HomeScreen.dart';
+import 'package:pet_welfrare_ph/src/view/Mapview.dart';
 
 import 'BaseNavigationComponent.dart';
 
@@ -29,7 +30,7 @@ class _UserNavigationComponentState extends BaseNavigationComponentState<UserNav
   List<Widget> getPageViewChildren() {
     return [
       const HomeScreen(), // User Home
-      const HomeScreen(), // User Search
+      const MapView(), // User Search
       const HomeScreen(), // User Profile
       const HomeScreen(), // User Menu
       const HomeScreen(), // User Notifications
