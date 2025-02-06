@@ -65,6 +65,7 @@ flutter:
     - assets/images/
     - assets/video/boy.mp4
     - assets/video/dogcat.mp4
+    - assets/word/
 
   fonts:
     - family: SmoochSans
