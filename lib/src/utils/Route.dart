@@ -5,6 +5,7 @@ import 'package:pet_welfrare_ph/src/view/LegalFirmRegisterView.dart';
 import 'package:pet_welfrare_ph/src/view/LoginView.dart';
 import 'package:pet_welfrare_ph/src/view/PetR_Shelter_RegisterView.dart';
 import 'package:pet_welfrare_ph/src/view/PrivacyView.dart';
+import 'package:pet_welfrare_ph/src/view/ProfileView.dart';
 import 'package:pet_welfrare_ph/src/view/SelectView.dart';
 import 'package:pet_welfrare_ph/src/view/TermsAndConditionView.dart';
 import 'package:pet_welfrare_ph/src/view/UploadIDView.dart';
@@ -32,6 +33,7 @@ class AppRoutes {
   static const String termsAndConditions = '/termsAndConditions';
   static const String privacyPolicy = '/privacyPolicy';
   static const String changePassword = '/changePassword';
+  static const String profile = '/profile';
 
   // Assign routes to the screens
   static Map<String, WidgetBuilder> routes = {
@@ -50,5 +52,6 @@ class AppRoutes {
     termsAndConditions: (context) => const TermsAndConditionView(), // Replace with actual screen
     privacyPolicy: (context) => const Privacyview(), // Replace with actual screen
     changePassword: (context) => const ChangePasswordView(), // Replace with actual screen
+    profile: (context) => const ProfileView(), // Replace with actual screen
   };
 }
