@@ -12,13 +12,13 @@ class Loginview extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<Loginview> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       body: Column(
@@ -138,13 +138,9 @@ class _LoginScreenState extends State<Loginview> {
                               ),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  // call the controller
-
                                   if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
                                     Provider.of<LoginViewModel>(context, listen: false).FetchData(context);
-                                  }
-
-                                  else {
+                                  } else {
                                     Fluttertoast.showToast(
                                       msg: 'Please fill all the fields',
                                       toastLength: Toast.LENGTH_SHORT,

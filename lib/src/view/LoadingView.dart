@@ -22,8 +22,8 @@ class LoadingState extends State<LoadingView> {
   @override
   Widget build(BuildContext context) {
     final splashViewModel = Provider.of<LoadingViewModel>(context, listen: true);
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
+    final double screenWidth = MediaQuery.of(context).size.width;
+    final double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       body: Container(
@@ -57,7 +57,7 @@ class LoadingState extends State<LoadingView> {
                       color: Colors.white,
                     ),
                   )
-                      : const Text(''),
+                      : const SizedBox.shrink(),
                 ],
               ),
             ),

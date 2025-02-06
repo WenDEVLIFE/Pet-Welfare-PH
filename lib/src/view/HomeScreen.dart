@@ -10,9 +10,11 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeState extends State<HomeScreen> {
-  final List<String> _chipLabels = ['Pet Appreciation', 'Missing Pets', 'Found Pets',
+  final List<String> _chipLabels = [
+    'Pet Appreciation', 'Missing Pets', 'Found Pets',
     'Find a Home: Rescue & Shelter', 'Call for Aid', 'Paw-some Experience',
-    'Pet Adoption', 'Protect Our Pets: Report Abuse', 'Caring for Pets: Vet & Travel Insights', 'Community Announcements'];
+    'Pet Adoption', 'Protect Our Pets: Report Abuse', 'Caring for Pets: Vet & Travel Insights', 'Community Announcements'
+  ];
   int _selectedIndex = 0;
 
   void _updateContent(int index) {
@@ -25,12 +27,15 @@ class HomeState extends State<HomeScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Home', style: TextStyle(
+        title: const Text(
+          'Home',
+          style: TextStyle(
             color: AppColors.white,
             fontSize: 20,
             fontFamily: 'SmoochSans',
-            fontWeight: FontWeight.w600
-        ),),
+            fontWeight: FontWeight.w600,
+          ),
+        ),
         backgroundColor: AppColors.orange,
       ),
       body: Column(
@@ -47,7 +52,10 @@ class HomeState extends State<HomeScreen> {
                   return Padding(
                     padding: const EdgeInsets.symmetric(horizontal: 4.0),
                     child: ActionChip(
-                      label: Text(label, style: TextStyle(color: isSelected ? Colors.white : Colors.white)),
+                      label: Text(
+                        label,
+                        style: TextStyle(color: Colors.white),
+                      ),
                       backgroundColor: isSelected ? AppColors.orange : AppColors.black,
                       onPressed: () {
                         _updateContent(index);

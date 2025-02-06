@@ -39,7 +39,8 @@ class RegisterViewModel extends ChangeNotifier {
   }
 
   void showTermsAndConditionDialog(BuildContext context) async {
-    String termsText = await loadTermsAndConditions();
+    // String termsText = await loadTermsAndConditions();
+    String termsText = "Terms and Conditions";
 
     showDialog(
       context: context,
