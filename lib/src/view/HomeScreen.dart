@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 import 'package:pet_welfrare_ph/src/components/BaseScreen.dart';
 
+import 'PetAppreciationView.dart';
+
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 
@@ -70,7 +72,7 @@ class HomeState extends State<HomeScreen> {
             child: IndexedStack(
               index: _selectedIndex,
               children: const [
-                BaseScreen(child: Center(child: Text('Pet Appreciation'))),
+                PetAppreciateView(),
                 BaseScreen(child: Center(child: Text('Missing Pets'))),
                 BaseScreen(child: Center(child: Text('Found Pets'))),
                 BaseScreen(child: Center(child: Text('Find a Home: Rescue & Shelter'))),
