@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
+import 'package:pet_welfrare_ph/src/view_model/ChangePasswordViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/MenuViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/OTPViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/RegisterViewModel.dart';
@@ -29,6 +30,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => UploadIDViewModel()),
         ChangeNotifierProvider(create: (_) => OTPViewModel()),
         ChangeNotifierProvider(create: (_) => MenuViewModel()),
+        ChangeNotifierProvider(create: (_) => ChangePasswordViewModel()),
       ],
       child: MaterialApp(
         key: GlobalKey(), //
