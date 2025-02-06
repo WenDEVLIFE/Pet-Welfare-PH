@@ -39,8 +39,8 @@ class LoadingState extends State<LoadingView> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
                   Container(
-                    height: screenHeight * 0.4,
-                    width: screenWidth * 0.8,
+                    height: screenHeight * 0.3,
+                    width: screenWidth * 0.6,
                     decoration: const BoxDecoration(
                       image: DecorationImage(
                         image: AssetImage(ImageUtils.logoPath),
