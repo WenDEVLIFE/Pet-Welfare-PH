@@ -11,6 +11,7 @@ import 'package:pet_welfrare_ph/src/view/UploadIDView.dart';
 import 'package:pet_welfrare_ph/src/view/VetClinicRegisterView.dart';
 
 import '../components/AdminNavigationComponent.dart';
+import '../view/ChangePasswordView.dart';
 import '../view/OTPView.dart';
 import '../view/SplashView.dart';
 import '../view/LoadingView.dart';
@@ -30,6 +31,7 @@ class AppRoutes {
   static const String admin = '/AdminNaview';
   static const String termsAndConditions = '/termsAndConditions';
   static const String privacyPolicy = '/privacyPolicy';
+  static const String changePassword = '/changePassword';
 
   // Assign routes to the screens
   static Map<String, WidgetBuilder> routes = {
@@ -45,7 +47,8 @@ class AppRoutes {
     otpScreen: (context) => const OTPView(), // Replace with actual screen
     user: (context) => const UserNavigationComponent(), // Replace with actual screen
     admin: (context) => const AdminNavigationComponent(), // Replace with actual screen
-    termsAndConditions: (context) => TermsAndConditionView(), // Replace with actual screen
-    privacyPolicy: (context) => Privacyview(), // Replace with actual screen
+    termsAndConditions: (context) => const TermsAndConditionView(), // Replace with actual screen
+    privacyPolicy: (context) => const Privacyview(), // Replace with actual screen
+    changePassword: (context) => const ChangePasswordView(), // Replace with actual screen
   };
 }
