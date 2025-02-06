@@ -1,6 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 import 'package:pet_welfrare_ph/src/components/BaseScreen.dart';
+import 'package:pet_welfrare_ph/src/view/CallofAidView.dart';
+import 'package:pet_welfrare_ph/src/view/CommunityView.dart';
+import 'package:pet_welfrare_ph/src/view/FoundPetView.dart';
+import 'package:pet_welfrare_ph/src/view/MissingPetView.dart';
+import 'package:pet_welfrare_ph/src/view/PawSomeView.dart';
+import 'package:pet_welfrare_ph/src/view/PetAdoptionView.dart';
+import 'package:pet_welfrare_ph/src/view/ProtectView.dart';
+import 'package:pet_welfrare_ph/src/view/RescueShelterView.dart';
+import 'package:pet_welfrare_ph/src/view/VetAndTravelView.dart';
 
 import 'PetAppreciationView.dart';
 
@@ -72,16 +81,16 @@ class HomeState extends State<HomeScreen> {
             child: IndexedStack(
               index: _selectedIndex,
               children: const [
-                PetAppreciateView(),
-                BaseScreen(child: Center(child: Text('Missing Pets'))),
-                BaseScreen(child: Center(child: Text('Found Pets'))),
-                BaseScreen(child: Center(child: Text('Find a Home: Rescue & Shelter'))),
-                BaseScreen(child: Center(child: Text('Call for Aid'))),
-                BaseScreen(child: Center(child: Text('Paw-some Experience'))),
-                BaseScreen(child: Center(child: Text('Pet Adoption'))),
-                BaseScreen(child: Center(child: Text('Protect Our Pets: Report Abuse'))),
-                BaseScreen(child: Center(child: Text('Caring for Pets: Vet & Travel Insights'))),
-                BaseScreen(child: Center(child: Text('Community Announcements'))),
+                PetAppreciateView(), // Pet Appreciation
+                MissingPetView(), // Missing Pets
+                FoundPetView(), // Found Pets
+                RescueShelterView(), // Find a Home: Rescue & Shelter
+                CallOfAidView(), // Call for Aid
+                PawSomeView(), // Paw-some Experience
+                PetAdoptionView(), // Pet Adoption
+                ProtectPetView(), // Protect Our Pets: Report Abuse
+                VetAndTravelView(), // Caring for Pets: Vet & Travel Insights
+               CommunityView(), // Community Announcements
               ],
             ),
           ),
