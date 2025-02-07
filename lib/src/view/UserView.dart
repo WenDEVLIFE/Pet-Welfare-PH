@@ -1,19 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
-import 'package:pet_welfrare_ph/src/components/BaseScreen.dart';
-import 'package:pet_welfrare_ph/src/view/CallofAidView.dart';
-import 'package:pet_welfrare_ph/src/view/CommunityView.dart';
-import 'package:pet_welfrare_ph/src/view/FoundPetView.dart';
-import 'package:pet_welfrare_ph/src/view/MissingPetView.dart';
-import 'package:pet_welfrare_ph/src/view/PawSomeView.dart';
-import 'package:pet_welfrare_ph/src/view/PetAdoptionView.dart';
-import 'package:pet_welfrare_ph/src/view/ProtectView.dart';
-import 'package:pet_welfrare_ph/src/view/RescueShelterView.dart';
-import 'package:pet_welfrare_ph/src/view/VetAndTravelView.dart';
-
 import '../components/DrawerHeaderWidget.dart';
 import '../utils/Route.dart';
-import 'PetAppreciationView.dart';
+
 
 class UserView extends StatefulWidget {
   const UserView({Key? key}) : super(key: key);
@@ -23,7 +12,8 @@ class UserView extends StatefulWidget {
 }
 
 class UserViewState extends State<UserView> {
-  final List<String> _chipLabels = ['Verified User', 'Unverified User', 'Bannded User', 'Admin & Sub Admin'];
+  final TextEditingController _searchController = TextEditingController();
+  final List<String> _chipLabels = ['Verified User', 'Unverified User', 'Banned User', 'Admin & Sub Admin'];
   int _selectedIndex = 0;
 
   void _updateContent(int index) {
@@ -34,6 +24,10 @@ class UserViewState extends State<UserView> {
 
   @override
   Widget build(BuildContext context) {
+
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       drawer: NavigationDrawer(
         children: [
@@ -86,11 +80,47 @@ class UserViewState extends State<UserView> {
           ),
         ),
         backgroundColor: AppColors.orange,
+        iconTheme: IconThemeData(color: Colors.white), // Ensure icon color is set
       ),
       body: Column(
         children: [
+          SizedBox(height: screenHeight * 0.005),
+          Container(
+            width: screenWidth * 0.99, // Set the width of the TextField container
+            height: screenHeight * 0.08, // Adjust the height of the TextField container
+            padding: const EdgeInsets.symmetric(horizontal: 10.0), // Optional padding for the container
+            decoration: BoxDecoration(
+              color: Colors.transparent, // Background color of the TextField container
+              borderRadius: BorderRadius.circular(10),
+              border: Border.all(color: Colors.transparent, width: 7), // Border color of the container
+            ),
+            child: TextField(
+              controller: _searchController,
+              decoration: InputDecoration(
+                filled: true,
+                prefixIcon: const Icon(Icons.search, color: Colors.black), // Search icon inside the TextField
+                fillColor: Colors.grey[200], // Set the background color here
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(10),
+                  borderSide: const BorderSide(color: Colors.transparent, width: 2), // Adjust border thickness
+                ),
+                hintText: 'Search a name or email....',
+                hintStyle: const TextStyle(
+                  color: Colors.black, // Set the hint text color here
+                ),
+                contentPadding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 0), // Remove or reduce inner padding
+              ),
+              style: const TextStyle(
+                fontFamily: 'LeagueSpartan',
+                color: Colors.black, // Set the text color here
+                fontSize: 16, // Set the text size here
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          SizedBox(height: screenHeight * 0.005), // Reduce the space between the TextField and the chips
           Padding(
-            padding: const EdgeInsets.all(8.0),
+            padding: const EdgeInsets.symmetric(horizontal: 8.0), // Adjust the padding around the chips
             child: SingleChildScrollView(
               scrollDirection: Axis.horizontal,
               child: Row(
@@ -116,21 +146,92 @@ class UserViewState extends State<UserView> {
             ),
           ),
           Expanded(
-            child: IndexedStack(
-              index: _selectedIndex,
-              children: const [
-                PetAppreciateView(), // Pet Appreciation
-                MissingPetView(), // Missing Pets
-                FoundPetView(), // Found Pets
-                RescueShelterView(), // Find a Home: Rescue & Shelter
-                CallOfAidView(), // Call for Aid
-                PawSomeView(), // Paw-some Experience
-                PetAdoptionView(), // Pet Adoption
-                ProtectPetView(), // Protect Our Pets: Report Abuse
-                VetAndTravelView(), // Caring for Pets: Vet & Travel Insights
-                CommunityView(), // Community Announcements
-              ],
-            ),
+              child: SingleChildScrollView(
+                child: Column(
+                  children: [
+                    if (_selectedIndex == 0) ...[
+                      const Center(
+                        child: Column(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                'Verified Users',
+                                style: TextStyle(
+                                  color: AppColors.black,
+                                  fontSize: 20,
+                                  fontFamily: 'SmoochSans',
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                    if (_selectedIndex == 1) ...[
+                      Center(
+                        child: Column(
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                'Unverified Users',
+                                style: TextStyle(
+                                  color: AppColors.black,
+                                  fontSize: 20,
+                                  fontFamily: 'SmoochSans',
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                    if (_selectedIndex == 2) ...[
+                      Center(
+                        child: Column(
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                'Banned Users',
+                                style: TextStyle(
+                                  color: AppColors.black,
+                                  fontSize: 20,
+                                  fontFamily: 'SmoochSans',
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                    if (_selectedIndex == 3) ...[
+                      Center(
+                        child: Column(
+                          children: [
+                            const Padding(
+                              padding: EdgeInsets.all(8.0),
+                              child: Text(
+                                'Admin & Sub Admin',
+                                style: TextStyle(
+                                  color: AppColors.black,
+                                  fontSize: 20,
+                                  fontFamily: 'SmoochSans',
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ],
+                ),
+              )
           ),
         ],
       ),
