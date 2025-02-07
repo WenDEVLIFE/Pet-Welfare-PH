@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:pet_welfrare_ph/src/components/UserNavigationComponent.dart';
+import 'package:pet_welfrare_ph/src/view/DashboardView.dart';
 import 'package:pet_welfrare_ph/src/view/FurParentRegisterView.dart';
 import 'package:pet_welfrare_ph/src/view/LegalFirmRegisterView.dart';
 import 'package:pet_welfrare_ph/src/view/LoginView.dart';
@@ -34,6 +35,7 @@ class AppRoutes {
   static const String privacyPolicy = '/privacyPolicy';
   static const String changePassword = '/changePassword';
   static const String profile = '/profile';
+  static const String dashboard = '/dashboard';
 
   // Assign routes to the screens
   static Map<String, WidgetBuilder> routes = {
@@ -53,5 +55,6 @@ class AppRoutes {
     privacyPolicy: (context) => const Privacyview(), // Replace with actual screen
     changePassword: (context) => const ChangePasswordView(), // Replace with actual screen
     profile: (context) => const ProfileView(), // Replace with actual screen
+    dashboard: (context) => const DashboardView(), // Replace with actual screen
   };
 }

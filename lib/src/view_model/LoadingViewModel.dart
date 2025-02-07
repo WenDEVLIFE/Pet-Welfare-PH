@@ -18,7 +18,7 @@ class LoadingViewModel extends ChangeNotifier {
       notifyListeners();
       Navigator.pushReplacementNamed(
         context,
-        AppRoutes.splashscreen,
+        AppRoutes.dashboard,
         arguments: {'key': 'value'}, // Pass a map or any data
       );
 

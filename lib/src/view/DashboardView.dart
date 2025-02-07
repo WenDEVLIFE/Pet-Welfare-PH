@@ -1,5 +1,10 @@
 import 'package:flutter/material.dart';
+import '../components/DrawerHeaderWidget.dart';
+import '../utils/AppColors.dart';
 
+
+
+// Dashboard View
 class DashboardView extends StatefulWidget {
   const DashboardView({Key? key}) : super(key: key);
 
@@ -12,46 +17,29 @@ class DashboardViewState extends State<DashboardView> {
   Widget build(BuildContext context) {
     return Scaffold(
       drawer: NavigationDrawer(
-        children: <Widget>[
-          const DrawerHeader(
-            decoration: BoxDecoration(
-              color: Colors.blue,
-            ),
-            child: Text(
-              'Navigation Menu',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 24,
-              ),
-            ),
-          ),
-          ListTile(
-            leading: Icon(Icons.home),
-            title: Text('Dashboard'),
-            onTap: () {
-              Navigator.pop(context);
-              // Navigate to Home
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.settings),
-            title: Text('Verified Users'),
-            onTap: () {
-              Navigator.pop(context);
-              // Navigate to Settings
-            },
-          ),
-          ListTile(
-            leading: Icon(Icons.contacts),
-            title: Text('Pending User Verification'),
-            onTap: () {
-              Navigator.pop(context);
-              // Navigate to Contacts
-            },
-          ),
+        children: [
+          const DrawerHeaderWidget(),
+          _buildDrawerItem(Icons.home, 'Dashboard', () {
+            Navigator.pop(context);
+            // Navigate to Home
+          }),
+          _buildDrawerItem(Icons.verified_user_rounded, 'Verified Users', () {
+            Navigator.pop(context);
+            // Navigate to Verified Users
+          }),
+          _buildDrawerItem(Icons.person_off_sharp, 'Pending User Verification', () {
+            Navigator.pop(context);
+            // Navigate to Pending User Verification
+          }),
         ],
       ),
       appBar: AppBar(
+        leading: Builder(
+          builder: (context) => IconButton(
+            icon: const Icon(Icons.menu),
+            onPressed: () => Scaffold.of(context).openDrawer(),
+          ),
+        ),
         title: const Text(
           'Dashboard',
           style: TextStyle(
@@ -61,11 +49,26 @@ class DashboardViewState extends State<DashboardView> {
             color: Colors.white,
           ),
         ),
-        backgroundColor: Colors.blue,
+        backgroundColor: AppColors.orange,
       ),
-      body: const Center(
-        child: Text('Dashboard View'),
+      body: const Center(child: Text('Dashboard View')),
+    );
+  }
+
+  // Reusable method for building drawer items
+  Widget _buildDrawerItem(IconData icon, String title, VoidCallback onTap) {
+    return ListTile(
+      leading: Icon(icon),
+      title: Text(
+        title,
+        style: const TextStyle(
+          color: AppColors.black,
+          fontFamily: 'SmoochSans',
+          fontWeight: FontWeight.w600,
+          fontSize: 20,
+        ),
       ),
+      onTap: onTap,
     );
   }
 }

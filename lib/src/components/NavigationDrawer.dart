@@ -1,3 +1,5 @@
+// Reusable Navigation Drawer
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class NavigationDrawer extends StatelessWidget {
@@ -8,10 +10,7 @@ class NavigationDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Drawer(
-      child: ListView(
-        padding: EdgeInsets.zero,
-        children: children,
-      ),
+      child: ListView(padding: EdgeInsets.zero, children: children),
     );
   }
 }
