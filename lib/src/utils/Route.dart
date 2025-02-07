@@ -18,6 +18,7 @@ import '../view/ChangePasswordView.dart';
 import '../view/OTPView.dart';
 import '../view/SplashView.dart';
 import '../view/LoadingView.dart';
+import '../view/UserView.dart';
 
 class AppRoutes {
   static const String loadingScreen = '/loadingscreen';
@@ -38,6 +39,7 @@ class AppRoutes {
   static const String profile = '/profile';
   static const String dashboard = '/dashboard';
   static const String homescreen = '/homescreen';
+  static const String userView = '/userView';
 
   // Assign routes to the screens
   static Map<String, WidgetBuilder> routes = {
@@ -59,5 +61,6 @@ class AppRoutes {
     profile: (context) => const ProfileView(), // Replace with actual screen
     dashboard: (context) => const DashboardView(), // Replace with actual screen
     homescreen: (context) => const HomeScreen(), // Replace with actual screen
+    userView: (context) => const UserView(), // Replace with actual screen
   };
 }

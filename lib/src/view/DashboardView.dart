@@ -24,13 +24,10 @@ class DashboardViewState extends State<DashboardView> {
             Navigator.pop(context);
             // Navigate to Home
           }),
-          _buildDrawerItem(Icons.verified_user_rounded, 'Verified Users', () {
+          _buildDrawerItem(Icons.verified_user_rounded, 'Users', () {
             Navigator.pop(context);
+            Navigator.pushNamed(context, AppRoutes.userView);
             // Navigate to Verified Users
-          }),
-          _buildDrawerItem(Icons.person_off_sharp, 'Pending User Verification', () {
-            Navigator.pop(context);
-            // Navigate to Pending User Verification
           }),
           _buildDrawerItem(Icons.home, 'Home', () {
             Navigator.pop(context);
