@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import '../components/DrawerHeaderWidget.dart';
 import '../utils/AppColors.dart';
+import '../utils/Route.dart';
 
 
 
@@ -28,6 +29,21 @@ class DashboardViewState extends State<DashboardView> {
             // Navigate to Verified Users
           }),
           _buildDrawerItem(Icons.person_off_sharp, 'Pending User Verification', () {
+            Navigator.pop(context);
+            // Navigate to Pending User Verification
+          }),
+          _buildDrawerItem(Icons.check, 'Terms and Condition', () {
+            Navigator.pushNamed(context, AppRoutes.termsAndConditions);
+            Navigator.pop(context);
+            // Navigate to Pending User Verification
+          }),
+          _buildDrawerItem(Icons.privacy_tip_outlined, 'Privacy Policy', () {
+            Navigator.pushNamed(context, AppRoutes.privacyPolicy);
+            Navigator.pop(context);
+            // Navigate to Pending User Verification
+          }),
+          _buildDrawerItem(Icons.logout, 'Logout', () {
+            Navigator.pushNamed(context, AppRoutes.privacyPolicy);
             Navigator.pop(context);
             // Navigate to Pending User Verification
           }),
