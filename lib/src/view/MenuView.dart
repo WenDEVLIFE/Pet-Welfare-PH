@@ -7,7 +7,6 @@ import '../components/MenuListView.dart';
 import '../utils/AppColors.dart';
 import '../utils/ImageUtils.dart';
 import 'package:provider/provider.dart';
-import '../utils/AppColors.dart';
 class MenuView extends StatefulWidget {
   const MenuView({Key? key}) : super(key: key);
 
