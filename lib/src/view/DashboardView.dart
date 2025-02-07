@@ -20,7 +20,7 @@ class DashboardViewState extends State<DashboardView> {
       drawer: NavigationDrawer(
         children: [
           const DrawerHeaderWidget(),
-          _buildDrawerItem(Icons.home, 'Dashboard', () {
+          _buildDrawerItem(Icons.dashboard, 'Dashboard', () {
             Navigator.pop(context);
             // Navigate to Home
           }),
@@ -30,6 +30,11 @@ class DashboardViewState extends State<DashboardView> {
           }),
           _buildDrawerItem(Icons.person_off_sharp, 'Pending User Verification', () {
             Navigator.pop(context);
+            // Navigate to Pending User Verification
+          }),
+          _buildDrawerItem(Icons.home, 'Home', () {
+            Navigator.pop(context);
+            Navigator.pushNamed(context, AppRoutes.homescreen);
             // Navigate to Pending User Verification
           }),
           _buildDrawerItem(Icons.check, 'Terms and Condition', () {
