@@ -57,6 +57,10 @@ class UserViewState extends State<UserView> {
             Navigator.pushNamed(context, AppRoutes.homescreen);
             // Navigate to Pending User Verification
           }),
+          _buildDrawerItem(Icons.attach_money, 'Subscriptions', () {
+            Navigator.pop(context);
+            // Navigate to Pending User Verification
+          }),
           _buildDrawerItem(Icons.check, 'Terms and Condition', () {
             Navigator.pushNamed(context, AppRoutes.termsAndConditions);
             Navigator.pop(context);
