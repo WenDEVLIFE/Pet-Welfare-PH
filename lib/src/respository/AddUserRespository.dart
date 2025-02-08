@@ -13,14 +13,20 @@ class AddUserRepository {
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
   Future<bool> checkIfUserExists(String name, String email) async {
-    final QuerySnapshot result = await _firestore
+    final QuerySnapshot nameResult = await _firestore
         .collection('Users')
         .where('Name', isEqualTo: name)
+        .get();
+
+    final QuerySnapshot emailResult = await _firestore
+        .collection('Users')
         .where('Email', isEqualTo: email)
         .get();
 
-    final List<DocumentSnapshot> documents = result.docs;
-    return documents.isNotEmpty;
+    final List<DocumentSnapshot> nameDocuments = nameResult.docs;
+    final List<DocumentSnapshot> emailDocuments = emailResult.docs;
+
+    return nameDocuments.isNotEmpty || emailDocuments.isNotEmpty;
   }
 
   Future <bool> checkValidateEmail(String email) async {
