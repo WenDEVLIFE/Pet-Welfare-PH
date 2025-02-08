@@ -14,6 +14,7 @@ import 'package:pet_welfrare_ph/src/view/UploadIDView.dart';
 import 'package:pet_welfrare_ph/src/view/VetClinicRegisterView.dart';
 
 import '../components/AdminNavigationComponent.dart';
+import '../view/AddAdminView.dart';
 import '../view/ChangePasswordView.dart';
 import '../view/OTPView.dart';
 import '../view/SplashView.dart';
@@ -40,6 +41,7 @@ class AppRoutes {
   static const String dashboard = '/dashboard';
   static const String homescreen = '/homescreen';
   static const String userView = '/userView';
+  static const String addAdmin = '/addAdmin';
 
   // Assign routes to the screens
   static Map<String, WidgetBuilder> routes = {
@@ -62,5 +64,6 @@ class AppRoutes {
     dashboard: (context) => const DashboardView(), // Replace with actual screen
     homescreen: (context) => const HomeScreen(), // Replace with actual screen
     userView: (context) => const UserView(), // Replace with actual screen
+    addAdmin: (context) => const AddAdminView(), // Replace with actual screen
   };
 }
