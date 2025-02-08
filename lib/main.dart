@@ -15,9 +15,9 @@ import 'package:pet_welfrare_ph/src/view_model/UserViewModel.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
-  runApp(const MyApp());
   WidgetsFlutterBinding.ensureInitialized();
   await FirebaseRestAPI.run();
+  runApp(const MyApp());
 }
 
 class MyApp extends StatelessWidget {

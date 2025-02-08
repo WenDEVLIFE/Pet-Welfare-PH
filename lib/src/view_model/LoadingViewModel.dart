@@ -13,10 +13,8 @@ class LoadingViewModel extends ChangeNotifier {
   void startLoading(BuildContext context) async{
     _isLoading = true;
     notifyListeners();
-
-    await FirebaseRestAPI.run();
-
     Future.delayed(const Duration(seconds: 5), () {
+
       _isLoading = false;
       notifyListeners();
       Navigator.pushReplacementNamed(

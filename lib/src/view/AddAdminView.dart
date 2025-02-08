@@ -64,7 +64,7 @@ class AddAdminViewState extends State<AddAdminView> {
               Consumer<AddAdminViewModel>(
                 builder: (context, changeViewModel, child) {
                   return TextField(
-                    controller: viewModel.name,
+                    controller: viewModel.email,
                     decoration: const InputDecoration(
                       filled: true,
                       fillColor: AppColors.gray,
@@ -279,6 +279,7 @@ class AddAdminViewState extends State<AddAdminView> {
                   child: ElevatedButton(
                     onPressed: () {
                       // Add your update password logic here
+                      Provider.of<AddAdminViewModel>(context, listen: false).checkData();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,

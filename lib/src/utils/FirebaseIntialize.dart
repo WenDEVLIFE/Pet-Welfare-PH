@@ -1,7 +1,7 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-
+import 'package:firebase_auth/firebase_auth.dart';
 class FirebaseRestAPI {
   static Future<void> run() async {
     await Firebase.initializeApp(
@@ -37,5 +37,9 @@ class FirebaseRestAPI {
       );
       print('Firebase is initialized');
     }
+  }
+
+  static Future<void> signInAnonymously() async {
+    await FirebaseAuth.instance.signInAnonymously();
   }
 }
