@@ -2,6 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
+import '../utils/FirebaseIntialize.dart';
 import '../utils/Route.dart';
 
 class LoadingViewModel extends ChangeNotifier {
@@ -9,9 +10,11 @@ class LoadingViewModel extends ChangeNotifier {
 
   bool get isLoading => _isLoading;
 
-  void startLoading(BuildContext context) {
+  void startLoading(BuildContext context) async{
     _isLoading = true;
     notifyListeners();
+
+    await FirebaseRestAPI.run();
 
     Future.delayed(const Duration(seconds: 5), () {
       _isLoading = false;
