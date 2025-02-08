@@ -133,7 +133,7 @@ class UserViewState extends State<UserView> {
                     child: ActionChip(
                       label: Text(
                         label,
-                        style: TextStyle(color: Colors.white),
+                        style: const TextStyle(color: Colors.white),
                       ),
                       backgroundColor: isSelected ? AppColors.orange : AppColors.black,
                       onPressed: () {
@@ -170,10 +170,10 @@ class UserViewState extends State<UserView> {
                       )
                     ],
                     if (_selectedIndex == 1) ...[
-                      Center(
+                      const Center(
                         child: Column(
                           children: [
-                            const Padding(
+                            Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Text(
                                 'Unverified Users',
@@ -190,10 +190,10 @@ class UserViewState extends State<UserView> {
                       )
                     ],
                     if (_selectedIndex == 2) ...[
-                      Center(
+                      const Center(
                         child: Column(
                           children: [
-                            const Padding(
+                            Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Text(
                                 'Banned Users',
@@ -210,10 +210,10 @@ class UserViewState extends State<UserView> {
                       )
                     ],
                     if (_selectedIndex == 3) ...[
-                      Center(
+                      const Center(
                         child: Column(
                           children: [
-                            const Padding(
+                            Padding(
                               padding: EdgeInsets.all(8.0),
                               child: Text(
                                 'Admin & Sub Admin',
@@ -232,6 +232,19 @@ class UserViewState extends State<UserView> {
                   ],
                 ),
               )
+          ),
+          Align(
+            alignment: Alignment.bottomRight,
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: FloatingActionButton(
+                onPressed: () {
+                  // Add your onPressed logic here
+                },
+                backgroundColor: AppColors.orange,
+                child: const Icon(Icons.add, color: AppColors.white,),
+              ),
+            ),
           ),
         ],
       ),
