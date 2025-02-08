@@ -279,7 +279,7 @@ class AddAdminViewState extends State<AddAdminView> {
                   child: ElevatedButton(
                     onPressed: () {
                       // Add your update password logic here
-                      Provider.of<AddAdminViewModel>(context, listen: false).checkData();
+                      Provider.of<AddAdminViewModel>(context, listen: false).checkData(context);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,

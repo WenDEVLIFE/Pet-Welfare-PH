@@ -32,10 +32,11 @@ class AddAdminViewModel extends ChangeNotifier {
 
   void setSelectedRole(String? value) {
     selectedRole = value;
+    print(selectedRole);
     notifyListeners();
   }
 
-  Future<void> checkData() async {
+  Future<void> checkData(BuildContext context) async {
 
     FirebaseRestAPI.signInAnonymously();
     if (email.text.isEmpty || name.text.isEmpty || password.text.isEmpty || confirmpassword.text.isEmpty) {
@@ -102,15 +103,13 @@ class AddAdminViewModel extends ChangeNotifier {
       }
       else {
         // Proceed with adding the user
-        Fluttertoast.showToast(
-          msg: 'User added successfully',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: CupertinoColors.systemGreen,
-          textColor: CupertinoColors.white,
-          fontSize: 16.0,
-        );
+        var userData = {
+          'name': name.text,
+          'email': email.text,
+          'password': password.text,
+          'role': selectedRole,
+        };
+        _repository.registerUser(userData, context, clearText);
       }
     }
   }
