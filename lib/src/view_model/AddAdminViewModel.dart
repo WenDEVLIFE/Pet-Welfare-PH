@@ -10,7 +10,7 @@ class AddAdminViewModel extends ChangeNotifier {
 
   final List<String> adminRole = ['Admin', 'Sub-Admin'];
 
-  String? selectedRole;
+  String? selectedRole = 'Admin';
 
   bool obscureText1 = true;
   bool obscureText2 = true;

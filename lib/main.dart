@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
+import 'package:pet_welfrare_ph/src/view_model/AddAdminViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/ChangePasswordViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/MenuViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/OTPViewModel.dart';
@@ -9,6 +10,7 @@ import 'package:pet_welfrare_ph/src/view_model/SelectViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/SplashViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/LoadingViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/UploadIDViewModel.dart';
+import 'package:pet_welfrare_ph/src/view_model/UserViewModel.dart';
 import 'package:provider/provider.dart';
 
 void main() async {
@@ -31,6 +33,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => OTPViewModel()),
         ChangeNotifierProvider(create: (_) => MenuViewModel()),
         ChangeNotifierProvider(create: (_) => ChangePasswordViewModel()),
+        ChangeNotifierProvider(create: (_) => AddAdminViewModel()),
+        ChangeNotifierProvider(create: (_) => UserViewModel()),
       ],
       child: MaterialApp(
         key: GlobalKey(), //

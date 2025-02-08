@@ -1,7 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
+import 'package:pet_welfrare_ph/src/view_model/UserViewModel.dart';
 import '../components/DrawerHeaderWidget.dart';
 import '../utils/Route.dart';
+import '../view_model/AddAdminViewModel.dart';
+import 'package:provider/provider.dart';
 
 
 class UserView extends StatefulWidget {
@@ -15,6 +18,14 @@ class UserViewState extends State<UserView> {
   final TextEditingController _searchController = TextEditingController();
   final List<String> _chipLabels = ['Verified User', 'Unverified User', 'Banned User', 'Admin & Sub Admin'];
   int _selectedIndex = 0;
+
+  late UserViewModel _userViewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    _userViewModel = Provider.of<UserViewModel>(context, listen: false);
+  }
 
   void _updateContent(int index) {
     setState(() {
@@ -240,6 +251,7 @@ class UserViewState extends State<UserView> {
               child: FloatingActionButton(
                 onPressed: () {
                   // Add your onPressed logic here
+                  Provider.of<UserViewModel>(context, listen: false).navigateToAddAdmin(context);
                 },
                 backgroundColor: AppColors.orange,
                 child: const Icon(Icons.add, color: AppColors.white,),

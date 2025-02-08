@@ -1,0 +1,30 @@
+{
+  "project_info": {
+    "project_number": "552598368291",
+    "firebase_url": "https://pet-welfare-ph-default-rtdb.firebaseio.com",
+    "project_id": "pet-welfare-ph",
+    "storage_bucket": "pet-welfare-ph.firebasestorage.app"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:552598368291:android:0625d565323e92c2768196",
+        "android_client_info": {
+          "package_name": "com.example.pet_welfrare_ph"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyAmF4Kj89FwcdZEOXqJ3Y2A0Df9kUdzvb4"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
