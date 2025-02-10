@@ -59,6 +59,7 @@ class AddUserRepository {
       var email = userData['email']!;
       var password = userData['password']!;
       var name = userData['name']!;
+      var role = userData['role']!;
 
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -84,6 +85,7 @@ class AddUserRepository {
         "Email": email,     // Store Email
         'ProfileUrl': downloadUrl,
         'ProfileImage': fileName,
+        "Role": role,     // Store Role
         "CreatedAt": FieldValue.serverTimestamp(),
       });
 

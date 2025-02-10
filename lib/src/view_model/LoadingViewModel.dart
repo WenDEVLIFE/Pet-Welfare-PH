@@ -1,4 +1,5 @@
 
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
@@ -13,6 +14,12 @@ class LoadingViewModel extends ChangeNotifier {
   void startLoading(BuildContext context) async{
     _isLoading = true;
     notifyListeners();
+
+    FirebaseRestAPI.run();
+    await FirebaseAppCheck.instance.activate(
+      androidProvider: AndroidProvider.playIntegrity,
+    );
+
     Future.delayed(const Duration(seconds: 5), () {
 
       _isLoading = false;

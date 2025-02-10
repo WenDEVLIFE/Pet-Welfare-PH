@@ -43,6 +43,7 @@ dependencies:
   chewie: ^1.10.0
   docx_to_text: ^1.0.1
   docx_template: ^0.4.0
+  firebase_app_check: ^0.3.2+2
 
 
 dev_dependencies:

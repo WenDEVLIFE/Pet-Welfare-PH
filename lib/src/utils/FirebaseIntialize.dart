@@ -1,3 +1,4 @@
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -41,5 +42,19 @@ class FirebaseRestAPI {
 
   static Future<void> signInAnonymously() async {
     await FirebaseAuth.instance.signInAnonymously();
+  }
+
+  static Future<void> initializeAppCheck() async {
+    try {
+      await FirebaseAppCheck.instance.activate(
+        androidProvider: AndroidProvider.playIntegrity,
+      );
+    } catch (e) {
+      print('Error during App Check activation: $e');
+      await Future.delayed(Duration(seconds: 5));  // retry with delay
+      await FirebaseAppCheck.instance.activate(
+        androidProvider: AndroidProvider.playIntegrity,
+      );
+    }
   }
 }

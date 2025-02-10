@@ -12,8 +12,14 @@ class Loginview extends StatefulWidget {
 }
 
 class _LoginScreenState extends State<Loginview> {
-  final TextEditingController emailController = TextEditingController();
-  final TextEditingController passwordController = TextEditingController();
+
+  late LoginViewModel loginViewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    loginViewModel = Provider.of<LoginViewModel>(context, listen: false);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -70,7 +76,7 @@ class _LoginScreenState extends State<Loginview> {
                               color: Colors.black)),
                           SizedBox(height: screenHeight * 0.01),
                           TextField(
-                            controller: emailController,
+                            controller: loginViewModel.emailController,
                             decoration: const InputDecoration(
                               filled: true,
                               fillColor: AppColors.gray,
@@ -99,7 +105,7 @@ class _LoginScreenState extends State<Loginview> {
                           Consumer<LoginViewModel>(
                             builder: (context, loginViewModel, child) {
                               return TextField(
-                                controller: passwordController,
+                                controller: loginViewModel.passwordController,
                                 decoration: InputDecoration(
                                   filled: true,
                                   fillColor: AppColors.gray,
@@ -138,8 +144,8 @@ class _LoginScreenState extends State<Loginview> {
                               ),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-                                    Provider.of<LoginViewModel>(context, listen: false).Login(context);
+                                  if (loginViewModel.emailController.text.isNotEmpty && loginViewModel.passwordController.text.isNotEmpty) {
+                                    Provider.of<LoginViewModel>(context, listen: false).login(context);
                                   } else {
                                     Fluttertoast.showToast(
                                       msg: 'Please fill all the fields',
