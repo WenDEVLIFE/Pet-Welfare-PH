@@ -10,6 +10,7 @@ import 'package:pet_welfrare_ph/src/view_model/LoginViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/SelectViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/SplashViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/LoadingViewModel.dart';
+import 'package:pet_welfrare_ph/src/view_model/SubcriptionViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/UploadIDViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/UserViewModel.dart';
 import 'package:provider/provider.dart';
@@ -38,6 +39,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => ChangePasswordViewModel()),
         ChangeNotifierProvider(create: (_) => AddAdminViewModel()),
         ChangeNotifierProvider(create: (_) => UserViewModel()),
+        ChangeNotifierProvider(create: (_) => SubscriptionViewModel()),
       ],
       child: MaterialApp(
         key: GlobalKey(), //
