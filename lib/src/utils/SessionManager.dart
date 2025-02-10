@@ -6,7 +6,9 @@ class SessionManager {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('email', userInfo['email']);
     prefs.setString('role', userInfo['role']);
+    prefs.setString('name', userInfo['name']);
     prefs.setString('uid', userInfo['uid']);
+    print('User Info Saved');
   }
 
   Future<Map<String, dynamic>?> getUserInfo() async {
@@ -15,6 +17,7 @@ class SessionManager {
       return {
         'email': prefs.getString('email'),
         'role': prefs.getString('role'),
+        'name': prefs.getString('name'),
         'uid': prefs.getString('uid')
       };
     }
@@ -30,6 +33,7 @@ class SessionManager {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.remove('username');
     prefs.remove('role');
+    prefs.remove('name');
     prefs.remove('uid');
 
   }

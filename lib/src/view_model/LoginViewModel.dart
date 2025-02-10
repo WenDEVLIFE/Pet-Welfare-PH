@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/respository/LoginRespository.dart';
+import 'package:pet_welfrare_ph/src/utils/SessionManager.dart';
 import 'package:sn_progress_dialog/enums/progress_types.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
 import '../utils/Route.dart';
@@ -8,7 +9,7 @@ class LoginViewModel extends ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final LoginRepository loginRepository = LoginRepositoryImpl();
-
+  final SessionManager sessionManager = SessionManager();
 
   // Password Visibility
   bool _obscureText1 = true;
@@ -42,6 +43,8 @@ class LoginViewModel extends ChangeNotifier {
         // If login is successful, navigate based on user role
         if (userData['role'] == 'Admin' || userData['role'] == 'Sub-Admin') {
           Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+
+          sessionManager.saveUserInfo(userData);
           ScaffoldMessenger.of(context).showSnackBar(
             const SnackBar(content: Text('Login successful!')),
           );

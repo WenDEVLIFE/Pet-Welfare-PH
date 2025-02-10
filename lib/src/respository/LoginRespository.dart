@@ -32,7 +32,7 @@ class LoginRepositoryImpl implements LoginRepository {
 
         // Return user data
         return {
-          'id': uid,
+          'uid': uid,
           'role': role,
           'email': email,
           'name': name,
