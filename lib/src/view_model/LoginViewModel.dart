@@ -23,6 +23,10 @@ class LoginViewModel extends ChangeNotifier {
 
   }
 
+  void Login(BuildContext context){
+    Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+  }
+
   void navigateToSelectView(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.selectScreen);
   }

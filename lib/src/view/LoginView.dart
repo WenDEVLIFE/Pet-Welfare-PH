@@ -139,7 +139,7 @@ class _LoginScreenState extends State<Loginview> {
                               child: ElevatedButton(
                                 onPressed: () {
                                   if (emailController.text.isNotEmpty && passwordController.text.isNotEmpty) {
-                                    Provider.of<LoginViewModel>(context, listen: false).FetchData(context);
+                                    Provider.of<LoginViewModel>(context, listen: false).Login(context);
                                   } else {
                                     Fluttertoast.showToast(
                                       msg: 'Please fill all the fields',

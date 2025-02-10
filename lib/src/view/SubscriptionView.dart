@@ -8,18 +8,15 @@ import 'package:provider/provider.dart';
 
 import '../view_model/SubcriptionViewModel.dart';
 
-
-class Subscriptionview extends StatefulWidget {
-  const Subscriptionview({Key? key}) : super(key: key);
+class SubscriptionView extends StatefulWidget {
+  const SubscriptionView({Key? key}) : super(key: key);
 
   @override
   SubscriptionState createState() => SubscriptionState();
 }
 
-class SubscriptionState extends State<Subscriptionview> {
+class SubscriptionState extends State<SubscriptionView> {
   final TextEditingController _searchController = TextEditingController();
-  int _selectedIndex = 0;
-
   late SubscriptionViewModel _userViewModel;
 
   @override
@@ -28,10 +25,8 @@ class SubscriptionState extends State<Subscriptionview> {
     _userViewModel = Provider.of<SubscriptionViewModel>(context, listen: false);
   }
 
-
   @override
   Widget build(BuildContext context) {
-
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
@@ -41,36 +36,37 @@ class SubscriptionState extends State<Subscriptionview> {
           const DrawerHeaderWidget(),
           _buildDrawerItem(Icons.dashboard, 'Dashboard', () {
             Navigator.pop(context);
+            Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
             // Navigate to Home
           }),
           _buildDrawerItem(Icons.verified_user_rounded, 'Users', () {
             Navigator.pop(context);
-            Navigator.pushNamed(context, AppRoutes.userView);
+            Navigator.pushReplacementNamed(context, AppRoutes.userView);
             // Navigate to Verified Users
           }),
           _buildDrawerItem(Icons.home, 'Home', () {
             Navigator.pop(context);
             Navigator.pushNamed(context, AppRoutes.homescreen);
-            // Navigate to Pending User Verification
+            // Navigate to Home
           }),
           _buildDrawerItem(Icons.attach_money, 'Subscriptions', () {
             Navigator.pop(context);
-            // Navigate to Pending User Verification
+            Navigator.pushNamed(context, AppRoutes.subscription);
+            // Navigate to Subscriptions
           }),
           _buildDrawerItem(Icons.check, 'Terms and Condition', () {
-            Navigator.pushNamed(context, AppRoutes.termsAndConditions);
             Navigator.pop(context);
-            // Navigate to Pending User Verification
+            Navigator.pushNamed(context, AppRoutes.termsAndConditions);
+            // Navigate to Terms and Conditions
           }),
           _buildDrawerItem(Icons.privacy_tip_outlined, 'Privacy Policy', () {
-            Navigator.pushNamed(context, AppRoutes.privacyPolicy);
             Navigator.pop(context);
-            // Navigate to Pending User Verification
+            Navigator.pushNamed(context, AppRoutes.privacyPolicy);
+            // Navigate to Privacy Policy
           }),
           _buildDrawerItem(Icons.logout, 'Logout', () {
-            Navigator.pushNamed(context, AppRoutes.privacyPolicy);
             Navigator.pop(context);
-            // Navigate to Pending User Verification
+            // Navigate to Logout
           }),
         ],
       ),
@@ -91,7 +87,7 @@ class SubscriptionState extends State<Subscriptionview> {
           ),
         ),
         backgroundColor: AppColors.orange,
-        iconTheme: IconThemeData(color: Colors.white), // Ensure icon color is set
+        iconTheme: const IconThemeData(color: Colors.white), // Ensure icon color is set
       ),
       body: Column(
         children: [

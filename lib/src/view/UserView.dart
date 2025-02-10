@@ -44,12 +44,13 @@ class UserViewState extends State<UserView> {
         children: [
           const DrawerHeaderWidget(),
           _buildDrawerItem(Icons.dashboard, 'Dashboard', () {
+            Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
             Navigator.pop(context);
             // Navigate to Home
           }),
           _buildDrawerItem(Icons.verified_user_rounded, 'Users', () {
             Navigator.pop(context);
-            Navigator.pushNamed(context, AppRoutes.userView);
+            Navigator.pushReplacementNamed(context, AppRoutes.userView);
             // Navigate to Verified Users
           }),
           _buildDrawerItem(Icons.home, 'Home', () {
@@ -59,21 +60,22 @@ class UserViewState extends State<UserView> {
           }),
           _buildDrawerItem(Icons.attach_money, 'Subscriptions', () {
             Navigator.pop(context);
+            Navigator.pushReplacementNamed(context, AppRoutes.subscription);
             // Navigate to Pending User Verification
           }),
           _buildDrawerItem(Icons.check, 'Terms and Condition', () {
-            Navigator.pushNamed(context, AppRoutes.termsAndConditions);
             Navigator.pop(context);
+            Navigator.pushNamed(context, AppRoutes.termsAndConditions);
             // Navigate to Pending User Verification
           }),
           _buildDrawerItem(Icons.privacy_tip_outlined, 'Privacy Policy', () {
-            Navigator.pushNamed(context, AppRoutes.privacyPolicy);
             Navigator.pop(context);
+            Navigator.pushNamed(context, AppRoutes.privacyPolicy);
             // Navigate to Pending User Verification
           }),
           _buildDrawerItem(Icons.logout, 'Logout', () {
-            Navigator.pushNamed(context, AppRoutes.privacyPolicy);
             Navigator.pop(context);
+
             // Navigate to Pending User Verification
           }),
         ],

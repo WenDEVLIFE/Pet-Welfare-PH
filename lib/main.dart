@@ -32,7 +32,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => SplashViewModel2()),
         ChangeNotifierProvider(create: (_) => LoginViewModel()),
         ChangeNotifierProvider(create: (_) => SelectViewModel()),
-        ChangeNotifierProvider(create:  (_) => RegisterViewModel()),
+        ChangeNotifierProvider(create: (_) => RegisterViewModel()),
         ChangeNotifierProvider(create: (_) => UploadIDViewModel()),
         ChangeNotifierProvider(create: (_) => OTPViewModel()),
         ChangeNotifierProvider(create: (_) => MenuViewModel()),

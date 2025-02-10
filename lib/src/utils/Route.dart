@@ -67,6 +67,6 @@ class AppRoutes {
     homescreen: (context) => const HomeScreen(), // Replace with actual screen
     userView: (context) => const UserView(), // Replace with actual screen
     addAdmin: (context) => const AddAdminView(), // Replace with actual screen
-    subscription: (context) => const Subscriptionview(), // Replace with actual screen
+    subscription : (context) => const SubscriptionView(), // Replace with actual screen
   };
 }
