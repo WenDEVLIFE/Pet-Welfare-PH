@@ -28,12 +28,14 @@ class LoginRepositoryImpl implements LoginRepository {
         // Extract user data
         String role = userDoc['Role'];
         String email = userDoc['Email'];
+        String name = userDoc['Name'];
 
         // Return user data
         return {
           'id': uid,
           'role': role,
           'email': email,
+          'name': name,
         };
       } else {
         // User document does not exist in Firestore

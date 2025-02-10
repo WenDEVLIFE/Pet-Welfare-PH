@@ -9,6 +9,7 @@ class LoginViewModel extends ChangeNotifier {
   final TextEditingController passwordController = TextEditingController();
   final LoginRepository loginRepository = LoginRepositoryImpl();
 
+
   // Password Visibility
   bool _obscureText1 = true;
 
