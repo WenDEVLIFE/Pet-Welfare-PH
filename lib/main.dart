@@ -22,6 +22,7 @@ void main() async {
 
   // Initialize Firebase
   await FirebaseRestAPI.run();
+  await FirebaseRestAPI.initializeAppCheck();
 
 
   runApp(const MyApp());
