@@ -19,9 +19,6 @@ class LoadingViewModel extends ChangeNotifier {
     notifyListeners();
 
     FirebaseRestAPI.run();
-    await FirebaseAppCheck.instance.activate(
-      androidProvider: AndroidProvider.playIntegrity,
-    );
 
     Future.delayed(const Duration(seconds: 5), () async {
       final user = await sessionManager.getUserInfo();
