@@ -40,17 +40,19 @@ class LoginViewModel extends ChangeNotifier {
 
       if (userData != null) {
         print(userData);
+        // Save user info
+        await sessionManager.saveUserInfo(userData);
+
         // If login is successful, navigate based on user role
         if (userData['role'] == 'Admin' || userData['role'] == 'Sub-Admin') {
           Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
-
-          sessionManager.saveUserInfo(userData);
-          ScaffoldMessenger.of(context).showSnackBar(
-            const SnackBar(content: Text('Login successful!')),
-          );
         } else {
           Navigator.pushReplacementNamed(context, AppRoutes.user);
         }
+
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(content: Text('Login successful!')),
+        );
       } else {
         // Show error message if login failed
         ScaffoldMessenger.of(context).showSnackBar(

@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
+import '../components/LogoutDialog.dart';
 import '../model/MenuList.dart';
 import '../utils/AppColors.dart';
 import '../utils/Route.dart';
+import '../utils/SessionManager.dart';
 
 class MenuListWidget extends StatelessWidget {
   final List<MenuItem> menuItems = [
@@ -43,11 +45,23 @@ class MenuListWidget extends StatelessWidget {
                     // Privacy Policy
                     Navigator.pushNamed(context, AppRoutes.privacyPolicy);
                   } else if (index == 4) {
-                    // About us
-                  } else if (index == 5) {
                     // About Us
-                  } else if (index == 6) {
+                  } else if (index == 5) {
                     // Logout
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return LogoutDialog(
+                          onLogout: () {
+                            Navigator.of(context).pop(); // Close the dialog
+                            SessionManager().clearUserInfo();
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                              Navigator.pushNamed(context, AppRoutes.loginScreen);
+                            });
+                          },
+                        );
+                      },
+                    );
                   }
                 },
               );

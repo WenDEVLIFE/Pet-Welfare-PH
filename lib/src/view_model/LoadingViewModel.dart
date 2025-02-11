@@ -1,4 +1,3 @@
-
 import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
@@ -14,45 +13,46 @@ class LoadingViewModel extends ChangeNotifier {
 
   final SessionManager sessionManager = SessionManager();
 
-  void startLoading(BuildContext context) async{
+  void startLoading(BuildContext context) async {
     _isLoading = true;
     notifyListeners();
 
     FirebaseRestAPI.run();
 
-    Future.delayed(const Duration(seconds: 5), () async {
-      final user = await sessionManager.getUserInfo();
-      _isLoading = false;
-      notifyListeners();
+    await Future.delayed(const Duration(seconds: 5));
 
-      // Check if user is already logged in
-       if (user != null) {
+    final user = await sessionManager.getUserInfo();
+    _isLoading = false;
+    notifyListeners();
 
-         if (user['role'] == 'Admin' || user['role'] == 'Sub-Admin') {
-           Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
-         } else {
-           Navigator.pushReplacementNamed(context, AppRoutes.user);
-         }
-       }
+    // Check if user is already logged in
+    if (user != null) {
+      print('User: $user');
 
-       // If user is not logged in, redirect to splash screen
-       else{
-         Navigator.pushReplacementNamed(
-           context,
-           AppRoutes.splashscreen,
-           arguments: {'key': 'value'}, // Pass a map or any data
-         );
-       }
-
-      Fluttertoast.showToast(
-        msg: 'Loading completed',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.black,
-        textColor: Colors.white,
-        fontSize: 16.0,
+      if (user['role'] == 'Admin' || user['role'] == 'Sub-Admin') {
+        Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+      } else if (user['role'] == null) {
+        Navigator.pushReplacementNamed(context, AppRoutes.loginScreen);
+      } else {
+        Navigator.pushReplacementNamed(context, AppRoutes.user);
+      }
+    } else {
+      // If user is not logged in, redirect to splash screen
+      Navigator.pushReplacementNamed(
+        context,
+        AppRoutes.splashscreen,
+        arguments: {'key': 'value'}, // Pass a map or any data
       );
-    });
+    }
+
+    Fluttertoast.showToast(
+      msg: 'Loading completed',
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.BOTTOM,
+      timeInSecForIosWeb: 1,
+      backgroundColor: Colors.black,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
   }
 }

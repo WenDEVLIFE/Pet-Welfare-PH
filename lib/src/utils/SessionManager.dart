@@ -1,4 +1,3 @@
-
 import 'package:shared_preferences/shared_preferences.dart';
 
 class SessionManager {
@@ -24,17 +23,16 @@ class SessionManager {
     return null;
   }
 
-  Future <void> updateEmail(String email) async {
+  Future<void> updateEmail(String email) async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
     prefs.setString('email', email);
   }
 
   Future<void> clearUserInfo() async {
     final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove('username');
+    prefs.remove('email');
     prefs.remove('role');
     prefs.remove('name');
     prefs.remove('uid');
-
   }
 }

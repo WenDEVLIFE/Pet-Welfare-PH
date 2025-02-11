@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/view_model/MenuViewModel.dart';
-import '../components/MenuListView.dart';
+import 'MenuListView.dart';
 import '../utils/AppColors.dart';
 import '../utils/ImageUtils.dart';
 import 'package:provider/provider.dart';
@@ -19,9 +19,9 @@ class MenuViewState extends State<MenuView> {
   void initState() {
     super.initState();
     // Load profile data when the widget is initialized
-
-    Provider.of<MenuViewModel>(context, listen: false).LoadProfile();
-
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<MenuViewModel>(context, listen: false).loadProfile();
+    });
   }
   @override
   Widget build(BuildContext context) {
@@ -78,6 +78,36 @@ class MenuViewState extends State<MenuView> {
                       ),
                     ],
                   ),
+                ),
+              ),
+              SizedBox.fromSize(size: Size.fromHeight(screenHeight * 0.02)),
+              Center(
+                child: Consumer<MenuViewModel>(
+                  builder: (context, viewModel, child) {
+                    return Text("Name: ${viewModel.name}",
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontFamily: 'SmoochSans',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    );
+                  },
+                ),
+              ),
+              SizedBox.fromSize(size: Size.fromHeight(screenHeight * 0.02)),
+              Center(
+                child: Consumer<MenuViewModel>(
+                  builder: (context, viewModel, child) {
+                    return Text("Email: ${viewModel.email}",
+                      style: const TextStyle(
+                        color: Colors.black,
+                        fontSize: 20,
+                        fontFamily: 'SmoochSans',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    );
+                  },
                 ),
               ),
               Container(

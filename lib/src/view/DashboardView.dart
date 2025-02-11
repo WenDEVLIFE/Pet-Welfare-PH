@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
+import 'package:pet_welfrare_ph/src/utils/SessionManager.dart';
 import '../components/DrawerHeaderWidget.dart';
+import '../components/LogoutDialog.dart';
 import '../utils/AppColors.dart';
 import '../utils/Route.dart';
 
@@ -49,6 +51,19 @@ class DashboardViewState extends State<DashboardView> {
           }),
           _buildDrawerItem(Icons.logout, 'Logout', () {
             Navigator.pop(context);
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return LogoutDialog(
+                  onLogout: () {
+                    // Perform logout action here
+                    SessionManager().clearUserInfo();
+                    Navigator.pushReplacementNamed(context, AppRoutes.loginScreen);
+                    print('User logged out');
+                  },
+                );
+              },
+            );
             // Navigate to Logout
           }),
         ],
