@@ -55,9 +55,7 @@ class MenuViewState extends State<MenuView> {
                             backgroundColor: AppColors.orange,
                             child: CircleAvatar(
                               radius: 95,
-                              backgroundImage: viewModel.currentfilepath.isNotEmpty
-                                  ? FileImage(File(viewModel.currentfilepath))
-                                  : const AssetImage(ImageUtils.catPath) as ImageProvider,
+                              backgroundImage: NetworkImage(viewModel.currentfilepath),
                             ),
                           );
                         },

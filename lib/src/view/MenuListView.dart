@@ -52,12 +52,10 @@ class MenuListWidget extends StatelessWidget {
                       context: context,
                       builder: (BuildContext context) {
                         return LogoutDialog(
-                          onLogout: () {
+                          onLogout: () async {
                             Navigator.of(context).pop(); // Close the dialog
-                            SessionManager().clearUserInfo();
-                            WidgetsBinding.instance.addPostFrameCallback((_) {
-                              Navigator.pushNamed(context, AppRoutes.loginScreen);
-                            });
+                            await SessionManager().clearUserInfo();
+                            Navigator.pushNamed(context, AppRoutes.loginScreen);
                           },
                         );
                       },

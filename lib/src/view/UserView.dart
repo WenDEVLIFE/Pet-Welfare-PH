@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 import 'package:pet_welfrare_ph/src/view_model/UserViewModel.dart';
 import '../components/DrawerHeaderWidget.dart';
+import '../components/LogoutDialog.dart';
 import '../utils/Route.dart';
+import '../utils/SessionManager.dart';
 import '../view_model/AddAdminViewModel.dart';
 import 'package:provider/provider.dart';
 
@@ -75,7 +77,21 @@ class UserViewState extends State<UserView> {
           }),
           _buildDrawerItem(Icons.logout, 'Logout', () {
             Navigator.pop(context);
+            showDialog(
+              context: context,
+              builder: (BuildContext context) {
+                return LogoutDialog(
+                  onLogout: () async {
+                    // Perform logout action here
+                    await SessionManager().clearUserInfo();
 
+                    Navigator.pushReplacementNamed(context, AppRoutes.loginScreen);
+
+                    print('User logged out');
+                  },
+                );
+              },
+            );
             // Navigate to Pending User Verification
           }),
         ],

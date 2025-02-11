@@ -55,10 +55,12 @@ class DashboardViewState extends State<DashboardView> {
               context: context,
               builder: (BuildContext context) {
                 return LogoutDialog(
-                  onLogout: () {
+                  onLogout: () async {
                     // Perform logout action here
-                    SessionManager().clearUserInfo();
-                    Navigator.pushReplacementNamed(context, AppRoutes.loginScreen);
+                     await SessionManager().clearUserInfo();
+
+                     Navigator.pushReplacementNamed(context, AppRoutes.loginScreen);
+
                     print('User logged out');
                   },
                 );
