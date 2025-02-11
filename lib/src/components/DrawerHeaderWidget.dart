@@ -1,53 +1,72 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import '../utils/AppColors.dart';
+import '../view_model/DrawerHeadViewModel.dart';
 
-class DrawerHeaderWidget extends StatelessWidget {
+class DrawerHeaderWidget extends StatefulWidget {
   const DrawerHeaderWidget({Key? key}) : super(key: key);
 
   @override
+  _DrawerHeaderWidgetState createState() => _DrawerHeaderWidgetState();
+}
+
+class _DrawerHeaderWidgetState extends State<DrawerHeaderWidget> {
+  @override
+  void initState() {
+    super.initState();
+    // Load profile data when the widget is initialized
+
+    Provider.of<DrawerHeadViewModel>(context, listen: false).loadData();
+
+  }
+
+  @override
   Widget build(BuildContext context) {
-    return const DrawerHeader(
-      decoration: BoxDecoration(color: AppColors.orange),
-      child: SingleChildScrollView(
-        child: Padding(
-          padding: EdgeInsets.all(8.0),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              CircleAvatar(
-                radius: 30,
-                backgroundImage: AssetImage('assets/images/cat.jpg'),
-              ),
-              SizedBox(height: 8),
-              Row(
+    return Consumer<DrawerHeadViewModel>(
+      builder: (context, viewModel, child) {
+        return DrawerHeader(
+          decoration: const BoxDecoration(color: AppColors.orange),
+          child: SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  CircleAvatar(
+                    radius: 30,
+                    backgroundImage: NetworkImage(viewModel.profileImage),
+                  ),
+                  const SizedBox(height: 8),
+                  Row(
+                    children: [
+                      Text(
+                        viewModel.name,
+                        style: const TextStyle(
+                          color: AppColors.black,
+                          fontFamily: 'SmoochSans',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 20,
+                        ),
+                      ),
+                      const SizedBox(width: 8),
+                      const Icon(Icons.verified_user_rounded, color: Colors.green),
+                    ],
+                  ),
                   Text(
-                    'John Doe',
-                    style: TextStyle(
+                    viewModel.role,
+                    style: const TextStyle(
                       color: AppColors.black,
                       fontFamily: 'SmoochSans',
                       fontWeight: FontWeight.w600,
-                      fontSize: 20,
+                      fontSize: 16,
                     ),
                   ),
-                  SizedBox(width: 8),
-                  Icon(Icons.verified_user_rounded, color: Colors.green),
                 ],
               ),
-              Text(
-                'Super Admin',
-                style: TextStyle(
-                  color: AppColors.black,
-                  fontFamily: 'SmoochSans',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                ),
-              ),
-            ],
+            ),
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }

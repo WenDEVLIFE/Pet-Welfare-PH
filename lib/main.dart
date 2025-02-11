@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/FirebaseIntialize.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
+import 'package:pet_welfrare_ph/src/view_model/DrawerHeadViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/AddAdminViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/ChangePasswordViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/MenuViewModel.dart';
@@ -21,7 +22,7 @@ void main() async {
 
   // Initialize Firebase
   await FirebaseRestAPI.run();
-  
+
   runApp(const MyApp());
 }
 class MyApp extends StatelessWidget {
@@ -43,6 +44,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => AddAdminViewModel()),
         ChangeNotifierProvider(create: (_) => UserViewModel()),
         ChangeNotifierProvider(create: (_) => SubscriptionViewModel()),
+        ChangeNotifierProvider(create: (_) => DrawerHeadViewModel()),
       ],
       child: MaterialApp(
         key: GlobalKey(), //
