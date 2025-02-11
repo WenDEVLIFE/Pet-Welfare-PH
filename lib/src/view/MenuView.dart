@@ -15,7 +15,14 @@ class MenuView extends StatefulWidget {
 }
 
 class MenuViewState extends State<MenuView> {
+  @override
+  void initState() {
+    super.initState();
+    // Load profile data when the widget is initialized
 
+    Provider.of<MenuViewModel>(context, listen: false).LoadProfile();
+
+  }
   @override
   Widget build(BuildContext context) {
 

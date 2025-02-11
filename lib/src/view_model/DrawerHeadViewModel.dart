@@ -8,6 +8,8 @@ class DrawerHeadViewModel extends ChangeNotifier {
   String role = "role";
   String profileImage = "profileImage";
 
+
+  // Load profile data
   void loadData() async {
     Map<String, dynamic>? profileData = await _loadProfileRepository.loadProfile();
 
