@@ -135,7 +135,7 @@ class _SelectViewState extends State<SelectView> {
                                     Provider.of<SelectViewModel>(context, listen: false).navigateToAffiliateLaw(context);
                                   },
                                   child: const Text(
-                                    'Affiliated to Legal Firms',
+                                    'Animal Welfare Advocates',
                                     style: TextStyle(
                                       fontFamily: 'SmoochSans',
                                       color: Colors.white,

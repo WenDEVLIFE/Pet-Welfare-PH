@@ -72,7 +72,7 @@ class RegisterState extends State<LegalFirmRegisterView> {
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: <Widget>[
                             const Center(
-                              child: Text('SIGN UP FOR LEGAL FIRM PERSONNEL',
+                              child: Text('SIGN UP FOR ANIMAL WELFARE ADVOCATE',
                                   style: TextStyle(fontSize: 30,
                                       fontWeight: FontWeight.w700,
                                       fontFamily: 'SmoochSans',
