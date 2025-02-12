@@ -1,10 +1,11 @@
+import 'dart:io';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
 
@@ -23,132 +24,115 @@ class AddUserRepository {
         .where('Email', isEqualTo: email)
         .get();
 
-    final List<DocumentSnapshot> nameDocuments = nameResult.docs;
-    final List<DocumentSnapshot> emailDocuments = emailResult.docs;
-
-    return nameDocuments.isNotEmpty || emailDocuments.isNotEmpty;
+    return nameResult.docs.isNotEmpty || emailResult.docs.isNotEmpty;
   }
 
-  Future <bool> checkValidateEmail(String email) async {
+  Future<bool> checkValidateEmail(String email) async {
     String pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
-    RegExp regExp = RegExp(pattern);
-    return regExp.hasMatch(email);
+    return RegExp(pattern).hasMatch(email);
   }
 
-  Future <bool> checkPassword(String password, String confirmPassword) async {
+  Future<bool> checkPassword(String password, String confirmPassword) async {
     return password == confirmPassword;
   }
 
-  Future <bool> checkPasswordComplexity(String password) async {
-    String pattern = r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
-    RegExp regExp = RegExp(pattern);
-    return regExp.hasMatch(password);
+  Future<bool> checkPasswordComplexity(String password) async {
+    String pattern =
+        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+    return RegExp(pattern).hasMatch(password);
   }
 
-  Future<void> registerUser(Map<String, String?> userData, BuildContext context, void Function() clearText) async {
-
+  Future<void> registerUser(Map<String, dynamic?> userData, BuildContext context, void Function() clearText) async {
     ProgressDialog pd = ProgressDialog(context: context);
-    pd.show(
-      max: 100,
-      msg: 'Registering User...',
-    );
-
+    pd.show(max: 100, msg: 'Registering User...');
 
     try {
-      // Create user in Firebase Authentication
+      // Extract user data
       var email = userData['email']!;
       var password = userData['password']!;
       var name = userData['name']!;
       var role = userData['role']!;
-      var idback = userData['idback']!;
-      var idfront = userData['idfront']!;
+      var idbackPath = userData['idback']!;
+      var idfrontPath = userData['idfront']!;
       var address = userData['address']!;
 
+      // Register user in Firebase Authentication
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
         password: password,
       );
 
-      // Get the User ID (UID) from Firebase Authentication
+      // Get the UID
       String uid = userCredential.user!.uid;
 
+      // Convert images to Uint8List
       ByteData data = await rootBundle.load('assets/images/cat.jpg');
       Uint8List bytes = data.buffer.asUint8List();
-      // Upload Image to Firebase Storage
-      String fileName = '$uid.jpg';
-      Reference reference = FirebaseStorage.instance.ref().child('Profile').child(fileName);
-      UploadTask uploadTask = reference.putData(bytes);
-      TaskSnapshot storageTaskSnapshot = await uploadTask;
+      Uint8List bytesIdFront = await File(idfrontPath).readAsBytes();
+      Uint8List bytesIdBack = await File(idbackPath).readAsBytes();
 
-      String downloadUrl = await storageTaskSnapshot.ref.getDownloadURL();
+      // Upload to Firebase Storage
+      Reference profileRef = FirebaseStorage.instance.ref().child('Profile/$uid.jpg');
+      Reference idFrontRef = FirebaseStorage.instance.ref().child('ID/$uid-front.jpg');
+      Reference idBackRef = FirebaseStorage.instance.ref().child('ID/$uid-back.jpg');
 
-      // Calculate the expiration date for the 6-month free trial
+      TaskSnapshot profileSnap = await profileRef.putData(bytes);
+      TaskSnapshot idFrontSnap = await idFrontRef.putData(bytesIdFront);
+      TaskSnapshot idBackSnap = await idBackRef.putData(bytesIdBack);
+
+      String profileUrl = await profileSnap.ref.getDownloadURL();
+      String idFrontUrl = await idFrontSnap.ref.getDownloadURL();
+      String idBackUrl = await idBackSnap.ref.getDownloadURL();
+
+      // Set expiration date (6-month free trial)
       DateTime expiryDate = DateTime.now().add(const Duration(days: 180));
 
-      if (role=='Admin' || role=='Super-Admin'){
-        // Store user info in Firestore
-        await _firestore.collection("Users").doc(uid).set({
-          "Uid": uid,         // Store UID
-          "Name": name,       // Store Name
-          "Email": email,     // Store Email
-          'ProfileUrl': downloadUrl,
-          'ProfileImage': fileName,
-          "Role": role,     // Store Role
-          "CreatedAt": FieldValue.serverTimestamp(),
-        });
-      }
-
-      if (role=='Pet Shelter' || role=='Pet Rescuer'){
-        // Store user info in Firestore with the trial subscription
-        await _firestore.collection("Users").doc(uid).set({
-          "Uid": uid,         // Store UID
-          "Name": name,       // Store Name
-          "Email": email,     // Store Email
-          "ProfileUrl": downloadUrl,
-          "ProfileImage": fileName,
-          "IDFrontUrl": idback,
-          "IDBackUrl": idfront,
-          "Role": role,       // Store Role
-          "CreatedAt": FieldValue.serverTimestamp(),
-          "Status": "Pending",
+      // User Firestore Data
+      Map<String, dynamic> userFirestoreData = {
+        "Uid": uid,
+        "Name": name,
+        "Email": email,
+        "ProfileUrl": profileUrl,
+        "ProfileImage": "$uid.jpg",
+        "IDFrontImage": "$uid-front.jpg",
+        "IDBackImage": "$uid-back.jpg",
+        "IDFrontUrl": idFrontUrl,
+        "IDBackUrl": idBackUrl,
+        "Role": role,
+        "CreatedAt": FieldValue.serverTimestamp(),
+        "Status": role == "Admin" || role == "Super-Admin" ? "Active" : "Pending",
+        if (role != "Admin" && role != "Super-Admin") ...{
           "Address": address,
-          "SubscriptionExpiresAt": Timestamp.fromDate(expiryDate), // Free trial expiry date
-          "SubscriptionType": "Free Trial", // Optional: Track subscription type
-        });
-      }
-      else{
-        // Store user info in Firestore with the trial subscription
-        await _firestore.collection("Users").doc(uid).set({
-          "Uid": uid,         // Store UID
-          "Name": name,       // Store Name
-          "Email": email,     // Store Email
-          "ProfileUrl": downloadUrl,
-          "ProfileImage": fileName,
-          "IDFrontUrl": idback,
-          "IDBackUrl": idfront,
-          "Role": role,       // Store Role
-          "CreatedAt": FieldValue.serverTimestamp(),
-          "Status": "Pending",
-          "SubscriptionExpiresAt": Timestamp.fromDate(expiryDate), // Free trial expiry date
-          "SubscriptionType": "Free Trial", // Optional: Track subscription type
-        });
-      }
+          "SubscriptionExpiresAt": Timestamp.fromDate(expiryDate),
+          "SubscriptionType": "Free Trial",
+        }
+      };
 
-      print("User registered successfully!");
+      // Add to Firestore
+      await _firestore.collection("Users").doc(uid).set(userFirestoreData);
+
+      // Success message
       Fluttertoast.showToast(
         msg: 'User registered successfully!',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
         backgroundColor: Colors.green,
         textColor: Colors.white,
         fontSize: 16.0,
       );
+
       clearText();
     } catch (e) {
       print("Error: $e");
-    }
-    finally {
+      Fluttertoast.showToast(
+        msg: "Error: $e",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } finally {
       pd.close();
     }
   }

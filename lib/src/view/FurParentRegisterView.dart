@@ -267,7 +267,15 @@ class RegisterState extends State<FurParentRegisterView> {
                               ),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Provider.of<RegisterViewModel>(context, listen: false).checkData(context, "FurUser");
+                                  if(viewModel.isChecked) {
+                                    Provider.of<RegisterViewModel>(context, listen: false).checkData(context, "FurUser");
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('Please agree to the terms and conditions'),
+                                      ),
+                                    );
+                                  }
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.black,

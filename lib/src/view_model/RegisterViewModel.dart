@@ -61,6 +61,7 @@ class RegisterViewModel extends ChangeNotifier {
       return; // Stop further execution
     }
 
+
     bool userExists = await _repository.checkIfUserExists(nameController.text, emailController.text);
     bool checkEmail = await _repository.checkValidateEmail(emailController.text);
     bool checkPassword = await _repository.checkPassword(passwordController.text, confirmPasswordController.text);
@@ -126,14 +127,13 @@ class RegisterViewModel extends ChangeNotifier {
       'role': role == 'FurUser' ? 'Fur User' :
       role == 'PetShelter' ? 'Pet Shelter' :
       role == 'PetRescuer' ? 'Pet Rescuer' :
-      role == 'Animal Welfare Advocate' ? 'Admin' : '',
+      role == 'Animal Welfare Advocate' ? 'Animal Welfare Advocate' : '',
     });
   }
 
 
   void showTermsAndConditionDialog(BuildContext context) async {
-    // String termsText = await loadTermsAndConditions();
-    String termsText = "Terms and Conditions";
+    String termsText = await loadTermsAndConditions();
 
     showDialog(
       context: context,

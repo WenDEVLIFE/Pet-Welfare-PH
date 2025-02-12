@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pet_welfrare_ph/src/utils/YahooServices.dart';
 
+import '../respository/AddUserRespository.dart';
+
 class OTPViewModel extends ChangeNotifier {
   int time = 60;
   Timer? _timer;
@@ -12,6 +14,8 @@ class OTPViewModel extends ChangeNotifier {
   bool _isLoading = false;
 
   final List<TextEditingController> controllers = List.generate(6, (index) => TextEditingController());
+
+  final AddUserRepository _repository = AddUserRepository();
 
   bool get isLoading => _isLoading;
 
@@ -59,16 +63,34 @@ class OTPViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void checkOTP(int enteredOTP) {
-    String enteredOTP = controllers.map((controller) => controller.text).join();
-    if (enteredOTP == otp.toString()) {
-      if (kDebugMode) {
-        print('OTP is correct');
+  void checkOTP(int enteredOTP, Map<String, dynamic>? userData, BuildContext context) {
+    if (userData != null) {
+      userData.addAll({'address': otp});
+      String enteredOTP = controllers.map((controller) => controller.text).join();
+      if (enteredOTP == otp.toString()) {
+        // Register user
+        _repository.registerUser(userData, context, clearData);
+      } else {
+        Fluttertoast.showToast(
+          msg: 'Invalid OTP',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          timeInSecForIosWeb: 1,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+
       }
     } else {
-      if (kDebugMode) {
-        print('OTP is incorrect');
-      }
+      Fluttertoast.showToast(
+        msg: 'User data is null',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
     }
     notifyListeners();
   }

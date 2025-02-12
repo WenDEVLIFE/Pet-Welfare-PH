@@ -210,13 +210,25 @@ class RegisterState extends State<UploadIDView> {
                           Center(
                             child: ElevatedButton(
                               onPressed: () {
-                                var userData1 = {
-                                  'email': userData!['email'],
-                                  'name': userData['name'],
-                                  'password': userData['password'],
-                                  'role': userData['role'],
-                                };
-                                context.read<UploadIDViewModel>().navigateToOTP(context ,userData1);
+                               if(userData?['role'] == 'Pet Shelter' || userData?['role'] == 'Pet Rescuer'){
+                                 var userData1 = {
+                                   'email': userData?['email'],
+                                   'name': userData?['name'],
+                                   'password': userData?['password'],
+                                   'role': userData?['role'],
+                                   'address': userData?['address'],
+                                 };
+                                 context.read<UploadIDViewModel>().navigateToOTP(context, userData1);
+                               }
+                               else{
+                                  var userData1 = {
+                                    'email': userData?['email'],
+                                    'name': userData?['name'],
+                                    'password': userData?['password'],
+                                    'role': userData?['role'],
+                                  };
+                                 context.read<UploadIDViewModel>().navigateToOTP(context ,userData1);
+                               }
                               },
                               style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
                               child: const Text(

@@ -128,12 +128,12 @@ class RegisterState extends State<OTPView> {
                                 ),
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    Provider.of<OTPViewModel>(context, listen: false).checkOTP(int.parse(_viewModel.controllers.map((controller) => controller.text).join()));
+                                    Provider.of<OTPViewModel>(context, listen: false).checkOTP(int.parse(_viewModel.controllers.map((controller) => controller.text).join()), userData ,context);
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.black,
                                   ),
-                                  child: const Text('Proceed',
+                                  child: const Text('Confirm',
                                     style: TextStyle(
                                       fontSize: 20,
                                       color: Colors.white,
