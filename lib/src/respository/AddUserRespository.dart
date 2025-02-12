@@ -60,6 +60,9 @@ class AddUserRepository {
       var password = userData['password']!;
       var name = userData['name']!;
       var role = userData['role']!;
+      var idback = userData['idback']!;
+      var idfront = userData['idfront']!;
+      var address = userData['address']!;
 
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -78,16 +81,62 @@ class AddUserRepository {
       TaskSnapshot storageTaskSnapshot = await uploadTask;
 
       String downloadUrl = await storageTaskSnapshot.ref.getDownloadURL();
-      // Store user info in Firestore
-      await _firestore.collection("Users").doc(uid).set({
-        "Uid": uid,         // Store UID
-        "Name": name,       // Store Name
-        "Email": email,     // Store Email
-        'ProfileUrl': downloadUrl,
-        'ProfileImage': fileName,
-        "Role": role,     // Store Role
-        "CreatedAt": FieldValue.serverTimestamp(),
-      });
+
+      if (role=='Admin' || role=='Super-Admin'){
+        // Store user info in Firestore
+        await _firestore.collection("Users").doc(uid).set({
+          "Uid": uid,         // Store UID
+          "Name": name,       // Store Name
+          "Email": email,     // Store Email
+          'ProfileUrl': downloadUrl,
+          'ProfileImage': fileName,
+          "Role": role,     // Store Role
+          "CreatedAt": FieldValue.serverTimestamp(),
+        });
+      }
+
+      if (role=='Pet Shelter' || role=='Pet Rescuer'){
+
+        // Calculate the expiration date for the 6-month free trial
+        DateTime expiryDate = DateTime.now().add(Duration(days: 180));
+
+        // Store user info in Firestore with the trial subscription
+        await _firestore.collection("Users").doc(uid).set({
+          "Uid": uid,         // Store UID
+          "Name": name,       // Store Name
+          "Email": email,     // Store Email
+          "ProfileUrl": downloadUrl,
+          "ProfileImage": fileName,
+          "IDFrontUrl": idback,
+          "IDBackUrl": idfront,
+          "Role": role,       // Store Role
+          "CreatedAt": FieldValue.serverTimestamp(),
+          "Status": "Pending",
+          "Address": address,
+          "SubscriptionExpiresAt": Timestamp.fromDate(expiryDate), // Free trial expiry date
+          "SubscriptionType": "Free Trial", // Optional: Track subscription type
+        });
+      }
+      else{
+        // Calculate the expiration date for the 6-month free trial
+        DateTime expiryDate = DateTime.now().add(Duration(days: 180));
+
+        // Store user info in Firestore with the trial subscription
+        await _firestore.collection("Users").doc(uid).set({
+          "Uid": uid,         // Store UID
+          "Name": name,       // Store Name
+          "Email": email,     // Store Email
+          "ProfileUrl": downloadUrl,
+          "ProfileImage": fileName,
+          "IDFrontUrl": idback,
+          "IDBackUrl": idfront,
+          "Role": role,       // Store Role
+          "CreatedAt": FieldValue.serverTimestamp(),
+          "Status": "Pending",
+          "SubscriptionExpiresAt": Timestamp.fromDate(expiryDate), // Free trial expiry date
+          "SubscriptionType": "Free Trial", // Optional: Track subscription type
+        });
+      }
 
       print("User registered successfully!");
       Fluttertoast.showToast(
