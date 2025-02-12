@@ -15,14 +15,24 @@ class OTPView extends StatefulWidget {
 class RegisterState extends State<OTPView> {
   late OTPViewModel _viewModel;
 
+  late Map<String, dynamic>? userData;
+
   @override
   void initState() {
     super.initState();
     _viewModel = Provider.of<OTPViewModel>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
+
+      userData = ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
       _viewModel.startTimer();
       _viewModel.resetTimer();
-      _viewModel.generateOTP(context);
+      _viewModel.generateOTP(context, userData?['email']);
+      print(userData?['email']);
+      print(userData?['password']);
+      print(userData?['name']);
+      print(userData?['role']);
+      print(userData?['idback']);
+      print(userData?['idfront']);
     });
   }
 
@@ -35,16 +45,6 @@ class RegisterState extends State<OTPView> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
-
-    final Map<String, dynamic>? userData =
-    ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
-
-    print(userData?['email']);
-    print(userData?['password']);
-    print(userData?['name']);
-    print(userData?['role']);
-    print(userData?['idback']);
-    print(userData?['idfront']);
 
     return WillPopScope(
       onWillPop: _onWillPop,
@@ -156,7 +156,7 @@ class RegisterState extends State<OTPView> {
                                 child: ElevatedButton(
                                   onPressed: () {
                                     if (_viewModel.time == 0) {
-                                      _viewModel.generateOTP(context);
+                                      _viewModel.generateOTP(context, userData?['email']);
                                       _viewModel.resetTimer();
                                       _viewModel.startTimer();
                                     } else {

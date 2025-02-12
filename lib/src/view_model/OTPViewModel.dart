@@ -24,7 +24,7 @@ class OTPViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void generateOTP(BuildContext context) {
+  void generateOTP(BuildContext context, String email) {
     int min = 234563;
     int max = 999999;
     otp = min + (DateTime.now().millisecond % (max - min));
@@ -43,7 +43,7 @@ class OTPViewModel extends ChangeNotifier {
     }
 
     // Send the OTP via email
-    YahooMail().sendEmail(otp, "medinajrfrouen@gmail.com", setLoading, context);
+    YahooMail().sendEmail(otp, email, setLoading, context);
     notifyListeners();
   }
 
