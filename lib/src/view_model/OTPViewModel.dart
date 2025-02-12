@@ -40,6 +40,7 @@ class OTPViewModel extends ChangeNotifier {
 
     // Send the OTP via email
     YahooMail().sendEmail(otp, "medinajrfrouen@gmail.com", setLoading, context);
+    notifyListeners();
   }
 
   void startTimer() {
@@ -69,11 +70,13 @@ class OTPViewModel extends ChangeNotifier {
         print('OTP is incorrect');
       }
     }
+    notifyListeners();
   }
 
   void clearData() {
     for (var controller in controllers) {
       controller.clear();
+      notifyListeners();
     }
   }
 

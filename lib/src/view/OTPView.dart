@@ -19,9 +19,11 @@ class RegisterState extends State<OTPView> {
   void initState() {
     super.initState();
     _viewModel = Provider.of<OTPViewModel>(context, listen: false);
-    _viewModel.startTimer();
-    _viewModel.resetTimer();
-    _viewModel.generateOTP(context);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _viewModel.startTimer();
+      _viewModel.resetTimer();
+      _viewModel.generateOTP(context);
+    });
   }
 
   Future<bool> _onWillPop() async {
@@ -33,6 +35,16 @@ class RegisterState extends State<OTPView> {
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
+
+    final Map<String, dynamic>? userData =
+    ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+
+    print(userData?['email']);
+    print(userData?['password']);
+    print(userData?['name']);
+    print(userData?['role']);
+    print(userData?['idback']);
+    print(userData?['idfront']);
 
     return WillPopScope(
       onWillPop: _onWillPop,

@@ -23,11 +23,6 @@ class RegisterState extends State<UploadIDView> {
     final Map<String, dynamic>? userData =
     ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
 
-    print(userData?['name']);
-    print(userData?['email']);
-    print(userData?['password']);
-
-
     return Scaffold(
       body: Column(
         children: <Widget>[
@@ -141,8 +136,8 @@ class RegisterState extends State<UploadIDView> {
                                       backgroundColor: AppColors.orange,
                                       child: CircleAvatar(
                                         radius: 95,
-                                        backgroundImage: viewModel.backImagePath.isNotEmpty
-                                            ? FileImage(File(viewModel.backImagePath))
+                                        backgroundImage: viewModel.frontImagePath.isNotEmpty
+                                            ? FileImage(File(viewModel.frontImagePath))
                                             : const AssetImage(ImageUtils.catPath) as ImageProvider,
 
                                       ),
@@ -215,7 +210,13 @@ class RegisterState extends State<UploadIDView> {
                           Center(
                             child: ElevatedButton(
                               onPressed: () {
-                                context.read<UploadIDViewModel>().navigateToOTP(context);
+                                var userData1 = {
+                                  'email': userData!['email'],
+                                  'name': userData['name'],
+                                  'password': userData['password'],
+                                  'role': userData['role'],
+                                };
+                                context.read<UploadIDViewModel>().navigateToOTP(context ,userData1);
                               },
                               style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
                               child: const Text(

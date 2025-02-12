@@ -34,7 +34,22 @@ class UploadIDViewModel extends ChangeNotifier {
     }
   }
 
-  void navigateToOTP(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.otpScreen);
+  void navigateToOTP(BuildContext context, Map<String, dynamic> userData1) {
+     if (frontImagePath.isNotEmpty && backImagePath.isNotEmpty) {
+       var email = userData1['email']!;
+        var password = userData1['password']!;
+        var name = userData1['name']!;
+        var role = userData1['role']!;
+
+       Navigator.pushNamed(context, AppRoutes.otpScreen, arguments: {
+         'email': email,
+         'password': password,
+         'name': name,
+         'role': role,
+         'idback': backImagePath,
+         'idfront': frontImagePath,
+       });
+     }
+
   }
 }
