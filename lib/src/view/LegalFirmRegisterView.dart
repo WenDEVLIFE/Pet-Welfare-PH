@@ -12,10 +12,7 @@ class LegalFirmRegisterView extends StatefulWidget {
 }
 
 class RegisterState extends State<LegalFirmRegisterView> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController nameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
+
 
   late RegisterViewModel viewModel;
 
@@ -85,7 +82,7 @@ class RegisterState extends State<LegalFirmRegisterView> {
                                 color: Colors.black)),
                             SizedBox(height: screenHeight * 0.01),
                             TextField(
-                              controller: nameController,
+                              controller: viewModel.nameController,
                               decoration: const InputDecoration(
                                 filled: true,
                                 fillColor: AppColors.gray,
@@ -111,7 +108,7 @@ class RegisterState extends State<LegalFirmRegisterView> {
                                 color: Colors.black)),
                             SizedBox(height: screenHeight * 0.01),
                             TextField(
-                              controller: emailController,
+                              controller: viewModel.emailController,
                               decoration: const InputDecoration(
                                 filled: true,
                                 fillColor: AppColors.gray,
@@ -141,7 +138,7 @@ class RegisterState extends State<LegalFirmRegisterView> {
                             Consumer<RegisterViewModel>(
                               builder: (context, viewmodel, child) {
                                 return TextField(
-                                  controller: passwordController,
+                                  controller: viewmodel.passwordController,
                                   decoration: InputDecoration(
                                     filled: true,
                                     fillColor: AppColors.gray,
@@ -179,7 +176,7 @@ class RegisterState extends State<LegalFirmRegisterView> {
                             Consumer<RegisterViewModel>(
                               builder: (context, viewmodel, child) {
                                 return TextField(
-                                  controller: confirmPasswordController,
+                                  controller: viewmodel.confirmPasswordController,
                                   decoration: InputDecoration(
                                     filled: true,
                                     fillColor: AppColors.gray,

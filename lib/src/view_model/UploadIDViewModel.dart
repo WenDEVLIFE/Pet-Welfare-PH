@@ -46,8 +46,10 @@ class UploadIDViewModel extends ChangeNotifier {
          'password': password,
          'name': name,
          'role': role,
+         'selectIDtype': selectedIdType,
          'idback': backImagePath,
          'idfront': frontImagePath,
+         if (role == "Pet Rescuer" && role == "Pet Shelter") "Address": userData1['address']!,
        });
      }
 

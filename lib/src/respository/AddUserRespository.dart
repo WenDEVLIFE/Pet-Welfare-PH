@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pet_welfrare_ph/src/utils/Route.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
 
 class AddUserRepository {
@@ -100,20 +101,25 @@ class AddUserRepository {
         "IDBackUrl": idBackUrl,
         "Role": role,
         "CreatedAt": FieldValue.serverTimestamp(),
-        "Status": role == "Admin" || role == "Super-Admin" ? "Active" : "Pending",
-        if (role != "Admin" && role != "Super-Admin") ...{
-          "Address": address,
+        if (role != "Admin" && role != "Super-Admin" ) ...{
+          if (role == "Pet Rescuer" && role == "Pet Shelter") "Address": address,
           "SubscriptionExpiresAt": Timestamp.fromDate(expiryDate),
           "SubscriptionType": "Free Trial",
+          "Status": "Pending",
         }
+
       };
 
       // Add to Firestore
       await _firestore.collection("Users").doc(uid).set(userFirestoreData);
 
+      if (role !="Admin" && role != "Super-Admin") {
+        Navigator.pushReplacementNamed(context, AppRoutes.loginScreen);
+      }
+
       // Success message
       Fluttertoast.showToast(
-        msg: 'User registered successfully!',
+        msg: 'Your account registered successfully!',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.green,

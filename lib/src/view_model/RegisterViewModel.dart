@@ -11,6 +11,7 @@ class RegisterViewModel extends ChangeNotifier {
   final TextEditingController nameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
   final TextEditingController confirmPasswordController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
 
   final AddUserRepository _repository = AddUserRepository();
 
@@ -128,6 +129,7 @@ class RegisterViewModel extends ChangeNotifier {
       role == 'PetShelter' ? 'Pet Shelter' :
       role == 'PetRescuer' ? 'Pet Rescuer' :
       role == 'Animal Welfare Advocate' ? 'Animal Welfare Advocate' : '',
+      if (role == "Pet Rescuer" || role == "Pet Shelter") "address": addressController.text,
     });
   }
 

@@ -13,12 +13,6 @@ class PetrShelterRegisterview extends StatefulWidget {
 }
 
 class RegisterState extends State<PetrShelterRegisterview> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController nameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
-  TextEditingController addressController = TextEditingController();
-
   var role = ['Pet Shelter', 'Pet Rescuer'];
   var selectedRole = 'Pet Shelter';
 
@@ -86,7 +80,7 @@ class RegisterState extends State<PetrShelterRegisterview> {
                           ),
                           SizedBox(height: screenHeight * 0.02),
                           TextField(
-                            controller: nameController,
+                            controller: viewModel.nameController,
                             decoration: const InputDecoration(
                               filled: true,
                               fillColor: AppColors.gray,
@@ -113,7 +107,7 @@ class RegisterState extends State<PetrShelterRegisterview> {
                               color: Colors.black)),
                           SizedBox(height: screenHeight * 0.01),
                           TextField(
-                            controller: emailController,
+                            controller: viewModel.emailController,
                             decoration: const InputDecoration(
                               filled: true,
                               fillColor: AppColors.gray,
@@ -204,7 +198,7 @@ class RegisterState extends State<PetrShelterRegisterview> {
                               color: Colors.black)),
                           SizedBox(height: screenHeight * 0.01),
                           TextField(
-                            controller: addressController,
+                            controller: viewModel.addressController,
                             decoration: const InputDecoration(
                               filled: true,
                               fillColor: AppColors.gray,
@@ -233,7 +227,7 @@ class RegisterState extends State<PetrShelterRegisterview> {
                           Consumer<RegisterViewModel>(
                             builder: (context, viewmodel, child) {
                               return TextField(
-                                controller: passwordController,
+                                controller: viewmodel.passwordController,
                                 decoration: InputDecoration(
                                   filled: true,
                                   fillColor: AppColors.gray,
@@ -272,7 +266,7 @@ class RegisterState extends State<PetrShelterRegisterview> {
                           Consumer<RegisterViewModel>(
                             builder: (context, viewmodel, child) {
                               return TextField(
-                                controller: confirmPasswordController,
+                                controller: viewmodel.confirmPasswordController,
                                 decoration: InputDecoration(
                                   filled: true,
                                   fillColor: AppColors.gray,
