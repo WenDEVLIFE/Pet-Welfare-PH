@@ -237,7 +237,7 @@ class RegisterState extends State<VetClinicRegisterView> {
                               ),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Provider.of<RegisterViewModel>(context, listen: false).proceedUploadID(context);
+                                  Provider.of<RegisterViewModel>(context, listen: false).checkData(context , 'Vet Personnel');
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.black,

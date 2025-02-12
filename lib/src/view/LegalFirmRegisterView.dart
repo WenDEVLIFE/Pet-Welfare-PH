@@ -263,7 +263,7 @@ class RegisterState extends State<LegalFirmRegisterView> {
                                 ),
                                 child: ElevatedButton(
                                   onPressed: () {
-                                    Provider.of<RegisterViewModel>(context, listen: false).proceedUploadID(context);
+                                    Provider.of<RegisterViewModel>(context, listen: false).checkData(context, "Animal Welfare Advocate");
                                   },
                                   style: ElevatedButton.styleFrom(
                                     backgroundColor: Colors.black,

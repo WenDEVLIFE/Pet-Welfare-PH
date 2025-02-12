@@ -1,8 +1,18 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:fluttertoast/fluttertoast.dart';
+import '../respository/AddUserRespository.dart';
 import '../utils/Route.dart';
 
 class RegisterViewModel extends ChangeNotifier {
+
+  final TextEditingController emailController = TextEditingController();
+  final TextEditingController nameController = TextEditingController();
+  final TextEditingController passwordController = TextEditingController();
+  final TextEditingController confirmPasswordController = TextEditingController();
+
+  final AddUserRepository _repository = AddUserRepository();
 
   // Password Visibility
   bool _obscureText1 = true;
@@ -29,14 +39,97 @@ class RegisterViewModel extends ChangeNotifier {
     Navigator.pushReplacementNamed(context, AppRoutes.loginScreen);
   }
 
-  void proceedUploadID(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.uploadIDScreen);
-  }
-
   void setChecked(bool value) {
     _isChecked = value;
     notifyListeners();
   }
+
+  Future<void> checkData(BuildContext context, String role) async {
+    if (emailController.text.isEmpty ||
+        nameController.text.isEmpty ||
+        passwordController.text.isEmpty ||
+        confirmPasswordController.text.isEmpty) {
+      Fluttertoast.showToast(
+        msg: 'Please fill all the fields',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: CupertinoColors.systemRed,
+        textColor: CupertinoColors.white,
+        fontSize: 16.0,
+      );
+      return; // Stop further execution
+    }
+
+    bool userExists = await _repository.checkIfUserExists(nameController.text, emailController.text);
+    bool checkEmail = await _repository.checkValidateEmail(emailController.text);
+    bool checkPassword = await _repository.checkPassword(passwordController.text, confirmPasswordController.text);
+    bool checkPasswordComplexity = await _repository.checkPasswordComplexity(passwordController.text);
+
+    if (userExists) {
+      Fluttertoast.showToast(
+        msg: 'User with this name or email already exists',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: CupertinoColors.systemRed,
+        textColor: CupertinoColors.white,
+        fontSize: 16.0,
+      );
+      return; // Stop further execution
+    }
+
+    if (!checkEmail) {
+      Fluttertoast.showToast(
+        msg: 'Please enter a valid email',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: CupertinoColors.systemRed,
+        textColor: CupertinoColors.white,
+        fontSize: 16.0,
+      );
+      return; // Stop further execution
+    }
+
+    if (!checkPassword) {
+      Fluttertoast.showToast(
+        msg: 'Password does not match',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: CupertinoColors.systemRed,
+        textColor: CupertinoColors.white,
+        fontSize: 16.0,
+      );
+      return; // Stop further execution
+    }
+
+    if (!checkPasswordComplexity) {
+      Fluttertoast.showToast(
+        msg: 'Password must contain at least 1 uppercase, 1 lowercase, 1 number, 1 special character and must be 8 characters long',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: CupertinoColors.systemRed,
+        textColor: CupertinoColors.white,
+        fontSize: 16.0,
+      );
+      return; // Stop further execution
+    }
+
+    // Proceed with adding the user
+    Navigator.pushNamed(context, AppRoutes.uploadIDScreen, arguments: {
+      'email': emailController.text,
+      'name': nameController.text,
+      'password': passwordController.text,
+      'role': role == 'FurUser' ? 'Fur User' :
+      role == 'PetShelter' ? 'Pet Shelter' :
+      role == 'PetRescuer' ? 'Pet Rescuer' :
+      role == 'Animal Welfare Advocate' ? 'Admin' : '',
+    });
+  }
+
 
   void showTermsAndConditionDialog(BuildContext context) async {
     // String termsText = await loadTermsAndConditions();

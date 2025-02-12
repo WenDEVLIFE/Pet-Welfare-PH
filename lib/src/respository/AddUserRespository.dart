@@ -82,6 +82,9 @@ class AddUserRepository {
 
       String downloadUrl = await storageTaskSnapshot.ref.getDownloadURL();
 
+      // Calculate the expiration date for the 6-month free trial
+      DateTime expiryDate = DateTime.now().add(const Duration(days: 180));
+
       if (role=='Admin' || role=='Super-Admin'){
         // Store user info in Firestore
         await _firestore.collection("Users").doc(uid).set({
@@ -96,10 +99,6 @@ class AddUserRepository {
       }
 
       if (role=='Pet Shelter' || role=='Pet Rescuer'){
-
-        // Calculate the expiration date for the 6-month free trial
-        DateTime expiryDate = DateTime.now().add(Duration(days: 180));
-
         // Store user info in Firestore with the trial subscription
         await _firestore.collection("Users").doc(uid).set({
           "Uid": uid,         // Store UID
@@ -118,9 +117,6 @@ class AddUserRepository {
         });
       }
       else{
-        // Calculate the expiration date for the 6-month free trial
-        DateTime expiryDate = DateTime.now().add(Duration(days: 180));
-
         // Store user info in Firestore with the trial subscription
         await _firestore.collection("Users").doc(uid).set({
           "Uid": uid,         // Store UID

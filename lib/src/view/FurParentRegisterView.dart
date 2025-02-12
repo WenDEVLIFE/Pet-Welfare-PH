@@ -12,10 +12,6 @@ class FurParentRegisterView extends StatefulWidget {
 }
 
 class RegisterState extends State<FurParentRegisterView> {
-  TextEditingController emailController = TextEditingController();
-  TextEditingController nameController = TextEditingController();
-  TextEditingController passwordController = TextEditingController();
-  TextEditingController confirmPasswordController = TextEditingController();
 
   late RegisterViewModel viewModel;
 
@@ -84,25 +80,29 @@ class RegisterState extends State<FurParentRegisterView> {
                               fontFamily: 'SmoochSans',
                               color: Colors.black)),
                           SizedBox(height: screenHeight * 0.01),
-                          TextField(
-                            controller: nameController,
-                            decoration: const InputDecoration(
-                              filled: true,
-                              fillColor: AppColors.gray,
-                              border: OutlineInputBorder(),
-                              hintText: 'Enter your name',
-                              hintStyle: TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'SmoochSans',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'SmoochSans',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
+                          Consumer<RegisterViewModel>(
+                            builder: (context, viewmodel, child) {
+                              return TextField(
+                                controller: viewmodel.nameController,
+                                decoration: const InputDecoration(
+                                  filled: true,
+                                  fillColor: AppColors.gray,
+                                  border: OutlineInputBorder(),
+                                  hintText: 'Enter your name',
+                                  hintStyle: TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'SmoochSans',
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: 'SmoochSans',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              );
+                            },
                           ),
                           SizedBox(height: screenHeight * 0.02),
                           const Text('EMAIL', style: TextStyle(fontSize: 18,
@@ -110,25 +110,29 @@ class RegisterState extends State<FurParentRegisterView> {
                               fontFamily: 'SmoochSans',
                               color: Colors.black)),
                           SizedBox(height: screenHeight * 0.01),
-                          TextField(
-                            controller: emailController,
-                            decoration: const InputDecoration(
-                              filled: true,
-                              fillColor: AppColors.gray,
-                              border: OutlineInputBorder(),
-                              hintText: 'Enter your email',
-                              hintStyle: TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'SmoochSans',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'SmoochSans',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
+                          Consumer<RegisterViewModel>(
+                            builder: (context, viewmodel, child) {
+                              return TextField(
+                                controller: viewmodel.emailController,
+                                decoration: const InputDecoration(
+                                  filled: true,
+                                  fillColor: AppColors.gray,
+                                  border: OutlineInputBorder(),
+                                  hintText: 'Enter your email',
+                                  hintStyle: TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'SmoochSans',
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: 'SmoochSans',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              );
+                            },
                           ),
                           SizedBox(height: screenHeight * 0.02),
                           const Text('PASSWORD', style:
@@ -141,7 +145,7 @@ class RegisterState extends State<FurParentRegisterView> {
                           Consumer<RegisterViewModel>(
                             builder: (context, viewmodel, child) {
                               return TextField(
-                                controller: passwordController,
+                                controller: viewmodel.passwordController,
                                 decoration: InputDecoration(
                                   filled: true,
                                   fillColor: AppColors.gray,
@@ -179,7 +183,7 @@ class RegisterState extends State<FurParentRegisterView> {
                           Consumer<RegisterViewModel>(
                             builder: (context, viewmodel, child) {
                               return TextField(
-                                controller: confirmPasswordController,
+                                controller: viewmodel.confirmPasswordController,
                                 decoration: InputDecoration(
                                   filled: true,
                                   fillColor: AppColors.gray,
@@ -263,7 +267,7 @@ class RegisterState extends State<FurParentRegisterView> {
                               ),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Provider.of<RegisterViewModel>(context, listen: false).proceedUploadID(context);
+                                  Provider.of<RegisterViewModel>(context, listen: false).checkData(context, "FurUser");
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.black,
