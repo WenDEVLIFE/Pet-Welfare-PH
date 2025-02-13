@@ -94,7 +94,7 @@ class AddAdminViewState extends State<AddSubscriptionView> {
                 ),
               ),
               SizedBox(height: screenHeight * 0.01),
-              Consumer<AddAdminViewModel>(
+              Consumer<SubscriptionViewModel>(
                 builder: (context, changeViewModel, child) {
                   return TextField(
                     controller: viewModel.subscriptionPriceController,
@@ -128,10 +128,10 @@ class AddAdminViewState extends State<AddSubscriptionView> {
                 ),
               ),
               SizedBox(height: screenHeight * 0.01),
-              Consumer<AddAdminViewModel>(
+              Consumer<SubscriptionViewModel>(
                 builder: (context, changeViewModel, child) {
                   return TextField(
-                    controller: viewModel.subscriptionPriceController,
+                    controller: viewModel.subscriptionDurationController,
                     keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
                       filled: true,
@@ -163,7 +163,7 @@ class AddAdminViewState extends State<AddSubscriptionView> {
                   child: ElevatedButton(
                     onPressed: () {
                       // Add your update password logic here
-                      Provider.of<AddAdminViewModel>(context, listen: false).checkData(context);
+                      Provider.of<SubscriptionViewModel>(context, listen: false).AddSubscription(context);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,

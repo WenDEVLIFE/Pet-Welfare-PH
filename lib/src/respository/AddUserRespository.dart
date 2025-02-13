@@ -15,7 +15,7 @@ abstract class AddUserRepository {
   Future<bool> checkValidateEmail(String email);
   Future<bool> checkPassword(String password, String confirmPassword);
   Future<bool> checkPasswordComplexity(String password);
-  Future<void> registerUser(Map<String, dynamic?> userData, BuildContext context, void Function() clearText);
+  Future<void> registerUser(Map<String, dynamic> userData, BuildContext context, void Function() clearText);
 }
 
 class AddUserImpl implements AddUserRepository {
