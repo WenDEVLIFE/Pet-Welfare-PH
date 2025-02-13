@@ -98,6 +98,7 @@ class AddAdminViewState extends State<AddSubscriptionView> {
                 builder: (context, changeViewModel, child) {
                   return TextField(
                     controller: viewModel.subscriptionPriceController,
+                    keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
                       filled: true,
                       fillColor: AppColors.gray,
@@ -131,6 +132,7 @@ class AddAdminViewState extends State<AddSubscriptionView> {
                 builder: (context, changeViewModel, child) {
                   return TextField(
                     controller: viewModel.subscriptionPriceController,
+                    keyboardType: TextInputType.number,
                     decoration: const InputDecoration(
                       filled: true,
                       fillColor: AppColors.gray,

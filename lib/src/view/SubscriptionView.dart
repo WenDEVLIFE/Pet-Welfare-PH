@@ -150,8 +150,8 @@ class SubscriptionState extends State<SubscriptionView> {
               padding: const EdgeInsets.all(16.0),
               child: FloatingActionButton(
                 onPressed: () {
-                  // Add your onPressed logic here
-                  //Provider.of<SubscriptionViewModel>(context, listen: false).navigateToAddAdmin(context);
+
+                  Provider.of<SubscriptionViewModel>(context, listen: false).addSubscriptionRoute(context);
                 },
                 backgroundColor: AppColors.orange,
                 child: const Icon(Icons.add, color: AppColors.white,),
