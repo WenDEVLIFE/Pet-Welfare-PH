@@ -3,13 +3,13 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class SubscriptionModel {
   String uid;
   String subscriptionName;
-  String subscriptionType;
+  String subscriptionDuration;
   String subscriptionAmount;
 
   SubscriptionModel({
     required this.uid,
     required this.subscriptionName,
-    required this.subscriptionType,
+    required this.subscriptionDuration,
     required this.subscriptionAmount,
   });
 
@@ -17,8 +17,8 @@ class SubscriptionModel {
     return SubscriptionModel(
       uid: doc.id,
       subscriptionName: doc['SubscriptionName'],
-      subscriptionType: doc['SubscriptionType'],
-      subscriptionAmount: doc['SubscriptionAmount'],
+      subscriptionDuration: doc['SubscriptionDuration'],
+      subscriptionAmount: doc['SubscriptionPrice'],
     );
   }
 }

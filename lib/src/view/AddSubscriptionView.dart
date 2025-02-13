@@ -163,7 +163,7 @@ class AddAdminViewState extends State<AddSubscriptionView> {
                   child: ElevatedButton(
                     onPressed: () {
                       // Add your update password logic here
-                      Provider.of<SubscriptionViewModel>(context, listen: false).AddSubscription(context);
+                      Provider.of<SubscriptionViewModel>(context, listen: false).addSubscription(context);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
