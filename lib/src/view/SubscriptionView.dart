@@ -18,16 +18,13 @@ class SubscriptionView extends StatefulWidget {
 }
 
 class SubscriptionState extends State<SubscriptionView> {
-  final TextEditingController _searchController = TextEditingController();
   late SubscriptionViewModel _subscriptionViewModel;
 
   @override
   void initState() {
     super.initState();
     _subscriptionViewModel = Provider.of<SubscriptionViewModel>(context, listen: false);
-
-    // Fetch subscriptions
-    Provider.of<SubscriptionViewModel>(context, listen: false).fetchSubscriptions();
+    _subscriptionViewModel.fetchSubscriptions();
   }
 
   @override
@@ -112,7 +109,10 @@ class SubscriptionState extends State<SubscriptionView> {
               border: Border.all(color: Colors.transparent, width: 7),
             ),
             child: TextField(
-              controller: _searchController,
+              controller: _subscriptionViewModel.searchController,
+              onChanged: (query) {
+                _subscriptionViewModel.filterSubscriptions(query);
+              },
               decoration: InputDecoration(
                 filled: true,
                 prefixIcon: const Icon(Icons.search, color: Colors.black),
@@ -121,7 +121,7 @@ class SubscriptionState extends State<SubscriptionView> {
                   borderRadius: BorderRadius.circular(10),
                   borderSide: const BorderSide(color: Colors.transparent, width: 2),
                 ),
-                hintText: 'Search a name or email....',
+                hintText: 'Search a subscription....',
                 hintStyle: const TextStyle(
                   color: Colors.black,
                 ),
@@ -158,24 +158,24 @@ class SubscriptionState extends State<SubscriptionView> {
                               child: ListTile(
                                 title: Text(subscription.subscriptionName,
                                   style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w800,
-                                  fontFamily: 'SmoochSans',
-                                  color: Colors.white,
-                                ),
+                                    fontSize: 18,
+                                    fontWeight: FontWeight.w800,
+                                    fontFamily: 'SmoochSans',
+                                    color: Colors.white,
+                                  ),
                                 ),
                                 subtitle: Column(
                                   crossAxisAlignment: CrossAxisAlignment.start,
                                   children: [
-                                    Text('Duration: ${subscription.subscriptionDuration}',
-                                        style: const TextStyle(
-                                          fontSize: 16,
-                                          fontWeight: FontWeight.w800,
-                                          fontFamily: 'SmoochSans',
-                                          color: Colors.white,
-                                        ),
+                                    Text('Duration: ${subscription.subscriptionDuration} days',
+                                      style: const TextStyle(
+                                        fontSize: 16,
+                                        fontWeight: FontWeight.w800,
+                                        fontFamily: 'SmoochSans',
+                                        color: Colors.white,
                                       ),
-                                    Text('Amount: ${subscription.subscriptionAmount}',
+                                    ),
+                                    Text('Amount: ₱ ${subscription.subscriptionAmount}',
                                       style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w800,
