@@ -45,6 +45,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => UserViewModel()),
         ChangeNotifierProvider(create: (_) => SubscriptionViewModel()),
         ChangeNotifierProvider(create: (_) => DrawerHeadViewModel()),
+        ChangeNotifierProvider(create: (_) => SubscriptionViewModel()),
       ],
       child: MaterialApp(
         key: GlobalKey(), //

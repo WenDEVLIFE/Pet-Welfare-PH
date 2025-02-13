@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:pet_welfrare_ph/src/components/UserNavigationComponent.dart';
+import 'package:pet_welfrare_ph/src/view/AddSubscriptionView.dart';
 import 'package:pet_welfrare_ph/src/view/DashboardView.dart';
 import 'package:pet_welfrare_ph/src/view/FurParentRegisterView.dart';
 import 'package:pet_welfrare_ph/src/view/HomeScreen.dart';
@@ -44,6 +45,7 @@ class AppRoutes {
   static const String userView = '/userView';
   static const String addAdmin = '/addAdmin';
   static const String subscription = '/subscription';
+  static const String goToSubscription = '/goToSubscription';
 
   // Assign routes to the screens
   static Map<String, WidgetBuilder> routes = {
@@ -68,5 +70,6 @@ class AppRoutes {
     userView: (context) => const UserView(), // Replace with actual screen
     addAdmin: (context) => const AddAdminView(), // Replace with actual screen
     subscription : (context) => const SubscriptionView(), // Replace with actual screen
+    goToSubscription : (context) => const AddSubscriptionView(), // Replace with actual screen
   };
 }
