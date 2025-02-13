@@ -8,8 +8,10 @@ import '../model/SubcriptionModel.dart';
 abstract class SubscriptionRespository {
   Future<bool> checkIfSubscriptionExist(String subscriptionName);
   Future<void> addSubscription(Map<String, dynamic> subscriptionData, BuildContext context, void Function() clearTextFields);
-  Future<List<SubscriptionModel>> getSubscriptions();
+  Stream<List<SubscriptionModel>> getSubscriptions();
   Future<void> updateSubscriptionData(Map<String, String> subscriptionData, BuildContext context, String uid);
+  void deleteSubscription(BuildContext context, String uid);
+
 }
 
 class SubscriptinImpl extends SubscriptionRespository {
@@ -56,14 +58,10 @@ class SubscriptinImpl extends SubscriptionRespository {
 
   // Get subscriptions
   @override
-  Future<List<SubscriptionModel>> getSubscriptions() async {
-    try {
-      QuerySnapshot snapshot = await _firestore.collection('Subscription').get();
+  Stream<List<SubscriptionModel>> getSubscriptions() {
+    return _firestore.collection('Subscription').snapshots().map((snapshot) {
       return snapshot.docs.map((doc) => SubscriptionModel.fromDocumentSnapshot(doc)).toList();
-    } catch (e) {
-      print(e);
-      return [];
-    }
+    });
   }
 
   // Update subscription
@@ -72,8 +70,6 @@ class SubscriptinImpl extends SubscriptionRespository {
     ProgressDialog pd = ProgressDialog(context: context);
     pd.show(max: 100, msg: 'Updating Subscription');
     try {
-      print("Debug Respository {$subscriptionData}");
-
       await _firestore.collection('Subscription').doc(uid).update({
         'SubscriptionName': subscriptionData['SubscriptionName'],
         'SubscriptionDuration': subscriptionData['SubscriptionDuration'],
@@ -88,12 +84,39 @@ class SubscriptinImpl extends SubscriptionRespository {
         textColor: Colors.white,
         fontSize: 16.0,
       );
-
-      Navigator.of(context).pop();
     } catch (e) {
       print(e);
       Fluttertoast.showToast(
         msg: 'Failed to update subscription',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } finally {
+      pd.close();
+    }
+  }
+  void deleteSubscription(BuildContext context, String uid) {
+    ProgressDialog pd = ProgressDialog(context: context);
+    pd.show(max: 100, msg: 'Deleting Subscription');
+    try {
+      _firestore.collection('Subscription').doc(uid).delete();
+      Fluttertoast.showToast(
+        msg: 'Subscription Deleted',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } catch (e) {
+      print(e);
+      Fluttertoast.showToast(
+        msg: 'Failed to delete subscription',
         toastLength: Toast.LENGTH_SHORT,
         gravity: ToastGravity.BOTTOM,
         timeInSecForIosWeb: 1,

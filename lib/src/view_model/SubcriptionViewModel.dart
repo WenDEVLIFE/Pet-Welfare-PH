@@ -19,6 +19,9 @@ class SubscriptionViewModel extends ChangeNotifier {
   // Get subscriptions
   List<SubscriptionModel> get subscriptions => _filteredSubscriptions;
 
+  // Stream of subscriptions
+  Stream<List<SubscriptionModel>> get subscriptionsStream => _subscriptionRespository.getSubscriptions();
+
   // Navigate to Add Subscription
   void addSubscriptionRoute(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.goToSubscription);
@@ -82,11 +85,23 @@ class SubscriptionViewModel extends ChangeNotifier {
     }
   }
 
-  // Fetch subscriptions
-  Future<void> fetchSubscriptions() async {
-    _subscriptions = await _subscriptionRespository.getSubscriptions();
-    _filteredSubscriptions = _subscriptions;
-    notifyListeners();
+  // Update Subscription
+  Future<void> updateSubscription(Map<String, String> subscriptionData, BuildContext context, String uid) async {
+    bool subscriptionExist = await _subscriptionRespository.checkIfSubscriptionExist(subscriptionData['SubscriptionName']!);
+
+    if (subscriptionExist) {
+      Fluttertoast.showToast(
+        msg: 'Subscription already exist',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } else {
+      _subscriptionRespository.updateSubscriptionData(subscriptionData, context, uid);
+    }
   }
 
   // Filter subscriptions
@@ -102,33 +117,13 @@ class SubscriptionViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void deleteSubscription(BuildContext context, String uid) {
+    _subscriptionRespository.deleteSubscription(context, uid);
+  }
+
   void clearTextFields() {
     subscriptionNameController.clear();
     subscriptionPriceController.clear();
     subscriptionDurationController.clear();
   }
-
-  Future<void> updateSubscription(Map<String, String> subscriptionData, BuildContext context, String uid) async {
-
-    bool subscriptionExist = await _subscriptionRespository.checkIfSubscriptionExist(subscriptionData['SubscriptionName']!);
-
-     if (subscriptionExist) {
-      Fluttertoast.showToast(
-        msg: 'Subscription already exist',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
-
-    } else {
-
-       print("Debug View Model {$subscriptionData}");
-      _subscriptionRespository.updateSubscriptionData(subscriptionData, context, uid);
-    }
-  }
-
-
 }

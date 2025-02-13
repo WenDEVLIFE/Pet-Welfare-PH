@@ -24,9 +24,7 @@ class SubscriptionState extends State<SubscriptionView> {
   void initState() {
     super.initState();
     _subscriptionViewModel = Provider.of<SubscriptionViewModel>(context, listen: false);
-    _subscriptionViewModel.fetchSubscriptions();
   }
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -137,8 +135,8 @@ class SubscriptionState extends State<SubscriptionView> {
           ),
           SizedBox(height: screenHeight * 0.005),
           Expanded(
-            child: FutureBuilder(
-              future: _subscriptionViewModel.fetchSubscriptions(),
+            child: StreamBuilder<List<SubscriptionModel>>(
+              stream: _subscriptionViewModel.subscriptionsStream,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -185,9 +183,21 @@ class SubscriptionState extends State<SubscriptionView> {
                                     ),
                                   ],
                                 ),
-                                trailing: IconButton(
-                                  icon: const Icon(Icons.edit, color: Colors.white,),
-                                  onPressed: () => _editSubscription(context, subscription, subscription.uid),
+                                trailing: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    IconButton(
+                                      icon: const Icon(Icons.edit, color: Colors.white),
+                                      onPressed: () => _editSubscription(context, subscription, subscription.uid),
+                                    ),
+                                    IconButton(
+                                      icon: const Icon(Icons.delete, color: Colors.white),
+                                      onPressed: () {
+                                        viewModel.deleteSubscription(context, subscription.uid);
+                                      },
+
+                                    ),
+                                  ],
                                 ),
                               ),
                             );
