@@ -343,7 +343,14 @@ class SubscriptionState extends State<SubscriptionView> {
                   subscription.subscriptionAmount = amountController.text;
 
                   // Call the update method in the ViewModel
-                  Provider.of<SubscriptionViewModel>(context, listen: false).updateSubscription(subscription);
+                  var subscriptionData = {
+                    'SubscriptionName': nameController.text,
+                    'SubscriptionDuration': durationController.text,
+                    'SubscriptionPrice': amountController.text,
+                  };
+
+                  // pass the subscription data to the updateSubscription method
+                  Provider.of<SubscriptionViewModel>(context, listen: false).updateSubscription(subscriptionData, context, uid);
 
                   Navigator.of(context).pop();
                 },

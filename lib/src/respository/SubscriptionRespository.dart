@@ -9,6 +9,7 @@ abstract class SubscriptionRespository {
   Future<bool> checkIfSubscriptionExist(String subscriptionName);
   Future<void> addSubscription(Map<String, dynamic> subscriptionData, BuildContext context, void Function() clearTextFields);
   Future<List<SubscriptionModel>> getSubscriptions();
+  Future<void> updateSubscriptionData(Map<String, String> subscriptionData, BuildContext context, String uid);
 }
 
 class SubscriptinImpl extends SubscriptionRespository {
@@ -62,6 +63,38 @@ class SubscriptinImpl extends SubscriptionRespository {
     } catch (e) {
       print(e);
       return [];
+    }
+  }
+
+  // Update subscription
+  @override
+  Future<void> updateSubscriptionData(Map<String, String> subscriptionData, BuildContext context, String uid) async {
+    ProgressDialog pd = ProgressDialog(context: context);
+    pd.show(max: 100, msg: 'Updating Subscription');
+    try {
+      await _firestore.collection('Subscription').doc(uid).update(subscriptionData);
+      Fluttertoast.showToast(
+        msg: 'Subscription Updated',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } catch (e) {
+      print(e);
+      Fluttertoast.showToast(
+        msg: 'Failed to update subscription',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        timeInSecForIosWeb: 1,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } finally {
+      pd.close();
     }
   }
 }
