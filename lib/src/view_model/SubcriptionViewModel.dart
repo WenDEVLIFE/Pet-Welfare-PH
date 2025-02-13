@@ -107,4 +107,8 @@ class SubscriptionViewModel extends ChangeNotifier {
     subscriptionPriceController.clear();
     subscriptionDurationController.clear();
   }
+
+  void updateSubscription(SubscriptionModel subscription) {
+
+  }
 }

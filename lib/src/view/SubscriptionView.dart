@@ -187,7 +187,7 @@ class SubscriptionState extends State<SubscriptionView> {
                                 ),
                                 trailing: IconButton(
                                   icon: const Icon(Icons.edit, color: Colors.white,),
-                                  onPressed: () => _editSubscription(context, subscription),
+                                  onPressed: () => _editSubscription(context, subscription, subscription.uid),
                                 ),
                               ),
                             );
@@ -219,8 +219,148 @@ class SubscriptionState extends State<SubscriptionView> {
   }
 
   // TODO : Added the editSubscription method
-  void _editSubscription(BuildContext context, SubscriptionModel subscription) {
-    // Implement the edit subscription dialog or screen
+  void _editSubscription(BuildContext context, SubscriptionModel subscription, String uid) {
+    // This is for show dialog edit subscription
+
+      TextEditingController nameController = TextEditingController(text: subscription.subscriptionName);
+      TextEditingController durationController = TextEditingController(text: subscription.subscriptionDuration.toString());
+      TextEditingController amountController = TextEditingController(text: subscription.subscriptionAmount.toString());
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            backgroundColor: AppColors.orange,
+            title: const Text('Edit Subscription',
+              style: TextStyle(
+                color: AppColors.white,
+                fontFamily: 'SmoochSans',
+                fontWeight: FontWeight.w600,
+                fontSize: 20,
+              ),
+            ),
+            content: SingleChildScrollView(
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  TextField(
+                    controller: nameController,
+                    decoration: const InputDecoration(
+                      labelText: 'Subscription Name',
+                      labelStyle: TextStyle(
+                        color: AppColors.white,
+                        fontFamily: 'SmoochSans',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                    ),
+                    style: const TextStyle(
+                      color: AppColors.white,
+                      fontFamily: 'SmoochSans',
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
+                  ),
+                  TextField(
+                    controller: durationController,
+                    decoration: const InputDecoration(
+                      labelText: 'Duration (days)',
+                      labelStyle: TextStyle(
+                        color: AppColors.white,
+                        fontFamily: 'SmoochSans',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                    ),
+                    keyboardType: TextInputType.number,
+                    style: const TextStyle(
+                      color: AppColors.white,
+                      fontFamily: 'SmoochSans',
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
+                  ),
+                  TextField(
+                    controller: amountController,
+                    decoration: const InputDecoration(
+                      labelText: 'Amount',
+                      labelStyle: TextStyle(
+                        color: AppColors.white,
+                        fontFamily: 'SmoochSans',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
+                      enabledBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                      focusedBorder: UnderlineInputBorder(
+                        borderSide: BorderSide(color: Colors.white),
+                      ),
+                    ),
+
+                    keyboardType: TextInputType.number,
+                    style: const TextStyle(
+                      color: AppColors.white,
+                      fontFamily: 'SmoochSans',
+                      fontWeight: FontWeight.w600,
+                      fontSize: 16,
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Cancel',
+                  style: const TextStyle(
+                    color: AppColors.white,
+                    fontFamily: 'SmoochSans',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              TextButton(
+                onPressed: () {
+                  // Update the subscription details
+                  subscription.subscriptionName = nameController.text;
+                  subscription.subscriptionDuration = durationController.text;
+                  subscription.subscriptionAmount = amountController.text;
+
+                  // Call the update method in the ViewModel
+                  Provider.of<SubscriptionViewModel>(context, listen: false).updateSubscription(subscription);
+
+                  Navigator.of(context).pop();
+                },
+                child: const Text('Save',
+                  style: const TextStyle(
+                    color: AppColors.white,
+                    fontFamily: 'SmoochSans',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+            ],
+          );
+        },
+      );
+
   }
 
   Widget _buildDrawerItem(IconData icon, String title, VoidCallback onTap) {
