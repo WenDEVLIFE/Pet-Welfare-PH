@@ -15,7 +15,7 @@ class AddAdminViewModel extends ChangeNotifier {
   bool obscureText1 = true;
   bool obscureText2 = true;
 
-  final AddUserRepository _repository = AddUserRepository();
+  final AddUserRepository _repository = AddUserImpl();
 
   bool get isobscure1 => obscureText1;
   bool get isobscure2 => obscureText2;

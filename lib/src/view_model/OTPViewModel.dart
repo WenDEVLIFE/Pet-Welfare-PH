@@ -15,7 +15,7 @@ class OTPViewModel extends ChangeNotifier {
 
   final List<TextEditingController> controllers = List.generate(6, (index) => TextEditingController());
 
-  final AddUserRepository _repository = AddUserRepository();
+  final AddUserRepository _repository = AddUserImpl();
 
   bool get isLoading => _isLoading;
 

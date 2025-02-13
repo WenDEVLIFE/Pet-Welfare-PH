@@ -10,7 +10,15 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
 
-class AddUserRepository {
+abstract class AddUserRepository {
+  Future<bool> checkIfUserExists(String name, String email);
+  Future<bool> checkValidateEmail(String email);
+  Future<bool> checkPassword(String password, String confirmPassword);
+  Future<bool> checkPasswordComplexity(String password);
+  Future<void> registerUser(Map<String, dynamic?> userData, BuildContext context, void Function() clearText);
+}
+
+class AddUserImpl implements AddUserRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 

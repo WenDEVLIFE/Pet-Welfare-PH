@@ -13,7 +13,7 @@ class RegisterViewModel extends ChangeNotifier {
   final TextEditingController confirmPasswordController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
 
-  final AddUserRepository _repository = AddUserRepository();
+  final AddUserRepository _repository = AddUserImpl();
 
   // Password Visibility
   bool _obscureText1 = true;
