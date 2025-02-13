@@ -51,7 +51,7 @@ class AddUserImpl implements AddUserRepository {
     return RegExp(pattern).hasMatch(password);
   }
 
-  Future<void> registerUser(Map<String, dynamic?> userData, BuildContext context, void Function() clearText) async {
+  Future<void> registerUser(Map<String, dynamic> userData, BuildContext context, void Function() clearText) async {
     ProgressDialog pd = ProgressDialog(context: context);
     pd.show(max: 100, msg: 'Registering User...');
 
@@ -115,13 +115,13 @@ class AddUserImpl implements AddUserRepository {
           "SubscriptionType": "Free Trial",
           "Status": "Pending",
         }
-
       };
 
       // Add to Firestore
       await _firestore.collection("Users").doc(uid).set(userFirestoreData);
 
-      if (role !="Admin" && role != "Super-Admin") {
+      // Navigate to login screen
+      if (role != "Admin" && role != "Super-Admin") {
         Navigator.pushReplacementNamed(context, AppRoutes.loginScreen);
       }
 
