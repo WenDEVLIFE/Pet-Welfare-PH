@@ -218,7 +218,6 @@ class SubscriptionState extends State<SubscriptionView> {
     );
   }
 
-  // TODO : Added the editSubscription method
   void _editSubscription(BuildContext context, SubscriptionModel subscription, String uid) {
     // This is for show dialog edit subscription
 
@@ -351,8 +350,6 @@ class SubscriptionState extends State<SubscriptionView> {
 
                   // pass the subscription data to the updateSubscription method
                   Provider.of<SubscriptionViewModel>(context, listen: false).updateSubscription(subscriptionData, context, uid);
-
-                  Navigator.of(context).pop();
                 },
                 child: const Text('Save',
                   style: const TextStyle(

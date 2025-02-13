@@ -72,7 +72,13 @@ class SubscriptinImpl extends SubscriptionRespository {
     ProgressDialog pd = ProgressDialog(context: context);
     pd.show(max: 100, msg: 'Updating Subscription');
     try {
-      await _firestore.collection('Subscription').doc(uid).update(subscriptionData);
+      print("Debug Respository {$subscriptionData}");
+
+      await _firestore.collection('Subscription').doc(uid).update({
+        'SubscriptionName': subscriptionData['SubscriptionName'],
+        'SubscriptionDuration': subscriptionData['SubscriptionDuration'],
+        'SubscriptionPrice': subscriptionData['SubscriptionPrice'],
+      });
       Fluttertoast.showToast(
         msg: 'Subscription Updated',
         toastLength: Toast.LENGTH_SHORT,
@@ -82,6 +88,8 @@ class SubscriptinImpl extends SubscriptionRespository {
         textColor: Colors.white,
         fontSize: 16.0,
       );
+
+      Navigator.of(context).pop();
     } catch (e) {
       print(e);
       Fluttertoast.showToast(
