@@ -6,6 +6,9 @@ class UserModel {
   String email;
   String role;
   String status;
+  String profileUrl;
+  String idbackPath;
+  String idfrontPath;
 
   UserModel({
     required this.uid,
@@ -13,17 +16,24 @@ class UserModel {
     required this.email,
     required this.role,
     required this.status,
+    required this.profileUrl,
+    required this.idbackPath,
+    required this.idfrontPath,
   });
 
   // Convert a UserModel into a Map
   factory UserModel.fromDocumentSnapshot(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>?;
+
     return UserModel(
       uid: doc.id,
-      name: doc['Name'] ??  '',
-      email: doc['Email'] ?? '',
-      role: doc['Role'] ?? '',
-      status: doc['Status'] ?? 'Status',
+      name: data?['Name'] ?? '',
+      email: data?['Email'] ?? '',
+      role: data?['Role'] ?? '',
+      status: data?['Status'] ?? 'Status',
+      profileUrl: data?['ProfileUrl'] ?? '',
+      idbackPath: data?['IDBackUrl'] ?? 'IDBackUrl',
+      idfrontPath: data?['IDFrontUrl'] ?? 'IDFrontUrl',
     );
-
   }
 }

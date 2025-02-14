@@ -8,6 +8,8 @@ import '../utils/Route.dart';
 import '../utils/SessionManager.dart';
 import 'package:provider/provider.dart';
 
+import 'ViewUserDataDialog.dart';
+
 class UserView extends StatefulWidget {
   const UserView({Key? key}) : super(key: key);
 
@@ -217,7 +219,14 @@ class UserViewState extends State<UserView> {
                           children: [
                             IconButton(
                               icon: const Icon(Icons.edit, color: Colors.white),
-                              onPressed: () {},
+                              onPressed: () {
+                                showDialog(
+                                  context: context,
+                                  builder: (BuildContext context) {
+                                    return ViewUserDataDialog(id: user.uid);
+                                  },
+                                );
+                              },
                             ),
                             IconButton(
                               icon: const Icon(Icons.delete, color: Colors.white),

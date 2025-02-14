@@ -17,15 +17,14 @@ class UserViewModel extends ChangeNotifier {
   // Stream of users
   Stream<List<UserModel>> get userStream => _addUserRepository.loadUserData();
 
-  // Constructor
   UserViewModel() {
     _listenToUserStream();
   }
 
-  // Listen to user stream
   void _listenToUserStream() {
     userStream.listen((userList) {
       setUsers(userList);
+      notifyListeners();
     });
   }
 
@@ -69,7 +68,6 @@ class UserViewModel extends ChangeNotifier {
       case 3:
         filteredUsers = users.where((user) => user.role?.toLowerCase() == 'admin' || user.role?.toLowerCase() == 'sub-admin').toList();
         break;
-
     }
     notifyListeners();
   }
