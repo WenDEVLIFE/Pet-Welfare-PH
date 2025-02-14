@@ -35,6 +35,7 @@ class UserViewState extends State<UserView> {
     setState(() {
       _selectedIndex = index;
     });
+    _userViewModel.filterByStatus(index);
   }
 
   @override
@@ -177,7 +178,9 @@ class UserViewState extends State<UserView> {
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return const Center(child: Text('No users found'));
-                } else {
+                } else if (snapshot.hasData) {
+                  final users = snapshot.data!;
+                  _userViewModel.setUsers(users);
                   return Consumer<UserViewModel>(
                     builder: (context, viewModel, child) {
                       return ListView.builder(
@@ -238,6 +241,8 @@ class UserViewState extends State<UserView> {
                       );
                     },
                   );
+                } else {
+                  return const Center(child: Text('No users available'));
                 }
               },
             ),

@@ -5,7 +5,6 @@ import 'package:pet_welfrare_ph/src/utils/Route.dart';
 
 class UserViewModel extends ChangeNotifier {
   final TextEditingController searchController = TextEditingController();
-
   final AddUserRepository _addUserRepository = AddUserImpl();
 
   // Users
@@ -22,6 +21,13 @@ class UserViewModel extends ChangeNotifier {
     Navigator.pushNamed(context, AppRoutes.addAdmin);
   }
 
+  // Set users
+  void setUsers(List<UserModel> userList) {
+    users = userList;
+    filteredUsers = userList;
+
+  }
+
   // Filtered Search
   void filterUser(String query) {
     if (query.isNotEmpty) {
@@ -30,10 +36,28 @@ class UserViewModel extends ChangeNotifier {
       user.name.toLowerCase().contains(query.toLowerCase()) ||
           user.email.toLowerCase().contains(query.toLowerCase()))
           .toList();
-      notifyListeners();
     } else {
       filteredUsers = users;
-      notifyListeners();
     }
+
+  }
+
+  // Filter by status
+  void filterByStatus(int index) {
+    switch (index) {
+      case 0:
+        filteredUsers = users.where((user) => user.status?.toLowerCase() == 'Approved').toList();
+        break;
+      case 1:
+        filteredUsers = users.where((user) => user.status?.toLowerCase() == 'Pending').toList();
+        break;
+      case 2:
+        filteredUsers = users.where((user) => user.status?.toLowerCase() == 'Banned').toList();
+        break;
+      case 3:
+        filteredUsers = users.where((user) => user.role?.toLowerCase() == 'Admin' || user.role?.toLowerCase() == 'Sub-Admin').toList();
+        break;
+    }
+    notifyListeners();  
   }
 }
