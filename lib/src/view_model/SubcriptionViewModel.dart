@@ -26,6 +26,7 @@ class SubscriptionViewModel extends ChangeNotifier {
   void setSubscriptions(List<SubscriptionModel> subscriptions) {
     _subscriptions = subscriptions;
     filterSubscriptions(searchController.text);
+    notifyListeners();
   }
 
   // Navigate to Add Subscription
@@ -90,6 +91,7 @@ class SubscriptionViewModel extends ChangeNotifier {
 
       _subscriptionRespository.addSubscription(subscriptionData, context, clearTextFields);
     }
+    notifyListeners();
   }
 
   // Update Subscription
@@ -109,6 +111,7 @@ class SubscriptionViewModel extends ChangeNotifier {
     } else {
       _subscriptionRespository.updateSubscriptionData(subscriptionData, context, uid);
     }
+    notifyListeners();
   }
 
   // Filter subscriptions
@@ -121,6 +124,7 @@ class SubscriptionViewModel extends ChangeNotifier {
             subscription.subscriptionAmount.toLowerCase().contains(query.toLowerCase());
       }).toList();
     }
+    notifyListeners();
   }
 
   void deleteSubscription(BuildContext context, String uid) {

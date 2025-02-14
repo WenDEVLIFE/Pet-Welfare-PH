@@ -22,7 +22,7 @@ class UserModel {
       name: doc['Name'] ?? '',
       email: doc['Email'] ?? '',
       role: doc['Role'] ?? '',
-      status: doc['Status'] ?? 'Approved',
+      status: doc['Status'] ?? 'Status',
     );
   }
 }

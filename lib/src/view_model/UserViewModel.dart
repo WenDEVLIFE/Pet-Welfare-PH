@@ -25,7 +25,7 @@ class UserViewModel extends ChangeNotifier {
   void setUsers(List<UserModel> userList) {
     users = userList;
     filteredUsers = userList;
-
+    notifyListeners();
   }
 
   // Filtered Search
@@ -39,6 +39,7 @@ class UserViewModel extends ChangeNotifier {
     } else {
       filteredUsers = users;
     }
+    notifyListeners();
 
   }
 
