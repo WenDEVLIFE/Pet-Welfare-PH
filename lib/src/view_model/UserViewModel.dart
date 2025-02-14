@@ -17,6 +17,18 @@ class UserViewModel extends ChangeNotifier {
   // Stream of users
   Stream<List<UserModel>> get userStream => _addUserRepository.loadUserData();
 
+  // Constructor
+  UserViewModel() {
+    _listenToUserStream();
+  }
+
+  // Listen to user stream
+  void _listenToUserStream() {
+    userStream.listen((userList) {
+      setUsers(userList);
+    });
+  }
+
   void navigateToAddAdmin(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.addAdmin);
   }
@@ -40,25 +52,25 @@ class UserViewModel extends ChangeNotifier {
       filteredUsers = users;
     }
     notifyListeners();
-
   }
 
   // Filter by status
   void filterByStatus(int index) {
     switch (index) {
       case 0:
-        filteredUsers = users.where((user) => user.status?.toLowerCase() == 'Approved').toList();
+        filteredUsers = users.where((user) => user.status?.toLowerCase() == 'approved').toList();
         break;
       case 1:
-        filteredUsers = users.where((user) => user.status?.toLowerCase() == 'Pending').toList();
+        filteredUsers = users.where((user) => user.status?.toLowerCase() == 'pending').toList();
         break;
       case 2:
-        filteredUsers = users.where((user) => user.status?.toLowerCase() == 'Banned').toList();
+        filteredUsers = users.where((user) => user.status?.toLowerCase() == 'banned').toList();
         break;
       case 3:
-        filteredUsers = users.where((user) => user.role?.toLowerCase() == 'Admin' || user.role?.toLowerCase() == 'Sub-Admin').toList();
+        filteredUsers = users.where((user) => user.role?.toLowerCase() == 'admin' || user.role?.toLowerCase() == 'sub-admin').toList();
         break;
+
     }
-    notifyListeners();  
+    notifyListeners();
   }
 }

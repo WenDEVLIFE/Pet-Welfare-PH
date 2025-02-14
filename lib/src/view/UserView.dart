@@ -171,79 +171,64 @@ class UserViewState extends State<UserView> {
             ),
           ),
           Expanded(
-            child: StreamBuilder<List<UserModel>>(
-              stream: _userViewModel.userStream,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return const Center(child: Text('No users found'));
-                } else if (snapshot.hasData) {
-                  final users = snapshot.data!;
-                  _userViewModel.setUsers(users);
-                  return Consumer<UserViewModel>(
-                    builder: (context, viewModel, child) {
-                      return ListView.builder(
-                        itemCount: viewModel.getUser.length,
-                        itemBuilder: (context, index) {
-                          UserModel user = viewModel.getUser[index];
-                          return Card(
-                            color: AppColors.orange,
-                            child: ListTile(
-                              title: Text(
-                                user.name,
-                                style: const TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w800,
-                                  fontFamily: 'SmoochSans',
-                                  color: Colors.white,
-                                ),
-                              ),
-                              subtitle: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    'Role: ${user.role}',
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w800,
-                                      fontFamily: 'SmoochSans',
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                  Text(
-                                    'Email: ${user.email}',
-                                    style: const TextStyle(
-                                      fontSize: 16,
-                                      fontWeight: FontWeight.w800,
-                                      fontFamily: 'SmoochSans',
-                                      color: Colors.white,
-                                    ),
-                                  ),
-                                ],
-                              ),
-                              trailing: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  IconButton(
-                                    icon: const Icon(Icons.edit, color: Colors.white),
-                                    onPressed: () {},
-                                  ),
-                                  IconButton(
-                                    icon: const Icon(Icons.delete, color: Colors.white),
-                                    onPressed: () {},
-                                  ),
-                                ],
+            child: Consumer<UserViewModel>(
+              builder: (context, viewModel, child) {
+                return ListView.builder(
+                  itemCount: viewModel.getUser.length,
+                  itemBuilder: (context, index) {
+                    UserModel user = viewModel.getUser[index];
+                    return Card(
+                      color: AppColors.orange,
+                      child: ListTile(
+                        title: Text(
+                          user.name,
+                          style: const TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w800,
+                            fontFamily: 'SmoochSans',
+                            color: Colors.white,
+                          ),
+                        ),
+                        subtitle: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'Role: ${user.role}',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                                fontFamily: 'SmoochSans',
+                                color: Colors.white,
                               ),
                             ),
-                          );
-                        },
-                      );
-                    },
-                  );
-                } else {
-                  return const Center(child: Text('No users available'));
-                }
+                            Text(
+                              'Email: ${user.email}',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                                fontFamily: 'SmoochSans',
+                                color: Colors.white,
+                              ),
+                            ),
+                          ],
+                        ),
+                        trailing: Row(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            IconButton(
+                              icon: const Icon(Icons.edit, color: Colors.white),
+                              onPressed: () {},
+                            ),
+                            IconButton(
+                              icon: const Icon(Icons.delete, color: Colors.white),
+                              onPressed: () {},
+                            ),
+                          ],
+                        ),
+                      ),
+                    );
+                  },
+                );
               },
             ),
           ),

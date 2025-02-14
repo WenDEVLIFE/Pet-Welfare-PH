@@ -19,10 +19,11 @@ class UserModel {
   factory UserModel.fromDocumentSnapshot(DocumentSnapshot doc) {
     return UserModel(
       uid: doc.id,
-      name: doc['Name'] ?? '',
+      name: doc['Name'] ??  '',
       email: doc['Email'] ?? '',
       role: doc['Role'] ?? '',
       status: doc['Status'] ?? 'Status',
     );
+
   }
 }
