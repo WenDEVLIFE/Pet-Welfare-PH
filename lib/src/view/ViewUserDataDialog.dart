@@ -39,25 +39,10 @@ class _ViewUserDataPageState extends State<ViewUserDataPage> {
       body: SingleChildScrollView(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisSize: MainAxisSize.min,
+          crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            TextField(
-              controller: TextEditingController(text: userData?['name']),
-              decoration: const InputDecoration(
-                labelText: 'Name',
-                labelStyle: TextStyle(
-                  color: AppColors.black,
-                  fontFamily: 'SmoochSans',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                ),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
-              ),
+            Text(
+              'Name: ${userData?['name'] ?? ''}',
               style: const TextStyle(
                 color: AppColors.black,
                 fontFamily: 'SmoochSans',
@@ -65,24 +50,9 @@ class _ViewUserDataPageState extends State<ViewUserDataPage> {
                 fontSize: 16,
               ),
             ),
-            TextField(
-              controller: TextEditingController(text: userData?['email']),
-              decoration: const InputDecoration(
-                labelText: 'Email',
-                labelStyle: TextStyle(
-                  color: AppColors.black,
-                  fontFamily: 'SmoochSans',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                ),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
-              ),
-              keyboardType: TextInputType.emailAddress,
+            SizedBox(height: screenHeight * 0.005),
+            Text(
+              'Email: ${userData?['email'] ?? ''}',
               style: const TextStyle(
                 color: AppColors.black,
                 fontFamily: 'SmoochSans',
@@ -90,23 +60,9 @@ class _ViewUserDataPageState extends State<ViewUserDataPage> {
                 fontSize: 16,
               ),
             ),
-            TextField(
-              controller: TextEditingController(text: userData?['role']),
-              decoration: const InputDecoration(
-                labelText: 'Role',
-                labelStyle: TextStyle(
-                  color: AppColors.black,
-                  fontFamily: 'SmoochSans',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                ),
-                enabledBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
-                focusedBorder: UnderlineInputBorder(
-                  borderSide: BorderSide(color: Colors.black),
-                ),
-              ),
+            SizedBox(height: screenHeight * 0.005),
+            Text(
+              'Role: ${userData?['role'] ?? ''}',
               style: const TextStyle(
                 color: AppColors.black,
                 fontFamily: 'SmoochSans',
@@ -157,31 +113,16 @@ class _ViewUserDataPageState extends State<ViewUserDataPage> {
               ),
             ],
             SizedBox(height: screenHeight * 0.005),
-             if (userData?['role'].toLowerCase() == 'Pet Rescuer' || userData?['role'].toLowerCase() == 'Pet Shelter') ...[
-               TextField(
-                  controller: TextEditingController(text: userData?['address']),
-                 decoration: const InputDecoration(
-                   labelText: 'Address',
-                   labelStyle: TextStyle(
-                     color: AppColors.black,
-                     fontFamily: 'SmoochSans',
-                     fontWeight: FontWeight.w600,
-                     fontSize: 16,
-                   ),
-                   enabledBorder: UnderlineInputBorder(
-                     borderSide: BorderSide(color: Colors.black),
-                   ),
-                   focusedBorder: UnderlineInputBorder(
-                     borderSide: BorderSide(color: Colors.black),
-                   ),
-                 ),
-                 style: const TextStyle(
-                   color: AppColors.black,
-                   fontFamily: 'SmoochSans',
-                   fontWeight: FontWeight.w600,
-                   fontSize: 16,
-                 ),
-               ),
+            if (userData?['role'].toLowerCase() == 'pet rescuer' || userData?['role'].toLowerCase() == 'pet shelter') ...[
+              Text(
+                'Address: ${userData?['address'] ?? ''}',
+                style: const TextStyle(
+                  color: AppColors.black,
+                  fontFamily: 'SmoochSans',
+                  fontWeight: FontWeight.w600,
+                  fontSize: 16,
+                ),
+              ),
             ],
             Center(
               child: Container(
@@ -193,7 +134,7 @@ class _ViewUserDataPageState extends State<ViewUserDataPage> {
                 ),
                 child: ElevatedButton(
                   onPressed: () {
-                   // Provider.of<OTPViewModel>(context, listen: false).checkOTP(int.parse(_viewModel.controllers.map((controller) => controller.text).join()), userData ,context);
+                    // Provider.of<OTPViewModel>(context, listen: false).checkOTP(int.parse(_viewModel.controllers.map((controller) => controller.text).join()), userData ,context);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
@@ -266,14 +207,7 @@ class _ViewUserDataPageState extends State<ViewUserDataPage> {
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          // Update the user details
-          // Implement the save functionality here
-        },
-        backgroundColor: AppColors.orange,
-        child: const Icon(Icons.save, color: AppColors.white),
-      ),
+
     );
   }
 }
