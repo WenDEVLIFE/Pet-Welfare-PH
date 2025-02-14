@@ -22,6 +22,7 @@ class AddUserImpl implements AddUserRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
+  // This will check if the username exists in the database
   Future<bool> checkIfUserExists(String name, String email) async {
     final QuerySnapshot nameResult = await _firestore
         .collection('Users')
@@ -36,21 +37,25 @@ class AddUserImpl implements AddUserRepository {
     return nameResult.docs.isNotEmpty || emailResult.docs.isNotEmpty;
   }
 
+  // This will check if the email is valid
   Future<bool> checkValidateEmail(String email) async {
     String pattern = r'^[\w-\.]+@([\w-]+\.)+[\w-]{2,4}$';
     return RegExp(pattern).hasMatch(email);
   }
 
+  // This will check if the password and confirm password are the same
   Future<bool> checkPassword(String password, String confirmPassword) async {
     return password == confirmPassword;
   }
 
+  // This will check if the password is complex
   Future<bool> checkPasswordComplexity(String password) async {
     String pattern =
         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
     return RegExp(pattern).hasMatch(password);
   }
 
+  // This will register the user
   Future<void> registerUser(Map<String, dynamic> userData, BuildContext context, void Function() clearText) async {
     ProgressDialog pd = ProgressDialog(context: context);
     pd.show(max: 100, msg: 'Registering User...');
@@ -150,4 +155,7 @@ class AddUserImpl implements AddUserRepository {
       pd.close();
     }
   }
+
+  // This will load the data of the user
+
 }
