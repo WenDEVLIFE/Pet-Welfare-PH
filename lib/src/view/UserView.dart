@@ -220,12 +220,16 @@ class UserViewState extends State<UserView> {
                             IconButton(
                               icon: const Icon(Icons.edit, color: Colors.white),
                               onPressed: () {
-                                showDialog(
-                                  context: context,
-                                  builder: (BuildContext context) {
-                                    return ViewUserDataDialog(id: user.uid);
-                                  },
-                                );
+                                Navigator.pushNamed(context, AppRoutes.viewUserData, arguments: {
+                                  'name': user.name,
+                                  'email': user.email,
+                                  'role': user.role,
+                                  'status': user.status,
+                                  'id': user.uid,
+                                  'address': user.address,
+
+
+                                });
                               },
                             ),
                             IconButton(
