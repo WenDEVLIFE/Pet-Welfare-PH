@@ -21,8 +21,12 @@ class UserViewState extends State<UserView> {
   final TextEditingController _searchController = TextEditingController();
   final List<String> _chipLabels = ['Verified User', 'Unverified User', 'Banned User', 'Admin & Sub Admin'];
   int _selectedIndex = 0;
+   late var user;
+   late var role;
 
   late UserViewModel _userViewModel;
+
+  SessionManager sessionManager = SessionManager();
 
   @override
   void initState() {
@@ -31,6 +35,15 @@ class UserViewState extends State<UserView> {
     _searchController.addListener(() {
       _userViewModel.filterUser(_searchController.text);
     });
+    getAdminData();
+
+  }
+
+  Future<void> getAdminData() async {
+     user = await sessionManager.getUserInfo();
+      role = user['role'];
+
+      print('Details: $user');
   }
 
   void _updateContent(int index) {
@@ -220,16 +233,19 @@ class UserViewState extends State<UserView> {
                             IconButton(
                               icon: const Icon(Icons.edit, color: Colors.white),
                               onPressed: () {
-                                Navigator.pushNamed(context, AppRoutes.viewUserData, arguments: {
-                                  'name': user.name,
-                                  'email': user.email,
-                                  'role': user.role,
-                                  'status': user.status,
-                                  'id': user.uid,
-                                  'address': user.address,
-
-
-                                });
+                                 if (user.role != 'Admin' || user.role != 'Sub-Admin') {
+                                   Navigator.pushNamed(context, AppRoutes.viewUserData, arguments: {
+                                     'name': user.name,
+                                     'email': user.email,
+                                     'role': user.role,
+                                     'status': user.status,
+                                     'id': user.uid,
+                                     'address': user.address,
+                                     'profileurl': user.profileUrl,
+                                     'idfronturl': user.idfrontPath,
+                                     'idbackurl': user.idbackPath,
+                                   });
+                                 }
                               },
                             ),
                             IconButton(

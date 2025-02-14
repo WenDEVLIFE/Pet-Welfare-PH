@@ -25,18 +25,17 @@ class UserModel {
 
   // Convert a UserModel into a Map
   factory UserModel.fromDocumentSnapshot(DocumentSnapshot doc) {
-
-    final data = doc.data() as Map<String, dynamic>?;
+    final data = doc.data() as Map<String, dynamic>? ?? {};
     return UserModel(
       uid: doc.id,
-      name: data?['Name'] ?? '',
-      email: data?['Email'] ?? '',
-      role: data?['Role'] ?? '',
-      status: data?['Status'] ?? 'Status',
-      profileUrl: data?['ProfileUrl'] ?? '',
-      idbackPath: data?['IDBackUrl'] ?? 'IDBackUrl',
-      idfrontPath: data?['IDFrontUrl'] ?? 'IDFrontUrl',
-      address: data?['Address'] ?? 'Address',
+      name: data['Name'] ?? '',
+      email: data['Email'] ?? '',
+      role: data['Role'] ?? '',
+      status: data['Status'] ?? '',
+      profileUrl: data['ProfileUrl'] ?? '',
+      idbackPath: data['IDBackUrl'] ?? '',
+      idfrontPath: data['IDFrontUrl'] ?? '',
+      address: data['Address'] ?? '',
     );
   }
 }
