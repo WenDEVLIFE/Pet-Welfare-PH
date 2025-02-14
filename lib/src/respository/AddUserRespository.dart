@@ -7,6 +7,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pet_welfrare_ph/src/model/UserModel.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
 
@@ -16,6 +17,7 @@ abstract class AddUserRepository {
   Future<bool> checkPassword(String password, String confirmPassword);
   Future<bool> checkPasswordComplexity(String password);
   Future<void> registerUser(Map<String, dynamic> userData, BuildContext context, void Function() clearText);
+  Stream<List<UserModel>> loadUserData();
 }
 
 class AddUserImpl implements AddUserRepository {
@@ -154,6 +156,15 @@ class AddUserImpl implements AddUserRepository {
     } finally {
       pd.close();
     }
+  }
+
+  @override
+  Stream<List<UserModel>> loadUserData() {
+
+     // This will load the data of the user
+    return _firestore.collection('Users').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => UserModel.fromDocumentSnapshot(doc)).toList();
+    });
   }
 
   // This will load the data of the user
