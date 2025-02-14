@@ -17,14 +17,21 @@ class SubscriptionViewModel extends ChangeNotifier {
   List<SubscriptionModel> _filteredSubscriptions = [];
 
   // Get subscriptions
-  List<SubscriptionModel> get subscriptions => _filteredSubscriptions;
+  List<SubscriptionModel> get subscriptionsdata => _filteredSubscriptions;
 
   // Stream of subscriptions
   Stream<List<SubscriptionModel>> get subscriptionsStream => _subscriptionRespository.getSubscriptions();
 
+  // Set subscriptions
+  void setSubscriptions(List<SubscriptionModel> subscriptions) {
+    _subscriptions = subscriptions;
+    filterSubscriptions(searchController.text);
+  }
+
   // Navigate to Add Subscription
   void addSubscriptionRoute(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.goToSubscription);
+    notifyListeners();
   }
 
   // Add Subscription
@@ -114,7 +121,6 @@ class SubscriptionViewModel extends ChangeNotifier {
             subscription.subscriptionAmount.toLowerCase().contains(query.toLowerCase());
       }).toList();
     }
-    notifyListeners();
   }
 
   void deleteSubscription(BuildContext context, String uid) {

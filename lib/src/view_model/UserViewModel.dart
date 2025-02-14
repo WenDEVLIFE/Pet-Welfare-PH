@@ -8,14 +8,14 @@ class UserViewModel extends ChangeNotifier {
 
   final AddUserRepository _addUserRepository = AddUserImpl();
 
-  // Subscriptions
+  // Users
   List<UserModel> users = [];
-  List<UserModel> filtereduser = [];
+  List<UserModel> filteredUsers = [];
 
-  // Get subscriptions
-  List<UserModel> get getUser => filtereduser;
+  // Get users
+  List<UserModel> get getUser => filteredUsers;
 
-  // Stream of subscriptions
+  // Stream of users
   Stream<List<UserModel>> get userStream => _addUserRepository.loadUserData();
 
   void navigateToAddAdmin(BuildContext context) {
@@ -24,17 +24,16 @@ class UserViewModel extends ChangeNotifier {
 
   // Filtered Search
   void filterUser(String query) {
-     if (query.isNotEmpty) {
-       filtereduser = users
-           .where((user) =>
-       user.name.toLowerCase().contains(query.toLowerCase()) ||
-           user.email.toLowerCase().contains(query.toLowerCase()))
-           .toList();
-       notifyListeners();
-     } else {
-       filtereduser = users;
-       notifyListeners();
-     }
+    if (query.isNotEmpty) {
+      filteredUsers = users
+          .where((user) =>
+      user.name.toLowerCase().contains(query.toLowerCase()) ||
+          user.email.toLowerCase().contains(query.toLowerCase()))
+          .toList();
+      notifyListeners();
+    } else {
+      filteredUsers = users;
+      notifyListeners();
+    }
   }
-
 }
