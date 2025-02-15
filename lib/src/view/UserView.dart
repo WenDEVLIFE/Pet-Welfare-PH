@@ -252,17 +252,15 @@ class UserViewState extends State<UserView> {
                             IconButton(
                               icon: const Icon(Icons.delete, color: Colors.white),
                               onPressed: () {
-                                showDialog(context: context, builder: (BuildContext context) {
-                                  return Alertmenudialog(
-                                      onAction: () {
-                                        Navigator.pop(context);
-
-                                        // Calll the delete function
-                                        Provider.of<UserViewModel>(context, listen: false).executeDelete(user.uid);
-                                      },
-                                      title: "Delete User",
-                                      content: "Are you sure you want to delete this user?");
-                                });
+                                Alertmenudialog.show(
+                                  context,
+                                  onAction: () {
+                                    // Your action here
+                                    Provider.of<UserViewModel>(context, listen: false).executeDelete(user.uid);
+                                  },
+                                  title: 'Delete User',
+                                  content: 'Are you sure you want to delete this user?',
+                                );
                               },
                             ),
                           ],

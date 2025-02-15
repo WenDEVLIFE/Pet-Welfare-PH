@@ -10,6 +10,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pet_welfrare_ph/src/model/UserModel.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
+import 'package:firebase_admin/firebase_admin.dart' as admin;
 
 abstract class AddUserRepository {
   Future<bool> checkIfUserExists(String name, String email);
@@ -26,6 +27,7 @@ abstract class AddUserRepository {
 class AddUserImpl implements AddUserRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+ //  final admin.App _adminApp = admin.initializeApp();
 
   // This will check if the username exists in the database
   Future<bool> checkIfUserExists(String name, String email) async {
@@ -239,23 +241,46 @@ class AddUserImpl implements AddUserRepository {
   }
 
   // This will delete the user
-  Future <void> deleteUser(String uid) async {
-    QuerySnapshot nameResult = await _firestore
-        .collection('Users')
-        .where('Uid', isEqualTo: uid)
-        .get();
+  // TODO : Fix the bug in this method deleting th user from the firebase authentication
+  Future<void> deleteUser(String uid) async {
+    try {
+      QuerySnapshot nameResult = await _firestore
+          .collection('Users')
+          .where('Uid', isEqualTo: uid)
+          .get();
 
-    if (nameResult.docs.isNotEmpty) {
-      await _firestore.collection('Users').doc(uid).delete();
+      if (nameResult.docs.isNotEmpty) {
+        print('User document found in Firestore');
+
+        // Delete user from Firebase Authentication using Admin SDK
+       //  await _adminApp.auth().deleteUser(uid);
+        print('User deleted from Firebase Authentication');
+
+        // Delete user document from Firestore
+        await _firestore.collection('Users').doc(uid).delete();
+        print('User document deleted from Firestore');
+
+        Fluttertoast.showToast(
+          msg: 'User deleted successfully!',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      } else {
+        print('User document not found in Firestore');
+      }
+    } catch (e) {
+      print('Error: $e');
       Fluttertoast.showToast(
-        msg: 'User deleted successfully!',
-        toastLength: Toast.LENGTH_SHORT,
+        msg: 'Error: $e',
+        toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.green,
+        backgroundColor: Colors.red,
         textColor: Colors.white,
         fontSize: 16.0,
       );
     }
   }
-
 }

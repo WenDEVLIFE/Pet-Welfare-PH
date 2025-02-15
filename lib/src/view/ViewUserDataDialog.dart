@@ -192,7 +192,6 @@ class _ViewUserDataPageState extends State<ViewUserDataPage> {
                           content: 'Are you sure you want to deny this user?',
                           onAction: () async {
                             Provider.of<UserViewModel>(context, listen: false).deniedUser(userData?['id']);
-                            Navigator.pop(context);
                           },
                         );
                       },
