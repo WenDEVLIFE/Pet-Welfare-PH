@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pet_welfrare_ph/src/components/AlertMenuDialog.dart';
 import 'package:pet_welfrare_ph/src/model/UserModel.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 import 'package:pet_welfrare_ph/src/view_model/UserViewModel.dart';
@@ -250,7 +251,19 @@ class UserViewState extends State<UserView> {
                             ),
                             IconButton(
                               icon: const Icon(Icons.delete, color: Colors.white),
-                              onPressed: () {},
+                              onPressed: () {
+                                showDialog(context: context, builder: (BuildContext context) {
+                                  return Alertmenudialog(
+                                      onAction: () {
+                                        Navigator.pop(context);
+
+                                        // Calll the delete function
+                                        Provider.of<UserViewModel>(context, listen: false).executeDelete(user.uid);
+                                      },
+                                      title: "Delete User",
+                                      content: "Are you sure you want to delete this user?");
+                                });
+                              },
                             ),
                           ],
                         ),

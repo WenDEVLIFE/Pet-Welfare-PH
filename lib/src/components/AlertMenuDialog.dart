@@ -13,14 +13,14 @@ class Alertmenudialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return AlertDialog(
       backgroundColor: AppColors.orange,
-      title: Text('{$title}',
+      title: Text(title,
         style: const TextStyle(
         color: Colors.white,
         fontSize: 20,
         fontFamily: 'SmoochSans',
         fontWeight: FontWeight.w600,
       ),),
-      content:  Text('{$content}',
+      content:  Text(content,
         style: const TextStyle(
           color: Colors.white,
           fontSize: 20,

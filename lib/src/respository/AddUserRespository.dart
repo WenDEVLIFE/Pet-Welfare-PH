@@ -19,8 +19,8 @@ abstract class AddUserRepository {
   Future<void> registerUser(Map<String, dynamic> userData, BuildContext context, void Function() clearText);
   Stream<List<UserModel>> loadUserData();
   Future<void> approveUser(String uid);
-
   deniedUser(String uid);
+  deleteUser(String uid);
 }
 
 class AddUserImpl implements AddUserRepository {
@@ -235,6 +235,26 @@ class AddUserImpl implements AddUserRepository {
           fontSize: 16.0,
         );
       }
+    }
+  }
+
+  // This will delete the user
+  Future <void> deleteUser(String uid) async {
+    QuerySnapshot nameResult = await _firestore
+        .collection('Users')
+        .where('Uid', isEqualTo: uid)
+        .get();
+
+    if (nameResult.docs.isNotEmpty) {
+      await _firestore.collection('Users').doc(uid).delete();
+      Fluttertoast.showToast(
+        msg: 'User deleted successfully!',
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
     }
   }
 

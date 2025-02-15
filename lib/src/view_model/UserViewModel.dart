@@ -77,7 +77,13 @@ class UserViewModel extends ChangeNotifier {
      await _addUserRepository.approveUser(uid);
   }
 
-  Future deniedUser(String uid) async {
+  // Deny user
+  Future <void> deniedUser(String uid) async {
     await _addUserRepository.deniedUser(uid);
+  }
+
+  // Delete user
+  Future <void> executeDelete(String uid) async {
+    await _addUserRepository.deleteUser(uid);
   }
 }
