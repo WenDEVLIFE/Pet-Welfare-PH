@@ -18,6 +18,7 @@ abstract class AddUserRepository {
   Future<bool> checkPasswordComplexity(String password);
   Future<void> registerUser(Map<String, dynamic> userData, BuildContext context, void Function() clearText);
   Stream<List<UserModel>> loadUserData();
+  Future<void> approveUser(String uid);
 }
 
 class AddUserImpl implements AddUserRepository {
@@ -167,6 +168,30 @@ class AddUserImpl implements AddUserRepository {
     });
   }
 
-  // This will load the data of the user
+  // This will approve the user
+  Future<void> approveUser(String uid) async {
+    QuerySnapshot nameResult = await _firestore
+        .collection('Users')
+        .where('Uid', isEqualTo: uid)
+        .get();
+
+    if (nameResult.docs.isNotEmpty) {
+      var status = nameResult.docs.first.get('Status');
+
+      if (status == 'Pending') {
+        await _firestore.collection('Users').doc(uid).update(
+            {'Status': 'Approved'});
+      } else {
+        Fluttertoast.showToast(
+          msg: 'User is already approved!',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
+    }
+  }
 
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pet_welfrare_ph/src/model/UserModel.dart';
+import 'package:pet_welfrare_ph/src/view_model/UserViewModel.dart';
+import 'package:provider/provider.dart';
 
 import '../utils/AppColors.dart';
 
@@ -12,6 +13,14 @@ class ViewUserDataPage extends StatefulWidget {
 }
 
 class _ViewUserDataPageState extends State<ViewUserDataPage> {
+
+  late UserViewModel _viewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    _viewModel = Provider.of<UserViewModel>(context, listen: false);
+  }
 
   @override
   Widget build(BuildContext context) {
