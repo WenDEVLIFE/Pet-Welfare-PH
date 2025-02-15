@@ -1,0 +1,35 @@
+Future<void> deleteUser(String uid) async {
+  try {
+    HttpsCallable callable = FirebaseFunctions.instance.httpsCallable('deleteUserAccount');
+    final response = await callable.call({'uid': uid});
+
+    if (response.data['success']) {
+      Fluttertoast.showToast(
+        msg: response.data['message'],
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.green,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    } else {
+      Fluttertoast.showToast(
+        msg: "Failed to delete user.",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+  } catch (e) {
+    Fluttertoast.showToast(
+      msg: "Error deleting user: $e",
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM,
+      backgroundColor: Colors.red,
+      textColor: Colors.white,
+      fontSize: 16.0,
+    );
+  }
+}

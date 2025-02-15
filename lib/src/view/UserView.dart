@@ -22,8 +22,8 @@ class UserViewState extends State<UserView> {
   final TextEditingController _searchController = TextEditingController();
   final List<String> _chipLabels = ['Verified User', 'Unverified User', 'Banned User', 'Admin & Sub Admin'];
   int _selectedIndex = 0;
-   late var user;
-   late var role;
+  late var user;
+  late var role;
 
   late UserViewModel _userViewModel;
 
@@ -37,14 +37,13 @@ class UserViewState extends State<UserView> {
       _userViewModel.filterUser(_searchController.text);
     });
     getAdminData();
-
   }
 
   Future<void> getAdminData() async {
-     user = await sessionManager.getUserInfo();
-      role = user['role'];
+    user = await sessionManager.getUserInfo();
+    role = user['role'];
 
-      print('Details: $user');
+    print('Details: $user');
   }
 
   void _updateContent(int index) {
@@ -234,19 +233,19 @@ class UserViewState extends State<UserView> {
                             IconButton(
                               icon: const Icon(Icons.edit, color: Colors.white),
                               onPressed: () {
-                                 if (user.role != 'Admin' || user.role != 'Sub-Admin') {
-                                   Navigator.pushNamed(context, AppRoutes.viewUserData, arguments: {
-                                     'name': user.name,
-                                     'email': user.email,
-                                     'role': user.role,
-                                     'status': user.status,
-                                     'id': user.uid,
-                                     'address': user.address,
-                                     'profileurl': user.profileUrl,
-                                     'idfronturl': user.idfrontPath,
-                                     'idbackurl': user.idbackPath,
-                                   });
-                                 }
+                                if (user.role != 'Admin' || user.role != 'Sub-Admin') {
+                                  Navigator.pushNamed(context, AppRoutes.viewUserData, arguments: {
+                                    'name': user.name,
+                                    'email': user.email,
+                                    'role': user.role,
+                                    'status': user.status,
+                                    'id': user.uid,
+                                    'address': user.address,
+                                    'profileurl': user.profileUrl,
+                                    'idfronturl': user.idfrontPath,
+                                    'idbackurl': user.idbackPath,
+                                  });
+                                }
                               },
                             ),
                             IconButton(
@@ -255,7 +254,6 @@ class UserViewState extends State<UserView> {
                                 Alertmenudialog.show(
                                   context,
                                   onAction: () {
-                                    // Your action here
                                     Provider.of<UserViewModel>(context, listen: false).executeDelete(user.uid);
                                   },
                                   title: 'Delete User',

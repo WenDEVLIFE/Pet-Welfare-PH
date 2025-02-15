@@ -231,6 +231,8 @@ class _ViewUserDataPageState extends State<ViewUserDataPage> {
                 ),
                 child: ElevatedButton(
                   onPressed: () {
+
+                    // TODO: Implement ban user
                     // Provider.of<OTPViewModel>(context, listen: false).checkOTP(int.parse(_viewModel.controllers.map((controller) => controller.text).join()), userData ,context);
                   },
                   style: ElevatedButton.styleFrom(
