@@ -244,37 +244,26 @@ class AddUserImpl implements AddUserRepository {
   // TODO : Fix the bug in this method deleting th user from the firebase authentication
   Future<void> deleteUser(String uid) async {
     try {
-      QuerySnapshot nameResult = await _firestore
-          .collection('Users')
-          .where('Uid', isEqualTo: uid)
-          .get();
 
-      if (nameResult.docs.isNotEmpty) {
-        print('User document found in Firestore');
+      FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-        // Delete user from Firebase Authentication using Admin SDK
-       //  await _adminApp.auth().deleteUser(uid);
-        print('User deleted from Firebase Authentication');
-
-        // Delete user document from Firestore
+        // 🔥 Step 1: Delete Firestore user data
         await _firestore.collection('Users').doc(uid).delete();
         print('User document deleted from Firestore');
 
         Fluttertoast.showToast(
-          msg: 'User deleted successfully!',
+          msg: "User deleted successfully!",
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.green,
           textColor: Colors.white,
           fontSize: 16.0,
         );
-      } else {
-        print('User document not found in Firestore');
-      }
+
     } catch (e) {
-      print('Error: $e');
+      print("Error deleting user: $e");
       Fluttertoast.showToast(
-        msg: 'Error: $e',
+        msg: "Error: $e",
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
         backgroundColor: Colors.red,
@@ -283,4 +272,5 @@ class AddUserImpl implements AddUserRepository {
       );
     }
   }
+
 }
