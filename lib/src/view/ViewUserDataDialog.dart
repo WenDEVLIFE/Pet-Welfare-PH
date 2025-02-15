@@ -143,7 +143,7 @@ class _ViewUserDataPageState extends State<ViewUserDataPage> {
                 ),
                 child: ElevatedButton(
                   onPressed: () {
-                    // Provider.of<OTPViewModel>(context, listen: false).checkOTP(int.parse(_viewModel.controllers.map((controller) => controller.text).join()), userData ,context);
+                    Provider.of<UserViewModel>(context, listen: false).updateStatus(userData?['id']);
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,

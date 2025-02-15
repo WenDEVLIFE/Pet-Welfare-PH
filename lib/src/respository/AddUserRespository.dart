@@ -181,6 +181,14 @@ class AddUserImpl implements AddUserRepository {
       if (status == 'Pending') {
         await _firestore.collection('Users').doc(uid).update(
             {'Status': 'Approved'});
+        Fluttertoast.showToast(
+          msg: 'User approved successfully!',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
       } else {
         Fluttertoast.showToast(
           msg: 'User is already approved!',
