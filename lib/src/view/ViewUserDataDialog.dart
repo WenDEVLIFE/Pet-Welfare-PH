@@ -83,7 +83,7 @@ class _ViewUserDataPageState extends State<ViewUserDataPage> {
             SizedBox(height: screenHeight * 0.005),
             if (userData?['role'].toLowerCase() != 'admin') ...[
               const Text(
-                'ID Front',
+                'ID Front:',
                 style: TextStyle(
                   color: AppColors.black,
                   fontFamily: 'SmoochSans',
@@ -92,18 +92,22 @@ class _ViewUserDataPageState extends State<ViewUserDataPage> {
                 ),
               ),
               SizedBox(height: screenHeight * 0.005),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: Image.network(
-                  userData?['idfronturl'] ?? '', // Replace with your image URL
-                  width: screenWidth * 0.8,
-                  height: screenHeight * 0.3,
-                  fit: BoxFit.cover,
+              Padding(padding: const EdgeInsets.only(top: 16.0),
+                child: Center(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: Image.network(
+                      userData?['idfronturl'] ?? '',
+                      width: screenWidth * 0.8,
+                      height: screenHeight * 0.4,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
               SizedBox(height: screenHeight * 0.005),
               const Text(
-                'ID Back',
+                'ID Back:',
                 style: TextStyle(
                   color: AppColors.black,
                   fontFamily: 'SmoochSans',
@@ -112,13 +116,17 @@ class _ViewUserDataPageState extends State<ViewUserDataPage> {
                 ),
               ),
               SizedBox(height: screenHeight * 0.005),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: Image.network(
-                  userData?['idbackurl'] ?? '', // Replace with your image URL
-                  width: screenWidth * 0.8,
-                  height: screenHeight * 0.3,
-                  fit: BoxFit.cover,
+              Padding(padding: const EdgeInsets.only(top: 16.0),
+                child: Center(
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(10.0),
+                    child: Image.network(
+                      userData?['idbackurl'] ?? '',
+                      width: screenWidth * 0.8,
+                      height: screenHeight * 0.4,
+                      fit: BoxFit.cover,
+                    ),
+                  ),
                 ),
               ),
             ],
