@@ -19,6 +19,8 @@ abstract class AddUserRepository {
   Future<void> registerUser(Map<String, dynamic> userData, BuildContext context, void Function() clearText);
   Stream<List<UserModel>> loadUserData();
   Future<void> approveUser(String uid);
+
+  deniedUser(String uid);
 }
 
 class AddUserImpl implements AddUserRepository {
@@ -192,6 +194,40 @@ class AddUserImpl implements AddUserRepository {
       } else {
         Fluttertoast.showToast(
           msg: 'User is already approved!',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
+    }
+  }
+
+  // This will deny the user
+ Future<void> deniedUser(String uid) async {
+    QuerySnapshot nameResult = await _firestore
+        .collection('Users')
+        .where('Uid', isEqualTo: uid)
+        .get();
+
+    if (nameResult.docs.isNotEmpty) {
+      var status = nameResult.docs.first.get('Status');
+
+      if (status == 'Pending' || status == 'Approved') {
+        await _firestore.collection('Users').doc(uid).update(
+            {'Status': 'Denied'});
+        Fluttertoast.showToast(
+          msg: 'User denied successfully!',
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      } else {
+        Fluttertoast.showToast(
+          msg: 'User is already denied!',
           toastLength: Toast.LENGTH_SHORT,
           gravity: ToastGravity.BOTTOM,
           backgroundColor: Colors.red,

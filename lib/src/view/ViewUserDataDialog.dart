@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pet_welfrare_ph/src/components/AlertMenuDialog.dart';
 import 'package:pet_welfrare_ph/src/view_model/UserViewModel.dart';
 import 'package:provider/provider.dart';
 
@@ -143,7 +144,20 @@ class _ViewUserDataPageState extends State<ViewUserDataPage> {
                 ),
                 child: ElevatedButton(
                   onPressed: () {
-                    Provider.of<UserViewModel>(context, listen: false).updateStatus(userData?['id']);
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Alertmenudialog(
+                          title: 'Approve User',
+                          content: 'Are you sure you want to approve this user?',
+                          onAction: () async {
+                            Provider.of<UserViewModel>(context, listen: false).updateStatus(userData?['id']);
+                            Navigator.pop(context);
+                          },
+                        );
+                      },
+                    );
+
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
@@ -170,7 +184,20 @@ class _ViewUserDataPageState extends State<ViewUserDataPage> {
                 ),
                 child: ElevatedButton(
                   onPressed: () {
-                    // Provider.of<OTPViewModel>(context, listen: false).checkOTP(int.parse(_viewModel.controllers.map((controller) => controller.text).join()), userData ,context);
+                    showDialog(
+                      context: context,
+                      builder: (BuildContext context) {
+                        return Alertmenudialog(
+                          title: 'Deny User',
+                          content: 'Are you sure you want to deny this user?',
+                          onAction: () async {
+                            Provider.of<UserViewModel>(context, listen: false).deniedUser(userData?['id']);
+                            Navigator.pop(context);
+                          },
+                        );
+                      },
+                    );
+
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
