@@ -54,7 +54,7 @@ class SubscriptionState extends State<SubscriptionView> {
           }),
           _buildDrawerItem(Icons.info, 'About us', () {
             Navigator.pop(context);
-            Navigator.pushNamed(context, AppRoutes.privacyPolicy);
+            Navigator.pushNamed(context, AppRoutes.about);
             // Navigate to Privacy Policy
           }),
           _buildDrawerItem(Icons.check, 'Terms and Condition', () {
