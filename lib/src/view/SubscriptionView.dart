@@ -49,6 +49,9 @@ class SubscriptionState extends State<SubscriptionView> {
             Navigator.pop(context);
             Navigator.pushNamed(context, AppRoutes.subscription);
           }),
+          _buildDrawerItem(Icons.report_gmailerrorred_sharp, 'Reports', () {
+            Navigator.pop(context);
+          }),
           _buildDrawerItem(Icons.check, 'Terms and Condition', () {
             Navigator.pop(context);
             Navigator.pushNamed(context, AppRoutes.termsAndConditions);
