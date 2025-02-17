@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class ToastComponent {
-  Future<Future<bool?>> showMessage(Color color, String message, BuildContext context) async {
+  Future<Future<bool?>> showMessage(Color color, String message,) async {
     return Fluttertoast.showToast(
       msg: message,
       toastLength: Toast.LENGTH_SHORT,

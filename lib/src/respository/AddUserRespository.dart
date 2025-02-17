@@ -9,6 +9,7 @@ import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pet_welfrare_ph/src/model/UserModel.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
+import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
 import 'package:firebase_admin/firebase_admin.dart' as admin;
 
@@ -140,26 +141,12 @@ class AddUserImpl implements AddUserRepository {
       }
 
       // Success message
-      Fluttertoast.showToast(
-        msg: 'Your account registered successfully!',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.green,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
+      ToastComponent().showMessage(Colors.green, 'User registered successfully!');
 
       clearText();
     } catch (e) {
       print("Error: $e");
-      Fluttertoast.showToast(
-        msg: "Error: $e",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
+     ToastComponent().showMessage(Colors.red, 'Error: $e');
     } finally {
       pd.close();
     }
@@ -186,23 +173,9 @@ class AddUserImpl implements AddUserRepository {
       if (status == 'Pending') {
         await _firestore.collection('Users').doc(uid).update(
             {'Status': 'Approved'});
-        Fluttertoast.showToast(
-          msg: 'User approved successfully!',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
+        ToastComponent().showMessage(Colors.green, 'User approved successfully!');
       } else {
-        Fluttertoast.showToast(
-          msg: 'User is already approved!',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
+        ToastComponent().showMessage(Colors.red, 'User is already approved!');
       }
     }
   }
@@ -218,25 +191,11 @@ class AddUserImpl implements AddUserRepository {
       var status = nameResult.docs.first.get('Status');
 
       if (status == 'Pending' || status == 'Approved') {
-        await _firestore.collection('Users').doc(uid).update(
-            {'Status': 'Denied'});
-        Fluttertoast.showToast(
-          msg: 'User denied successfully!',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
+        await _firestore.collection('Users').doc(uid).update({'Status': 'Denied'});
+
+        ToastComponent().showMessage(Colors.green, 'User denied successfully!');
       } else {
-        Fluttertoast.showToast(
-          msg: 'User is already denied!',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
+         ToastComponent().showMessage(Colors.red, 'User is already denied!');
       }
     }
   }
@@ -265,35 +224,14 @@ class AddUserImpl implements AddUserRepository {
         await _firestore.collection('Users').doc(uid).delete();
         print('User document deleted from Firestore');
 
-        Fluttertoast.showToast(
-          msg: "User deleted successfully!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
+        ToastComponent().showMessage(Colors.green, 'User deleted successfully!');
       } else {
         print('User not found');
-        Fluttertoast.showToast(
-          msg: "User not found!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
+        ToastComponent().showMessage(Colors.red, 'User not found!');
       }
     } catch (e) {
       print("Error deleting user: $e");
-      Fluttertoast.showToast(
-        msg: "Error: $e",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
+      ToastComponent().showMessage(Colors.red, 'Error: $e');
     }
   }
 
@@ -306,14 +244,7 @@ class AddUserImpl implements AddUserRepository {
           .get();
 
       if (bannedResult.docs.isNotEmpty) {
-        Fluttertoast.showToast(
-          msg: "User is already banned!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.red,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
+        ToastComponent().showMessage(Colors.red, 'User is already banned!');
         return;
       } else{
         // Proceed with banning the user
@@ -324,26 +255,12 @@ class AddUserImpl implements AddUserRepository {
         });
         await _firestore.collection('Users').doc(uid).update({'Status': 'Banned'});
 
-        Fluttertoast.showToast(
-          msg: "User banned successfully!",
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          backgroundColor: Colors.green,
-          textColor: Colors.white,
-          fontSize: 16.0,
-        );
+        ToastComponent().showMessage(Colors.green, 'User banned successfully!');
 
       }
     } catch (e) {
       print("Error banning user: $e");
-      Fluttertoast.showToast(
-        msg: "Error: $e",
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-        backgroundColor: Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
+      ToastComponent().showMessage(Colors.red, 'Error: $e');
     }
   }
 
