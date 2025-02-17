@@ -16,6 +16,7 @@ import 'package:pet_welfrare_ph/src/view/VetClinicRegisterView.dart';
 import 'package:pet_welfrare_ph/src/view/ViewUserDataDialog.dart';
 
 import '../components/AdminNavigationComponent.dart';
+import '../view/AboutView.dart';
 import '../view/AddAdminView.dart';
 import '../view/ChangePasswordView.dart';
 import '../view/OTPView.dart';
@@ -48,6 +49,7 @@ class AppRoutes {
   static const String subscription = '/subscription';
   static const String goToSubscription = '/goToSubscription';
   static const String viewUserData = '/ViewUserData';
+  static const String about = '/about';
 
   // Assign routes to the screens
   static Map<String, WidgetBuilder> routes = {
@@ -74,5 +76,6 @@ class AppRoutes {
     subscription : (context) => const SubscriptionView(), // Replace with actual screen
     goToSubscription : (context) => const AddSubscriptionView(), // Replace with actual screen
     viewUserData : (context) => const ViewUserDataPage(), // Replace with actual screen
+    about : (context) => const AboutView(), // Replace with actual screen
   };
 }
