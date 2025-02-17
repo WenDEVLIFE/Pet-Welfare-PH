@@ -9,6 +9,7 @@ import '../utils/Route.dart';
 import '../utils/SessionManager.dart';
 import 'package:provider/provider.dart';
 
+import 'BanDialogInformation.dart';
 import 'ViewUserDataDialog.dart';
 
 class UserView extends StatefulWidget {
@@ -192,8 +193,10 @@ class UserViewState extends State<UserView> {
                   itemCount: viewModel.getUser.length,
                   itemBuilder: (context, index) {
                     UserModel user = viewModel.getUser[index];
+                    bool isBanned = user.status?.toLowerCase() == 'banned';
+
                     return Card(
-                      color: AppColors.orange,
+                      color: isBanned ? Colors.red : AppColors.orange,
                       child: ListTile(
                         title: Text(
                           user.name,
@@ -230,37 +233,70 @@ class UserViewState extends State<UserView> {
                         trailing: Row(
                           mainAxisSize: MainAxisSize.min,
                           children: [
-                            IconButton(
-                              icon: const Icon(Icons.edit, color: Colors.white),
-                              onPressed: () {
-                                if (user.role != 'Admin' || user.role != 'Sub-Admin') {
-                                  Navigator.pushNamed(context, AppRoutes.viewUserData, arguments: {
-                                    'name': user.name,
-                                    'email': user.email,
-                                    'role': user.role,
-                                    'status': user.status,
-                                    'id': user.uid,
-                                    'address': user.address,
-                                    'profileurl': user.profileUrl,
-                                    'idfronturl': user.idfrontPath,
-                                    'idbackurl': user.idbackPath,
-                                  });
-                                }
-                              },
-                            ),
-                            IconButton(
-                              icon: const Icon(Icons.delete, color: Colors.white),
-                              onPressed: () {
-                                Alertmenudialog.show(
-                                  context,
-                                  onAction: () {
-                                    Provider.of<UserViewModel>(context, listen: false).executeDelete(user.uid);
-                                  },
-                                  title: 'Delete User',
-                                  content: 'Are you sure you want to delete this user?',
-                                );
-                              },
-                            ),
+
+                            // Check if user is banned
+                            if (isBanned) ...[
+                              IconButton(
+                                icon: const Icon(Icons.visibility, color: Colors.white),
+                                onPressed: () {
+                                  BanDialogInformation(
+                                    userId: user.uid,
+                                    userName: user.name,
+                                    userEmail: user.email,
+                                  ).showBanDialog(context);
+                                },
+                              ),
+
+
+                              IconButton(
+                                icon: const Icon(Icons.close, color: Colors.white),
+                                onPressed: () {
+                                  Alertmenudialog.show(
+                                    context,
+                                    onAction: () {
+                                     // Provider.of<UserViewModel>(context, listen: false).unbanUser(user.uid);
+                                    },
+                                    title: 'Unban User',
+                                    content: 'Are you sure you want to unban this user?',
+                                  );
+                                },
+                              ),
+                            ]
+
+                            // Check if user is not banned
+                            else ...[
+                              IconButton(
+                                icon: const Icon(Icons.edit, color: Colors.white),
+                                onPressed: () {
+                                  if (user.role != 'Admin' || user.role != 'Sub-Admin') {
+                                    Navigator.pushNamed(context, AppRoutes.viewUserData, arguments: {
+                                      'name': user.name,
+                                      'email': user.email,
+                                      'role': user.role,
+                                      'status': user.status,
+                                      'id': user.uid,
+                                      'address': user.address,
+                                      'profileurl': user.profileUrl,
+                                      'idfronturl': user.idfrontPath,
+                                      'idbackurl': user.idbackPath,
+                                    });
+                                  }
+                                },
+                              ),
+                              IconButton(
+                                icon: const Icon(Icons.delete, color: Colors.white),
+                                onPressed: () {
+                                  Alertmenudialog.show(
+                                    context,
+                                    onAction: () {
+                                      Provider.of<UserViewModel>(context, listen: false).executeDelete(user.uid);
+                                    },
+                                    title: 'Delete User',
+                                    content: 'Are you sure you want to delete this user?',
+                                  );
+                                },
+                              ),
+                            ],
                           ],
                         ),
                       ),
