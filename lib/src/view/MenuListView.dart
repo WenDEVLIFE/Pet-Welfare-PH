@@ -11,7 +11,7 @@ class MenuListWidget extends StatelessWidget {
     MenuItem(icon: Icons.password, title: 'Change Password'),
     MenuItem(icon: Icons.check, title: 'Terms and Conditions'),
     MenuItem(icon: Icons.privacy_tip_outlined, title: 'Privacy Policy'),
-    MenuItem(icon: Icons.perm_device_information, title: 'About Us'),
+    MenuItem(icon: Icons.info_outline, title: 'About Us'),
     MenuItem(icon: Icons.logout, title: 'Logout'),
   ];
 
@@ -46,6 +46,7 @@ class MenuListWidget extends StatelessWidget {
                     Navigator.pushNamed(context, AppRoutes.privacyPolicy);
                   } else if (index == 4) {
                     // About Us
+                    Navigator.pushNamed(context, AppRoutes.about);
                   } else if (index == 5) {
                     // Logout
                     showDialog(
