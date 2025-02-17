@@ -5,6 +5,7 @@ import 'package:pet_welfrare_ph/src/view_model/UserViewModel.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/AppColors.dart';
+import 'BanDialogForm.dart';
 
 class ViewUserDataPage extends StatefulWidget {
   const ViewUserDataPage({Key? key}) : super(key: key);
@@ -231,14 +232,15 @@ class _ViewUserDataPageState extends State<ViewUserDataPage> {
                 ),
                 child: ElevatedButton(
                   onPressed: () {
-
-                    // TODO: Implement ban user
-                    // Provider.of<OTPViewModel>(context, listen: false).checkOTP(int.parse(_viewModel.controllers.map((controller) => controller.text).join()), userData ,context);
+                    _showBanDialog (
+                        context, userData
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.black,
                   ),
-                  child: const Text('Ban User',
+                  child: const Text(
+                    'Ban User',
                     style: TextStyle(
                       fontSize: 20,
                       color: Colors.white,
@@ -252,7 +254,19 @@ class _ViewUserDataPageState extends State<ViewUserDataPage> {
           ],
         ),
       ),
+    );
+  }
 
+  void _showBanDialog(BuildContext context , Map<String, dynamic>? userData) {
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return BanDialog(userData: {
+          'name': userData?['name'],
+          'email': userData?['email'],
+          'id': userData?['id'],
+        });
+      },
     );
   }
 }
