@@ -80,6 +80,11 @@ class AddUserImpl implements AddUserRepository {
       var idfrontPath = userData['idfront']!;
       var address = userData['address']!;
 
+      // Navigate to login screen
+      if (role != "Admin" && role != "Super-Admin") {
+        Navigator.pushReplacementNamed(context, AppRoutes.loginScreen);
+      }
+
       // Register user in Firebase Authentication
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
         email: email,
@@ -134,11 +139,6 @@ class AddUserImpl implements AddUserRepository {
 
       // Add to Firestore
       await _firestore.collection("Users").doc(uid).set(userFirestoreData);
-
-      // Navigate to login screen
-      if (role != "Admin" && role != "Super-Admin") {
-        Navigator.pushReplacementNamed(context, AppRoutes.loginScreen);
-      }
 
       // Success message
       ToastComponent().showMessage(Colors.green, 'User registered successfully!');
