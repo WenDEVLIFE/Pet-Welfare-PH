@@ -28,6 +28,7 @@ abstract class AddUserRepository {
 class AddUserImpl implements AddUserRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseStorage storage = FirebaseStorage.instance;
  //  final admin.App _adminApp = admin.initializeApp();
 
   // This will check if the username exists in the database
@@ -166,7 +167,6 @@ class AddUserImpl implements AddUserRepository {
 
   @override
   Stream<List<UserModel>> loadUserData() {
-
      // This will load the data of the user
     return _firestore.collection('Users').snapshots().map((snapshot) {
       return snapshot.docs.map((doc) => UserModel.fromDocumentSnapshot(doc)).toList();
@@ -242,13 +242,26 @@ class AddUserImpl implements AddUserRepository {
   }
 
   // This will delete the user
-  // TODO : Fix the bug in this method deleting th user from the firebase authentication
   Future<void> deleteUser(String uid) async {
     try {
-
       FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
-        // 🔥 Step 1: Delete Firestore user data
+      // Delete Firestore user data
+      QuerySnapshot userResult = await _firestore
+          .collection('Users')
+          .where('Uid', isEqualTo: uid)
+          .get();
+
+      if (userResult.docs.isNotEmpty) {
+        // Delete user files from Firebase Storage
+        Reference profileRef = storage.ref().child("Profile/$uid.jpg");
+        Reference idFrontRef = storage.ref().child("ID/$uid-front.jpg");
+        Reference idBackRef = storage.ref().child("ID/$uid-back.jpg");
+        await profileRef.delete();
+        await idFrontRef.delete();
+        await idBackRef.delete();
+
+        // Delete user document from Firestore
         await _firestore.collection('Users').doc(uid).delete();
         print('User document deleted from Firestore');
 
@@ -260,7 +273,17 @@ class AddUserImpl implements AddUserRepository {
           textColor: Colors.white,
           fontSize: 16.0,
         );
-
+      } else {
+        print('User not found');
+        Fluttertoast.showToast(
+          msg: "User not found!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+      }
     } catch (e) {
       print("Error deleting user: $e");
       Fluttertoast.showToast(
@@ -276,8 +299,6 @@ class AddUserImpl implements AddUserRepository {
 
   Future<void> executeBan(String uid, String reason) async {
     try {
-      FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
       // Check if the user is already banned
       QuerySnapshot bannedResult = await _firestore
           .collection('Banned')
