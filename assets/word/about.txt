@@ -1,0 +1,22 @@
+ABOUT PET WELFARE PH
+
+Features
+
+Advanced search function
+Pet Welfare PH is a mobile app which allows easier browsing or sorting of posts related to missing and found pets (main purpose). The app has advanced search functions which will filter posts based on certain information. All posts related to missing and found pets are required to have the following information: type of pet, with or without collar, age, gender, size, breed, colors or patterns, date missing or found, and location.
+Segregated posts by classification
+Posts will be segregated based on their classification. There will be a separate section for Missing Pets, where all posts are only about missing pets. There will be another section for Found Pets, which only contains posts about found pets. This will be the case for each classification of posts. The segregation will promote efficiency for a user who wanted to browse a specific section or by section. Other classifications are Pet Appreciation, Find a Home: Rescue & Shelter, Call for Aid, Paw-some Experience (in relation to Vet clinics and Pet transportation services), Pet Adoption, Protect our Pets (Reports of Abuse or Cruelty), and Community Posts.
+
+Map location
+In order to easily locate certain places such as rescuers, pet shelters, vet clinics and pet transportation services, a map is available on the app which can show registered addresses or known locations. Users who find pets for rescue can also provide the exact location using the map.
+Social interaction
+The app also acts as a social media platform where users can create posts and interact with other users by commenting or reacting to other users’ posts. Users can also message one another to discuss relevant matters. We aim to build and maintain a community that values and upholds the rights of pets and the provision of their needs; a community composed of kind, loving, respectful, and responsible human beings.
+
+Subscription
+PET WELFARE PH is a subscription app. The first six months (180 days) is free. Afterwards, the subscription amounts to Php10 per month or Php100 per year (two options only), to recoup initial costs and maintain its continued use. Any excess proceeds will be used for projects like Oplan Kapon, assistance to rescues and shelters, and assistance for vet bills. The following users will be exempt from the subscription: admin, sub-admins, rescuer, and shelter personnel.
+Back story
+I have a missing cat and I joined numerous social media groups related to pets just to look for her. Several times a day, I check each group for updates and new posts, hoping one will be related to my missing cat. It’s a struggle. The search function on said social media platforms were very simple and not quite helpful as most posts do not contain complete information. The keywords are limited, even the location. The search results are very few and some are not even related. I had to check each post just to be sure I’m not missing anything. The posts are also of varying nature and some are repetitive. Everything’s mixed up. There are posts about missing pets, found pets, for rescue, for foster, for adoption, reports of animal abuse and cruelty, seeking advice or recommendations. There’s a lot. Sometimes, I would try to match the missing pets with the found pets to help others but it’s truly difficult, especially if only based on pictures and incomplete information. Sometimes, even the locations are not provided. Some cats and dogs resemble each other, too. I had to double check, find the previous posts, to see if it was a female cat or a male cat. Does it have a collar or not? Was it a young cat? Or an adult cat? After going through such an experience, I thought there must be a better way to do it. The idea about the app came to mind, although I wasn’t sure if the features I thought of are actually doable. I thought it was somewhat ambitious, but I hoped it will help in making things easier, mainly to reunite missing pets with their loving families.
+
+
+
+

@@ -82,6 +82,11 @@ class UserViewState extends State<UserView> {
           _buildDrawerItem(Icons.report_gmailerrorred_sharp, 'Reports', () {
             Navigator.pop(context);
           }),
+          _buildDrawerItem(Icons.info, 'About us', () {
+            Navigator.pop(context);
+            Navigator.pushNamed(context, AppRoutes.privacyPolicy);
+            // Navigate to Privacy Policy
+          }),
           _buildDrawerItem(Icons.check, 'Terms and Condition', () {
             Navigator.pop(context);
             Navigator.pushNamed(context, AppRoutes.termsAndConditions);

@@ -21,7 +21,7 @@ class TermsAndConditionState extends State<AboutView> {
   }
 
   Future<void> loadTermsAndConditions() async {
-    final String text = await rootBundle.loadString("assets/word/terms.txt");
+    final String text = await rootBundle.loadString("assets/word/about.txt");
     setState(() {
       termsText = text;
     });
