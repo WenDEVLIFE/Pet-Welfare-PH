@@ -14,8 +14,13 @@ class DashboardView extends StatefulWidget {
 }
 
 class DashboardViewState extends State<DashboardView> {
+
   @override
   Widget build(BuildContext context) {
+
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       drawer: NavigationDrawer(
         children: [
@@ -91,7 +96,184 @@ class DashboardViewState extends State<DashboardView> {
         ),
         backgroundColor: AppColors.orange,
       ),
-      body: const Center(child: Text('Dashboard View')),
+      body: SingleChildScrollView(
+        child: Center(
+          child: Column(
+            children: <Widget>[
+              Padding(
+                padding: const EdgeInsets.all(20),
+                child: Column(
+                  children: <Widget>[
+                    const Text(
+                      'Welcome to the Dashboard',
+                      style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'SmoochSans',
+                      ),
+                    ),
+                    SizedBox(height: screenHeight * 0.02),
+                    const Card(
+                      color: AppColors.orange,
+                      child: Column(
+                        children: <Widget>[
+                          ListTile(
+                            title: Row(
+                              children: <Widget>[
+                                Icon(Icons.person, color: Colors.white),
+                                Text('Total Users',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w800,
+                                    fontFamily: 'SmoochSans',
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            subtitle: Text('100',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                                fontFamily: 'SmoochSans',
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: screenHeight * 0.02),
+                    const Card(
+                      color: AppColors.orange,
+                      child: Column(
+                        children: <Widget>[
+                          ListTile(
+                            title: Row(
+                              children: <Widget>[
+                                Icon(Icons.post_add, color: Colors.white),
+                                Text('Total Posts',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w800,
+                                    fontFamily: 'SmoochSans',
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            subtitle: Text('100',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                                fontFamily: 'SmoochSans',
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: screenHeight * 0.02),
+                    const Card(
+                      color: AppColors.orange,
+                      child: Column(
+                        children: <Widget>[
+                          ListTile(
+                            title: Row(
+                              children: <Widget>[
+                                Icon(Icons.person_off, color: Colors.white),
+                                Text('Total Banned Users',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w800,
+                                    fontFamily: 'SmoochSans',
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            subtitle: Text('100',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                                fontFamily: 'SmoochSans',
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: screenHeight * 0.02),
+                    const Card(
+                      color: AppColors.orange,
+                      child: Column(
+                        children: <Widget>[
+                          ListTile(
+                            title: Row(
+                              children: <Widget>[
+                                Icon(Icons.verified_user_rounded, color: Colors.white),
+                                Text('Total Verified User',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w800,
+                                    fontFamily: 'SmoochSans',
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            subtitle: Text('100',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                                fontFamily: 'SmoochSans',
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(height: screenHeight * 0.02),
+                    const Card(
+                      color: AppColors.orange,
+                      child: Column(
+                        children: <Widget>[
+                          ListTile(
+                            title: Row(
+                              children: <Widget>[
+                                Icon(Icons.person_off_sharp, color: Colors.white),
+                                Text('Total Unverified User',
+                                  style: const TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w800,
+                                    fontFamily: 'SmoochSans',
+                                    color: Colors.white,
+                                  ),
+                                ),
+                              ],
+                            ),
+                            subtitle: Text('100',
+                              style: const TextStyle(
+                                fontSize: 16,
+                                fontWeight: FontWeight.w800,
+                                fontFamily: 'SmoochSans',
+                                color: Colors.white,
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                )
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 
