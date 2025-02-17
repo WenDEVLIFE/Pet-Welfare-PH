@@ -169,7 +169,7 @@ class _ViewUserDataPageState extends State<ViewUserDataPage> {
 
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
+                    backgroundColor: Colors.green,
                   ),
                   child: const Text('Approved',
                     style: TextStyle(
@@ -237,7 +237,7 @@ class _ViewUserDataPageState extends State<ViewUserDataPage> {
                     );
                   },
                   style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.black,
+                    backgroundColor: Colors.red,
                   ),
                   child: const Text(
                     'Ban User',

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pet_welfrare_ph/src/respository/AddUserRespository.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 
 class BanDialog extends StatefulWidget {
@@ -21,6 +22,8 @@ class _BanDialogState extends State<BanDialog> {
 
   @override
   Widget build(BuildContext context) {
+
+    TextEditingController reasonController = TextEditingController();
     return AlertDialog(
       backgroundColor: AppColors.orange,
       title: const Text(
@@ -32,10 +35,10 @@ class _BanDialogState extends State<BanDialog> {
           fontSize: 20,
         ),
       ),
-      content: const Column(
+      content: Column(
         mainAxisSize: MainAxisSize.min,
         children: [
-          Text(
+          const Text(
             'Please provide a reason for banning the user:',
             style: TextStyle(
               color: AppColors.white,
@@ -45,7 +48,8 @@ class _BanDialogState extends State<BanDialog> {
             ),
           ),
           TextField(
-            decoration: InputDecoration(
+            controller: reasonController,
+            decoration: const InputDecoration(
               labelText: 'Reason',
               labelStyle: TextStyle(
                 color: AppColors.white,
@@ -60,6 +64,18 @@ class _BanDialogState extends State<BanDialog> {
                 fontWeight: FontWeight.w600,
                 fontSize: 16,
               ),
+              enabledBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.white),
+              ),
+              focusedBorder: UnderlineInputBorder(
+                borderSide: BorderSide(color: Colors.white),
+              ),
+            ),
+            style: const TextStyle(
+              color: AppColors.white,
+              fontFamily: 'SmoochSans',
+              fontWeight: FontWeight.w600,
+              fontSize: 16,
             ),
           ),
         ],
@@ -81,8 +97,10 @@ class _BanDialogState extends State<BanDialog> {
         ),
         TextButton(
           onPressed: () {
-            // Implement the ban functionality here
-            Navigator.of(context).pop();
+             if (reasonController.text.isNotEmpty) {
+                final AddUserRepository _addUserRepository = AddUserImpl();
+                _addUserRepository.executeBan(userData['id'], reasonController.text);
+             }
           },
           child: const Text(
             'Confirm Ban',

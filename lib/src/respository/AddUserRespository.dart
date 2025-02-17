@@ -22,6 +22,7 @@ abstract class AddUserRepository {
   Future<void> approveUser(String uid);
   deniedUser(String uid);
   deleteUser(String uid);
+  executeBan(String uid, String text);
 }
 
 class AddUserImpl implements AddUserRepository {
@@ -262,6 +263,58 @@ class AddUserImpl implements AddUserRepository {
 
     } catch (e) {
       print("Error deleting user: $e");
+      Fluttertoast.showToast(
+        msg: "Error: $e",
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+    }
+  }
+
+  Future<void> executeBan(String uid, String reason) async {
+    try {
+      FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
+      // Check if the user is already banned
+      QuerySnapshot bannedResult = await _firestore
+          .collection('Banned')
+          .where('Uid', isEqualTo: uid)
+          .get();
+
+      if (bannedResult.docs.isNotEmpty) {
+        Fluttertoast.showToast(
+          msg: "User is already banned!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.red,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+        return;
+      } else{
+        // Proceed with banning the user
+        await _firestore.collection('Banned').add({
+          'Uid': uid,
+          'Reason': reason,
+          'CreatedAt': FieldValue.serverTimestamp(),
+        });
+        await _firestore.collection('Users').doc(uid).update({'Status': 'Banned'});
+
+        Fluttertoast.showToast(
+          msg: "User banned successfully!",
+          toastLength: Toast.LENGTH_SHORT,
+          gravity: ToastGravity.BOTTOM,
+          backgroundColor: Colors.green,
+          textColor: Colors.white,
+          fontSize: 16.0,
+        );
+
+      }
+    } catch (e) {
+      print("Error banning user: $e");
       Fluttertoast.showToast(
         msg: "Error: $e",
         toastLength: Toast.LENGTH_LONG,

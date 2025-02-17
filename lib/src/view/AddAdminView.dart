@@ -116,7 +116,6 @@ class AddAdminViewState extends State<AddAdminView> {
                   );
                 },
               ),
-
               SizedBox(height: screenHeight * 0.02),
               const Text('SELECT YOUR USER CLASSIFICATION',
                   style: TextStyle(
