@@ -13,6 +13,7 @@ import 'package:pet_welfrare_ph/src/view/SelectView.dart';
 import 'package:pet_welfrare_ph/src/view/TermsAndConditionView.dart';
 import 'package:pet_welfrare_ph/src/view/UploadIDView.dart';
 import 'package:pet_welfrare_ph/src/view/VetClinicRegisterView.dart';
+import 'package:pet_welfrare_ph/src/view/ViewUserData.dart';
 import 'package:pet_welfrare_ph/src/view/ViewUserDataDialog.dart';
 
 import '../components/AdminNavigationComponent.dart';
@@ -50,32 +51,34 @@ class AppRoutes {
   static const String goToSubscription = '/goToSubscription';
   static const String viewUserData = '/ViewUserData';
   static const String about = '/about';
+  static const String viewUserInformation = '/viewUserInformation';
 
   // Assign routes to the screens
   static Map<String, WidgetBuilder> routes = {
-    loadingScreen: (context) => LoadingView(), // Replace with actual screen
-    splashscreen: (context) => SplashView2(), // Replace with actual screen
-    loginScreen: (context) => const Loginview(), // Replace with actual screen
-    selectScreen: (context) => const SelectView(), // Replace with actual screen
-    furRegistrationScreen: (context) => const FurParentRegisterView(), // Replace with actual screen
-    shelterRegistrationScreen: (context) => const PetrShelterRegisterview(), // Replace with actual screen
-    clinicRegistrationScreen: (context) => const VetClinicRegisterView(), // Replace with actual screen
-    legalScreen: (context) => const LegalFirmRegisterView(), // Replace with actual screen
-    uploadIDScreen: (context) => const UploadIDView(), // Replace with actual screen
-    otpScreen: (context) => const OTPView(), // Replace with actual screen
-    user: (context) => const UserNavigationComponent(), // Replace with actual screen
-    admin: (context) => const AdminNavigationComponent(), // Replace with actual screen
-    termsAndConditions: (context) => const TermsAndConditionView(), // Replace with actual screen
-    privacyPolicy: (context) => const Privacyview(), // Replace with actual screen
-    changePassword: (context) => const ChangePasswordView(), // Replace with actual screen
-    profile: (context) => const ProfileView(), // Replace with actual screen
-    dashboard: (context) => const DashboardView(), // Replace with actual screen
-    homescreen: (context) => const HomeScreen(), // Replace with actual screen
-    userView: (context) => const UserView(), // Replace with actual screen
-    addAdmin: (context) => const AddAdminView(), // Replace with actual screen
-    subscription : (context) => const SubscriptionView(), // Replace with actual screen
-    goToSubscription : (context) => const AddSubscriptionView(), // Replace with actual screen
-    viewUserData : (context) => const ViewUserDataPage(), // Replace with actual screen
-    about : (context) => const AboutView(), // Replace with actual screen
+    loadingScreen: (context) => LoadingView(),// This is the loading screen
+    splashscreen: (context) => SplashView2(), // This is the splash screen
+    loginScreen: (context) => const Loginview(),  // This is the login screen
+    selectScreen: (context) => const SelectView(), // This is the select screen
+    furRegistrationScreen: (context) => const FurParentRegisterView(),  // This is the fur parent registration screen
+    shelterRegistrationScreen: (context) => const PetrShelterRegisterview(),  // This is the pet shelter registration screen
+    clinicRegistrationScreen: (context) => const VetClinicRegisterView(),  // This is the vet clinic registration screen
+    legalScreen: (context) => const LegalFirmRegisterView(), // This is the legal firm registration screen
+    uploadIDScreen: (context) => const UploadIDView(), //  This is the upload ID screen
+    otpScreen: (context) => const OTPView(), //  This is the OTP screen
+    user: (context) => const UserNavigationComponent(), //  This is the user navigation component
+    admin: (context) => const AdminNavigationComponent(), //  This is the admin navigation component
+    termsAndConditions: (context) => const TermsAndConditionView(), //  This is the terms and conditions
+    privacyPolicy: (context) => const Privacyview(), //  This is the privacy policy
+    changePassword: (context) => const ChangePasswordView(), //  This is the change password
+    profile: (context) => const ProfileView(), //  This is the profile
+    dashboard: (context) => const DashboardView(), // This is the dashboard
+    homescreen: (context) => const HomeScreen(), // This is the home screen
+    userView: (context) => const UserView(), // This is where the admin can view the user
+    addAdmin: (context) => const AddAdminView(), // This is where the admin can add another admin
+    subscription : (context) => const SubscriptionView(), // // This is where the user can go to the subscription page
+    goToSubscription : (context) => const AddSubscriptionView(),// This is where the user can go to the add subscription page
+    viewUserData : (context) => const ViewUserDataPage(), // This is where the admin can view the user data
+    about : (context) => const AboutView(), // About page
+    viewUserInformation : (context) => const ViewUserData(), // This is where the user can view its status
   };
 }

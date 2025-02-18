@@ -14,6 +14,7 @@ import 'package:pet_welfrare_ph/src/view_model/SplashViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/LoadingViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/SubcriptionViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/UploadIDViewModel.dart';
+import 'package:pet_welfrare_ph/src/view_model/UserDataViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/UserViewModel.dart';
 import 'package:provider/provider.dart';
 
@@ -46,6 +47,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => SubscriptionViewModel()),
         ChangeNotifierProvider(create: (_) => DrawerHeadViewModel()),
         ChangeNotifierProvider(create: (_) => SubscriptionViewModel()),
+        ChangeNotifierProvider(create: (_) => UserDataViewModel()),
       ],
       child: MaterialApp(
         key: GlobalKey(), //
