@@ -262,7 +262,7 @@ class UserViewState extends State<UserView> {
                                   Alertmenudialog.show(
                                     context,
                                     onAction: () {
-                                     // Provider.of<UserViewModel>(context, listen: false).unbanUser(user.uid);
+                                      Provider.of<UserViewModel>(context, listen: false).unbanUser(user.uid);
                                     },
                                     title: 'Unban User',
                                     content: 'Are you sure you want to unban this user?',

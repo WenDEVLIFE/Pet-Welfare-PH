@@ -24,6 +24,7 @@ abstract class AddUserRepository {
   deniedUser(String uid);
   deleteUser(String uid);
   executeBan(String uid, String text);
+  unBanUser(String uid);
 }
 
 class AddUserImpl implements AddUserRepository {
@@ -260,6 +261,30 @@ class AddUserImpl implements AddUserRepository {
       }
     } catch (e) {
       print("Error banning user: $e");
+      ToastComponent().showMessage(Colors.red, 'Error: $e');
+    }
+  }
+
+  Future<void> unBanUser(String uid) async {
+    try {
+      // Check if the user is already banned
+      QuerySnapshot bannedResult = await _firestore
+          .collection('Banned')
+          .where('Uid', isEqualTo: uid)
+          .get();
+
+      if (bannedResult.docs.isNotEmpty) {
+        bannedResult.docs.forEach((doc) async {
+          await doc.reference.delete();
+        });
+        await _firestore.collection('Users').doc(uid).update({'Status': 'Approved'});
+
+        ToastComponent().showMessage(Colors.green, 'User unbanned successfully!');
+      } else {
+        ToastComponent().showMessage(Colors.red, 'User is not banned!');
+      }
+    } catch (e) {
+      print("Error unbanning user: $e");
       ToastComponent().showMessage(Colors.red, 'Error: $e');
     }
   }

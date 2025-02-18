@@ -86,4 +86,9 @@ class UserViewModel extends ChangeNotifier {
   Future <void> executeDelete(String uid) async {
     await _addUserRepository.deleteUser(uid);
   }
+
+  // Unban user
+  Future <void> unbanUser(String uid) async {
+    await _addUserRepository.unBanUser(uid);
+  }
 }
