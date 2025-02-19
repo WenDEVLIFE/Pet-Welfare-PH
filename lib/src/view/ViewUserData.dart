@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
+import 'package:provider/provider.dart';
+import '../view_model/UserDataViewModel.dart';
 
 class ViewUserData extends StatefulWidget {
   const ViewUserData({Key? key}) : super(key: key);
@@ -9,22 +11,27 @@ class ViewUserData extends StatefulWidget {
   _ViewUserDataState createState() => _ViewUserDataState();
 }
 
-// TODO : Implement the state of the ViewUserData and the UI of the ViewUserData
-class _ViewUserDataState extends State<ViewUserData>{
+class _ViewUserDataState extends State<ViewUserData> {
+  late UserDataViewModel viewModel;
+
+  @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    viewModel = Provider.of<UserDataViewModel>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      viewModel.loadInformation();
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    final Map<String, dynamic>? userData =
-    ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
-
-    print(userData);
-
     return Scaffold(
       appBar: AppBar(
-        title: const Text('My Information',
+        title: const Text(
+          'My Information',
           style: TextStyle(
             color: AppColors.white,
             fontFamily: 'SmoochSans',
@@ -35,44 +42,51 @@ class _ViewUserDataState extends State<ViewUserData>{
         backgroundColor: AppColors.orange,
       ),
       body: SingleChildScrollView(
-        padding: const EdgeInsets.all(16.0),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            Text(
-              'Name:',
-              style: const TextStyle(
-                color: AppColors.black,
-                fontFamily: 'SmoochSans',
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
+            Container(
+              width: screenWidth,
+              height: screenHeight * 0.2,
+              color: AppColors.orange,
+              padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Center(
+                    child:  Consumer<UserDataViewModel>(
+                      builder: (context, viewModel, child) {
+                        return CircleAvatar(
+                          radius: 60,
+                          backgroundColor: AppColors.black,
+                          child: CircleAvatar(
+                            radius: 55,
+                            backgroundImage: NetworkImage(viewModel.profilepath),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ],
               ),
             ),
-            SizedBox(height: screenHeight * 0.005),
-            Text(
-              'Email:',
-              style: const TextStyle(
-                color: AppColors.black,
-                fontFamily: 'SmoochSans',
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
-              ),
+            Padding(
+                padding:  const EdgeInsets.only(left: 16.0, top: 16.0),
+               child: Text(
+                 'Name: ${viewModel.name}',
+                 style: const TextStyle(
+                   color: AppColors.black,
+                   fontFamily: 'SmoochSans',
+                   fontWeight: FontWeight.w600,
+                   fontSize: 16,
+                 ),
+               ),
             ),
             SizedBox(height: screenHeight * 0.005),
-            Text(
-              'Role:',
-              style: const TextStyle(
-                color: AppColors.black,
-                fontFamily: 'SmoochSans',
-                fontWeight: FontWeight.w600,
-                fontSize: 16,
-              ),
-            ),
-            SizedBox(height: screenHeight * 0.005),
-            if (userData?['role'].toLowerCase() != 'admin') ...[
-
-              Text(
-                'IDType: ${userData?['idtype'] ?? ''}',
+            Padding(
+              padding:  const EdgeInsets.only(left: 16.0, top: 16.0),
+              child: Text(
+                'Email: ${viewModel.email}',
                 style: const TextStyle(
                   color: AppColors.black,
                   fontFamily: 'SmoochSans',
@@ -80,22 +94,54 @@ class _ViewUserDataState extends State<ViewUserData>{
                   fontSize: 16,
                 ),
               ),
-              const Text(
-                'ID Front:',
-                style: TextStyle(
+            ),
+            SizedBox(height: screenHeight * 0.005),
+            Padding(
+              padding:  const EdgeInsets.only(left: 16.0, top: 16.0),
+              child: Text(
+                'Role: ${viewModel.role}',
+                style: const TextStyle(
                   color: AppColors.black,
                   fontFamily: 'SmoochSans',
                   fontWeight: FontWeight.w600,
                   fontSize: 16,
                 ),
               ),
+            ),
+            SizedBox(height: screenHeight * 0.005),
+            if (viewModel.role.toLowerCase() != 'admin') ...[
+              Padding(
+                padding:  const EdgeInsets.only(left: 16.0, top: 16.0),
+                child: Text(
+                  'ID Type: ${viewModel.idType}',
+                  style: const TextStyle(
+                    color: AppColors.black,
+                    fontFamily: 'SmoochSans',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              const Padding(
+                padding:  EdgeInsets.only(left: 16.0, top: 16.0),
+                child: Text(
+                  'ID Front:',
+                  style: TextStyle(
+                    color: AppColors.black,
+                    fontFamily: 'SmoochSans',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
               SizedBox(height: screenHeight * 0.005),
-              Padding(padding: const EdgeInsets.only(top: 16.0),
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
                 child: Center(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
                     child: Image.network(
-                      userData?['idfronturl'] ?? '',
+                      viewModel.idfrontpath ?? '',
                       width: screenWidth * 0.8,
                       height: screenHeight * 0.4,
                       fit: BoxFit.cover,
@@ -104,41 +150,93 @@ class _ViewUserDataState extends State<ViewUserData>{
                 ),
               ),
               SizedBox(height: screenHeight * 0.005),
-              const Text(
-                'ID Back:',
-                style: TextStyle(
-                  color: AppColors.black,
-                  fontFamily: 'SmoochSans',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
+              Center(
+                child: Padding(
+                  padding:  const EdgeInsets.only(left: 16.0, top: 16.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                    ),
+                    child: const Text('Change ID Front',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'SmoochSans',
+                      ),
+                    ),
+                  ),
                 ),
               ),
               SizedBox(height: screenHeight * 0.005),
-              Padding(padding: const EdgeInsets.only(top: 16.0),
+              const Padding(
+                padding:  EdgeInsets.only(left: 16.0, top: 16.0),
+                child: Text(
+                  'ID Back:',
+                  style: TextStyle(
+                    color: AppColors.black,
+                    fontFamily: 'SmoochSans',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
+                ),
+              ),
+              SizedBox(height: screenHeight * 0.005),
+              Padding(
+                padding: const EdgeInsets.only(top: 16.0),
                 child: Center(
                   child: ClipRRect(
                     borderRadius: BorderRadius.circular(10.0),
                     child: Image.network(
-                      userData?['idbackurl'] ?? '',
+                      viewModel.idbackpath ?? '',
                       width: screenWidth * 0.8,
                       height: screenHeight * 0.4,
                       fit: BoxFit.cover,
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(height: screenHeight * 0.005),
+              Center(
+                child: Padding(
+                  padding:  const EdgeInsets.only(left: 16.0, top: 16.0),
+                  child: ElevatedButton(
+                    onPressed: () {
+
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.black,
+                    ),
+                    child: const Text('Change ID Back',
+                      style: TextStyle(
+                        fontSize: 20,
+                        color: Colors.white,
+                        fontWeight: FontWeight.w600,
+                        fontFamily: 'SmoochSans',
+                      ),
                     ),
                   ),
                 ),
               ),
             ],
             SizedBox(height: screenHeight * 0.005),
-            if (userData?['role'].toLowerCase() == 'pet rescuer' || userData?['role'].toLowerCase() == 'pet shelter') ...[
-              Text(
-                'Address: ${userData?['address'] ?? ''}',
-                style: const TextStyle(
-                  color: AppColors.black,
-                  fontFamily: 'SmoochSans',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
+            if (viewModel.role == 'pet rescuer' || viewModel.role.toLowerCase() == 'pet shelter') ...[
+              Padding(
+                padding:  const EdgeInsets.only(left: 16.0, top: 16.0),
+                child: Text(
+                  'Address: ${viewModel.address }',
+                  style: const TextStyle(
+                    color: AppColors.black,
+                    fontFamily: 'SmoochSans',
+                    fontWeight: FontWeight.w600,
+                    fontSize: 16,
+                  ),
                 ),
               ),
+              SizedBox(height: screenHeight * 0.005),
             ],
           ],
         ),
