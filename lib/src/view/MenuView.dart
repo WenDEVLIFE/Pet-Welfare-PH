@@ -7,6 +7,7 @@ import 'MenuListView.dart';
 import '../utils/AppColors.dart';
 import '../utils/ImageUtils.dart';
 import 'package:provider/provider.dart';
+
 class MenuView extends StatefulWidget {
   const MenuView({Key? key}) : super(key: key);
 
@@ -23,97 +24,88 @@ class MenuViewState extends State<MenuView> {
       Provider.of<MenuViewModel>(context, listen: false).loadProfile();
     });
   }
+
   @override
   Widget build(BuildContext context) {
-
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
     return CupertinoPageScaffold(
-      navigationBar: const CupertinoNavigationBar(
-        leading: Text('Menu', style: TextStyle(
-          color: Colors.white,
-          fontSize: 20,
-          fontFamily: 'SmoochSans',
-          fontWeight: FontWeight.w600,
-        ),),
-        backgroundColor: AppColors.orange,
-      ),
-      child: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              SizedBox.fromSize(size: Size.fromHeight(screenHeight * 0.02)),
-              Center(
-                child: Container(
-                  child: Stack(
-                    children: [
-                      Consumer<MenuViewModel>(
-                        builder: (context, viewModel, child) {
-                          return CircleAvatar(
-                            radius: 100,
-                            backgroundColor: AppColors.orange,
-                            child: CircleAvatar(
-                              radius: 95,
-                              backgroundImage: NetworkImage(viewModel.currentfilepath),
-                            ),
-                          );
-                        },
-                      ),
-                      Positioned(
-                        bottom: 0,
-                        right: 0,
-                        child: Container(
-                          decoration: const BoxDecoration(
-                            color: Colors.black,
-                            shape: BoxShape.circle,
-                          ),
-                          child: IconButton(
-                            icon: const Icon(Icons.photo_camera),
-                            onPressed: () => context.read<MenuViewModel>().pickImage(),
-                          ),
+      child: Center(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Flexible(
+              child: Container(
+                width: screenWidth,
+                height: screenHeight * 0.2, // Set to 30% of screen height
+                color: AppColors.orange,
+                padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Consumer<MenuViewModel>(
+                          builder: (context, viewModel, child) {
+                            return CircleAvatar(
+                              radius: 50, // Adjust size as needed
+                              backgroundColor: AppColors.black,
+                              child: CircleAvatar(
+                                radius: 45,
+                                backgroundImage: NetworkImage(viewModel.currentfilepath),
+                              ),
+                            );
+                          },
                         ),
-                      ),
-                    ],
-                  ),
+                        SizedBox(width: 12.0),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Consumer<MenuViewModel>(
+                              builder: (context, viewModel, child) {
+                                return Text(
+                                  viewModel.name,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 18,
+                                    fontFamily: 'SmoochSans',
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                );
+                              },
+                            ),
+                            SizedBox(height: 4.0),
+                            Consumer<MenuViewModel>(
+                              builder: (context, viewModel, child) {
+                                return Text(
+                                  viewModel.email,
+                                  style: const TextStyle(
+                                    color: Colors.white,
+                                    fontSize: 16,
+                                    fontFamily: 'SmoochSans',
+                                    fontWeight: FontWeight.w500,
+                                  ),
+                                );
+                              },
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ],
                 ),
               ),
-              SizedBox.fromSize(size: Size.fromHeight(screenHeight * 0.02)),
-              Center(
-                child: Consumer<MenuViewModel>(
-                  builder: (context, viewModel, child) {
-                    return Text("Name: ${viewModel.name}",
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontFamily: 'SmoochSans',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    );
-                  },
-                ),
-              ),
-              SizedBox.fromSize(size: Size.fromHeight(screenHeight * 0.02)),
-              Center(
-                child: Consumer<MenuViewModel>(
-                  builder: (context, viewModel, child) {
-                    return Text("Email: ${viewModel.email}",
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 20,
-                        fontFamily: 'SmoochSans',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    );
-                  },
-                ),
-              ),
-              Container(
-                height: MediaQuery.of(context).size.height, // Ensure proper layout constraints
-                child: MenuListWidget(),
-              ),
-            ],
-          ),
+
+            ),
+
+            SizedBox.fromSize(size: Size.fromHeight(screenHeight * 0.02)),
+            Expanded(
+              child: MenuListWidget(),
+            ),
+          ],
         ),
       ),
     );

@@ -24,7 +24,7 @@ class MenuListWidget extends StatelessWidget {
             itemCount: menuItems.length,
             itemBuilder: (context, index) {
               return ListTile(
-                leading: Icon(menuItems[index].icon, color: AppColors.black,),
+                leading: Icon(menuItems[index].icon, color: AppColors.black, size: 22,),
                 title: Text(menuItems[index].title,
                   style: const TextStyle(fontSize: 18,
                     fontFamily: 'SmoochSans',
@@ -35,6 +35,7 @@ class MenuListWidget extends StatelessWidget {
                   // Handle menu item tap
                   if (index == 0) {
                     // User Information
+                    Navigator.pushReplacementNamed(context, AppRoutes.viewUserInformation);
                   } else if (index == 1) {
                     // Change Password
                     Navigator.pushNamed(context, AppRoutes.changePassword);
