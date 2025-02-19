@@ -10,6 +10,7 @@ class UserModel {
   String idbackPath;
   String idfrontPath;
   String address;
+  String idType;
 
   UserModel({
     required this.uid,
@@ -21,6 +22,7 @@ class UserModel {
     required this.idbackPath,
     required this.idfrontPath,
     required this.address,
+    required this.idType,
   });
 
   // Convert a UserModel into a Map
@@ -36,6 +38,7 @@ class UserModel {
       idbackPath: data['IDBackUrl'] ?? '',
       idfrontPath: data['IDFrontUrl'] ?? '',
       address: data['Address'] ?? '',
+      idType: data['IDType'] ?? '',
     );
   }
 }

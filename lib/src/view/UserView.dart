@@ -287,6 +287,7 @@ class UserViewState extends State<UserView> {
                                       'profileurl': user.profileUrl,
                                       'idfronturl': user.idfrontPath,
                                       'idbackurl': user.idbackPath,
+                                      'idtype': user.idType,
                                     });
                                   }
                                 },

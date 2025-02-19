@@ -35,7 +35,7 @@ class MenuListWidget extends StatelessWidget {
                   // Handle menu item tap
                   if (index == 0) {
                     // User Information
-                    Navigator.pushReplacementNamed(context, AppRoutes.viewUserInformation);
+                    Navigator.pushNamed(context, AppRoutes.viewUserInformation);
                   } else if (index == 1) {
                     // Change Password
                     Navigator.pushNamed(context, AppRoutes.changePassword);
