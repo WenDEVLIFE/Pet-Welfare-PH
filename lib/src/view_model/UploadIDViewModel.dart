@@ -8,7 +8,7 @@ class UploadIDViewModel extends ChangeNotifier {
     'Passport', 'Driver\'s License', 'SSS ID', 'UMID', 'Voter\'s ID', 'Postal ID', 'PRC ID',
     'OFW ID', 'Senior Citizen ID', 'PWD ID', 'Student ID', 'Company ID', 'Police Clearance',
     'NBI Clearance', 'Barangay Clearance', 'Health Card', 'PhilHealth ID', 'TIN ID', 'GSIS ID',
-    'Pag-IBIG ID', 'DFA ID'
+    'Pag-IBIG ID', 'DFA ID', 'National ID',
   ];
 
   String selectedIdType = 'Passport';

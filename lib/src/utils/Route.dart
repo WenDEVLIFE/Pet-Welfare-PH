@@ -19,6 +19,7 @@ import 'package:pet_welfrare_ph/src/view/ViewUserDataDialog.dart';
 import '../components/AdminNavigationComponent.dart';
 import '../view/AboutView.dart';
 import '../view/AddAdminView.dart';
+import '../view/ChangeIDView.dart';
 import '../view/ChangePasswordView.dart';
 import '../view/OTPView.dart';
 import '../view/SplashView.dart';
@@ -52,6 +53,7 @@ class AppRoutes {
   static const String viewUserData = '/ViewUserData';
   static const String about = '/about';
   static const String viewUserInformation = '/viewUserInformation';
+  static const String changeID = '/changeID';
 
   // Assign routes to the screens
   static Map<String, WidgetBuilder> routes = {
@@ -80,5 +82,6 @@ class AppRoutes {
     viewUserData : (context) => const ViewUserDataPage(), // This is where the admin can view the user data
     about : (context) => const AboutView(), // About page
     viewUserInformation : (context) => const ViewUserData(), // This is where the user can view its status
+    changeID : (context) => const ChangeIDView(), // This is where the user can change its ID
   };
 }

@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
+import 'package:pet_welfrare_ph/src/utils/Route.dart';
 import 'package:provider/provider.dart';
 import '../view_model/UserDataViewModel.dart';
 
@@ -150,18 +151,18 @@ class _ViewUserDataState extends State<ViewUserData> {
                 ),
               ),
               SizedBox(height: screenHeight * 0.005),
-              if (viewModel.status == 'approved') ...[
+              if (viewModel.status == 'Pending') ...[
                 Center(
                   child: Padding(
                     padding:  const EdgeInsets.only(left: 16.0, top: 16.0),
                     child: ElevatedButton(
                       onPressed: () {
-
+                        Navigator.pushNamed(context, AppRoutes.changeID);
                       },
                       style: ElevatedButton.styleFrom(
                         backgroundColor: Colors.black,
                       ),
-                      child: const Text('Change ID Back',
+                      child: const Text('Change ID Front',
                         style: TextStyle(
                           fontSize: 20,
                           color: Colors.white,
@@ -203,12 +204,13 @@ class _ViewUserDataState extends State<ViewUserData> {
                 ),
               ),
               SizedBox(height: screenHeight * 0.005),
-             if (viewModel.status == 'approved') ...[
+             if (viewModel.status == 'Pending') ...[
                Center(
                  child: Padding(
                    padding:  const EdgeInsets.only(left: 16.0, top: 16.0),
                    child: ElevatedButton(
                      onPressed: () {
+                       Navigator.pushNamed(context, AppRoutes.changeID);
 
                      },
                      style: ElevatedButton.styleFrom(
