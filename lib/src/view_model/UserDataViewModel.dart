@@ -36,18 +36,22 @@ class UserDataViewModel extends ChangeNotifier {
   final sessionManager = SessionManager();
 
   Future<void> loadInformation() async {
-    final Map<String, dynamic>? userData = await _loadprofilerespository.loadProfile1();
-    name = userData?['name'] ?? '';
-    email = userData?['email'] ?? '';
-    idType = userData?['idType'] ?? '';
-    profilepath = userData?['profilepath'] ?? '';
-    idfrontpath = userData?['idfrontpath'] ?? '';
-    idbackpath = userData?['idbackpath'] ?? '';
-    role = userData?['role'] ?? '';
-    address = userData?['address'] ?? '';
-    status = userData?['status'] ?? '';
-    selectedIdType = idType.isNotEmpty ? idType : (idType1.isNotEmpty ? idType1.first : '');
-    notifyListeners();
+    _loadprofilerespository.loadProfile1().listen((userData) {
+      if (userData != null) {
+        name = userData?['name'] ?? '';
+        email = userData?['email'] ?? '';
+        idType = userData?['idType'] ?? '';
+        profilepath = userData?['profilepath'] ?? '';
+        idfrontpath = userData?['idfrontpath'] ?? '';
+        idbackpath = userData?['idbackpath'] ?? '';
+        role = userData?['role'] ?? '';
+        address = userData?['address'] ?? '';
+        status = userData?['status'] ?? '';
+        selectedIdType = idType.isNotEmpty ? idType : (idType1.isNotEmpty ? idType1.first : '');
+        notifyListeners();
+      }
+    });
+
   }
 
   Future<void> pickImage(bool isFront) async {

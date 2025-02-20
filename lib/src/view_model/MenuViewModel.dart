@@ -23,17 +23,17 @@ class MenuViewModel extends ChangeNotifier {
 
   // Load profile data
   Future<void> loadProfile() async {
-    Map<String, dynamic>? profileData = await _loadProfileRepository.loadProfile();
-
-    if (profileData != null) {
-      name = profileData['Name'] ?? "Name";
-      role = profileData['Role'] ?? "Role";
-      currentfilepath = profileData['ProfileUrl'] ?? "ProfileUrl";
-      email = profileData['Email'] ?? "Email";
-      print('Profile Data: $profileData');
-      notifyListeners();
-    } else {
-      print('Profile Data is null');
-    }
+    _loadProfileRepository.loadProfile().listen((profileData) {
+      if (profileData != null) {
+        name = profileData['Name'] ?? "Name";
+        role = profileData['Role'] ?? "Role";
+        currentfilepath = profileData['ProfileUrl'] ?? "ProfileUrl";
+        email = profileData['Email'] ?? "Email";
+        print('Profile Data: $profileData');
+        notifyListeners();
+      } else {
+        print('Profile Data is null');
+      }
+    });
   }
 }

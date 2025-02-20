@@ -8,19 +8,18 @@ class DrawerHeadViewModel extends ChangeNotifier {
   String role = "role";
   String profileImage = "profileImage";
 
-
   // Load profile data
-  void loadData() async {
-    Map<String, dynamic>? profileData = await _loadProfileRepository.loadProfile();
-
-    if (profileData != null) {
-      name = profileData['Name'] ?? "Name";
-      role = profileData['Role'] ?? "Role";
-      profileImage = profileData['ProfileUrl'] ?? "ProfileUrl";
-      print('Profile Data: $profileData');
-      notifyListeners();
-    } else {
-      print('Profile Data is null');
-    }
+  void loadData() {
+    _loadProfileRepository.loadProfile().listen((profileData) {
+      if (profileData != null) {
+        name = profileData['Name'] ?? "Name";
+        role = profileData['Role'] ?? "Role";
+        profileImage = profileData['ProfileUrl'] ?? "ProfileUrl";
+        print('Profile Data: $profileData');
+        notifyListeners();
+      } else {
+        print('Profile Data is null');
+      }
+    });
   }
 }
