@@ -12,6 +12,7 @@ class UserDataViewModel extends ChangeNotifier {
   String role = '';
   String address = '';
   String id = '';
+  String status = '';
 
   final Loadprofilerespository _loadprofilerespository = LoadProfileImpl();
   final sessionManager = SessionManager();
@@ -26,6 +27,7 @@ class UserDataViewModel extends ChangeNotifier {
     idbackpath = userData?['idbackpath']?? '';
     role = userData?['role']?? '';
     address = userData?['address'] ?? '';
+    status = userData?['status'] ?? '';
     notifyListeners();
   }
 }

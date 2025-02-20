@@ -150,27 +150,30 @@ class _ViewUserDataState extends State<ViewUserData> {
                 ),
               ),
               SizedBox(height: screenHeight * 0.005),
-              Center(
-                child: Padding(
-                  padding:  const EdgeInsets.only(left: 16.0, top: 16.0),
-                  child: ElevatedButton(
-                    onPressed: () {
+              if (viewModel.status == 'approved') ...[
+                Center(
+                  child: Padding(
+                    padding:  const EdgeInsets.only(left: 16.0, top: 16.0),
+                    child: ElevatedButton(
+                      onPressed: () {
 
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                    ),
-                    child: const Text('Change ID Front',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'SmoochSans',
+                      },
+                      style: ElevatedButton.styleFrom(
+                        backgroundColor: Colors.black,
+                      ),
+                      child: const Text('Change ID Back',
+                        style: TextStyle(
+                          fontSize: 20,
+                          color: Colors.white,
+                          fontWeight: FontWeight.w600,
+                          fontFamily: 'SmoochSans',
+                        ),
                       ),
                     ),
                   ),
                 ),
-              ),
+                SizedBox(height: screenHeight * 0.005),
+              ],
               SizedBox(height: screenHeight * 0.005),
               const Padding(
                 padding:  EdgeInsets.only(left: 16.0, top: 16.0),
@@ -200,27 +203,30 @@ class _ViewUserDataState extends State<ViewUserData> {
                 ),
               ),
               SizedBox(height: screenHeight * 0.005),
-              Center(
-                child: Padding(
-                  padding:  const EdgeInsets.only(left: 16.0, top: 16.0),
-                  child: ElevatedButton(
-                    onPressed: () {
+             if (viewModel.status == 'approved') ...[
+               Center(
+                 child: Padding(
+                   padding:  const EdgeInsets.only(left: 16.0, top: 16.0),
+                   child: ElevatedButton(
+                     onPressed: () {
 
-                    },
-                    style: ElevatedButton.styleFrom(
-                      backgroundColor: Colors.black,
-                    ),
-                    child: const Text('Change ID Back',
-                      style: TextStyle(
-                        fontSize: 20,
-                        color: Colors.white,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'SmoochSans',
-                      ),
-                    ),
-                  ),
-                ),
-              ),
+                     },
+                     style: ElevatedButton.styleFrom(
+                       backgroundColor: Colors.black,
+                     ),
+                     child: const Text('Change ID Back',
+                       style: TextStyle(
+                         fontSize: 20,
+                         color: Colors.white,
+                         fontWeight: FontWeight.w600,
+                         fontFamily: 'SmoochSans',
+                       ),
+                     ),
+                   ),
+                 ),
+               ),
+               SizedBox(height: screenHeight * 0.005),
+             ],
             ],
             SizedBox(height: screenHeight * 0.005),
             if (viewModel.role == 'pet rescuer' || viewModel.role.toLowerCase() == 'pet shelter') ...[

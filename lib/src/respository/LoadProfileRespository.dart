@@ -51,6 +51,7 @@ class LoadProfileImpl implements Loadprofilerespository {
           'idbackpath': data['IDBackUrl'] ?? '',
           'role': data['Role'] ?? '',
           'address': data.containsKey('Address') ? data['Address'] : '',
+          'status': data.containsKey('Status') ? data['Status'] : '',
         };
       }
     } catch (e) {
