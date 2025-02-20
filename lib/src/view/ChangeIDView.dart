@@ -202,7 +202,9 @@ class IDState extends State<ChangeIDView> {
                         ),
                         Center(
                           child: ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Provider.of<UserDataViewModel>(context, listen: false).updateProfile(context);
+                            },
                             style: ElevatedButton.styleFrom(backgroundColor: Colors.black),
                             child: const Text(
                               'Update ID',

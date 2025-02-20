@@ -1,6 +1,9 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:pet_welfrare_ph/src/respository/LoadProfileRespository.dart';
+import 'package:pet_welfrare_ph/src/respository/UpdateProfileRepository.dart';
+import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import '../utils/SessionManager.dart';
 
 class UserDataViewModel extends ChangeNotifier {
@@ -26,8 +29,10 @@ class UserDataViewModel extends ChangeNotifier {
   String id = '';
   String status = '';
   String selectedIdType = '';
+  bool isImage = false;
 
   final Loadprofilerespository _loadprofilerespository = LoadProfileImpl();
+  final UpdateProfileRepository _updateProfileRepository = UpdateProfileImpl();
   final sessionManager = SessionManager();
 
   Future<void> loadInformation() async {
@@ -53,6 +58,7 @@ class UserDataViewModel extends ChangeNotifier {
       } else {
         backImagePath = pickedFile.path;
       }
+      isImage = true;
       notifyListeners();
     }
   }
@@ -65,5 +71,19 @@ class UserDataViewModel extends ChangeNotifier {
   void updateIdType(String newValue) {
     selectedIdType = newValue;
     notifyListeners();
+  }
+
+  void updateProfile(BuildContext context) {
+    if (frontImagePath.isNotEmpty && backImagePath.isNotEmpty) {
+      var userData = {
+        'idType': selectedIdType,
+        'idfrontpath': frontImagePath,
+        'idbackpath': backImagePath,
+      };
+
+      _updateProfileRepository.updateProfile(userData, isImage, context);
+    } else {
+      ToastComponent().showMessage(Colors.red, 'Please upload both front and back of your ID');
+    }
   }
 }
