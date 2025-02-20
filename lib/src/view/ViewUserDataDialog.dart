@@ -5,7 +5,7 @@ import 'package:pet_welfrare_ph/src/view_model/UserViewModel.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/AppColors.dart';
-import 'BanDialogForm.dart';
+import '../DialogView/BanDialogForm.dart';
 
 class ViewUserDataPage extends StatefulWidget {
   const ViewUserDataPage({Key? key}) : super(key: key);

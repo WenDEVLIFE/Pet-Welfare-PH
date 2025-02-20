@@ -9,7 +9,7 @@ import '../utils/Route.dart';
 import '../utils/SessionManager.dart';
 import 'package:provider/provider.dart';
 
-import 'BanDialogInformation.dart';
+import '../DialogView/BanDialogInformation.dart';
 import 'ViewUserDataDialog.dart';
 
 class UserView extends StatefulWidget {
