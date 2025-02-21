@@ -67,7 +67,7 @@ class ChangeProfileDialog extends StatelessWidget {
                         shape: BoxShape.circle,
                       ),
                       child: IconButton(
-                        icon: const Icon(Icons.photo_camera),
+                        icon: const Icon(Icons.photo_camera, color: AppColors.white,),
                         onPressed: () =>
                             context.read<UserDataViewModel>().pickSelectProfileImage(),
                       ),
@@ -96,6 +96,7 @@ class ChangeProfileDialog extends StatelessWidget {
           TextButton(
             onPressed: () {
               // Add your update profile logic here
+              Provider.of<UserDataViewModel>(context, listen: false).updateProfileData(context);
             },
             child: const Text(
               'Update Profile',

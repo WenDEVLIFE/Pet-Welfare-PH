@@ -36,6 +36,7 @@ class UserDataViewModel extends ChangeNotifier {
   final UpdateProfileRepository _updateProfileRepository = UpdateProfileImpl();
   final sessionManager = SessionManager();
 
+  // This is load information method
   Future<void> loadInformation() async {
     _loadprofilerespository.loadProfile1().listen((userData) {
       if (userData != null) {
@@ -55,6 +56,7 @@ class UserDataViewModel extends ChangeNotifier {
 
   }
 
+  // This is pick image method
   Future<void> pickImage(bool isFront) async {
     final XFile? pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
@@ -68,6 +70,7 @@ class UserDataViewModel extends ChangeNotifier {
     }
   }
 
+  // This is pick select profile image method
   Future<void> pickSelectProfileImage() async {
     final XFile? pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
@@ -76,16 +79,19 @@ class UserDataViewModel extends ChangeNotifier {
     }
   }
 
+  // This is load selected id type method
   void loadSelectedIDType() {
     selectedIdType = idType;
     notifyListeners();
   }
 
+  // This is update id type method
   void updateIdType(String newValue) {
     selectedIdType = newValue;
     notifyListeners();
   }
 
+  // This is update information method
   void updateProfile(BuildContext context) {
     if (frontImagePath.isNotEmpty && backImagePath.isNotEmpty) {
       var userData = {
@@ -97,6 +103,18 @@ class UserDataViewModel extends ChangeNotifier {
       _updateProfileRepository.updateProfile(userData, isImage, context);
     } else {
       ToastComponent().showMessage(Colors.red, 'Please upload both front and back of your ID');
+    }
+  }
+
+  void updateProfileData(BuildContext context) {
+    if (selectedProfilePath.isNotEmpty) {
+      var userData = {
+        'profilepath': selectedProfilePath,
+      };
+
+      _updateProfileRepository.updateProfile1(userData, isImage, context);
+    } else {
+      ToastComponent().showMessage(Colors.red, 'Please upload your profile picture');
     }
   }
 }
