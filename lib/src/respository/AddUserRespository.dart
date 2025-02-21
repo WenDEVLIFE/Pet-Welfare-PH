@@ -73,6 +73,8 @@ class AddUserImpl implements AddUserRepository {
 
     try {
       // Extract user data
+
+
       var email = userData['email']!;
       var password = userData['password']!;
       var name = userData['name']!;

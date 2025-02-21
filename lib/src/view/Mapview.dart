@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 import 'package:pet_welfrare_ph/src/view_model/MapViewModel.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../utils/MapTilerKey.dart';
 import 'package:provider/provider.dart';
 
@@ -25,6 +26,7 @@ class MapViewState extends State<MapView> {
     _mapViewModel = Provider.of<MapViewModel>(context, listen: false);
     Provider.of<MapViewModel>(context, listen: false).requestPermissions();
     Provider.of<MapViewModel>(context, listen: false).getLocation();
+    Provider.of<MapViewModel>(context, listen: false).loadRole();
   }
 
   Future<void> _loadMap() async {
@@ -60,21 +62,58 @@ class MapViewState extends State<MapView> {
           }
         },
       ),
-      floatingActionButton: FloatingActionButton(
+      floatingActionButton: _mapViewModel.role.toLowerCase() == 'pet rescuer' || _mapViewModel.role.toLowerCase() == 'pet shelter'
+          ? SpeedDial(
+        icon: Icons.menu,
         backgroundColor: AppColors.orange,
-        onPressed: () {
-          if (_mapController != null) {
-            _mapController!.animateCamera(
-              CameraUpdate.newCameraPosition(
-                CameraPosition(
-                  target: LatLng(_mapViewModel.lat, _mapViewModel.long),
-                  zoom: 15.0, // Zoom level
-                ),
-              ),
-            );
-          }
-        },
-        child: const Icon(Icons.my_location, color: AppColors.white,),
+        children: [
+          SpeedDialChild(
+            child: const Icon(Icons.my_location, color: AppColors.white),
+            backgroundColor: AppColors.orange,
+            label: 'My Location',
+            onTap: () {
+              if (_mapController != null) {
+                _mapController!.animateCamera(
+                  CameraUpdate.newCameraPosition(
+                    CameraPosition(
+                      target: LatLng(_mapViewModel.lat, _mapViewModel.long),
+                      zoom: 15.0, // Zoom level
+                    ),
+                  ),
+                );
+              }
+            },
+          ),
+          SpeedDialChild(
+            child: const Icon(Icons.house, color: AppColors.white),
+            backgroundColor: AppColors.orange,
+            label: 'My Pet Shelter & Clinic',
+            onTap: () {
+              // Add your custom action here
+            },
+          ),
+        ],
+      )
+          : Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            backgroundColor: AppColors.orange,
+            onPressed: () {
+              if (_mapController != null) {
+                _mapController!.animateCamera(
+                  CameraUpdate.newCameraPosition(
+                    CameraPosition(
+                      target: LatLng(_mapViewModel.lat, _mapViewModel.long),
+                      zoom: 15.0, // Zoom level
+                    ),
+                  ),
+                );
+              }
+            },
+            child: const Icon(Icons.my_location, color: AppColors.white),
+          ),
+        ],
       ),
     );
   }
