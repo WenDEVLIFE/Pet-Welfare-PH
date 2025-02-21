@@ -21,8 +21,8 @@ class _UserNavigationComponentState extends BaseNavigationComponentState<UserNav
       buildNavItem(0, Icons.home, "Home"),
       buildNavItem(1, Icons.map, "Map"),
       buildNavItem(2, Icons.person_pin, "Profile"),
+      buildNavItem(4, Icons.chat_sharp, "Chats"),
       buildNavItem(3, Icons.menu, "Menu"),
-      buildNavItem(4, Icons.notifications_active, "Notifications"),
     ];
   }
 
@@ -34,7 +34,7 @@ class _UserNavigationComponentState extends BaseNavigationComponentState<UserNav
       const MapView(), // User Search
       const HomeScreen(), // User Profile
       const MenuView(), // User Menu
-      const HomeScreen(), // User Notifications
+      const MenuView(), // User Notifications
     ];
   }
 }

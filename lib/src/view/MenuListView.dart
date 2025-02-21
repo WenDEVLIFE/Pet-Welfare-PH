@@ -9,6 +9,7 @@ class MenuListWidget extends StatelessWidget {
   final List<MenuItem> menuItems = [
     MenuItem(icon: Icons.perm_device_information, title: 'User Information'),
     MenuItem(icon: Icons.password, title: 'Change Password'),
+    MenuItem(icon: Icons.notifications_active, title: 'Notifications'),
     MenuItem(icon: Icons.check, title: 'Terms and Conditions'),
     MenuItem(icon: Icons.privacy_tip_outlined, title: 'Privacy Policy'),
     MenuItem(icon: Icons.info_outline, title: 'About Us'),
@@ -42,13 +43,18 @@ class MenuListWidget extends StatelessWidget {
                   } else if (index == 2) {
                     // Terms and Conditions
                     Navigator.pushNamed(context, AppRoutes.termsAndConditions);
-                  } else if (index == 3) {
+                  }
+                   else if (index == 3) {
+                    // Notifications
+
+                  }
+                  else if (index == 4) {
                     // Privacy Policy
                     Navigator.pushNamed(context, AppRoutes.privacyPolicy);
-                  } else if (index == 4) {
+                  } else if (index == 5) {
                     // About Us
                     Navigator.pushNamed(context, AppRoutes.about);
-                  } else if (index == 5) {
+                  } else if (index == 6) {
                     // Logout
                     showDialog(
                       context: context,
