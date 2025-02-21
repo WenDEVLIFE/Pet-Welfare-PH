@@ -17,6 +17,7 @@ class UserDataViewModel extends ChangeNotifier {
   final ImagePicker imagePicker = ImagePicker();
   String frontImagePath = '';
   String backImagePath = '';
+  String selectedProfilePath = '';
 
   String name = '';
   String email = '';
@@ -63,6 +64,14 @@ class UserDataViewModel extends ChangeNotifier {
         backImagePath = pickedFile.path;
       }
       isImage = true;
+      notifyListeners();
+    }
+  }
+
+  Future<void> pickSelectProfileImage() async {
+    final XFile? pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      selectedProfilePath = pickedFile.path;
       notifyListeners();
     }
   }

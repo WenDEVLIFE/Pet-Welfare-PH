@@ -1,8 +1,11 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
 import 'package:provider/provider.dart';
+import '../DialogView/ChangeProfileDialog.dart';
 import '../view_model/UserDataViewModel.dart';
 
 class ViewUserData extends StatefulWidget {
@@ -55,15 +58,41 @@ class _ViewUserDataState extends State<ViewUserData> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Center(
-                    child:  Consumer<UserDataViewModel>(
+                    child: Consumer<UserDataViewModel>(
                       builder: (context, viewModel, child) {
-                        return CircleAvatar(
-                          radius: 60,
-                          backgroundColor: AppColors.black,
-                          child: CircleAvatar(
-                            radius: 55,
-                            backgroundImage: NetworkImage(viewModel.profilepath),
-                          ),
+                        return Stack(
+                          children: [
+                            CircleAvatar(
+                              radius: 50,
+                              backgroundColor: AppColors.orange,
+                              child: CircleAvatar(
+                                radius: 60,
+                                backgroundColor: AppColors.black,
+                                child: CircleAvatar(
+                                  radius: 55,
+                                  backgroundImage: NetworkImage(viewModel.profilepath),
+                                ),
+                              ),
+                            ),
+                            Positioned(
+                              bottom: 0,
+                              right: 0,
+                              child: Container(
+                                decoration: const BoxDecoration(
+                                  color: Colors.black,
+                                  shape: BoxShape.circle,
+                                ),
+                                child: IconButton(
+                                  icon: const Icon(Icons.photo_camera, color: Colors.white),
+                                  onPressed: () {
+                                    showDialog(context: context, builder: (BuildContext context){
+                                      return const ChangeProfileDialog();
+                                    });
+                                  },
+                                ),
+                              ),
+                            ),
+                          ],
                         );
                       },
                     ),
