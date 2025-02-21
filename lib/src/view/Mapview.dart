@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
+import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 import 'package:pet_welfrare_ph/src/view_model/MapViewModel.dart';
 import '../utils/MapTilerKey.dart';
 import 'package:provider/provider.dart';
@@ -15,6 +16,7 @@ class MapView extends StatefulWidget {
 class MapViewState extends State<MapView> {
   late Future<void> _mapFuture;
   late MapViewModel _mapViewModel;
+  MaplibreMapController? _mapController;
 
   @override
   void initState() {
@@ -28,6 +30,10 @@ class MapViewState extends State<MapView> {
   Future<void> _loadMap() async {
     // Simulate a delay to mimic loading time
     await Future.delayed(Duration(seconds: 1));
+  }
+
+  void _onMapCreated(MaplibreMapController controller) {
+    _mapController = controller;
   }
 
   @override
@@ -49,9 +55,26 @@ class MapViewState extends State<MapView> {
                 zoom: 10.0,
               ),
               trackCameraPosition: true,
+              onMapCreated: _onMapCreated,
             );
           }
         },
+      ),
+      floatingActionButton: FloatingActionButton(
+        backgroundColor: AppColors.orange,
+        onPressed: () {
+          if (_mapController != null) {
+            _mapController!.animateCamera(
+              CameraUpdate.newCameraPosition(
+                CameraPosition(
+                  target: LatLng(_mapViewModel.lat, _mapViewModel.long),
+                  zoom: 15.0, // Zoom level
+                ),
+              ),
+            );
+          }
+        },
+        child: const Icon(Icons.my_location, color: AppColors.white,),
       ),
     );
   }
