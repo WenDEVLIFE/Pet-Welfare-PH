@@ -22,9 +22,7 @@ class _ViewUserDataState extends State<ViewUserData> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     viewModel = Provider.of<UserDataViewModel>(context, listen: false);
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      viewModel.loadInformation();
-    });
+    Provider.of<UserDataViewModel>(context, listen: false).loadInformation();
   }
 
   @override
