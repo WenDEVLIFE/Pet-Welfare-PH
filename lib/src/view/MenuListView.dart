@@ -20,7 +20,7 @@ class MenuListWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Expanded(
+        Flexible(
           child: ListView.builder(
             itemCount: menuItems.length,
             itemBuilder: (context, index) {
@@ -41,12 +41,12 @@ class MenuListWidget extends StatelessWidget {
                     // Change Password
                     Navigator.pushNamed(context, AppRoutes.changePassword);
                   } else if (index == 2) {
-                    // Terms and Conditions
-                    Navigator.pushNamed(context, AppRoutes.termsAndConditions);
-                  }
-                   else if (index == 3) {
                     // Notifications
 
+                  }
+                   else if (index == 3) {
+                    // Terms And Conditions
+                    Navigator.pushNamed(context, AppRoutes.termsAndConditions);
                   }
                   else if (index == 4) {
                     // Privacy Policy

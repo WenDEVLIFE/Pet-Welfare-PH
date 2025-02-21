@@ -35,72 +35,68 @@ class MenuViewState extends State<MenuView> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: <Widget>[
-            Flexible(
-              child: Container(
-                width: screenWidth,
-                height: screenHeight * 0.2, // Set to 30% of screen height
-                color: AppColors.orange,
-                padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
-                      children: [
-                        Consumer<MenuViewModel>(
-                          builder: (context, viewModel, child) {
-                            return CircleAvatar(
-                              radius: 50, // Adjust size as needed
-                              backgroundColor: AppColors.black,
-                              child: CircleAvatar(
-                                radius: 45,
-                                backgroundImage: NetworkImage(viewModel.currentfilepath),
-                              ),
-                            );
-                          },
-                        ),
-                        SizedBox(width: 12.0),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Consumer<MenuViewModel>(
-                              builder: (context, viewModel, child) {
-                                return Text(
-                                  viewModel.name,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 18,
-                                    fontFamily: 'SmoochSans',
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                );
-                              },
+            Container(
+              width: screenWidth,
+              height: screenHeight * 0.2, // Set to 20% of screen height
+              color: AppColors.orange,
+              padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Consumer<MenuViewModel>(
+                        builder: (context, viewModel, child) {
+                          return CircleAvatar(
+                            radius: 50, // Adjust size as needed
+                            backgroundColor: AppColors.black,
+                            child: CircleAvatar(
+                              radius: 45,
+                              backgroundImage: NetworkImage(viewModel.currentfilepath),
                             ),
-                            SizedBox(height: 4.0),
-                            Consumer<MenuViewModel>(
-                              builder: (context, viewModel, child) {
-                                return Text(
-                                  viewModel.email,
-                                  style: const TextStyle(
-                                    color: Colors.white,
-                                    fontSize: 16,
-                                    fontFamily: 'SmoochSans',
-                                    fontWeight: FontWeight.w500,
-                                  ),
-                                );
-                              },
-                            ),
-                          ],
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
+                          );
+                        },
+                      ),
+                      SizedBox(width: 12.0),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Consumer<MenuViewModel>(
+                            builder: (context, viewModel, child) {
+                              return Text(
+                                viewModel.name,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 18,
+                                  fontFamily: 'SmoochSans',
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              );
+                            },
+                          ),
+                          SizedBox(height: 4.0),
+                          Consumer<MenuViewModel>(
+                            builder: (context, viewModel, child) {
+                              return Text(
+                                viewModel.email,
+                                style: const TextStyle(
+                                  color: Colors.white,
+                                  fontSize: 16,
+                                  fontFamily: 'SmoochSans',
+                                  fontWeight: FontWeight.w500,
+                                ),
+                              );
+                            },
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ],
               ),
-
             ),
-
             SizedBox.fromSize(size: Size.fromHeight(screenHeight * 0.02)),
             Expanded(
               child: MenuListWidget(),
