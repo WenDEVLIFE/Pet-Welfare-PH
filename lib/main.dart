@@ -5,6 +5,7 @@ import 'package:pet_welfrare_ph/src/utils/Route.dart';
 import 'package:pet_welfrare_ph/src/view_model/DrawerHeadViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/AddAdminViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/ChangePasswordViewModel.dart';
+import 'package:pet_welfrare_ph/src/view_model/MapViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/MenuViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/OTPViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/RegisterViewModel.dart';
@@ -48,6 +49,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => DrawerHeadViewModel()),
         ChangeNotifierProvider(create: (_) => SubscriptionViewModel()),
         ChangeNotifierProvider(create: (_) => UserDataViewModel()),
+        ChangeNotifierProvider(create: (_) => MapViewModel()),
       ],
       child: MaterialApp(
         key: GlobalKey(), //
