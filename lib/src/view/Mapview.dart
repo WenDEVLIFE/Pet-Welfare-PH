@@ -1,8 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
-
+import 'package:pet_welfrare_ph/src/view_model/MapViewModel.dart';
 import '../utils/MapTilerKey.dart';
+import 'package:provider/provider.dart';
 
 class MapView extends StatefulWidget {
   const MapView({Key? key}) : super(key: key);
@@ -13,11 +14,15 @@ class MapView extends StatefulWidget {
 
 class MapViewState extends State<MapView> {
   late Future<void> _mapFuture;
+  late MapViewModel _mapViewModel;
 
   @override
   void initState() {
     super.initState();
     _mapFuture = _loadMap();
+    _mapViewModel = Provider.of<MapViewModel>(context, listen: false);
+    Provider.of<MapViewModel>(context, listen: false).requestPermissions();
+    Provider.of<MapViewModel>(context, listen: false).getLocation();
   }
 
   Future<void> _loadMap() async {
@@ -39,8 +44,8 @@ class MapViewState extends State<MapView> {
             return MaplibreMap(
               styleString: "${MapTilerKey.styleUrl}?key=${MapTilerKey.apikey}",
               myLocationEnabled: true,
-              initialCameraPosition: const CameraPosition(
-                target: LatLng(37.7749, -122.4194), // Example: San Francisco
+              initialCameraPosition: CameraPosition(
+                target: LatLng(_mapViewModel.lat, _mapViewModel.long), // Example: San Francisco
                 zoom: 10.0,
               ),
               trackCameraPosition: true,
