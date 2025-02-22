@@ -4,18 +4,20 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:pet_welfrare_ph/src/model/EstablishmentModel.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
 import 'dart:typed_data';
 
 import 'package:uuid/uuid.dart';
 
-abstract class AddLocationRespository {
+abstract class Locationrespository {
   Future<void> addLocation(Map<String, dynamic> locationData, BuildContext context);
   Future<bool> checkIfNameExists(String name);
+  Stream<List<EstablishmentModel>> getData();
 }
 
-class AddLocationRespositoryImpl implements AddLocationRespository {
+class LocationrespositoryImpl implements Locationrespository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
@@ -95,4 +97,16 @@ class AddLocationRespositoryImpl implements AddLocationRespository {
       throw Exception(e);
     }
   }
+
+  // This will get the data from the database
+  @override
+  Stream<List<EstablishmentModel>> getData() {
+    User user = _auth.currentUser!;
+
+    return _firestore.collection('LocationCollection').
+    where('EstablishmentOwnerID', isEqualTo: user.uid).snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => EstablishmentModel.fromDocumentSnapshot(doc)).toList());
+  }
+
+
 }

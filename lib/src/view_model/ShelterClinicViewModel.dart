@@ -1,18 +1,13 @@
-
-
 import 'package:flutter/cupertino.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
-
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:pet_welfrare_ph/src/model/UserModel.dart';
-import 'package:pet_welfrare_ph/src/respository/AddLocationRespository.dart';
+import 'package:pet_welfrare_ph/src/model/EstablishmentModel.dart';
+import 'package:pet_welfrare_ph/src/respository/LocationRespository.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
-
 
 class ShelterClinicViewModel extends ChangeNotifier {
   final TextEditingController shelterNameController = TextEditingController();
@@ -20,9 +15,10 @@ class ShelterClinicViewModel extends ChangeNotifier {
   final TextEditingController shelterAddressController = TextEditingController();
   final TextEditingController shelterPhoneNumber = TextEditingController();
   final TextEditingController shelterEmailController = TextEditingController();
+  final TextEditingController searchController = TextEditingController();
   final ImagePicker imagePicker = ImagePicker();
 
-  final AddLocationRespository _addLocationRespository = AddLocationRespositoryImpl();
+  final Locationrespository _addLocationRespository = LocationrespositoryImpl();
   String shelterImage = '';
   LatLng? selectedLocation; // Store clicked location
   bool _locationInitialized = false;
@@ -31,6 +27,14 @@ class ShelterClinicViewModel extends ChangeNotifier {
   MaplibreMapController? mapController;
   var establishmentType = ['Shelter', 'Clinic'];
   var selectEstablishment = 'Shelter';
+  List<EstablishmentModel> establismentList = [];
+  List<EstablishmentModel> filteredEstablisment = [];
+
+  // Get subscriptions
+  List<EstablishmentModel> get establismentListdata => filteredEstablisment;
+
+  // Stream of subscriptions
+  Stream<List<EstablishmentModel>> get establishmentStream => _addLocationRespository.getData();
 
   // Pick image for profile
   Future<void> pickImage() async {
@@ -101,36 +105,25 @@ class ShelterClinicViewModel extends ChangeNotifier {
   }
 
   Future<void> insertActionEvent(BuildContext context) async {
-
-    bool isShelterName =  await _addLocationRespository.checkIfNameExists(shelterNameController.text);
+    bool isShelterName = await _addLocationRespository.checkIfNameExists(shelterNameController.text);
 
     if (shelterNameController.text.isEmpty) {
       ToastComponent().showMessage(Colors.red, 'Please enter the name of the shelter');
-    }
-    else if (shelterDescriptionController.text.isEmpty) {
+    } else if (shelterDescriptionController.text.isEmpty) {
       ToastComponent().showMessage(Colors.red, 'Please enter the description of the shelter');
-    }
-    else if (shelterAddressController.text.isEmpty) {
+    } else if (shelterAddressController.text.isEmpty) {
       ToastComponent().showMessage(Colors.red, 'Please enter the address of the shelter');
-    }
-    else if (shelterPhoneNumber.text.isEmpty) {
+    } else if (shelterPhoneNumber.text.isEmpty) {
       ToastComponent().showMessage(Colors.red, 'Please enter the phone number of the shelter');
-    }
-    else if (shelterEmailController.text.isEmpty) {
+    } else if (shelterEmailController.text.isEmpty) {
       ToastComponent().showMessage(Colors.red, 'Please enter the email of the shelter');
-    }
-    else if (shelterImage.isEmpty) {
+    } else if (shelterImage.isEmpty) {
       ToastComponent().showMessage(Colors.red, 'Please select an image for the shelter');
-    }
-    else if (selectedLocation == null) {
+    } else if (selectedLocation == null) {
       ToastComponent().showMessage(Colors.red, 'Please select the location of the shelter');
-    }
-
-    else if (isShelterName) {
+    } else if (isShelterName) {
       ToastComponent().showMessage(Colors.red, 'Shelter name already exists');
-    }
-    else {
-
+    } else {
       // Map for locations
       var locationData = {
         'EstablishmentName': shelterNameController.text,
@@ -148,21 +141,35 @@ class ShelterClinicViewModel extends ChangeNotifier {
       };
 
       // add the establishment to the database
-    _addLocationRespository.addLocation(locationData, context);
-
+      _addLocationRespository.addLocation(locationData, context);
     }
+  }
 
+  void clearTextFields() {
+    shelterNameController.clear();
+    shelterDescriptionController.clear();
+    shelterAddressController.clear();
+    shelterPhoneNumber.clear();
+    shelterEmailController.clear();
+    selectEstablishment = 'Shelter';
+    notifyListeners();
+  }
+
+  void setEstablishment(List<EstablishmentModel> establishment) {
+    establismentList = establishment;
+    filteredEstablisment = establishment;
+    notifyListeners();
+  }
+
+  void filterSubscriptions(String query) {
+    if (query.isEmpty) {
+      filteredEstablisment = establismentList;
+    } else {
+      filteredEstablisment = establismentList.where((establishment) {
+        return establishment.establishmentName.toLowerCase().contains(query.toLowerCase()) ||
+            establishment.establishmentAddress.toLowerCase().contains(query.toLowerCase());
+      }).toList();
     }
-
-
-    void clearTextFields(){
-      shelterNameController.clear();
-      shelterDescriptionController.clear();
-      shelterAddressController.clear();
-      shelterPhoneNumber.clear();
-      shelterEmailController.clear();
-      selectEstablishment = 'Shelter';
-      notifyListeners();
-    }
-
+    notifyListeners();
+  }
 }

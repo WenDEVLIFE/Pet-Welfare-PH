@@ -1,38 +1,48 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EstablishmentModel {
-  String uid;
-  String ProfilePath;
-  String establishmentName;
-  String establishmentAddress;
-  String latitude;
-  String longitude;
-  String phoneNumber;
-  String status;
+  final String establishmentName;
+  final String establishmentDescription;
+  final String establishmentAddress;
+  final String establishmentPhoneNumber;
+  final String establishmentEmail;
+  final String establishmentPicture;
+  final double establishmentLat;
+  final double establishmentLong;
+  final String establishmentType;
+  final String establishmentOwnerID;
+  final String establishmentOwnerName;
+  final String establishmentStatus;
 
   EstablishmentModel({
-    required this.uid,
-    required this.ProfilePath,
     required this.establishmentName,
+    required this.establishmentDescription,
     required this.establishmentAddress,
-    required this.latitude,
-    required this.longitude,
-    required this.phoneNumber,
-    required this.status,
+    required this.establishmentPhoneNumber,
+    required this.establishmentEmail,
+    required this.establishmentPicture,
+    required this.establishmentLat,
+    required this.establishmentLong,
+    required this.establishmentType,
+    required this.establishmentOwnerID,
+    required this.establishmentOwnerName,
+    required this.establishmentStatus,
   });
 
-  // This will convert the data from the database to a model
-  factory EstablishmentModel.fromDocumentSnapshot(DocumentSnapshot doc){
+  factory EstablishmentModel.fromDocumentSnapshot(DocumentSnapshot doc) {
     return EstablishmentModel(
-      uid: doc.id,
-      ProfilePath: doc['EstablishmentPicture'],
       establishmentName: doc['EstablishmentName'],
+      establishmentDescription: doc['EstablishmentDescription'],
       establishmentAddress: doc['EstablishmentAddress'],
-      latitude: doc['EstablishmentLat'],
-      longitude: doc['EstablishmentLong'],
-      phoneNumber: doc['EstablishmentPhoneNumber'],
-      status: doc['EstablishmentStatus'],
+      establishmentPhoneNumber: doc['EstablishmentPhoneNumber'],
+      establishmentEmail: doc['EstablishmentEmail'],
+      establishmentPicture: doc['EstablishmentPicture'],
+      establishmentLat: doc['EstablishmentLat'],
+      establishmentLong: doc['EstablishmentLong'],
+      establishmentType: doc['EstablishmentType'],
+      establishmentOwnerID: doc['EstablishmentOwnerID'],
+      establishmentOwnerName: doc['EstablishmentOwnerName'],
+      establishmentStatus: doc['EstablishmentStatus'],
     );
   }
-
 }
