@@ -5,17 +5,13 @@ import 'package:image_picker/image_picker.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pet_welfrare_ph/src/model/UserModel.dart';
-import 'package:pet_welfrare_ph/src/utils/Route.dart';
+import 'package:pet_welfrare_ph/src/respository/AddLocationRespository.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
-import 'package:sn_progress_dialog/progress_dialog.dart';
-import 'package:firebase_admin/firebase_admin.dart' as admin;
 
 
 class ShelterClinicViewModel extends ChangeNotifier {
@@ -25,12 +21,16 @@ class ShelterClinicViewModel extends ChangeNotifier {
   final TextEditingController shelterPhoneNumber = TextEditingController();
   final TextEditingController shelterEmailController = TextEditingController();
   final ImagePicker imagePicker = ImagePicker();
+
+  final AddLocationRespository _addLocationRespository = AddLocationRespositoryImpl();
   String shelterImage = '';
   LatLng? selectedLocation; // Store clicked location
   bool _locationInitialized = false;
   double lat = 0.0;
   double long = 0.0;
   MaplibreMapController? mapController;
+  var establishmentType = ['Shelter', 'Clinic'];
+  var selectEstablishment = 'Shelter';
 
   // Pick image for profile
   Future<void> pickImage() async {
@@ -93,5 +93,76 @@ class ShelterClinicViewModel extends ChangeNotifier {
     Uint8List bytes = data.buffer.asUint8List();
     await controller.addImage("custom_marker", bytes);
   }
+
+  // Update establishment type
+  void updateEstablishmentType(String newType) {
+    selectEstablishment = newType;
+    notifyListeners();
+  }
+
+  Future<void> insertActionEvent(BuildContext context) async {
+
+    bool isShelterName =  await _addLocationRespository.checkIfNameExists(shelterNameController.text);
+
+    if (shelterNameController.text.isEmpty) {
+      ToastComponent().showMessage(Colors.red, 'Please enter the name of the shelter');
+    }
+    else if (shelterDescriptionController.text.isEmpty) {
+      ToastComponent().showMessage(Colors.red, 'Please enter the description of the shelter');
+    }
+    else if (shelterAddressController.text.isEmpty) {
+      ToastComponent().showMessage(Colors.red, 'Please enter the address of the shelter');
+    }
+    else if (shelterPhoneNumber.text.isEmpty) {
+      ToastComponent().showMessage(Colors.red, 'Please enter the phone number of the shelter');
+    }
+    else if (shelterEmailController.text.isEmpty) {
+      ToastComponent().showMessage(Colors.red, 'Please enter the email of the shelter');
+    }
+    else if (shelterImage.isEmpty) {
+      ToastComponent().showMessage(Colors.red, 'Please select an image for the shelter');
+    }
+    else if (selectedLocation == null) {
+      ToastComponent().showMessage(Colors.red, 'Please select the location of the shelter');
+    }
+
+    else if (isShelterName) {
+      ToastComponent().showMessage(Colors.red, 'Shelter name already exists');
+    }
+    else {
+
+      // Map for locations
+      var locationData = {
+        'EstablishmentName': shelterNameController.text,
+        'EstablishmentDescription': shelterDescriptionController.text,
+        'EstablishmentAddress': shelterAddressController.text,
+        'EstablishmentPhoneNumber': shelterPhoneNumber.text,
+        'EstablishmentEmail': shelterEmailController.text,
+        'EstablishmentType': selectEstablishment,
+        'Latitude': selectedLocation!.latitude,
+        'Longitude': selectedLocation!.longitude,
+        'Image': shelterImage,
+        'EstablishmentOwnerID': FirebaseAuth.instance.currentUser!.uid,
+        'EstablishmentStatus': 'Pending',
+        'ClearFields': clearTextFields
+      };
+
+      // add the establishment to the database
+    _addLocationRespository.addLocation(locationData, context);
+
+    }
+
+    }
+
+
+    void clearTextFields(){
+      shelterNameController.clear();
+      shelterDescriptionController.clear();
+      shelterAddressController.clear();
+      shelterPhoneNumber.clear();
+      shelterEmailController.clear();
+      selectEstablishment = 'Shelter';
+      notifyListeners();
+    }
 
 }

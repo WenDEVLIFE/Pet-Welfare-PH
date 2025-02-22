@@ -115,6 +115,68 @@ class AddShelterClinic extends StatelessWidget {
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.02),
+                      const Text('SELECT YOUR ESTABLISHMENT TYPE',
+                          style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
+                              fontFamily: 'SmoochSans',
+                              color: Colors.black)),
+                      SizedBox(height: screenHeight * 0.01),
+                      Container(
+                        width: screenWidth * 0.9,
+                        height: screenHeight * 0.08,
+                        decoration: BoxDecoration(
+                          color: AppColors.gray,
+                          border: Border.all(color: AppColors.gray, width: 2),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        child: Theme(
+                          data: Theme.of(context).copyWith(
+                            canvasColor: Colors.grey[800],
+                          ),
+                          child: DropdownButton<String>(
+                            value: viewModel.selectEstablishment,
+                            items: viewModel.establishmentType.map<DropdownMenuItem<String>>((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(
+                                  value,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'SmoochSans',
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              viewModel.updateEstablishmentType(newValue!);
+                            },
+                            dropdownColor: AppColors.gray,
+                            iconEnabledColor: Colors.grey,
+                            style: const TextStyle(color: Colors.white),
+                            selectedItemBuilder: (BuildContext context) {
+                              return viewModel.establishmentType.map<Widget>((String item) {
+                                return Align(
+                                  alignment: Alignment.centerLeft,
+                                  child: Text(
+                                    item,
+                                    style: const TextStyle(
+                                      color: Colors.black,
+                                      fontFamily: 'SmoochSans',
+                                      fontWeight: FontWeight.w600,
+                                    ),
+                                  ),
+                                );
+                              }).toList();
+                            },
+                            isExpanded: true,
+                            alignment: Alignment.bottomLeft,
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: screenHeight * 0.02),
                       const Text(
                         'Shelter/Clinic Description',
                         style: TextStyle(
@@ -127,12 +189,41 @@ class AddShelterClinic extends StatelessWidget {
                       SizedBox(height: screenHeight * 0.01),
                       TextField(
                         controller: viewModel.shelterDescriptionController,
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           filled: true,
                           fillColor: AppColors.gray,
-                          border: const OutlineInputBorder(),
+                          border: OutlineInputBorder(),
                           hintText: 'Enter Shelter/Clinic Description',
-                          hintStyle: const TextStyle(
+                          hintStyle: TextStyle(
+                            color: Colors.black,
+                          ),
+                        ),
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontFamily: 'SmoochSans',
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                      SizedBox(height: screenHeight * 0.02),
+                      const Text(
+                        'Shelter/Clinic Address',
+                        style: TextStyle(
+                          fontSize: 18,
+                          fontWeight: FontWeight.w900,
+                          fontFamily: 'SmoochSans',
+                          color: Colors.black,
+                        ),
+                      ),
+                      SizedBox(height: screenHeight * 0.01),
+                      TextField(
+                        controller: viewModel.shelterAddressController,
+                        decoration: const InputDecoration(
+                          filled: true,
+                          fillColor: AppColors.gray,
+                          border: OutlineInputBorder(),
+                          hintText: 'Enter Shelter/Clinic Address',
+                          hintStyle: TextStyle(
                             color: Colors.black,
                           ),
                         ),
@@ -291,7 +382,8 @@ class AddShelterClinic extends StatelessWidget {
                           ),
                           child: ElevatedButton(
                             onPressed: () {
-                              // Add your update password logic here
+                              // Add your insert function to database
+                              viewModel.insertActionEvent(context);
                             },
                             style: ElevatedButton.styleFrom(
                               backgroundColor: Colors.black,
@@ -308,6 +400,7 @@ class AddShelterClinic extends StatelessWidget {
                           ),
                         ),
                       ),
+                      SizedBox(height: screenHeight * 0.02),
                     ],
                   ),
                 ),

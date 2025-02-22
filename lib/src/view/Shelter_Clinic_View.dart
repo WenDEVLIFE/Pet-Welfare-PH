@@ -32,11 +32,10 @@ class Shelter_Clinic_ViewState  extends State<Shelter_Clinic_View> {
       ),
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-          Navigator.pop(context);
           Navigator.pushNamed(context, AppRoutes.addSherterClinic);
         },
         backgroundColor: AppColors.orange,
-        child: const Icon(Icons.add, color: AppColors.orange,),
+        child: const Icon(Icons.add, color: AppColors.white,),
       ),
     );
   }
