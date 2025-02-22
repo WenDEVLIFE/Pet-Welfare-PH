@@ -22,6 +22,7 @@ import '../view/AddAdminView.dart';
 import '../view/ChangeIDView.dart';
 import '../view/ChangePasswordView.dart';
 import '../view/OTPView.dart';
+import '../view/Shelter_Clinic_View.dart';
 import '../view/SplashView.dart';
 import '../view/LoadingView.dart';
 import '../view/SubscriptionView.dart';
@@ -54,6 +55,7 @@ class AppRoutes {
   static const String about = '/about';
   static const String viewUserInformation = '/viewUserInformation';
   static const String changeID = '/changeID';
+  static const String shelterClinic = '/shelterClinic';
 
   // Assign routes to the screens
   static Map<String, WidgetBuilder> routes = {
@@ -83,5 +85,6 @@ class AppRoutes {
     about : (context) => const AboutView(), // About page
     viewUserInformation : (context) => const ViewUserData(), // This is where the user can view its status
     changeID : (context) => const ChangeIDView(), // This is where the user can change its ID
+    shelterClinic : (context) => const Shelter_Clinic_View(), // This is where the user can view the shelter clinic
   };
 }
