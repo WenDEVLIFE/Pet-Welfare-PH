@@ -38,11 +38,12 @@ class MapViewModel extends ChangeNotifier {
       long = position.longitude;
       lat = position.latitude;
 
-      ToastComponent().showMessage(Colors.green, 'Location: $lat, $long');
+     // ToastComponent().showMessage(Colors.green, 'Location: $lat, $long');
       notifyListeners();
     }
   }
 
+  // Load the role
   void loadRole() {
     _loadProfileRepository.loadProfile().listen((profileData) {
       if (profileData != null) {

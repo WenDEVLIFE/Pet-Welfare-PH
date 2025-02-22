@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
+import 'package:pet_welfrare_ph/src/utils/Route.dart';
 import 'package:pet_welfrare_ph/src/view_model/MapViewModel.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../utils/MapTilerKey.dart';
@@ -156,6 +157,7 @@ class MapViewState extends State<MapView> {
             label: 'My Pet Shelter & Clinic',
             onTap: () {
               // Add your custom action here
+              Navigator.pushNamed(context, AppRoutes.shelterClinic);
             },
           ),
         ],
