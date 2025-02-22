@@ -19,6 +19,7 @@ import 'package:pet_welfrare_ph/src/view/ViewUserDataDialog.dart';
 import '../components/AdminNavigationComponent.dart';
 import '../view/AboutView.dart';
 import '../view/AddAdminView.dart';
+import '../view/AddShelterClinicScreen.dart';
 import '../view/ChangeIDView.dart';
 import '../view/ChangePasswordView.dart';
 import '../view/OTPView.dart';
@@ -56,6 +57,7 @@ class AppRoutes {
   static const String viewUserInformation = '/viewUserInformation';
   static const String changeID = '/changeID';
   static const String shelterClinic = '/shelterClinic';
+  static const String addSherterClinic = '/addSherterClinic';
 
   // Assign routes to the screens
   static Map<String, WidgetBuilder> routes = {
@@ -86,5 +88,6 @@ class AppRoutes {
     viewUserInformation : (context) => const ViewUserData(), // This is where the user can view its status
     changeID : (context) => const ChangeIDView(), // This is where the user can change its ID
     shelterClinic : (context) => const Shelter_Clinic_View(), // This is where the user can view the shelter clinic
+    addSherterClinic : (context) => const AddShelterClinic(), // This is where the user can add the shelter clinic
   };
 }
