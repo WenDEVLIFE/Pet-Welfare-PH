@@ -47,7 +47,7 @@ class ChangePasswordState extends State<ChangePasswordView> {
             children: <Widget>[
               SizedBox(height: screenHeight * 0.01),
               const Text(
-                'OLD PASSWORD',
+                'Old Password',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w900,
@@ -89,7 +89,7 @@ class ChangePasswordState extends State<ChangePasswordView> {
               ),
               SizedBox(height: screenHeight * 0.02),
               const Text(
-                'NEW PASSWORD',
+                'New Password',
                 style: TextStyle(
                   fontSize: 18,
                   fontWeight: FontWeight.w900,
