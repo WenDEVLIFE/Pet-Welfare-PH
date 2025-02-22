@@ -82,6 +82,8 @@ class AddUserImpl implements AddUserRepository {
       var idbackPath = userData['idback']!;
       var idfrontPath = userData['idfront']!;
       var address = userData['address']!;
+      final Function clearData = userData['clearData'];
+      final Function clearFields = userData['clearFields'];
 
       // Navigate to login screen
       if (role != "Admin" && role != "Super-Admin") {
@@ -143,10 +145,17 @@ class AddUserImpl implements AddUserRepository {
       // Add to Firestore
       await _firestore.collection("Users").doc(uid).set(userFirestoreData);
 
-      // Success message
-      ToastComponent().showMessage(Colors.green, 'User registered successfully!');
+      if (role != "Admin" && role != "Super-Admin") {
+        clearData();
+        clearFields();
 
-      clearText();
+        // Success message
+        ToastComponent().showMessage(Colors.green, 'User registered successfully!');
+      }
+      else{
+        ToastComponent().showMessage(Colors.green, 'Admin added successfully!');
+        clearText();
+      }
     } catch (e) {
       print("Error: $e");
      ToastComponent().showMessage(Colors.red, 'Error: $e');

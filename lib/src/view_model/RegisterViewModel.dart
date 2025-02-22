@@ -13,6 +13,9 @@ class RegisterViewModel extends ChangeNotifier {
   final TextEditingController confirmPasswordController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
 
+  var role = ['Pet Shelter', 'Pet Rescuer'];
+  var selectedRole = 'Pet Shelter';
+
   final AddUserRepository _repository = AddUserImpl();
 
   // Password Visibility
@@ -124,10 +127,11 @@ class RegisterViewModel extends ChangeNotifier {
     Navigator.pushNamed(context, AppRoutes.uploadIDScreen, arguments: {
       'email': emailController.text,
       'name': nameController.text,
+      'clearData': clearData,
       'password': passwordController.text,
       'role': role == 'FurUser' ? 'Fur User' :
-      role == 'PetShelter' ? 'Pet Shelter' :
-      role == 'PetRescuer' ? 'Pet Rescuer' :
+      role == 'Pet Shelter' ? 'Pet Shelter' :
+      role == 'Pet Rescuer' ? 'Pet Rescuer' :
       role == 'Animal Welfare Advocate' ? 'Animal Welfare Advocate' : '',
       if (role == "Pet Rescuer" || role == "Pet Shelter") "address": addressController.text,
     });
@@ -164,5 +168,15 @@ class RegisterViewModel extends ChangeNotifier {
     // Load text from the text file
     String text = await rootBundle.loadString("assets/word/terms.txt");
     return text;
+  }
+
+  void clearData() {
+    emailController.clear();
+    nameController.clear();
+    passwordController.clear();
+    confirmPasswordController.clear();
+    addressController.clear();
+    selectedRole = 'Pet Shelter';
+    notifyListeners();
   }
 }

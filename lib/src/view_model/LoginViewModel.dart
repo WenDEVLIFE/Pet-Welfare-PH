@@ -46,8 +46,11 @@ class LoginViewModel extends ChangeNotifier {
         // If login is successful, navigate based on user role
         if (userData['role'] == 'Admin' || userData['role'] == 'Sub-Admin') {
           Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+          clearTextFields();
+
         } else {
           Navigator.pushReplacementNamed(context, AppRoutes.user);
+          clearTextFields();
         }
 
         ScaffoldMessenger.of(context).showSnackBar(
@@ -69,5 +72,11 @@ class LoginViewModel extends ChangeNotifier {
 
   void navigateToSelectView(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.selectScreen);
+  }
+
+  void clearTextFields() {
+    emailController.clear();
+    passwordController.clear();
+    notifyListeners();
   }
 }

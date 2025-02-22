@@ -13,9 +13,6 @@ class PetrShelterRegisterview extends StatefulWidget {
 }
 
 class RegisterState extends State<PetrShelterRegisterview> {
-  var role = ['Pet Shelter', 'Pet Rescuer'];
-  var selectedRole = 'Pet Shelter';
-
   late RegisterViewModel viewModel;
 
   @override
@@ -148,8 +145,8 @@ class RegisterState extends State<PetrShelterRegisterview> {
                                 canvasColor: Colors.grey[800],
                               ),
                               child: DropdownButton<String>(
-                                value: selectedRole,
-                                items: role.map<DropdownMenuItem<String>>((String value) {
+                                value: viewModel.selectedRole,
+                                items: viewModel.role.map<DropdownMenuItem<String>>((String value) {
                                   return DropdownMenuItem<String>(
                                     value: value,
                                     child: Text(
@@ -164,14 +161,14 @@ class RegisterState extends State<PetrShelterRegisterview> {
                                 }).toList(),
                                 onChanged: (String? newValue) {
                                   setState(() {
-                                    selectedRole = newValue!;
+                                    viewModel.selectedRole = newValue!;
                                   });
                                 },
                                 dropdownColor: AppColors.gray,
                                 iconEnabledColor: Colors.grey,
                                 style: const TextStyle(color: Colors.white),
                                 selectedItemBuilder: (BuildContext context) {
-                                  return role.map<Widget>((String item) {
+                                  return viewModel.role.map<Widget>((String item) {
                                     return Align(
                                       alignment: Alignment.centerLeft,
                                       child: Text(
@@ -351,7 +348,7 @@ class RegisterState extends State<PetrShelterRegisterview> {
                               ),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Provider.of<RegisterViewModel>(context, listen: false).checkData(context, selectedRole);
+                                  Provider.of<RegisterViewModel>(context, listen: false).checkData(context, viewModel.selectedRole);
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.black,

@@ -22,6 +22,7 @@ class UploadIDViewModel extends ChangeNotifier {
   String frontImagePath = '';
   String backImagePath = '';
 
+
   Future<void> pickImage(bool isFront) async {
     final XFile? pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
@@ -40,12 +41,16 @@ class UploadIDViewModel extends ChangeNotifier {
         var password = userData1['password']!;
         var name = userData1['name']!;
         var role = userData1['role']!;
+        final Function clearData = userData1['clearData'];
+
 
        Navigator.pushNamed(context, AppRoutes.otpScreen, arguments: {
          'email': email,
          'password': password,
          'name': name,
          'role': role,
+         'clearFields': clearTextFields,
+         'clearData': clearData,
          'selectIDtype': selectedIdType,
          'idback': backImagePath,
          'idfront': frontImagePath,
@@ -53,5 +58,12 @@ class UploadIDViewModel extends ChangeNotifier {
        });
      }
 
+  }
+
+  void clearTextFields() {
+    frontImagePath = '';
+    backImagePath = '';
+    selectedIdType = 'Passport';
+    notifyListeners();
   }
 }
