@@ -153,7 +153,7 @@ class RegisterState extends State<UploadIDView> {
                                       shape: BoxShape.circle,
                                     ),
                                     child: IconButton(
-                                      icon: const Icon(Icons.photo_camera),
+                                      icon: const Icon(Icons.photo_camera, color: AppColors.white,),
                                       onPressed: () =>
                                           context.read<UploadIDViewModel>().pickImage(true),
                                     ),
@@ -198,7 +198,7 @@ class RegisterState extends State<UploadIDView> {
                                       shape: BoxShape.circle,
                                     ),
                                     child: IconButton(
-                                      icon: const Icon(Icons.photo_camera),
+                                      icon: const Icon(Icons.photo_camera, color: AppColors.white),
                                       onPressed: () =>
                                           context.read<UploadIDViewModel>().pickImage(false),
                                     ),

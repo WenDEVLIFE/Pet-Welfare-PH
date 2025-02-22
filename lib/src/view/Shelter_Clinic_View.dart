@@ -29,6 +29,13 @@ class Shelter_Clinic_ViewState  extends State<Shelter_Clinic_View> {
       body: const Center(
         child: Text('Shelter/Clinic'),
       ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        backgroundColor: AppColors.orange,
+        child: const Icon(Icons.add, color: AppColors.orange,),
+      ),
     );
   }
 }
