@@ -2,6 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/FirebaseIntialize.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
+import 'package:pet_welfrare_ph/src/view_model/ChatViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/DrawerHeadViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/AddAdminViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/ChangePasswordViewModel.dart';
@@ -52,6 +53,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => UserDataViewModel()),
         ChangeNotifierProvider(create: (_) => MapViewModel()),
         ChangeNotifierProvider(create: (_) => ShelterClinicViewModel()),
+        ChangeNotifierProvider(create: (_) => ChatViewModel())
       ],
       child: MaterialApp(
         key: GlobalKey(), //
