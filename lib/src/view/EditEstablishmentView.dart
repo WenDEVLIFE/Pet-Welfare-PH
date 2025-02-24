@@ -23,50 +23,56 @@ class EditEstablishmentScreen extends StatefulWidget {
 }
 
 class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
+
+  late String id;
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
+    final viewModel = Provider.of<ShelterClinicViewModel>(context, listen: false);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      final Map<String, dynamic>? data =
+      ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+      if (data != null) {
+        viewModel.shelterNameController.text = data['establishmentName'] ?? '';
+        viewModel.shelterDescriptionController.text = data['establishmentDescription'] ?? '';
+        viewModel.shelterAddressController.text = data['establishmentAddress'] ?? '';
+        viewModel.shelterPhoneNumber.text = data['establishmentPhoneNumber'] ?? '';
+        viewModel.shelterEmailController.text = data['establishmentEmail'] ?? '';
+        viewModel.selectedLocation = LatLng(data['establishmentLat'], data['establishmentLong']);
+        id = data['establishmentId'];
 
-    final Map<String, dynamic>? data =
-    ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
+        if (data['establishmentPicture']?.startsWith('http')) {
+          viewModel.setImageUrl(data['establishmentPicture']);
+        } else {
+          viewModel.shelterImage = data['establishmentPicture'] ?? '';
+        }
 
-    if (data != null) {
-      final viewModel = Provider.of<ShelterClinicViewModel>(context, listen: false);
-      viewModel.shelterNameController.text = data['establishmentName'] ?? '';
-      viewModel.shelterDescriptionController.text = data['establishmentDescription'] ?? '';
-      viewModel.shelterAddressController.text = data['establishmentAddress'] ?? '';
-      viewModel.shelterPhoneNumber.text = data['establishmentPhoneNumber'] ?? '';
-      viewModel.shelterEmailController.text = data['establishmentEmail'] ?? '';
+        viewModel.selectEstablishment = data['establishmentType'];
 
-      if (data['establishmentPicture']?.startsWith('http')) {
-        viewModel.setImageUrl(data['establishmentPicture']);
-      } else {
-        viewModel.shelterImage = data['establishmentPicture'] ?? '';
-      }
+        print(data['establishmentType']);
 
-      viewModel.selectEstablishment = data['establishmentType'] ?? 'Shelter';
-
-      if (data['establishmentLat'] != null && data['establishmentLong'] != null) {
-        viewModel.setInitialLocation();
-        try {
-          double lat = double.parse(data['establishmentLat'].toString());
-          double long = double.parse(data['establishmentLong'].toString());
-          print('Setting initial location to: $lat, $long');
-          // Update the location in the view model
-          viewModel.newlat = lat;
-          viewModel.newlong = long;
-          viewModel.selectedLocation = LatLng(lat, long);
-          // If map controller exists, update the pin
-          if (viewModel.mapController != null) {
-            viewModel.addPin(LatLng(lat, long));
+        if (data['establishmentLat'] != null && data['establishmentLong'] != null) {
+          try {
+            double lat = double.parse(data['establishmentLat'].toString());
+            double long = double.parse(data['establishmentLong'].toString());
+            print('Setting initial location to: $lat, $long');
+            // Update the location in the view model
+            viewModel.newlat = lat;
+            viewModel.newlong = long;
+            viewModel.selectedLocation = LatLng(lat, long);
+            // If map controller exists, update the pin
+            if (viewModel.mapController != null) {
+              viewModel.addPin(LatLng(lat, long));
+            }
+          } catch (e) {
+            print('Error parsing location coordinates: $e');
+            ToastComponent().showMessage(Colors.red, 'Error setting location');
           }
-        } catch (e) {
-          print('Error parsing location coordinates: $e');
-          ToastComponent().showMessage(Colors.red, 'Error setting location');
         }
       }
-    }
-
+      // Call setInitialLocation here, after the first frame is built
+      viewModel.setInitialLocation();
+    });
   }
 
   @override
@@ -182,46 +188,37 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                           data: Theme.of(context).copyWith(
                             canvasColor: Colors.grey[800],
                           ),
-                          child:DropdownButton<String>(
-                            value: viewModel.selectEstablishment,
-                            items: viewModel.establishmentType.map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(
-                                  value,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: 'SmoochSans',
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
+                          child:Consumer<ShelterClinicViewModel>(
+                            builder: (context, viewModel, child) {
+                              return DropdownButton<String>(
+                                value: viewModel.selectEstablishment,
+                                items: viewModel.establishmentType.map<DropdownMenuItem<String>>(
+                                      (String value) {
+                                    return DropdownMenuItem<String>(
+                                      value: value,
+                                      child: Text(
+                                        value,
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: 'SmoochSans',
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    );
+                                  },
+                                ).toList(),
+                                onChanged: (String? newValue) {
+                                  if (newValue != null) {
+                                    viewModel.updateEstablishmentType(newValue);
+                                  }
+                                },
+                                dropdownColor: AppColors.gray,
+                                iconEnabledColor: Colors.grey,
+                                style: const TextStyle(color: Colors.white),
+                                isExpanded: true,
+                                alignment: Alignment.bottomLeft,
                               );
-                            }).toList(),
-                            onChanged: (String? newValue) {
-                              if (newValue != null) {
-                                viewModel.updateEstablishmentType(newValue);
-                              }
                             },
-                            dropdownColor: AppColors.gray,
-                            iconEnabledColor: Colors.grey,
-                            style: const TextStyle(color: Colors.white),
-                            selectedItemBuilder: (BuildContext context) {
-                              return viewModel.establishmentType.map<Widget>((String item) {
-                                return Align(
-                                  alignment: Alignment.centerLeft,
-                                  child: Text(
-                                    item,
-                                    style: const TextStyle(
-                                      color: Colors.black,
-                                      fontFamily: 'SmoochSans',
-                                      fontWeight: FontWeight.w600,
-                                    ),
-                                  ),
-                                );
-                              }).toList();
-                            },
-                            isExpanded: true,
-                            alignment: Alignment.bottomLeft,
                           ),
                         ),
                       ),
@@ -408,6 +405,7 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                           onPressed: () async {
                             final viewModel = Provider.of<ShelterClinicViewModel>(context, listen: false);
                             Map<String, dynamic> data = {
+                              'establishmentId': id,
                               'establishmentName': viewModel.shelterNameController.text,
                               'establishmentDescription': viewModel.shelterDescriptionController.text,
                               'establishmentAddress': viewModel.shelterAddressController.text,
@@ -418,7 +416,7 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                               'lat': viewModel.lat,
                               'long': viewModel.long,
                             };
-                            viewModel.updateEstablishment(data);
+                            viewModel.updateEstablishment(data, context);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.orange,
@@ -437,7 +435,8 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                             ),
                           ),
                         ),
-                      )
+                      ),
+                      SizedBox(height: screenHeight * 0.02),
                     ],
                   ),
                 ),
@@ -453,11 +452,14 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
     ImageProvider? imageProvider;
 
     try {
-      if (viewModel.isNetworkImage) {
+      if (viewModel.isNetworkImage && viewModel.shelterImage.isNotEmpty) {
+        // Load from network
         imageProvider = NetworkImage(viewModel.shelterImage);
-      } else if (viewModel.shelterImage.isNotEmpty) {
+      } else if (viewModel.shelterImage.isNotEmpty && File(viewModel.shelterImage).existsSync()) {
+        // Load from file (ensure the file exists)
         imageProvider = FileImage(File(viewModel.shelterImage));
       } else {
+        // Load default asset image
         imageProvider = const AssetImage(ImageUtils.catPath);
       }
     } catch (e) {
@@ -471,12 +473,14 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
       child: CircleAvatar(
         radius: 95,
         backgroundImage: imageProvider,
-        onBackgroundImageError: (e, s) {
+        onBackgroundImageError: (exception, stackTrace) {
+          print('Image load error: $exception');
           ToastComponent().showMessage(Colors.red, 'Error loading image');
         },
       ),
     );
   }
+
 
 
 }

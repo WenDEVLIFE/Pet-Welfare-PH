@@ -5,12 +5,9 @@ import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:pet_welfrare_ph/src/model/EstablishmentModel.dart';
 import 'package:pet_welfrare_ph/src/respository/LocationRespository.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
-
-import '../utils/GeoUtils.dart';
 
 class ShelterClinicViewModel extends ChangeNotifier {
   final TextEditingController shelterNameController = TextEditingController();
@@ -40,6 +37,8 @@ class ShelterClinicViewModel extends ChangeNotifier {
 
   Stream<List<EstablishmentModel>> get establishmentStream => _addLocationRespository.getData();
 
+  String get selectEstablishment1 => selectEstablishment;
+
 
 
   void setImageUrl(String url) {
@@ -54,32 +53,34 @@ class ShelterClinicViewModel extends ChangeNotifier {
     final XFile? pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
     if (pickedFile != null) {
       shelterImage = pickedFile.path;
+      isNetworkImage = false;
       notifyListeners();
     }
   }
 
   // Set initial location
   Future<void> setInitialLocation() async {
-    var status = await Permission.location.request();
-    if (status.isGranted) {
-      getLocation();
-      notifyListeners();
-    } else {
-      ToastComponent().showMessage(Colors.red, 'Location permissions are denied.');
-      notifyListeners();
+    if (_locationInitialized) return; // Prevent multiple calls
+    _locationInitialized = true;
+
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) return;
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) return;
     }
-  }
-  // Get the locations
-  Future<void> getLocation() async {
-    await Geolocator.checkPermission();
-    await Geolocator.requestPermission();
-    Position? position = await GeoUtils().getLocation();
-    if (position != null) {
 
-      long = position.longitude;
-      lat = position.latitude;
+    if (permission == LocationPermission.deniedForever) return;
 
-      // ToastComponent().showMessage(Colors.green, 'Location: $lat, $long');
+    Position position = await Geolocator.getCurrentPosition();
+    lat = position.latitude;
+    long = position.longitude;
+    notifyListeners();
+
+    if (mapController != null) {
+      addPin(LatLng(lat, long));
       notifyListeners();
     }
   }
@@ -89,6 +90,7 @@ class ShelterClinicViewModel extends ChangeNotifier {
     if (selectedLocation == newLocation) return; // Avoid redundant updates
     selectedLocation = newLocation;
     addPin(newLocation);
+    notifyListeners();
   }
 
   // Add marker to map
@@ -187,7 +189,24 @@ class ShelterClinicViewModel extends ChangeNotifier {
   }
 
 
-  void updateEstablishment(Map <String , dynamic> data) {
-
+  void updateEstablishment(Map<String, dynamic> data, BuildContext context) {
+    if (shelterNameController.text.isEmpty) {
+      ToastComponent().showMessage(Colors.red, 'Please enter the name of the shelter');
+    } else if (shelterDescriptionController.text.isEmpty) {
+      ToastComponent().showMessage(Colors.red, 'Please enter the description of the shelter');
+    } else if (shelterAddressController.text.isEmpty) {
+      ToastComponent().showMessage(Colors.red, 'Please enter the address of the shelter');
+    } else if (shelterPhoneNumber.text.isEmpty) {
+      ToastComponent().showMessage(Colors.red, 'Please enter the phone number of the shelter');
+    } else if (shelterEmailController.text.isEmpty) {
+      ToastComponent().showMessage(Colors.red, 'Please enter the email of the shelter');
+    } else if (shelterImage.isEmpty) {
+      ToastComponent().showMessage(Colors.red, 'Please select an image for the shelter');
+    } else if (selectedLocation == null) {
+      ToastComponent().showMessage(Colors.red, 'Please select the location of the shelter');
+    } else {
+      _addLocationRespository.updateLocation(data, context);
+      notifyListeners();
+    }
   }
 }
