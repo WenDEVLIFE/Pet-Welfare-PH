@@ -189,6 +189,7 @@ class ShelterClinicViewModel extends ChangeNotifier {
   }
 
 
+  // This is for the update of the establishment
   void updateEstablishment(Map<String, dynamic> data, BuildContext context) {
     if (shelterNameController.text.isEmpty) {
       ToastComponent().showMessage(Colors.red, 'Please enter the name of the shelter');
@@ -208,5 +209,11 @@ class ShelterClinicViewModel extends ChangeNotifier {
       _addLocationRespository.updateLocation(data, context);
       notifyListeners();
     }
+  }
+
+  // This is for the delete data
+  void deleteEstablishment(String id, BuildContext context) {
+    _addLocationRespository.deleteEstablishment(id, context);
+    notifyListeners();
   }
 }

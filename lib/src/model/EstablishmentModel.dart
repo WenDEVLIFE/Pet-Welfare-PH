@@ -39,7 +39,7 @@ class EstablishmentModel {
       establishmentAddress: doc['EstablishmentAddress'],
       establishmentPhoneNumber: doc['EstablishmentPhoneNumber'],
       establishmentEmail: doc['EstablishmentEmail'],
-      establishmentPicture: doc['EstablishmentPicture'],
+      establishmentPicture: doc['EstablishmentPictureUrl'],
       establishmentLat: doc['EstablishmentLat'],
       establishmentLong: doc['EstablishmentLong'],
       establishmentType: doc['EstablishmentType'],

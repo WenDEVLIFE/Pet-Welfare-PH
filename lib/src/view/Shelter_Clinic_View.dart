@@ -184,7 +184,7 @@ class Shelter_Clinic_ViewState extends State<Shelter_Clinic_View> {
                                     IconButton(
                                       icon: const Icon(Icons.delete, color: Colors.white),
                                       onPressed: () {
-                                        // viewModel.deleteSubscription(context, subscription.uid);
+                                        viewModel.deleteEstablishment(establishData.id, context);
                                       },
                                     ),
                                   ],

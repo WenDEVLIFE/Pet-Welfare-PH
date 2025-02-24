@@ -15,11 +15,16 @@ abstract class Locationrespository {
   Future<void> addLocation(Map<String, dynamic> locationData, BuildContext context);
   Future<bool> checkIfNameExists(String name);
   Stream<List<EstablishmentModel>> getData();
+
+  void updateLocation(Map<String, dynamic> data, BuildContext context);
+
+  void deleteEstablishment(String id, BuildContext context);
 }
 
 class LocationrespositoryImpl implements Locationrespository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
+  final FirebaseStorage storage = FirebaseStorage.instance;
 
   // This will add the location to the database
   @override
@@ -66,7 +71,8 @@ class LocationrespositoryImpl implements Locationrespository {
           'EstablishmentAddress': locationData['EstablishmentAddress'],
           'EstablishmentPhoneNumber': locationData['EstablishmentPhoneNumber'],
           'EstablishmentEmail': locationData['EstablishmentEmail'],
-          'EstablishmentPicture': profileUrl,
+          'EstablishmentPictureUrl': profileUrl,
+          'EstablishmentPicture': '$uid.jpg',
           'EstablishmentLat': locationData['Longitude'],
           'EstablishmentLong': locationData['Latitude'],
           'EstablishmentType': locationData['EstablishmentType'],
@@ -102,11 +108,80 @@ class LocationrespositoryImpl implements Locationrespository {
   @override
   Stream<List<EstablishmentModel>> getData() {
     User user = _auth.currentUser!;
-
     return _firestore.collection('LocationCollection').
     where('EstablishmentOwnerID', isEqualTo: user.uid).snapshots()
         .map((snapshot) => snapshot.docs.map((doc) => EstablishmentModel.fromDocumentSnapshot(doc)).toList());
   }
+
+  // Update the data
+  @override
+  Future<void> updateLocation(Map<String, dynamic> data, BuildContext context) async {
+    User user = _auth.currentUser!;
+    ProgressDialog pd = ProgressDialog(context: context);
+    pd.show(max: 100, msg: 'Updating Location...');
+
+    try {
+         // get the id from the list
+         var id = data['establishmentId'];
+
+         DocumentSnapshot userDoc = await _firestore.collection('LocationCollection').doc(id).get();
+         print('Existing document data: ${userDoc.data()}');
+         if (userDoc.exists) {
+
+           // Update Firestore with new data
+           await _firestore.collection('LocationCollection').doc(id).update({
+             'EstablishmentName': data['establishmentName'],
+             'EstablishmentDescription': data['establishmentDescription'],
+             'EstablishmentLat': data['lat'],
+             'EstablishmentLong': data['long'],
+             'EstablishmentAddress': data['establishmentAddress'],
+             'EstablishmentPhoneNumber': data['establishmentPhoneNumber'],
+             'EstablishmentEmail': data['establishmentEmail'],
+             'EstablishmentType': data['EstablishmentType'],
+
+           });
+           ToastComponent().showMessage(Colors.green, 'Establishment updated successfully');
+
+         }
+
+    } catch (e) {
+      throw Exception(e);
+    }
+    finally {
+      pd.close();
+    }
+  }
+
+  // This will delete the establishment
+  Future <void> deleteEstablishment(String id, BuildContext context) async{
+
+    ProgressDialog pd = ProgressDialog(context: context);
+    pd.show(max: 100, msg: 'Deleting Establishment...');
+    try {
+      DocumentSnapshot userDoc = await _firestore.collection('LocationCollection').doc(id).get();
+      if (userDoc.exists) {
+        // Get the stored Firebase Storage path, NOT the URL
+        var storedPath = userDoc.get('EstablishmentPicture');
+
+        // Reference to Firebase Storage
+        Reference oldImageRef = FirebaseStorage.instance.ref().child('EstablishmentPicture/$storedPath');
+
+        // Delete the old image
+        try {
+          await oldImageRef.delete();
+          print('Old image deleted successfully.');
+          // Delete the establishment
+          await _firestore.collection('LocationCollection').doc(id).delete();
+          ToastComponent().showMessage(Colors.green, 'Establishment deleted successfully');
+        } catch (e) {
+          print('Failed to delete old image: $e');
+        }
+      }
+    }catch (e){
+      throw Exception(e);
+    }
+  }
+
 
 
 }
