@@ -11,7 +11,7 @@ import 'package:provider/provider.dart';
 
 import '../utils/AppColors.dart';
 import '../utils/ImageUtils.dart';
-import '../utils/MapTilerKey.dart';
+import '../services/MapTilerKey.dart';
 
 class AddShelterClinic extends StatelessWidget {
   const AddShelterClinic({Key? key}) : super(key: key);
