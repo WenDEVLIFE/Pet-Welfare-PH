@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class EstablishmentModel {
+  final String id;
   final String establishmentName;
   final String establishmentDescription;
   final String establishmentAddress;
@@ -15,6 +16,7 @@ class EstablishmentModel {
   final String establishmentStatus;
 
   EstablishmentModel({
+    required this.id,
     required this.establishmentName,
     required this.establishmentDescription,
     required this.establishmentAddress,
@@ -31,6 +33,7 @@ class EstablishmentModel {
 
   factory EstablishmentModel.fromDocumentSnapshot(DocumentSnapshot doc) {
     return EstablishmentModel(
+      id: doc.id,
       establishmentName: doc['EstablishmentName'],
       establishmentDescription: doc['EstablishmentDescription'],
       establishmentAddress: doc['EstablishmentAddress'],

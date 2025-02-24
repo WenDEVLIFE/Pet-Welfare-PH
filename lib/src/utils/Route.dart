@@ -23,6 +23,7 @@ import '../view/AddShelterClinicScreen.dart';
 import '../view/ChangeIDView.dart';
 import '../view/ChangePasswordView.dart';
 import '../view/ChatView.dart';
+import '../view/EditEstablishmentView.dart';
 import '../view/OTPView.dart';
 import '../view/Shelter_Clinic_View.dart';
 import '../view/SplashView.dart';
@@ -60,6 +61,7 @@ class AppRoutes {
   static const String shelterClinic = '/shelterClinic';
   static const String addSherterClinic = '/addSherterClinic';
   static const String chatView = '/chatView';
+  static const String editEstablishment = '/editEstablishment';
 
   // Assign routes to the screens
   static Map<String, WidgetBuilder> routes = {
@@ -92,5 +94,6 @@ class AppRoutes {
     shelterClinic : (context) => const Shelter_Clinic_View(), // This is where the user can view the shelter clinic
     addSherterClinic : (context) => const AddShelterClinic(), // This is where the user can add the shelter clinic
     chatView : (context) => ChatView(), // This is where the user can chat
+    editEstablishment : (context) => const EditEstablishmentScreen(), // This is where the user can edit the establishment
   };
 }

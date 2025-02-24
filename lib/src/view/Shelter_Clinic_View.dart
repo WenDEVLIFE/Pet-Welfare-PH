@@ -4,6 +4,7 @@ import 'package:pet_welfrare_ph/src/model/EstablishmentModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/ShelterClinicViewModel.dart';
 import 'package:provider/provider.dart';
 
+import 'EditEstablishmentView.dart';
 import '../utils/AppColors.dart';
 import '../utils/Route.dart';
 
@@ -22,6 +23,7 @@ class Shelter_Clinic_ViewState extends State<Shelter_Clinic_View> {
     super.initState();
     establishmentViewModel = Provider.of<ShelterClinicViewModel>(context, listen: false);
     Provider.of<ShelterClinicViewModel>(context, listen: false).setInitialLocation();
+
   }
 
   @override
@@ -160,7 +162,23 @@ class Shelter_Clinic_ViewState extends State<Shelter_Clinic_View> {
                                     IconButton(
                                       icon: const Icon(Icons.edit, color: Colors.white),
                                       onPressed: () {
-                                        // _editSubscription(context, subscription, subscription.uid)
+
+
+                                        Navigator.pushNamed(context, AppRoutes.editEstablishment, arguments: {
+                                          'establishmentName': establishData.establishmentName,
+                                          'establishmentDescription': establishData.establishmentDescription,
+                                          'establishmentStatus': establishData.establishmentStatus,
+                                          'establishmentPicture': establishData.establishmentPicture,
+                                          'establishmentId': establishData.id,
+                                          'establishmentLat': establishData.establishmentLat,
+                                          'establishmentLong': establishData.establishmentLong,
+                                          'establishmentAddress': establishData.establishmentAddress,
+                                          'establishmentPhoneNumber': establishData.establishmentPhoneNumber,
+                                          'establishmentEmail': establishData.establishmentEmail,
+                                          'establishmentType': establishData.establishmentType,
+
+                                        });
+
                                       },
                                     ),
                                     IconButton(
@@ -193,4 +211,6 @@ class Shelter_Clinic_ViewState extends State<Shelter_Clinic_View> {
       ),
     );
   }
+
+
 }

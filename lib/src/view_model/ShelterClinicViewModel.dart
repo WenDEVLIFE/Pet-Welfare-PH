@@ -5,9 +5,12 @@ import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:pet_welfrare_ph/src/model/EstablishmentModel.dart';
 import 'package:pet_welfrare_ph/src/respository/LocationRespository.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
+
+import '../utils/GeoUtils.dart';
 
 class ShelterClinicViewModel extends ChangeNotifier {
   final TextEditingController shelterNameController = TextEditingController();
@@ -20,21 +23,31 @@ class ShelterClinicViewModel extends ChangeNotifier {
 
   final Locationrespository _addLocationRespository = LocationrespositoryImpl();
   String shelterImage = '';
-  LatLng? selectedLocation; // Store clicked location
+  bool isNetworkImage = false;
+  LatLng? selectedLocation;
   bool _locationInitialized = false;
   double lat = 0.0;
   double long = 0.0;
+  double newlat = 0.0;
+  double newlong = 0.0;
   MaplibreMapController? mapController;
   var establishmentType = ['Shelter', 'Clinic'];
   var selectEstablishment = 'Shelter';
   List<EstablishmentModel> establismentList = [];
   List<EstablishmentModel> filteredEstablisment = [];
 
-  // Get subscriptions
   List<EstablishmentModel> get establismentListdata => filteredEstablisment;
 
-  // Stream of subscriptions
   Stream<List<EstablishmentModel>> get establishmentStream => _addLocationRespository.getData();
+
+
+
+  void setImageUrl(String url) {
+    shelterImage = url;
+    isNetworkImage = true;
+    notifyListeners();
+  }
+
 
   // Pick image for profile
   Future<void> pickImage() async {
@@ -47,27 +60,27 @@ class ShelterClinicViewModel extends ChangeNotifier {
 
   // Set initial location
   Future<void> setInitialLocation() async {
-    if (_locationInitialized) return; // Prevent multiple calls
-    _locationInitialized = true;
-
-    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
-    if (!serviceEnabled) return;
-
-    LocationPermission permission = await Geolocator.checkPermission();
-    if (permission == LocationPermission.denied) {
-      permission = await Geolocator.requestPermission();
-      if (permission == LocationPermission.denied) return;
+    var status = await Permission.location.request();
+    if (status.isGranted) {
+      getLocation();
+      notifyListeners();
+    } else {
+      ToastComponent().showMessage(Colors.red, 'Location permissions are denied.');
+      notifyListeners();
     }
+  }
+  // Get the locations
+  Future<void> getLocation() async {
+    await Geolocator.checkPermission();
+    await Geolocator.requestPermission();
+    Position? position = await GeoUtils().getLocation();
+    if (position != null) {
 
-    if (permission == LocationPermission.deniedForever) return;
+      long = position.longitude;
+      lat = position.latitude;
 
-    Position position = await Geolocator.getCurrentPosition();
-    lat = position.latitude;
-    long = position.longitude;
-    notifyListeners();
-
-    if (mapController != null) {
-      addPin(LatLng(lat, long));
+      // ToastComponent().showMessage(Colors.green, 'Location: $lat, $long');
+      notifyListeners();
     }
   }
 
@@ -171,5 +184,10 @@ class ShelterClinicViewModel extends ChangeNotifier {
       }).toList();
     }
     notifyListeners();
+  }
+
+
+  void updateEstablishment(Map <String , dynamic> data) {
+
   }
 }
