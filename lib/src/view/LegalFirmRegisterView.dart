@@ -83,12 +83,15 @@ class RegisterState extends State<LegalFirmRegisterView> {
                             SizedBox(height: screenHeight * 0.01),
                             TextField(
                               controller: viewModel.nameController,
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 filled: true,
                                 fillColor: AppColors.gray,
-                                border: OutlineInputBorder(),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                                ),
                                 hintText: 'Enter your name',
-                                hintStyle: TextStyle(
+                                hintStyle: const TextStyle(
                                   color: Colors.black,
                                   fontFamily: 'SmoochSans',
                                   fontWeight: FontWeight.w600,
@@ -109,12 +112,15 @@ class RegisterState extends State<LegalFirmRegisterView> {
                             SizedBox(height: screenHeight * 0.01),
                             TextField(
                               controller: viewModel.emailController,
-                              decoration: const InputDecoration(
+                              decoration: InputDecoration(
                                 filled: true,
                                 fillColor: AppColors.gray,
-                                border: OutlineInputBorder(),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(30),
+                                  borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                                ),
                                 hintText: 'Enter your email',
-                                hintStyle: TextStyle(
+                                hintStyle: const TextStyle(
                                   color: Colors.black,
                                   fontFamily: 'SmoochSans',
                                   fontWeight: FontWeight.w600,
@@ -142,7 +148,10 @@ class RegisterState extends State<LegalFirmRegisterView> {
                                   decoration: InputDecoration(
                                     filled: true,
                                     fillColor: AppColors.gray,
-                                    border: const OutlineInputBorder(),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                      borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                                    ),
                                     suffixIcon: IconButton(
                                       icon: Icon(
                                         viewmodel.obscureText1 ? Icons.visibility : Icons.visibility_off,
@@ -180,7 +189,10 @@ class RegisterState extends State<LegalFirmRegisterView> {
                                   decoration: InputDecoration(
                                     filled: true,
                                     fillColor: AppColors.gray,
-                                    border: const OutlineInputBorder(),
+                                    border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                      borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                                    ),
                                     suffixIcon: IconButton(
                                       icon: Icon(
                                         viewmodel.obscureText2 ? Icons.visibility : Icons.visibility_off,

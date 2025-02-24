@@ -150,7 +150,7 @@ class UserViewState extends State<UserView> {
                 prefixIcon: const Icon(Icons.search, color: Colors.black),
                 fillColor: Colors.grey[200],
                 border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
+                  borderRadius: BorderRadius.circular(30),
                   borderSide: const BorderSide(color: Colors.transparent, width: 2),
                 ),
                 hintText: 'Search a name or email....',

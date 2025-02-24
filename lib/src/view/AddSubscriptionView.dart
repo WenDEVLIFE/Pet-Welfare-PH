@@ -65,12 +65,15 @@ class AddAdminViewState extends State<AddSubscriptionView> {
                 builder: (context, changeViewModel, child) {
                   return TextField(
                     controller: viewModel.subscriptionNameController,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       filled: true,
                       fillColor: AppColors.gray,
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                      ),
                       hintText: 'Enter the subscription name',
-                      hintStyle: TextStyle(
+                      hintStyle: const TextStyle(
                         color: Colors.black,
                       ),
                     ),
@@ -99,12 +102,15 @@ class AddAdminViewState extends State<AddSubscriptionView> {
                   return TextField(
                     controller: viewModel.subscriptionPriceController,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       filled: true,
                       fillColor: AppColors.gray,
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                      ),
                       hintText: 'Enter the subscription price',
-                      hintStyle: TextStyle(
+                      hintStyle: const TextStyle(
                         color: Colors.black,
                       ),
                     ),
@@ -133,12 +139,15 @@ class AddAdminViewState extends State<AddSubscriptionView> {
                   return TextField(
                     controller: viewModel.subscriptionDurationController,
                     keyboardType: TextInputType.number,
-                    decoration: const InputDecoration(
+                    decoration: InputDecoration(
                       filled: true,
                       fillColor: AppColors.gray,
-                      border: OutlineInputBorder(),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(30),
+                        borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                      ),
                       hintText: 'Enter the subscription duration',
-                      hintStyle: TextStyle(
+                      hintStyle: const TextStyle(
                         color: Colors.black,
                       ),
                     ),

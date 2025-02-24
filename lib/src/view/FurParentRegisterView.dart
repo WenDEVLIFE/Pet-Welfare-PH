@@ -84,12 +84,15 @@ class RegisterState extends State<FurParentRegisterView> {
                             builder: (context, viewmodel, child) {
                               return TextField(
                                 controller: viewmodel.nameController,
-                                decoration: const InputDecoration(
+                                decoration: InputDecoration(
                                   filled: true,
                                   fillColor: AppColors.gray,
-                                  border: OutlineInputBorder(),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                                  ),
                                   hintText: 'Enter your name',
-                                  hintStyle: TextStyle(
+                                  hintStyle: const TextStyle(
                                     color: Colors.black,
                                     fontFamily: 'SmoochSans',
                                     fontWeight: FontWeight.w600,
@@ -114,12 +117,15 @@ class RegisterState extends State<FurParentRegisterView> {
                             builder: (context, viewmodel, child) {
                               return TextField(
                                 controller: viewmodel.emailController,
-                                decoration: const InputDecoration(
+                                decoration: InputDecoration(
                                   filled: true,
                                   fillColor: AppColors.gray,
-                                  border: OutlineInputBorder(),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                                  ),
                                   hintText: 'Enter your email',
-                                  hintStyle: TextStyle(
+                                  hintStyle: const TextStyle(
                                     color: Colors.black,
                                     fontFamily: 'SmoochSans',
                                     fontWeight: FontWeight.w600,
@@ -149,7 +155,10 @@ class RegisterState extends State<FurParentRegisterView> {
                                 decoration: InputDecoration(
                                   filled: true,
                                   fillColor: AppColors.gray,
-                                  border: const OutlineInputBorder(),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                                  ),
                                   suffixIcon: IconButton(
                                     icon: Icon(
                                       viewmodel.obscureText1 ? Icons.visibility : Icons.visibility_off,
@@ -187,7 +196,10 @@ class RegisterState extends State<FurParentRegisterView> {
                                 decoration: InputDecoration(
                                   filled: true,
                                   fillColor: AppColors.gray,
-                                  border: const OutlineInputBorder(),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                                  ),
                                   suffixIcon: IconButton(
                                     icon: Icon(
                                       viewmodel.obscureText2 ? Icons.visibility : Icons.visibility_off,

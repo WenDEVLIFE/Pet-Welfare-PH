@@ -58,12 +58,15 @@ class AddShelterClinic extends StatelessWidget {
                       SizedBox(height: screenHeight * 0.01),
                       TextField(
                         controller: viewModel.shelterNameController,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           filled: true,
                           fillColor: AppColors.gray,
-                          border: OutlineInputBorder(),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                          ),
                           hintText: 'Enter Shelter/Clinic Name',
-                          hintStyle: TextStyle(
+                          hintStyle: const TextStyle(
                             color: Colors.black,
                           ),
                         ),
@@ -189,12 +192,15 @@ class AddShelterClinic extends StatelessWidget {
                       SizedBox(height: screenHeight * 0.01),
                       TextField(
                         controller: viewModel.shelterDescriptionController,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           filled: true,
                           fillColor: AppColors.gray,
-                          border: OutlineInputBorder(),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                          ),
                           hintText: 'Enter Shelter/Clinic Description',
-                          hintStyle: TextStyle(
+                          hintStyle: const TextStyle(
                             color: Colors.black,
                           ),
                         ),
@@ -218,12 +224,15 @@ class AddShelterClinic extends StatelessWidget {
                       SizedBox(height: screenHeight * 0.01),
                       TextField(
                         controller: viewModel.shelterAddressController,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           filled: true,
                           fillColor: AppColors.gray,
-                          border: OutlineInputBorder(),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                          ),
                           hintText: 'Enter Shelter/Clinic Address',
-                          hintStyle: TextStyle(
+                          hintStyle: const TextStyle(
                             color: Colors.black,
                           ),
                         ),
@@ -247,12 +256,15 @@ class AddShelterClinic extends StatelessWidget {
                       SizedBox(height: screenHeight * 0.01),
                       TextField(
                         controller: viewModel.shelterPhoneNumber,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           filled: true,
                           fillColor: AppColors.gray,
-                          border: OutlineInputBorder(),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                          ),
                           hintText: 'Enter Shelter/Clinic Phone Number',
-                          hintStyle: TextStyle(
+                          hintStyle: const TextStyle(
                             color: Colors.black,
                           ),
                         ),
@@ -276,12 +288,15 @@ class AddShelterClinic extends StatelessWidget {
                       SizedBox(height: screenHeight * 0.01),
                       TextField(
                         controller: viewModel.shelterEmailController,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           filled: true,
                           fillColor: AppColors.gray,
-                          border: OutlineInputBorder(),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                          ),
                           hintText: 'Enter Shelter/Clinic Email',
-                          hintStyle: TextStyle(
+                          hintStyle: const TextStyle(
                             color: Colors.black,
                           ),
                         ),
@@ -305,12 +320,15 @@ class AddShelterClinic extends StatelessWidget {
                       SizedBox(height: screenHeight * 0.01),
                       TextField(
                         controller: viewModel.shelterPhoneNumber,
-                        decoration: const InputDecoration(
+                        decoration: InputDecoration(
                           filled: true,
                           fillColor: AppColors.gray,
-                          border: OutlineInputBorder(),
+                          border: OutlineInputBorder(
+                            borderRadius: BorderRadius.circular(30),
+                            borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                          ),
                           hintText: 'Enter Shelter/Clinic Address',
-                          hintStyle: TextStyle(
+                          hintStyle: const TextStyle(
                             color: Colors.black,
                           ),
                         ),

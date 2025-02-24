@@ -77,23 +77,29 @@ class RegisterState extends State<VetClinicRegisterView> {
                           SizedBox(height: screenHeight * 0.02),
                           TextField(
                             controller: viewModel.nameController,
-                            decoration: const InputDecoration(
+                            decoration: InputDecoration(
                               filled: true,
                               fillColor: AppColors.gray,
-                              border: OutlineInputBorder(),
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(30),
+                                borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                              ),
                               hintText: 'Enter your name',
-                              hintStyle: TextStyle(
+                              hintStyle: const TextStyle(
                                 color: Colors.black,
                                 fontFamily: 'SmoochSans',
                                 fontWeight: FontWeight.w600,
                               ),
+
                             ),
+
                             style: const TextStyle(
                               color: Colors.black,
                               fontFamily: 'SmoochSans',
                               fontSize: 16,
                               fontWeight: FontWeight.w600,
                             ),
+
                           ),
                           SizedBox(height: screenHeight * 0.02),
                           const Text('EMAIL', style: TextStyle(fontSize: 18,
@@ -105,16 +111,20 @@ class RegisterState extends State<VetClinicRegisterView> {
                             builder: (context, viewmodel, child) {
                               return TextField(
                                 controller: viewmodel.emailController,
-                                decoration: const InputDecoration(
+                                decoration: InputDecoration(
                                   filled: true,
                                   fillColor: AppColors.gray,
-                                  border: OutlineInputBorder(),
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                                  ),
                                   hintText: 'Enter your email',
-                                  hintStyle: TextStyle(
+                                  hintStyle: const TextStyle(
                                     color: Colors.black,
                                     fontFamily: 'SmoochSans',
                                     fontWeight: FontWeight.w600,
                                   ),
+
                                 ),
                                 style: const TextStyle(
                                   color: Colors.black,
@@ -140,7 +150,10 @@ class RegisterState extends State<VetClinicRegisterView> {
                                 decoration: InputDecoration(
                                   filled: true,
                                   fillColor: AppColors.gray,
-                                  border: const OutlineInputBorder(),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                      borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                                    ),
                                   suffixIcon: IconButton(
                                     icon: Icon(
                                       viewmodel.obscureText1 ? Icons.visibility : Icons.visibility_off,
@@ -178,7 +191,10 @@ class RegisterState extends State<VetClinicRegisterView> {
                                 decoration: InputDecoration(
                                   filled: true,
                                   fillColor: AppColors.gray,
-                                  border: const OutlineInputBorder(),
+                                  border: OutlineInputBorder(
+                                      borderRadius: BorderRadius.circular(30),
+                                      borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                                  ),
                                   suffixIcon: IconButton(
                                     icon: Icon(
                                       viewmodel.obscureText2 ? Icons.visibility : Icons.visibility_off,
