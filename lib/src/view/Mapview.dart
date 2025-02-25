@@ -24,6 +24,8 @@ class MapViewState extends State<MapView> {
   final sessionManager = SessionManager();
   late String role;
   bool _showDropdown = false;
+  final TextEditingController _searchController = TextEditingController();
+  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
@@ -69,112 +71,126 @@ class MapViewState extends State<MapView> {
         ),
         backgroundColor: AppColors.orange,
       ),
-      body: Stack(
-        children: [
-          FutureBuilder<void>(
-            future: _mapFuture,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return Center(child: CircularProgressIndicator());
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error loading map'));
-              } else {
-                return MaplibreMap(
-                  styleString: "${MapTilerKey.styleUrl}?key=${MapTilerKey.apikey}",
-                  myLocationEnabled: true,
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(_mapViewModel.lat, _mapViewModel.long),
-                    zoom: 10.0,
-                  ),
-                  trackCameraPosition: true,
-                  onMapCreated: _onMapCreated,
-                );
-              }
-            },
-          ),
-          Padding(
-            padding: const EdgeInsets.all(8.0),
-            child: Column(
-              children: [
-                Container(
-                  width: screenWidth * 0.99,
-                  height: screenHeight * 0.08,
-                  padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                  decoration: BoxDecoration(
-                    color: Colors.transparent,
-                    borderRadius: BorderRadius.circular(30),
-                    border: Border.all(color: Colors.transparent, width: 7),
-                  ),
-                  child: TextField(
-                    onChanged: (query) {
-                      _mapViewModel.searchLocation(query);
-                      setState(() {
-                        _showDropdown = true;
-                      });
-                    },
-                    decoration: InputDecoration(
-                      filled: true,
-                      prefixIcon: const Icon(Icons.search, color: Colors.black),
-                      fillColor: Colors.grey[200],
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                      ),
-                      enabledBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: AppColors.orange, width: 2),
-                      ),
-                      focusedBorder: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(10),
-                        borderSide: const BorderSide(color: AppColors.orange, width: 2),
-                      ),
-                      hintText: 'Search an address....',
-                      hintStyle: const TextStyle(
-                        color: Colors.black,
-                      ),
-                      contentPadding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 0),
+      body: GestureDetector(
+        onTap: () {
+          setState(() {
+            _showDropdown = false;
+            _focusNode.unfocus();
+          });
+        },
+        child: Stack(
+          children: [
+            FutureBuilder<void>(
+              future: _mapFuture,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error loading map'));
+                } else {
+                  return MaplibreMap(
+                    styleString: "${MapTilerKey.styleUrl}?key=${MapTilerKey.apikey}",
+                    myLocationEnabled: true,
+                    initialCameraPosition: CameraPosition(
+                      target: LatLng(_mapViewModel.lat, _mapViewModel.long),
+                      zoom: 10.0,
                     ),
-                    style: const TextStyle(
-                      fontFamily: 'LeagueSpartan',
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-                if (_showDropdown)
-                  Consumer<MapViewModel>(
-                    builder: (context, viewModel, child) {
-                      return Expanded(
-                        child: ListView.builder(
-                          itemCount: viewModel.searchResults.length,
-                          itemBuilder: (context, index) {
-                            final result = viewModel.searchResults[index];
-                            return ListTile(
-                              title: Text(result['display_name']),
-                              onTap: () {
-                                setState(() {
-                                  _showDropdown = false;
-                                });
-                                _mapController?.animateCamera(
-                                  CameraUpdate.newLatLng(
-                                    LatLng(
-                                      double.parse(result['lat']),
-                                      double.parse(result['lon']),
-                                    ),
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                        ),
-                      );
-                    },
-                  ),
-              ],
+                    trackCameraPosition: true,
+                    onMapCreated: _onMapCreated,
+                  );
+                }
+              },
             ),
-          ),
-        ],
+            Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                children: [
+                  Container(
+                    width: screenWidth * 0.99,
+                    height: screenHeight * 0.08,
+                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                    decoration: BoxDecoration(
+                      color: Colors.transparent,
+                      borderRadius: BorderRadius.circular(30),
+                      border: Border.all(color: Colors.transparent, width: 7),
+                    ),
+                    child: TextField(
+                      controller: _searchController,
+                      focusNode: _focusNode,
+                      onChanged: (query) {
+                        _mapViewModel.searchLocation(query);
+                        setState(() {
+                          _showDropdown = true;
+                        });
+                      },
+                      decoration: InputDecoration(
+                        filled: true,
+                        prefixIcon: const Icon(Icons.search, color: Colors.black),
+                        fillColor: Colors.grey[200],
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                        ),
+                        enabledBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: AppColors.orange, width: 2),
+                        ),
+                        focusedBorder: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: AppColors.orange, width: 2),
+                        ),
+                        hintText: 'Search an address....',
+                        hintStyle: const TextStyle(
+                          color: Colors.black,
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 0),
+                      ),
+                      style: const TextStyle(
+                        fontFamily: 'LeagueSpartan',
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                  if (_showDropdown)
+                    Consumer<MapViewModel>(
+                      builder: (context, viewModel, child) {
+                        return Container(
+                          height: screenHeight * 0.3,
+                          color: Colors.white, // Set the background color
+                          child: ListView.builder(
+                            itemCount: viewModel.searchResults.length,
+                            itemBuilder: (context, index) {
+                              final result = viewModel.searchResults[index];
+                              return ListTile(
+                                title: Text(result['display_name']),
+                                onTap: () {
+                                  setState(() {
+                                    _searchController.text = result['display_name'];
+                                    _showDropdown = false;
+                                    _focusNode.unfocus();
+                                  });
+                                  _mapController?.animateCamera(
+                                    CameraUpdate.newLatLng(
+                                      LatLng(
+                                        double.parse(result['lat']),
+                                        double.parse(result['lon']),
+                                      ),
+                                    ),
+                                  );
+                                },
+                              );
+                            },
+                          ),
+                        );
+                      },
+                    ),
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
       floatingActionButton: role.toLowerCase() == 'pet rescuer' || role.toLowerCase() == 'pet shelter'
           ? SpeedDial(
