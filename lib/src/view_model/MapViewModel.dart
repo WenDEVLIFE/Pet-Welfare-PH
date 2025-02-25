@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pet_welfrare_ph/src/services/OpenStreetMapService.dart';
 import 'package:pet_welfrare_ph/src/utils/GeoUtils.dart';
 import 'package:pet_welfrare_ph/src/utils/SessionManager.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
@@ -9,12 +10,13 @@ import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import '../respository/LoadProfileRespository.dart';
 
 class MapViewModel extends ChangeNotifier {
-
   double lat = 0.0;
   double long = 0.0;
   final SessionManager _sessionManager = SessionManager();
   final Loadprofilerespository _loadProfileRepository = LoadProfileImpl();
-  // Get the permissions
+  final OpenStreetMapService _openStreetMapService = OpenStreetMapService();
+  List<Map<String, dynamic>> searchResults = [];
+
   Future<void> requestPermissions() async {
     var status = await Permission.location.request();
     if (status.isGranted) {
@@ -26,9 +28,7 @@ class MapViewModel extends ChangeNotifier {
     }
   }
 
-  // Get the locations
   Future<void> getLocation() async {
-    // Set a default location while fetching
     lat = 14.5995;  // Example: Manila, Philippines
     long = 120.9842;
     notifyListeners();
@@ -41,6 +41,19 @@ class MapViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Load the role
+  Future<void> searchLocation(String query) async {
+    try {
+      final results = await _openStreetMapService.fetchOpenStreetMapData(query);
 
+      if (results.isEmpty) {
+        ToastComponent().showMessage(Colors.red, 'No results found.');
+      } else {
+        ToastComponent().showMessage(Colors.green, 'Results found.');
+      }
+      searchResults = results;
+      notifyListeners();
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
+  }
 }
