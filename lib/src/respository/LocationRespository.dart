@@ -19,6 +19,8 @@ abstract class Locationrespository {
   void updateLocation(Map<String, dynamic> data, BuildContext context);
 
   void deleteEstablishment(String id, BuildContext context);
+
+  void updateProfileImage(String selectedImage, String id, BuildContext context);
 }
 
 class LocationrespositoryImpl implements Locationrespository {
@@ -153,7 +155,6 @@ class LocationrespositoryImpl implements Locationrespository {
     }
   }
 
-  // TODO : FIX THE BUG NOT DETECTING THE FILE OBJECT
 
   // This will delete the establishment
   Future <void> deleteEstablishment(String id, BuildContext context) async{
@@ -183,12 +184,61 @@ class LocationrespositoryImpl implements Locationrespository {
     }catch (e){
       throw Exception(e);
     }
+    finally {
+      pd.close();
+    }
   }
 
-  void UpdateEstablismentProfile(){
-    // TODO : Implement the update establishment profile
+  @override
+  Future<void> updateProfileImage(String selectedImage, String id, BuildContext context) async {
+
+    ProgressDialog pd = ProgressDialog(context: context);
+    pd.show(max: 100, msg: 'Updating Profile Image...');
+
+    try{
+
+      DocumentSnapshot userDoc = await _firestore.collection('LocationCollection').doc(id).get();
+      if (userDoc.exists) {
+        // Get the stored Firebase Storage path, NOT the URL
+        var storedPath = userDoc.get('EstablishmentPicture');
+
+        // Reference to Firebase Storage
+        Reference oldImageRef = FirebaseStorage.instance.ref().child('EstablishmentPicture/$storedPath');
+
+        // Delete the old image
+        try {
+          await oldImageRef.delete();
+          print('Old image deleted successfully.');
+        } catch (e) {
+          print('Failed to delete old image: $e');
+        }
+        // Upload image to firebase storage
+        Uint8List bytesIdFront = await File(selectedImage).readAsBytes();
+
+        // Upload to Firebase Storage
+        Reference shelterRef = FirebaseStorage.instance.ref().child('EstablishmentPicture/$id.jpg');
+
+        // Upload the image to firebase storage
+        TaskSnapshot profileSnap = await shelterRef.putData(bytesIdFront);
+
+        // Get the download url of the image
+        String profileUrl = await profileSnap.ref.getDownloadURL();
+
+        // Set the document with the specified ID
+        await _firestore.collection('LocationCollection').doc(id).update({
+          'EstablishmentPictureUrl': profileUrl,
+          'EstablishmentPicture': '$id.jpg',
+        });
+
+        ToastComponent().showMessage(Colors.green, 'Profile image updated successfully');
+      }
+
+    } catch (e) {
+      throw Exception(e);
+    }
+    finally {
+      pd.close();
+    }
   }
-
-
 
 }

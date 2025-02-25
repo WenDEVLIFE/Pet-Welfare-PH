@@ -20,6 +20,7 @@ class ShelterClinicViewModel extends ChangeNotifier {
 
   final Locationrespository _addLocationRespository = LocationrespositoryImpl();
   String shelterImage = '';
+  String selectedImage = '';
   bool isNetworkImage = false;
   LatLng? selectedLocation;
   bool _locationInitialized = false;
@@ -54,6 +55,14 @@ class ShelterClinicViewModel extends ChangeNotifier {
     if (pickedFile != null) {
       shelterImage = pickedFile.path;
       isNetworkImage = false;
+      notifyListeners();
+    }
+  }
+
+  Future<void> pickImageCamera() async {
+    final XFile? pickedFile = await imagePicker.pickImage(source: ImageSource.gallery);
+    if (pickedFile != null) {
+      selectedImage = pickedFile.path;
       notifyListeners();
     }
   }
@@ -215,5 +224,14 @@ class ShelterClinicViewModel extends ChangeNotifier {
   void deleteEstablishment(String id, BuildContext context) {
     _addLocationRespository.deleteEstablishment(id, context);
     notifyListeners();
+  }
+
+  void updateProfileData(BuildContext context, String id) {
+    if (selectedImage.isNotEmpty) {
+      _addLocationRespository.updateProfileImage(selectedImage, id, context);
+    } else {
+      ToastComponent().showMessage(Colors.red, 'Please select an image');
+    }
+
   }
 }

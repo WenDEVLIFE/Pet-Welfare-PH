@@ -319,7 +319,7 @@ class AddShelterClinic extends StatelessWidget {
                       ),
                       SizedBox(height: screenHeight * 0.01),
                       TextField(
-                        controller: viewModel.shelterPhoneNumber,
+                        controller: viewModel.shelterAddressController,
                         decoration: InputDecoration(
                           filled: true,
                           fillColor: AppColors.gray,

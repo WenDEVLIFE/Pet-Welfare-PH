@@ -5,9 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
-import 'package:pet_welfrare_ph/src/model/EstablishmentModel.dart';
+import 'package:pet_welfrare_ph/src/DialogView/ChangeEstablishmentProfile.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
-import 'package:pet_welfrare_ph/src/view_model/UserDataViewModel.dart';
 import 'package:provider/provider.dart';
 
 import '../services/MapTilerKey.dart';
@@ -160,7 +159,12 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                                 ),
                                 child: IconButton(
                                   icon: const Icon(Icons.photo_camera, color: AppColors.white),
-                                  onPressed: () => viewModel.pickImage(),
+                                  onPressed: (){
+                                    showDialog(context: context, builder: (context){
+
+                                      return ChangeEstablishmentProfile(id);
+                                    });
+                                  },
                                 ),
                               ),
                             ),

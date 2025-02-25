@@ -176,7 +176,6 @@ class Shelter_Clinic_ViewState extends State<Shelter_Clinic_View> {
                                           'establishmentPhoneNumber': establishData.establishmentPhoneNumber,
                                           'establishmentEmail': establishData.establishmentEmail,
                                           'establishmentType': establishData.establishmentType,
-
                                         });
 
                                       },
