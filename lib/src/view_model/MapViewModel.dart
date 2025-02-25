@@ -12,8 +12,6 @@ class MapViewModel extends ChangeNotifier {
 
   double lat = 0.0;
   double long = 0.0;
-  String role ='';
-
   final SessionManager _sessionManager = SessionManager();
   final Loadprofilerespository _loadProfileRepository = LoadProfileImpl();
   // Get the permissions
@@ -44,17 +42,5 @@ class MapViewModel extends ChangeNotifier {
   }
 
   // Load the role
-  void loadRole() {
-    _loadProfileRepository.loadProfile().listen((profileData) {
-      if (profileData != null) {
-        role = profileData['Role'] ?? "Role";
-        print('Profile Data: $profileData');
-        notifyListeners();
-      } else {
-        print('Profile Data is null');
-      }
-    });
 
-    notifyListeners();
-  }
 }

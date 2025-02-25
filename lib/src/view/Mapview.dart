@@ -8,6 +8,8 @@ import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../services/MapTilerKey.dart';
 import 'package:provider/provider.dart';
 
+import '../utils/SessionManager.dart';
+
 class MapView extends StatefulWidget {
   const MapView({Key? key}) : super(key: key);
 
@@ -19,17 +21,25 @@ class MapViewState extends State<MapView> {
   late Future<void> _mapFuture;
   late MapViewModel _mapViewModel;
   MaplibreMapController? _mapController;
-  final TextEditingController _searchController = TextEditingController();
+  final sessionManager = SessionManager();
+   late String role;
 
   @override
-  void initState() {
+  void initState()  {
     super.initState();
+    LoadRole();
     _mapViewModel = Provider.of<MapViewModel>(context, listen: false);
     _mapViewModel.requestPermissions().then((_) {
       _mapViewModel.getLocation();
     });
-    _mapViewModel.loadRole();
     _mapFuture = _loadMap();
+  }
+
+  Future<void> LoadRole() async {
+    final user = await sessionManager.getUserInfo();
+    setState(() {
+      role = user?['role'] ?? ''; // Ensure role is not null
+    });
   }
 
   Future<void> _loadMap() async {
@@ -130,7 +140,7 @@ class MapViewState extends State<MapView> {
           ),
         ],
       ),
-      floatingActionButton: _mapViewModel.role.toLowerCase() == 'pet rescuer' || _mapViewModel.role.toLowerCase() == 'pet shelter'
+      floatingActionButton: role.toLowerCase() == 'pet rescuer' || role.toLowerCase() == 'pet shelter'
           ? SpeedDial(
         icon: Icons.menu,
         backgroundColor: AppColors.orange,
