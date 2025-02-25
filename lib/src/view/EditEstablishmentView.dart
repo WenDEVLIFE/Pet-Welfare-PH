@@ -377,6 +377,8 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                             viewModel.mapController = controller;
                             await viewModel.loadMarkerImage(controller); // Load custom marker
                             if (viewModel.selectedLocation != null) {
+
+                              // get the selected location
                               viewModel.addPin(LatLng(viewModel.selectedLocation!.latitude, viewModel.selectedLocation!.longitude));
                             }
                           },

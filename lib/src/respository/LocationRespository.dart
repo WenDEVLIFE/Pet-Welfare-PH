@@ -21,6 +21,8 @@ abstract class Locationrespository {
   void deleteEstablishment(String id, BuildContext context);
 
   void updateProfileImage(String selectedImage, String id, BuildContext context);
+
+  Future<bool> phoneNumberValidation(String phoneNumber);
 }
 
 class LocationrespositoryImpl implements Locationrespository {
@@ -239,6 +241,12 @@ class LocationrespositoryImpl implements Locationrespository {
     finally {
       pd.close();
     }
+  }
+
+  Future<bool> phoneNumberValidation(String phoneNumber) async {
+    String pattern = r'^\+?[0-9]\d{1,11}$';
+    RegExp regExp = new RegExp(pattern);
+    return regExp.hasMatch(phoneNumber);
   }
 
 }

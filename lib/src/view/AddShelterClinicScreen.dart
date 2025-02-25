@@ -13,13 +13,33 @@ import '../utils/AppColors.dart';
 import '../utils/ImageUtils.dart';
 import '../services/MapTilerKey.dart';
 
-class AddShelterClinic extends StatelessWidget {
+class AddShelterClinic extends StatefulWidget {
   const AddShelterClinic({Key? key}) : super(key: key);
+
+  @override
+  _AddShelterClinicState createState() => _AddShelterClinicState();
+}
+
+class _AddShelterClinicState extends State<AddShelterClinic> {
+  late Future<void> _initializeDataFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    final viewModel = Provider.of<ShelterClinicViewModel>(context, listen: false);
+    _initializeDataFuture = _initializeData(viewModel);
+  }
+
+  Future<void> _initializeData(ShelterClinicViewModel viewModel) async {
+    await viewModel.setInitialLocation();
+    viewModel.clearTextFields();
+  }
 
   @override
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
+    final viewModel = Provider.of<ShelterClinicViewModel>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -34,137 +54,120 @@ class AddShelterClinic extends StatelessWidget {
         ),
         backgroundColor: Colors.orange,
       ),
-      body: Consumer<ShelterClinicViewModel>(
-        builder: (context, viewModel, child) {
-          return FutureBuilder(
-            future: viewModel.setInitialLocation(),
-            builder: (context, snapshot) {
-              return SingleChildScrollView(
-                child: Padding(
-                  padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: <Widget>[
-                      SizedBox(height: screenHeight * 0.01),
-                      const Text(
-                        'Shelter/Clinic Name',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
-                          fontFamily: 'SmoochSans',
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(height: screenHeight * 0.01),
-                      TextField(
-                        controller: viewModel.shelterNameController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: AppColors.gray,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                          ),
-                          hintText: 'Enter Shelter/Clinic Name',
-                          hintStyle: const TextStyle(
+      body: FutureBuilder(
+        future: _initializeDataFuture,
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else {
+            return Consumer<ShelterClinicViewModel>(
+              builder: (context, viewModel, child) {
+                return SingleChildScrollView(
+                  child: Padding(
+                    padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.05),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: <Widget>[
+                        SizedBox(height: screenHeight * 0.01),
+                        const Text(
+                          'Shelter/Clinic Name',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w900,
+                            fontFamily: 'SmoochSans',
                             color: Colors.black,
                           ),
                         ),
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontFamily: 'SmoochSans',
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      SizedBox(height: screenHeight * 0.02),
-                      const Text(
-                        'Shelter/Clinic Profile',
-                        style: TextStyle(
-                          fontSize: 20,
-                          fontWeight: FontWeight.w600,
-                          fontFamily: 'SmoochSans',
-                          color: Colors.black,
-                        ),
-                      ),
-                      Center(
-                        child: Stack(
-                          children: [
-                            CircleAvatar(
-                              radius: 100,
-                              backgroundColor: AppColors.orange,
-                              child: CircleAvatar(
-                                radius: 95,
-                                backgroundImage: viewModel.shelterImage.isNotEmpty
-                                    ? FileImage(File(viewModel.shelterImage))
-                                    : const AssetImage(ImageUtils.catPath) as ImageProvider,
-                              ),
+                        SizedBox(height: screenHeight * 0.01),
+                        TextField(
+                          controller: viewModel.shelterNameController,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: AppColors.gray,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: const BorderSide(color: Colors.transparent, width: 2),
                             ),
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  color: Colors.black,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: IconButton(
-                                  icon: const Icon(Icons.photo_camera, color: AppColors.white),
-                                  onPressed: () => context.read<ShelterClinicViewModel>().pickImage(),
-                                ),
-                              ),
+                            hintText: 'Enter Shelter/Clinic Name',
+                            hintStyle: const TextStyle(
+                              color: Colors.black,
                             ),
-                          ],
-                        ),
-                      ),
-                      SizedBox(height: screenHeight * 0.02),
-                      const Text('SELECT YOUR ESTABLISHMENT TYPE',
-                          style: TextStyle(
-                              fontSize: 18,
-                              fontWeight: FontWeight.w700,
-                              fontFamily: 'SmoochSans',
-                              color: Colors.black)),
-                      SizedBox(height: screenHeight * 0.01),
-                      Container(
-                        width: screenWidth * 0.9,
-                        height: screenHeight * 0.08,
-                        decoration: BoxDecoration(
-                          color: AppColors.gray,
-                          border: Border.all(color: AppColors.gray, width: 2),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                        child: Theme(
-                          data: Theme.of(context).copyWith(
-                            canvasColor: Colors.grey[800],
                           ),
-                          child: DropdownButton<String>(
-                            value: viewModel.selectEstablishment,
-                            items: viewModel.establishmentType.map<DropdownMenuItem<String>>((String value) {
-                              return DropdownMenuItem<String>(
-                                value: value,
-                                child: Text(
-                                  value,
-                                  style: const TextStyle(
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontFamily: 'SmoochSans',
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(height: screenHeight * 0.02),
+                        const Text(
+                          'Shelter/Clinic Profile',
+                          style: TextStyle(
+                            fontSize: 20,
+                            fontWeight: FontWeight.w600,
+                            fontFamily: 'SmoochSans',
+                            color: Colors.black,
+                          ),
+                        ),
+                        Center(
+                          child: Stack(
+                            children: [
+                              CircleAvatar(
+                                radius: 100,
+                                backgroundColor: AppColors.orange,
+                                child: CircleAvatar(
+                                  radius: 95,
+                                  backgroundImage: viewModel.shelterImage.isNotEmpty
+                                      ? FileImage(File(viewModel.shelterImage))
+                                      : const AssetImage(ImageUtils.catPath) as ImageProvider,
+                                ),
+                              ),
+                              Positioned(
+                                bottom: 0,
+                                right: 0,
+                                child: Container(
+                                  decoration: const BoxDecoration(
                                     color: Colors.black,
-                                    fontFamily: 'SmoochSans',
-                                    fontWeight: FontWeight.w600,
+                                    shape: BoxShape.circle,
+                                  ),
+                                  child: IconButton(
+                                    icon: const Icon(Icons.photo_camera, color: AppColors.white),
+                                    onPressed: () => context.read<ShelterClinicViewModel>().pickImage(),
                                   ),
                                 ),
-                              );
-                            }).toList(),
-                            onChanged: (String? newValue) {
-                              viewModel.updateEstablishmentType(newValue!);
-                            },
-                            dropdownColor: AppColors.gray,
-                            iconEnabledColor: Colors.grey,
-                            style: const TextStyle(color: Colors.white),
-                            selectedItemBuilder: (BuildContext context) {
-                              return viewModel.establishmentType.map<Widget>((String item) {
-                                return Align(
-                                  alignment: Alignment.centerLeft,
+                              ),
+                            ],
+                          ),
+                        ),
+                        SizedBox(height: screenHeight * 0.02),
+                        const Text('SELECT YOUR ESTABLISHMENT TYPE',
+                            style: TextStyle(
+                                fontSize: 18,
+                                fontWeight: FontWeight.w700,
+                                fontFamily: 'SmoochSans',
+                                color: Colors.black)),
+                        SizedBox(height: screenHeight * 0.01),
+                        Container(
+                          width: screenWidth * 0.9,
+                          height: screenHeight * 0.08,
+                          decoration: BoxDecoration(
+                            color: AppColors.gray,
+                            border: Border.all(color: AppColors.gray, width: 2),
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                          child: Theme(
+                            data: Theme.of(context).copyWith(
+                              canvasColor: Colors.grey[800],
+                            ),
+                            child: DropdownButton<String>(
+                              value: viewModel.selectEstablishment,
+                              items: viewModel.establishmentType.map<DropdownMenuItem<String>>((String value) {
+                                return DropdownMenuItem<String>(
+                                  value: value,
                                   child: Text(
-                                    item,
+                                    value,
                                     style: const TextStyle(
                                       color: Colors.black,
                                       fontFamily: 'SmoochSans',
@@ -172,259 +175,281 @@ class AddShelterClinic extends StatelessWidget {
                                     ),
                                   ),
                                 );
-                              }).toList();
-                            },
-                            isExpanded: true,
-                            alignment: Alignment.bottomLeft,
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: screenHeight * 0.02),
-                      const Text(
-                        'Shelter/Clinic Description',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
-                          fontFamily: 'SmoochSans',
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(height: screenHeight * 0.01),
-                      TextField(
-                        controller: viewModel.shelterDescriptionController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: AppColors.gray,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                          ),
-                          hintText: 'Enter Shelter/Clinic Description',
-                          hintStyle: const TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontFamily: 'SmoochSans',
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      SizedBox(height: screenHeight * 0.02),
-                      const Text(
-                        'Shelter/Clinic Address',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
-                          fontFamily: 'SmoochSans',
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(height: screenHeight * 0.01),
-                      TextField(
-                        controller: viewModel.shelterAddressController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: AppColors.gray,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                          ),
-                          hintText: 'Enter Shelter/Clinic Address',
-                          hintStyle: const TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontFamily: 'SmoochSans',
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      SizedBox(height: screenHeight * 0.02),
-                      const Text(
-                        'Shelter/Clinic Phone Number',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
-                          fontFamily: 'SmoochSans',
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(height: screenHeight * 0.01),
-                      TextField(
-                        controller: viewModel.shelterPhoneNumber,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: AppColors.gray,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                          ),
-                          hintText: 'Enter Shelter/Clinic Phone Number',
-                          hintStyle: const TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontFamily: 'SmoochSans',
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      SizedBox(height: screenHeight * 0.02),
-                      const Text(
-                        'Shelter/Clinic Email',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
-                          fontFamily: 'SmoochSans',
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(height: screenHeight * 0.01),
-                      TextField(
-                        controller: viewModel.shelterEmailController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: AppColors.gray,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                          ),
-                          hintText: 'Enter Shelter/Clinic Email',
-                          hintStyle: const TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontFamily: 'SmoochSans',
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      SizedBox(height: screenHeight * 0.02),
-                      const Text(
-                        'Shelter/Clinic Address',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
-                          fontFamily: 'SmoochSans',
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(height: screenHeight * 0.01),
-                      TextField(
-                        controller: viewModel.shelterAddressController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: AppColors.gray,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                          ),
-                          hintText: 'Enter Shelter/Clinic Address',
-                          hintStyle: const TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontFamily: 'SmoochSans',
-                          fontWeight: FontWeight.w600,
-                        ),
-                      ),
-                      SizedBox(height: screenHeight * 0.02),
-                      const Text(
-                        'Location',
-                        style: TextStyle(
-                          fontSize: 18,
-                          fontWeight: FontWeight.w900,
-                          fontFamily: 'SmoochSans',
-                          color: Colors.black,
-                        ),
-                      ),
-                      SizedBox(height: screenHeight * 0.01),
-                      Container(
-                        height: screenHeight * 0.4,
-                        child:MaplibreMap(
-                          styleString: "${MapTilerKey.styleUrl}?key=${MapTilerKey.apikey}",
-                          myLocationEnabled: true,
-                          initialCameraPosition: CameraPosition(
-                            target: LatLng(viewModel.lat, viewModel.long),
-                            zoom: 15.0,
-                          ),
-                          onMapCreated: (MaplibreMapController controller) async {
-                            viewModel.mapController = controller;
-                            await viewModel.loadMarkerImage(controller); // Load custom marker
-                          },
-
-                          onMapClick: (point, coordinates) async {
-                            if (viewModel.mapController == null) return;
-
-                            // Update location
-                            viewModel.updateLocation(coordinates);
-
-                            // Remove previous markers
-                            await viewModel.mapController!.clearSymbols();
-
-                            // Add new marker
-                            await viewModel.mapController!.addSymbol(SymbolOptions(
-                              geometry: coordinates,
-                              iconImage: "custom_marker", // Use loaded image
-                              iconSize: 1.5,
-                            ));
-
-                            print("Pinned Location: ${coordinates.latitude}, ${coordinates.longitude}");
-                            ToastComponent().showMessage(AppColors.orange,'Pinned Location:${coordinates.latitude}${coordinates.longitude}');
-                          },
-                          gestureRecognizers: {
-                            Factory<OneSequenceGestureRecognizer>(() => EagerGestureRecognizer()),
-                          },
-                        ),
-
-                      ),
-                      SizedBox(height: screenHeight * 0.02),
-                      Center(
-                        child: Container(
-                          width: screenWidth * 0.8,
-                          decoration: BoxDecoration(
-                            color: Colors.transparent,
-                            borderRadius: BorderRadius.circular(5),
-                            border: Border.all(color: Colors.transparent),
-                          ),
-                          child: ElevatedButton(
-                            onPressed: () {
-                              // Add your insert function to database
-                              viewModel.insertActionEvent(context);
-                            },
-                            style: ElevatedButton.styleFrom(
-                              backgroundColor: Colors.black,
+                              }).toList(),
+                              onChanged: (String? newValue) {
+                                viewModel.updateEstablishmentType(newValue!);
+                              },
+                              dropdownColor: AppColors.gray,
+                              iconEnabledColor: Colors.grey,
+                              style: const TextStyle(color: Colors.white),
+                              selectedItemBuilder: (BuildContext context) {
+                                return viewModel.establishmentType.map<Widget>((String item) {
+                                  return Align(
+                                    alignment: Alignment.centerLeft,
+                                    child: Text(
+                                      item,
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'SmoochSans',
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  );
+                                }).toList();
+                              },
+                              isExpanded: true,
+                              alignment: Alignment.bottomLeft,
                             ),
-                            child: const Text(
-                              'Add Shelter/Clinic',
-                              style: TextStyle(
-                                fontSize: 20,
-                                fontFamily: 'SmoochSans',
-                                color: Colors.white,
-                                fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(height: screenHeight * 0.02),
+                        const Text(
+                          'Shelter/Clinic Description',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w900,
+                            fontFamily: 'SmoochSans',
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(height: screenHeight * 0.01),
+                        TextField(
+                          controller: viewModel.shelterDescriptionController,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: AppColors.gray,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                            ),
+                            hintText: 'Enter Shelter/Clinic Description',
+                            hintStyle: const TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontFamily: 'SmoochSans',
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(height: screenHeight * 0.02),
+                        const Text(
+                          'Shelter/Clinic Address',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w900,
+                            fontFamily: 'SmoochSans',
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(height: screenHeight * 0.01),
+                        TextField(
+                          controller: viewModel.shelterAddressController,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: AppColors.gray,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                            ),
+                            hintText: 'Enter Shelter/Clinic Address',
+                            hintStyle: const TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontFamily: 'SmoochSans',
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(height: screenHeight * 0.02),
+                        const Text(
+                          'Shelter/Clinic Phone Number',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w900,
+                            fontFamily: 'SmoochSans',
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(height: screenHeight * 0.01),
+                        TextField(
+                          controller: viewModel.shelterPhoneNumber,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: AppColors.gray,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                            ),
+                            hintText: 'Enter Shelter/Clinic Phone Number',
+                            hintStyle: const TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontFamily: 'SmoochSans',
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(height: screenHeight * 0.02),
+                        const Text(
+                          'Shelter/Clinic Email',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w900,
+                            fontFamily: 'SmoochSans',
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(height: screenHeight * 0.01),
+                        TextField(
+                          controller: viewModel.shelterEmailController,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: AppColors.gray,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                            ),
+                            hintText: 'Enter Shelter/Clinic Email',
+                            hintStyle: const TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontFamily: 'SmoochSans',
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(height: screenHeight * 0.02),
+                        const Text(
+                          'Shelter/Clinic Address',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w900,
+                            fontFamily: 'SmoochSans',
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(height: screenHeight * 0.01),
+                        TextField(
+                          controller: viewModel.shelterAddressController,
+                          decoration: InputDecoration(
+                            filled: true,
+                            fillColor: AppColors.gray,
+                            border: OutlineInputBorder(
+                              borderRadius: BorderRadius.circular(30),
+                              borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                            ),
+                            hintText: 'Enter Shelter/Clinic Address',
+                            hintStyle: const TextStyle(
+                              color: Colors.black,
+                            ),
+                          ),
+                          style: const TextStyle(
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontFamily: 'SmoochSans',
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                        SizedBox(height: screenHeight * 0.02),
+                        const Text(
+                          'Location',
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w900,
+                            fontFamily: 'SmoochSans',
+                            color: Colors.black,
+                          ),
+                        ),
+                        SizedBox(height: screenHeight * 0.01),
+                        Container(
+                          height: screenHeight * 0.4,
+                          child: MaplibreMap(
+                            styleString: "${MapTilerKey.styleUrl}?key=${MapTilerKey.apikey}",
+                            myLocationEnabled: true,
+                            initialCameraPosition: CameraPosition(
+                              target: LatLng(viewModel.lat, viewModel.long),
+                              zoom: 15.0,
+                            ),
+                            onMapCreated: (MaplibreMapController controller) async {
+                              viewModel.mapController = controller;
+                              await viewModel.loadMarkerImage(controller); // Load custom marker
+                              if (viewModel.selectedLocation != null) {
+                                viewModel.addPin(viewModel.selectedLocation!);
+                              }
+                            },
+                            onMapClick: (point, coordinates) async {
+                              if (viewModel.mapController == null) return;
+
+                              // Update location
+                              viewModel.updateLocation(coordinates);
+
+                              // Remove previous markers
+                              await viewModel.mapController!.clearSymbols();
+
+                              // Add new marker
+                              await viewModel.mapController!.addSymbol(SymbolOptions(
+                                geometry: coordinates,
+                                iconImage: "custom_marker", // Use loaded image
+                                iconSize: 1.5,
+                              ));
+
+                              print("Pinned Location: ${coordinates.latitude}, ${coordinates.longitude}");
+                              ToastComponent().showMessage(AppColors.orange, 'Pinned Location: ${coordinates.latitude}, ${coordinates.longitude}');
+                            },
+                            gestureRecognizers: {
+                              Factory<OneSequenceGestureRecognizer>(() => EagerGestureRecognizer()),
+                            },
+                          ),
+                        ),
+                        SizedBox(height: screenHeight * 0.02),
+                        Center(
+                          child: Container(
+                            width: screenWidth * 0.8,
+                            decoration: BoxDecoration(
+                              color: Colors.transparent,
+                              borderRadius: BorderRadius.circular(5),
+                              border: Border.all(color: Colors.transparent),
+                            ),
+                            child: ElevatedButton(
+                              onPressed: () {
+                                // Add your insert function to database
+                                viewModel.insertActionEvent(context);
+                              },
+                              style: ElevatedButton.styleFrom(
+                                backgroundColor: Colors.black,
+                              ),
+                              child: const Text(
+                                'Add Shelter/Clinic',
+                                style: TextStyle(
+                                  fontSize: 20,
+                                  fontFamily: 'SmoochSans',
+                                  color: Colors.white,
+                                  fontWeight: FontWeight.w600,
+                                ),
                               ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(height: screenHeight * 0.02),
-                    ],
+                        SizedBox(height: screenHeight * 0.02),
+                      ],
+                    ),
                   ),
-                ),
-              );
-            },
-          );
+                );
+              },
+            );
+          }
         },
       ),
     );

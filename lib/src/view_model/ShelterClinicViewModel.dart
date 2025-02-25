@@ -6,6 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pet_welfrare_ph/src/model/EstablishmentModel.dart';
+import 'package:pet_welfrare_ph/src/respository/AddUserRespository.dart';
 import 'package:pet_welfrare_ph/src/respository/LocationRespository.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 
@@ -19,6 +20,7 @@ class ShelterClinicViewModel extends ChangeNotifier {
   final ImagePicker imagePicker = ImagePicker();
 
   final Locationrespository _addLocationRespository = LocationrespositoryImpl();
+  final AddUserRepository _addUserRepository = AddUserImpl();
   String shelterImage = '';
   String selectedImage = '';
   bool isNetworkImage = false;
@@ -133,6 +135,8 @@ class ShelterClinicViewModel extends ChangeNotifier {
 
   Future<void> insertActionEvent(BuildContext context) async {
     bool isShelterName = await _addLocationRespository.checkIfNameExists(shelterNameController.text);
+    bool email = await _addUserRepository.checkValidateEmail(shelterEmailController.text);
+    bool phone = await _addLocationRespository.phoneNumberValidation(shelterPhoneNumber.text);
 
     if (shelterNameController.text.isEmpty) {
       ToastComponent().showMessage(Colors.red, 'Please enter the name of the shelter');
@@ -150,7 +154,15 @@ class ShelterClinicViewModel extends ChangeNotifier {
       ToastComponent().showMessage(Colors.red, 'Please select the location of the shelter');
     } else if (isShelterName) {
       ToastComponent().showMessage(Colors.red, 'Shelter name already exists');
-    } else {
+    }
+    else if (!email) {
+      ToastComponent().showMessage(Colors.red, 'Please enter a valid email');
+    }
+
+    else if (!phone) {
+      ToastComponent().showMessage(Colors.red, 'Please enter a valid phone number from 11 digits');
+    }
+    else {
       // Map for locations
       var locationData = {
         'EstablishmentName': shelterNameController.text,
@@ -205,7 +217,11 @@ class ShelterClinicViewModel extends ChangeNotifier {
 
 
   // This is for the update of the establishment
-  void updateEstablishment(Map<String, dynamic> data, BuildContext context) {
+  Future<void> updateEstablishment(Map<String, dynamic> data, BuildContext context) async {
+
+    bool email = await _addUserRepository.checkValidateEmail(shelterEmailController.text);
+    bool phone = await _addLocationRespository.phoneNumberValidation(shelterPhoneNumber.text);
+
     if (shelterNameController.text.isEmpty) {
       ToastComponent().showMessage(Colors.red, 'Please enter the name of the shelter');
     } else if (shelterDescriptionController.text.isEmpty) {
@@ -220,7 +236,15 @@ class ShelterClinicViewModel extends ChangeNotifier {
       ToastComponent().showMessage(Colors.red, 'Please select an image for the shelter');
     } else if (selectedLocation == null) {
       ToastComponent().showMessage(Colors.red, 'Please select the location of the shelter');
-    } else {
+    }
+    else if (!email) {
+      ToastComponent().showMessage(Colors.red, 'Please enter a valid email');
+    }
+
+    else if (!phone) {
+      ToastComponent().showMessage(Colors.red, 'Please enter a valid phone number from 11 digits');
+    }
+    else {
       _addLocationRespository.updateLocation(data, context);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         notifyListeners();
