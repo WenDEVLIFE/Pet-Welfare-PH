@@ -120,6 +120,7 @@ class LocationrespositoryImpl implements Locationrespository {
     ProgressDialog pd = ProgressDialog(context: context);
     pd.show(max: 100, msg: 'Updating Location...');
 
+    // TODO : Fix the File not getting the location
     try {
          // get the id from the list
          var id = data['establishmentId'];
@@ -152,6 +153,8 @@ class LocationrespositoryImpl implements Locationrespository {
     }
   }
 
+  // TODO : FIX THE BUG NOT DETECTING THE FILE OBJECT
+
   // This will delete the establishment
   Future <void> deleteEstablishment(String id, BuildContext context) async{
 
@@ -180,6 +183,10 @@ class LocationrespositoryImpl implements Locationrespository {
     }catch (e){
       throw Exception(e);
     }
+  }
+
+  void UpdateEstablismentProfile(){
+    // TODO : Implement the update establishment profile
   }
 
 

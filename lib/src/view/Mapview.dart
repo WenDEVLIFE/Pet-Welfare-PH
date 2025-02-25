@@ -24,11 +24,12 @@ class MapViewState extends State<MapView> {
   @override
   void initState() {
     super.initState();
-    _mapFuture = _loadMap();
     _mapViewModel = Provider.of<MapViewModel>(context, listen: false);
-    Provider.of<MapViewModel>(context, listen: false).requestPermissions();
-    Provider.of<MapViewModel>(context, listen: false).getLocation();
-    Provider.of<MapViewModel>(context, listen: false).loadRole();
+    _mapViewModel.requestPermissions().then((_) {
+      _mapViewModel.getLocation();
+    });
+    _mapViewModel.loadRole();
+    _mapFuture = _loadMap();
   }
 
   Future<void> _loadMap() async {

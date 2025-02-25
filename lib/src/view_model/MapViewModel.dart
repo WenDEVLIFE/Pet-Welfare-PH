@@ -30,17 +30,17 @@ class MapViewModel extends ChangeNotifier {
 
   // Get the locations
   Future<void> getLocation() async {
-    await Geolocator.checkPermission();
-    await Geolocator.requestPermission();
+    // Set a default location while fetching
+    lat = 14.5995;  // Example: Manila, Philippines
+    long = 120.9842;
+    notifyListeners();
+
     Position? position = await GeoUtils().getLocation();
     if (position != null) {
-
-      long = position.longitude;
       lat = position.latitude;
-
-     // ToastComponent().showMessage(Colors.green, 'Location: $lat, $long');
-      notifyListeners();
+      long = position.longitude;
     }
+    notifyListeners();
   }
 
   // Load the role
@@ -54,5 +54,7 @@ class MapViewModel extends ChangeNotifier {
         print('Profile Data is null');
       }
     });
+
+    notifyListeners();
   }
 }
