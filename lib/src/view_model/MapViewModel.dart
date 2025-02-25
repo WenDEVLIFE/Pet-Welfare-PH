@@ -46,9 +46,9 @@ class MapViewModel extends ChangeNotifier {
       final results = await _openStreetMapService.fetchOpenStreetMapData(query);
 
       if (results.isEmpty) {
-        ToastComponent().showMessage(Colors.red, 'No results found.');
+      print('No results found.');
       } else {
-        ToastComponent().showMessage(Colors.green, 'Results found.');
+        print('Results found: $results');
       }
       searchResults = results;
       notifyListeners();

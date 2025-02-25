@@ -36,6 +36,12 @@ class MapViewState extends State<MapView> {
       _mapViewModel.getLocation();
     });
     _mapFuture = _loadMap();
+
+    _searchController.addListener(() {
+      setState(() {
+        _showDropdown = _searchController.text.isNotEmpty;
+      });
+    });
   }
 
   Future<void> LoadRole() async {
@@ -119,13 +125,18 @@ class MapViewState extends State<MapView> {
                       focusNode: _focusNode,
                       onChanged: (query) {
                         _mapViewModel.searchLocation(query);
-                        setState(() {
-                          _showDropdown = true;
-                        });
                       },
                       decoration: InputDecoration(
                         filled: true,
                         prefixIcon: const Icon(Icons.search, color: Colors.black),
+                        suffixIcon: _searchController.text.isNotEmpty
+                            ? IconButton(
+                          icon: const Icon(Icons.clear, color: Colors.black),
+                          onPressed: () {
+                            _searchController.clear();
+                          },
+                        )
+                            : null,
                         fillColor: Colors.grey[200],
                         border: OutlineInputBorder(
                           borderRadius: BorderRadius.circular(10),
@@ -158,7 +169,10 @@ class MapViewState extends State<MapView> {
                       builder: (context, viewModel, child) {
                         return Container(
                           height: screenHeight * 0.3,
-                          color: Colors.white, // Set the background color
+                          decoration: BoxDecoration(
+                            color: Colors.white, // Set the background color
+                            borderRadius: BorderRadius.circular(10),
+                          ),
                           child: ListView.builder(
                             itemCount: viewModel.searchResults.length,
                             itemBuilder: (context, index) {
