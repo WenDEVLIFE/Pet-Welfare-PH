@@ -24,6 +24,7 @@ class EditEstablishmentScreen extends StatefulWidget {
 class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
 
   late String id;
+
   @override
   void initState() {
     super.initState();
@@ -38,6 +39,7 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
         viewModel.shelterPhoneNumber.text = data['establishmentPhoneNumber'] ?? '';
         viewModel.shelterEmailController.text = data['establishmentEmail'] ?? '';
         viewModel.selectedLocation = LatLng(data['establishmentLat'], data['establishmentLong']);
+        ToastComponent().showMessage(AppColors.orange, 'Pinned Location: ${data['establishmentLat']}, ${data['establishmentLong']}');
         id = data['establishmentId'];
 
         if (data['establishmentPicture']?.startsWith('http')) {
@@ -56,12 +58,13 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
             double long = double.parse(data['establishmentLong'].toString());
             print('Setting initial location to: $lat, $long');
             // Update the location in the view model
-            viewModel.newlat = lat;
-            viewModel.newlong = long;
             viewModel.selectedLocation = LatLng(lat, long);
             // If map controller exists, update the pin
             if (viewModel.mapController != null) {
-              viewModel.addPin(LatLng(lat, long));
+              print('Map controller is available, adding pin...');
+              viewModel.addPin(LatLng(viewModel.selectedLocation!.latitude, viewModel.selectedLocation!.longitude));
+            } else {
+              print('Map controller is not available yet.');
             }
           } catch (e) {
             print('Error parsing location coordinates: $e');
@@ -73,7 +76,6 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
       viewModel.setInitialLocation();
     });
   }
-
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
@@ -367,19 +369,24 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                       SizedBox(height: screenHeight * 0.01),
                       Container(
                         height: screenHeight * 0.4,
-                        child: MaplibreMap(
-                          styleString: "${MapTilerKey.styleUrl}?key=${MapTilerKey.apikey}",
-                          myLocationEnabled: true,
+                        child:MapLibreMap(
+                            styleString: "${MapTilerKey.styleUrl}?key=${MapTilerKey.apikey}",
+                            myLocationEnabled: true,
+                          onMapCreated: (MapLibreMapController controller) async {
+                            final viewModel = Provider.of<ShelterClinicViewModel>(context, listen: false);
+                            viewModel.mapController = controller;
+                            await viewModel.loadMarkerImage(controller); // Load custom marker
+                            if (viewModel.selectedLocation != null) {
+                              viewModel.addPin(LatLng(viewModel.selectedLocation!.latitude, viewModel.selectedLocation!.longitude));
+                            }
+                          },
                           initialCameraPosition: CameraPosition(
+
                             target: LatLng(viewModel.lat, viewModel.long),
                             zoom: 15.0,
                           ),
-                          onMapCreated: (MaplibreMapController controller) async {
-                            viewModel.mapController = controller;
-                            await viewModel.loadMarkerImage(controller); // Load custom marker
-                            viewModel.addPin(LatLng(viewModel.newlong, viewModel.newlat));
-                          },
                           onMapClick: (point, coordinates) async {
+                            final viewModel = Provider.of<ShelterClinicViewModel>(context, listen: false);
                             if (viewModel.mapController == null) return;
 
                             // Update location
@@ -400,7 +407,7 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                           },
                           gestureRecognizers: {
                             Factory<OneSequenceGestureRecognizer>(() => EagerGestureRecognizer()),
-                          },
+                          }
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.02),
@@ -417,8 +424,8 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                               'establishmentEmail': viewModel.shelterEmailController.text,
                               'establishmentPicture': viewModel.shelterImage,
                               'EstablishmentType': viewModel.selectEstablishment,
-                              'lat': viewModel.lat,
-                              'long': viewModel.long,
+                              'lat': viewModel.selectedLocation!.latitude,
+                              'long': viewModel.selectedLocation!.longitude,
                             };
                             viewModel.updateEstablishment(data, context);
                           },

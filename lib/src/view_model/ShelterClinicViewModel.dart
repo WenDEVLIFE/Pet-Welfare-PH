@@ -99,6 +99,8 @@ class ShelterClinicViewModel extends ChangeNotifier {
     if (selectedLocation == newLocation) return; // Avoid redundant updates
     selectedLocation = newLocation;
     addPin(newLocation);
+
+    print('New location: $newLocation');
     notifyListeners();
   }
 
@@ -120,6 +122,7 @@ class ShelterClinicViewModel extends ChangeNotifier {
     ByteData data = await rootBundle.load('assets/icon/location.png');
     Uint8List bytes = data.buffer.asUint8List();
     await controller.addImage("custom_marker", bytes);
+    notifyListeners();
   }
 
   // Update establishment type
@@ -176,13 +179,16 @@ class ShelterClinicViewModel extends ChangeNotifier {
     shelterPhoneNumber.clear();
     shelterEmailController.clear();
     selectEstablishment = 'Shelter';
+    selectedLocation = null;
     notifyListeners();
   }
 
   void setEstablishment(List<EstablishmentModel> establishment) {
-    establismentList = establishment;
-    filteredEstablisment = establishment;
-    notifyListeners();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      establismentList = establishment;
+      filteredEstablisment = establishment;
+      notifyListeners();
+    });
   }
 
   void filterSubscriptions(String query) {
@@ -216,7 +222,9 @@ class ShelterClinicViewModel extends ChangeNotifier {
       ToastComponent().showMessage(Colors.red, 'Please select the location of the shelter');
     } else {
       _addLocationRespository.updateLocation(data, context);
-      notifyListeners();
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        notifyListeners();
+      });
     }
   }
 
