@@ -39,6 +39,7 @@ class ShelterClinicViewModel extends ChangeNotifier {
   List<EstablishmentModel> get establismentListdata => filteredEstablisment;
 
   Stream<List<EstablishmentModel>> get establishmentStream => _addLocationRespository.getData();
+  Stream<List<EstablishmentModel>> get establishmentStream1 => _addLocationRespository.getData1();
 
   String get selectEstablishment1 => selectEstablishment;
 

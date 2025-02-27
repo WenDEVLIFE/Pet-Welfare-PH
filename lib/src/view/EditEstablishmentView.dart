@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
@@ -467,7 +468,7 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
     try {
       if (viewModel.isNetworkImage && viewModel.shelterImage.isNotEmpty) {
         // Load from network
-        imageProvider = NetworkImage(viewModel.shelterImage);
+        imageProvider = CachedNetworkImageProvider(viewModel.shelterImage);
       } else if (viewModel.shelterImage.isNotEmpty && File(viewModel.shelterImage).existsSync()) {
         // Load from file (ensure the file exists)
         imageProvider = FileImage(File(viewModel.shelterImage));

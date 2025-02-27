@@ -81,6 +81,7 @@ class UserViewState extends State<UserView> {
           }),
           _buildDrawerItem(Icons.holiday_village_outlined, 'Clinic & Shelter', () {
             Navigator.pop(context);
+            Navigator.pushNamed(context, AppRoutes.adminViewEstablishment);
           }),
           _buildDrawerItem(Icons.report_gmailerrorred_sharp, 'Reports', () {
             Navigator.pop(context);

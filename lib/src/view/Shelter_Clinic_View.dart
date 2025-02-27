@@ -22,7 +22,6 @@ class Shelter_Clinic_ViewState extends State<Shelter_Clinic_View> {
   void initState() {
     super.initState();
     establishmentViewModel = Provider.of<ShelterClinicViewModel>(context, listen: false);
-    Provider.of<ShelterClinicViewModel>(context, listen: false).setInitialLocation();
 
   }
 

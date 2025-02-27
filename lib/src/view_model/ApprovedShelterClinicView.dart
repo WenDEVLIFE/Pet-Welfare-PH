@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -24,11 +25,7 @@ class ApprovedShelterClinicViewState extends State<ApprovedShelterClinicView> {
   void initState() {
     super.initState();
     establishmentViewModel = Provider.of<ShelterClinicViewModel>(context, listen: false);
-    Provider.of<ShelterClinicViewModel>(context, listen: false).setInitialLocation();
   }
-
-
-
 
   @override
   Widget build(BuildContext context) {
@@ -147,7 +144,7 @@ class ApprovedShelterClinicViewState extends State<ApprovedShelterClinicView> {
           SizedBox(height: screenHeight * 0.005),
           Expanded(
             child: FutureBuilder<List<EstablishmentModel>>(
-              future: establishmentViewModel.establishmentStream.first,
+              future: establishmentViewModel.establishmentStream1.first,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
@@ -178,7 +175,7 @@ class ApprovedShelterClinicViewState extends State<ApprovedShelterClinicView> {
                                         backgroundColor: AppColors.black,
                                         child: CircleAvatar(
                                           radius: 35,
-                                          backgroundImage: NetworkImage(establishData.establishmentPicture),
+                                          backgroundImage: CachedNetworkImageProvider(establishData.establishmentPicture),
                                         ),
                                       ),
                                       SizedBox(width: screenWidth * 0.02),

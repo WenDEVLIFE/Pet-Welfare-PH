@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import '../utils/AppColors.dart';
@@ -34,7 +35,7 @@ class _DrawerHeaderWidgetState extends State<DrawerHeaderWidget> {
                 children: [
                   CircleAvatar(
                     radius: 30,
-                    backgroundImage: NetworkImage(viewModel.profileImage),
+                    backgroundImage: CachedNetworkImageProvider(viewModel.profileImage),
                   ),
                   const SizedBox(height: 8),
                   Row(
