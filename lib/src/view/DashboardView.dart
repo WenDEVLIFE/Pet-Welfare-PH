@@ -44,6 +44,9 @@ class DashboardViewState extends State<DashboardView> {
             Navigator.pushReplacementNamed(context, AppRoutes.subscription);
             // Navigate to Pending User Verification
           }),
+          _buildDrawerItem(Icons.holiday_village_outlined, 'Clinic & Shelter', () {
+            Navigator.pop(context);
+          }),
           _buildDrawerItem(Icons.report_gmailerrorred_sharp, 'Reports', () {
             Navigator.pop(context);
           }),

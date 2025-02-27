@@ -49,6 +49,9 @@ class SubscriptionState extends State<SubscriptionView> {
             Navigator.pop(context);
             Navigator.pushNamed(context, AppRoutes.subscription);
           }),
+          _buildDrawerItem(Icons.holiday_village_outlined, 'Clinic & Shelter', () {
+            Navigator.pop(context);
+          }),
           _buildDrawerItem(Icons.report_gmailerrorred_sharp, 'Reports', () {
             Navigator.pop(context);
           }),
