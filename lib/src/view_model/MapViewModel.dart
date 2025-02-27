@@ -62,26 +62,29 @@ class MapViewModel extends ChangeNotifier {
   }
 
   // Load custom marker image
-  Future<void> loadMarkerImage(MaplibreMapController controller) async {
+  Future<void> loadMarkerImage() async {
     ByteData data = await rootBundle.load('assets/icon/location.png');
     Uint8List bytes = data.buffer.asUint8List();
-    await controller.addImage("custom_marker", bytes);
+    await mapController?.addImage("custom_marker", bytes);
     notifyListeners();
   }
 
   // Add marker to map
-  void addPin(LatLng position) {
+  Future<void> addPin(LatLng position) async {
     if (mapController != null) {
-      mapController!.clearSymbols(); // Remove previous marker
+
+      // add await loadMarkerImage();
+      await loadMarkerImage();
+      print('Adding pin at: ${position.latitude}, ${position.longitude}');
+      mapController!.clearSymbols();
       mapController!.addSymbol(SymbolOptions(
         geometry: position,
-        iconImage: "custom_marker", // Default MapLibre marker
-        iconSize: 2.0, // Adjust size if needed
+        iconImage: "custom_marker",
+        iconSize: 2.0,
       ));
       notifyListeners();
     }
   }
-
   // Remove all markers from map
   void removePins() {
     if (mapController != null) {

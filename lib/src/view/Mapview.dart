@@ -55,8 +55,9 @@ class MapViewState extends State<MapView> {
     await Future.delayed(Duration(seconds: 1));
   }
 
-  void _onMapCreated(MaplibreMapController controller) {
+  void onMapCreated(MaplibreMapController controller) {
     _mapViewModel.mapController = controller;
+    _mapViewModel.loadMarkerImage();
   }
 
   @override
@@ -108,7 +109,7 @@ class MapViewState extends State<MapView> {
                       zoom: 10.0,
                     ),
                     trackCameraPosition: true,
-                    onMapCreated: _onMapCreated,
+                    onMapCreated: onMapCreated,
                   );
                 }
               },
@@ -140,6 +141,7 @@ class MapViewState extends State<MapView> {
                           icon: const Icon(Icons.clear, color: Colors.black),
                           onPressed: () {
                             _searchController.clear();
+                            _mapViewModel.removePins();
                           },
                         )
                             : null,
@@ -190,14 +192,12 @@ class MapViewState extends State<MapView> {
                                     _searchController.text = result['display_name'];
                                     _showDropdown = false;
                                     _focusNode.unfocus();
-                                    locationModal().ShowLocationModal(context, result);
+                                    locationModal().ShowLocationModal(context, result, _mapViewModel);
                                   });
-                                  _mapViewModel.addPin(
-                                    LatLng(
-                                      double.parse(result['lat']),
-                                      double.parse(result['lon']),
-                                    ),
-                                  );
+                                  _mapViewModel.addPin(LatLng(
+                                    double.parse(result['lat']),
+                                    double.parse(result['lon']),
+                                  ));
                                   _mapViewModel.mapController?.animateCamera(
                                     CameraUpdate.newLatLng(
                                       LatLng(
@@ -229,7 +229,7 @@ class MapViewState extends State<MapView> {
             backgroundColor: AppColors.orange,
             label: 'My Location',
             onTap: () {
-              if ( _mapViewModel.mapController != null) {
+              if (_mapViewModel.mapController != null) {
                 _mapViewModel.mapController!.animateCamera(
                   CameraUpdate.newCameraPosition(
                     CameraPosition(
@@ -257,7 +257,7 @@ class MapViewState extends State<MapView> {
           FloatingActionButton(
             backgroundColor: AppColors.orange,
             onPressed: () {
-              if ( _mapViewModel.mapController != null) {
+              if (_mapViewModel.mapController != null) {
                 _mapViewModel.mapController!.animateCamera(
                   CameraUpdate.newCameraPosition(
                     CameraPosition(
