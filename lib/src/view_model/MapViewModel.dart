@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pet_welfrare_ph/src/services/OpenStreetMapService.dart';
 import 'package:pet_welfrare_ph/src/utils/GeoUtils.dart';
@@ -15,7 +17,9 @@ class MapViewModel extends ChangeNotifier {
   final SessionManager _sessionManager = SessionManager();
   final Loadprofilerespository _loadProfileRepository = LoadProfileImpl();
   final OpenStreetMapService _openStreetMapService = OpenStreetMapService();
+  MaplibreMapController? mapController;
   List<Map<String, dynamic>> searchResults = [];
+  List<Map<String, dynamic>> mapLocations = [];
 
   Future<void> requestPermissions() async {
     var status = await Permission.location.request();
@@ -46,7 +50,7 @@ class MapViewModel extends ChangeNotifier {
       final results = await _openStreetMapService.fetchOpenStreetMapData(query);
 
       if (results.isEmpty) {
-      print('No results found.');
+        print('No results found.');
       } else {
         print('Results found: $results');
       }
@@ -54,6 +58,35 @@ class MapViewModel extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       print('Error fetching data: $e');
+    }
+  }
+
+  // Load custom marker image
+  Future<void> loadMarkerImage(MaplibreMapController controller) async {
+    ByteData data = await rootBundle.load('assets/icon/location.png');
+    Uint8List bytes = data.buffer.asUint8List();
+    await controller.addImage("custom_marker", bytes);
+    notifyListeners();
+  }
+
+  // Add marker to map
+  void addPin(LatLng position) {
+    if (mapController != null) {
+      mapController!.clearSymbols(); // Remove previous marker
+      mapController!.addSymbol(SymbolOptions(
+        geometry: position,
+        iconImage: "custom_marker", // Default MapLibre marker
+        iconSize: 2.0, // Adjust size if needed
+      ));
+      notifyListeners();
+    }
+  }
+
+  // Remove all markers from map
+  void removePins() {
+    if (mapController != null) {
+      mapController!.clearSymbols();
+      notifyListeners();
     }
   }
 }

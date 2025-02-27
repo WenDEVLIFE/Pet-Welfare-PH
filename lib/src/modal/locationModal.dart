@@ -6,8 +6,11 @@ class locationModal {
 
   void ShowLocationModal(BuildContext context, Map<String , dynamic> maps) {
     showModalBottomSheet(context: context, builder: (BuildContext context) {
+
+      double screenWidth = MediaQuery.of(context).size.width;
+      double screenHeight = MediaQuery.of(context).size.height;
       return Container(
-        height: 200,
+        height: screenHeight * 0.3,
         decoration: const BoxDecoration(
           color: AppColors.orange,
           borderRadius: BorderRadius.only(
@@ -41,10 +44,10 @@ class locationModal {
                 Navigator.pop(context);
               },
               style: ButtonStyle(
-                backgroundColor: MaterialStateProperty.all<Color>(AppColors.orange),
+                backgroundColor: MaterialStateProperty.all<Color>(AppColors.black),
               ),
               child: const Text('Close', style: TextStyle(
-                color: Colors.black,
+                color: Colors.white,
                 fontSize: 16,
                 fontFamily: 'SmoochSans',
                 fontWeight: FontWeight.w600,

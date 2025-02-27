@@ -5,6 +5,7 @@ import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
 import 'package:pet_welfrare_ph/src/view_model/MapViewModel.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import '../modal/locationModal.dart';
 import '../services/MapTilerKey.dart';
 import 'package:provider/provider.dart';
 
@@ -20,7 +21,6 @@ class MapView extends StatefulWidget {
 class MapViewState extends State<MapView> {
   late Future<void> _mapFuture;
   late MapViewModel _mapViewModel;
-  MaplibreMapController? _mapController;
   final sessionManager = SessionManager();
   late String role;
   bool _showDropdown = false;
@@ -56,7 +56,13 @@ class MapViewState extends State<MapView> {
   }
 
   void _onMapCreated(MaplibreMapController controller) {
-    _mapController = controller;
+    _mapViewModel.mapController = controller;
+  }
+
+  @override
+  void dispose() {
+    _mapViewModel.removePins();
+    super.dispose();
   }
 
   @override
@@ -184,8 +190,15 @@ class MapViewState extends State<MapView> {
                                     _searchController.text = result['display_name'];
                                     _showDropdown = false;
                                     _focusNode.unfocus();
+                                    locationModal().ShowLocationModal(context, result);
                                   });
-                                  _mapController?.animateCamera(
+                                  _mapViewModel.addPin(
+                                    LatLng(
+                                      double.parse(result['lat']),
+                                      double.parse(result['lon']),
+                                    ),
+                                  );
+                                  _mapViewModel.mapController?.animateCamera(
                                     CameraUpdate.newLatLng(
                                       LatLng(
                                         double.parse(result['lat']),
@@ -216,8 +229,8 @@ class MapViewState extends State<MapView> {
             backgroundColor: AppColors.orange,
             label: 'My Location',
             onTap: () {
-              if (_mapController != null) {
-                _mapController!.animateCamera(
+              if ( _mapViewModel.mapController != null) {
+                _mapViewModel.mapController!.animateCamera(
                   CameraUpdate.newCameraPosition(
                     CameraPosition(
                       target: LatLng(_mapViewModel.lat, _mapViewModel.long),
@@ -244,8 +257,8 @@ class MapViewState extends State<MapView> {
           FloatingActionButton(
             backgroundColor: AppColors.orange,
             onPressed: () {
-              if (_mapController != null) {
-                _mapController!.animateCamera(
+              if ( _mapViewModel.mapController != null) {
+                _mapViewModel.mapController!.animateCamera(
                   CameraUpdate.newCameraPosition(
                     CameraPosition(
                       target: LatLng(_mapViewModel.lat, _mapViewModel.long),
