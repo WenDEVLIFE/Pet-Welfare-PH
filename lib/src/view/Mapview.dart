@@ -32,9 +32,7 @@ class MapViewState extends State<MapView> {
     super.initState();
     LoadRole();
     _mapViewModel = Provider.of<MapViewModel>(context, listen: false);
-    _mapViewModel.requestPermissions().then((_) {
-      _mapViewModel.getLocation();
-    });
+    _mapViewModel.requestPermissions();
     _mapFuture = _loadMap();
 
     _searchController.addListener(() {

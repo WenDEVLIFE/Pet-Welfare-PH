@@ -24,7 +24,16 @@ class MapViewModel extends ChangeNotifier {
   Future<void> requestPermissions() async {
     var status = await Permission.location.request();
     if (status.isGranted) {
-      getLocation();
+      lat = 14.5995;  // Example: Manila, Philippines
+      long = 120.9842;
+      notifyListeners();
+
+      Position? position = await GeoUtils().getLocation();
+      if (position != null) {
+        lat = position.latitude;
+        long = position.longitude;
+      }
+
       notifyListeners();
     } else {
       ToastComponent().showMessage(Colors.red, 'Location permissions are denied.');
@@ -32,19 +41,7 @@ class MapViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> getLocation() async {
-    lat = 14.5995;  // Example: Manila, Philippines
-    long = 120.9842;
-    notifyListeners();
-
-    Position? position = await GeoUtils().getLocation();
-    if (position != null) {
-      lat = position.latitude;
-      long = position.longitude;
-    }
-    notifyListeners();
-  }
-
+  // This is the search locatons function
   Future<void> searchLocation(String query) async {
     try {
       final results = await _openStreetMapService.fetchOpenStreetMapData(query);
