@@ -15,6 +15,7 @@ import 'package:pet_welfrare_ph/src/view/UploadIDView.dart';
 import 'package:pet_welfrare_ph/src/view/VetClinicRegisterView.dart';
 import 'package:pet_welfrare_ph/src/view/ViewUserData.dart';
 import 'package:pet_welfrare_ph/src/view/ViewUserDataDialog.dart';
+import 'package:pet_welfrare_ph/src/view_model/ApprovedShelterClinicView.dart';
 
 import '../components/AdminNavigationComponent.dart';
 import '../view/AboutView.dart';
@@ -62,6 +63,7 @@ class AppRoutes {
   static const String addSherterClinic = '/addSherterClinic';
   static const String chatView = '/chatView';
   static const String editEstablishment = '/editEstablishment';
+  static const String adminViewEstablishment = '/adminViewEstablishment';
 
   // Assign routes to the screens
   static Map<String, WidgetBuilder> routes = {
@@ -95,5 +97,6 @@ class AppRoutes {
     addSherterClinic : (context) => const AddShelterClinic(), // This is where the user can add the shelter clinic
     chatView : (context) => ChatView(), // This is where the user can chat
     editEstablishment : (context) => const EditEstablishmentScreen(), // This is where the user can edit the establishment
+    adminViewEstablishment : (context) => const ApprovedShelterClinicView(), // This is where the admin can view the establishment
   };
 }
