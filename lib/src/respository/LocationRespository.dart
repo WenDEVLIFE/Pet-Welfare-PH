@@ -23,6 +23,8 @@ abstract class Locationrespository {
   void updateProfileImage(String selectedImage, String id, BuildContext context);
 
   Future<bool> phoneNumberValidation(String phoneNumber);
+
+  Stream<List<EstablishmentModel>> getData1();
 }
 
 class LocationrespositoryImpl implements Locationrespository {
@@ -114,6 +116,12 @@ class LocationrespositoryImpl implements Locationrespository {
     User user = _auth.currentUser!;
     return _firestore.collection('LocationCollection').
     where('EstablishmentOwnerID', isEqualTo: user.uid).snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => EstablishmentModel.fromDocumentSnapshot(doc)).toList());
+  }
+
+  @override
+  Stream<List<EstablishmentModel>> getData1() {
+    return _firestore.collection('LocationCollection').snapshots()
         .map((snapshot) => snapshot.docs.map((doc) => EstablishmentModel.fromDocumentSnapshot(doc)).toList());
   }
 
