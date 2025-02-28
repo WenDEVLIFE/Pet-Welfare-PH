@@ -220,7 +220,7 @@ class ApprovedShelterClinicViewState extends State<ApprovedShelterClinicView> {
                                     IconButton(
                                       icon: const Icon(Icons.remove_red_eye, color: Colors.white),
                                       onPressed: () {
-                                        Navigator.pushNamed(context, AppRoutes.editEstablishment, arguments: {
+                                        Navigator.pushNamed(context, AppRoutes.viewEstablishment, arguments: {
                                           'establishmentName': establishData.establishmentName,
                                           'establishmentDescription': establishData.establishmentDescription,
                                           'establishmentStatus': establishData.establishmentStatus,
