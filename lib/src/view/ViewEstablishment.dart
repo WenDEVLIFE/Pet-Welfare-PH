@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 import '../services/MapTilerKey.dart';
 import '../utils/ImageUtils.dart';
 import '../utils/ToastComponent.dart';
-import '../view_model/ShelterClinicViewModel.dart';
+import '../view_model/EstablishmentViewModel.dart';
 
 class ViewEstablishmentView extends StatefulWidget {
   const ViewEstablishmentView({Key? key}) : super(key: key);
@@ -29,7 +29,7 @@ class ViewEstablishmentScreenState extends State<ViewEstablishmentView> {
   @override
   void initState() {
     super.initState();
-    final viewModel = Provider.of<ShelterClinicViewModel>(context, listen: false);
+    final viewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final Map<String, dynamic>? data =
       ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
@@ -95,7 +95,7 @@ class ViewEstablishmentScreenState extends State<ViewEstablishmentView> {
         ),
         backgroundColor: AppColors.orange,
       ),
-      body: Consumer<ShelterClinicViewModel>(
+      body: Consumer<EstablishmentViewModel>(
         builder: (context, viewModel, child) {
           return FutureBuilder(
             future: viewModel.setInitialLocation(),
@@ -174,7 +174,7 @@ class ViewEstablishmentScreenState extends State<ViewEstablishmentView> {
                           data: Theme.of(context).copyWith(
                             canvasColor: Colors.grey[800],
                           ),
-                          child:Consumer<ShelterClinicViewModel>(
+                          child:Consumer<EstablishmentViewModel>(
                             builder: (context, viewModel, child) {
                               return DropdownButton<String>(
                                 value: viewModel.selectEstablishment,
@@ -305,7 +305,7 @@ class ViewEstablishmentScreenState extends State<ViewEstablishmentView> {
                             styleString: "${MapTilerKey.styleUrl}?key=${MapTilerKey.apikey}",
                             myLocationEnabled: true,
                             onMapCreated: (MapLibreMapController controller) async {
-                              final viewModel = Provider.of<ShelterClinicViewModel>(context, listen: false);
+                              final viewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
                               viewModel.mapController = controller;
                               await viewModel.loadMarkerImage(controller); // Load custom marker
                               if (viewModel.selectedLocation != null) {
@@ -320,7 +320,7 @@ class ViewEstablishmentScreenState extends State<ViewEstablishmentView> {
                               zoom: 15.0,
                             ),
                             onMapClick: (point, coordinates) async {
-                              final viewModel = Provider.of<ShelterClinicViewModel>(context, listen: false);
+                              final viewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
                               if (viewModel.mapController == null) return;
 
                               // Update location
@@ -348,7 +348,7 @@ class ViewEstablishmentScreenState extends State<ViewEstablishmentView> {
                       Center(
                         child: ElevatedButton(
                           onPressed: () async {
-                            final viewModel = Provider.of<ShelterClinicViewModel>(context, listen: false);
+                            final viewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
                             Map<String, dynamic> data = {
                               'establishmentId': id,
                               'establishmentName': viewModel.shelterNameController.text,
@@ -385,7 +385,7 @@ class ViewEstablishmentScreenState extends State<ViewEstablishmentView> {
                       Center(
                         child: ElevatedButton(
                           onPressed: () async {
-                            final viewModel = Provider.of<ShelterClinicViewModel>(context, listen: false);
+                            final viewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
                             Map<String, dynamic> data = {
                               'establishmentId': id,
                               'establishmentName': viewModel.shelterNameController.text,
@@ -430,7 +430,7 @@ class ViewEstablishmentScreenState extends State<ViewEstablishmentView> {
     );
   }
 
-  Widget buildProfileImage(ShelterClinicViewModel viewModel) {
+  Widget buildProfileImage(EstablishmentViewModel viewModel) {
     ImageProvider? imageProvider;
 
     try {

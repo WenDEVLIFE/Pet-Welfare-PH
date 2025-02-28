@@ -10,7 +10,7 @@ import 'package:pet_welfrare_ph/src/respository/AddUserRespository.dart';
 import 'package:pet_welfrare_ph/src/respository/LocationRespository.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 
-class ShelterClinicViewModel extends ChangeNotifier {
+class EstablishmentViewModel extends ChangeNotifier {
   final TextEditingController shelterNameController = TextEditingController();
   final TextEditingController shelterDescriptionController = TextEditingController();
   final TextEditingController shelterAddressController = TextEditingController();

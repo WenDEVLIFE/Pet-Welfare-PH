@@ -7,7 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../utils/ImageUtils.dart';
 import '../utils/ToastComponent.dart';
-import '../view_model/ShelterClinicViewModel.dart';
+import '../view_model/EstablishmentViewModel.dart';
 
 class ChangeEstablishmentProfile extends StatelessWidget {
   final String id; // Add this line to store the ID
@@ -20,7 +20,7 @@ class ChangeEstablishmentProfile extends StatelessWidget {
     double screenHeight = MediaQuery.of(context).size.height;
 
 
-    return Consumer<ShelterClinicViewModel>(builder: (context, viewModel, child) {
+    return Consumer<EstablishmentViewModel>(builder: (context, viewModel, child) {
       return AlertDialog(
         backgroundColor: AppColors.orange,
         title: const Text(
@@ -48,7 +48,7 @@ class ChangeEstablishmentProfile extends StatelessWidget {
             Center(
               child: Stack(
                 children: [
-                  Consumer<ShelterClinicViewModel>(
+                  Consumer<EstablishmentViewModel>(
                     builder: (context, viewModel, child) {
                       return buildProfileImage(viewModel);
                     },
@@ -64,7 +64,7 @@ class ChangeEstablishmentProfile extends StatelessWidget {
                       child: IconButton(
                         icon: const Icon(Icons.photo_camera, color: AppColors.white,),
                         onPressed: () =>
-                            context.read<ShelterClinicViewModel>().pickImageCamera(),
+                            context.read<EstablishmentViewModel>().pickImageCamera(),
                       ),
                     ),
                   ),
@@ -91,7 +91,7 @@ class ChangeEstablishmentProfile extends StatelessWidget {
           TextButton(
             onPressed: () {
               // Add your update profile logic here
-              Provider.of<ShelterClinicViewModel>(context, listen: false).updateProfileData(context, id);
+              Provider.of<EstablishmentViewModel>(context, listen: false).updateProfileData(context, id);
             },
             child: const Text(
               'Update Profile',
@@ -108,7 +108,7 @@ class ChangeEstablishmentProfile extends StatelessWidget {
     });
   }
 
-  Widget buildProfileImage(ShelterClinicViewModel viewModel) {
+  Widget buildProfileImage(EstablishmentViewModel viewModel) {
     ImageProvider? imageProvider;
 
     try {

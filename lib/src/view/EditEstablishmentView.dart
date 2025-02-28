@@ -13,7 +13,7 @@ import 'package:provider/provider.dart';
 import '../services/MapTilerKey.dart';
 import '../utils/ImageUtils.dart';
 import '../utils/ToastComponent.dart';
-import '../view_model/ShelterClinicViewModel.dart';
+import '../view_model/EstablishmentViewModel.dart';
 
 class EditEstablishmentScreen extends StatefulWidget {
   const EditEstablishmentScreen({Key? key}) : super(key: key);
@@ -29,7 +29,7 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
   @override
   void initState() {
     super.initState();
-    final viewModel = Provider.of<ShelterClinicViewModel>(context, listen: false);
+    final viewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
     WidgetsBinding.instance.addPostFrameCallback((_) {
       final Map<String, dynamic>? data =
       ModalRoute.of(context)!.settings.arguments as Map<String, dynamic>?;
@@ -95,7 +95,7 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
         ),
         backgroundColor: AppColors.orange,
       ),
-      body: Consumer<ShelterClinicViewModel>(
+      body: Consumer<EstablishmentViewModel>(
         builder: (context, viewModel, child) {
           return FutureBuilder(
             future: viewModel.setInitialLocation(),
@@ -195,7 +195,7 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                           data: Theme.of(context).copyWith(
                             canvasColor: Colors.grey[800],
                           ),
-                          child:Consumer<ShelterClinicViewModel>(
+                          child:Consumer<EstablishmentViewModel>(
                             builder: (context, viewModel, child) {
                               return DropdownButton<String>(
                                 value: viewModel.selectEstablishment,
@@ -374,7 +374,7 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                             styleString: "${MapTilerKey.styleUrl}?key=${MapTilerKey.apikey}",
                             myLocationEnabled: true,
                           onMapCreated: (MapLibreMapController controller) async {
-                            final viewModel = Provider.of<ShelterClinicViewModel>(context, listen: false);
+                            final viewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
                             viewModel.mapController = controller;
                             await viewModel.loadMarkerImage(controller); // Load custom marker
                             if (viewModel.selectedLocation != null) {
@@ -389,7 +389,7 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                             zoom: 15.0,
                           ),
                           onMapClick: (point, coordinates) async {
-                            final viewModel = Provider.of<ShelterClinicViewModel>(context, listen: false);
+                            final viewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
                             if (viewModel.mapController == null) return;
 
                             // Update location
@@ -417,7 +417,7 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                       Center(
                         child: ElevatedButton(
                           onPressed: () async {
-                            final viewModel = Provider.of<ShelterClinicViewModel>(context, listen: false);
+                            final viewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
                             Map<String, dynamic> data = {
                               'establishmentId': id,
                               'establishmentName': viewModel.shelterNameController.text,
@@ -462,7 +462,7 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
     );
   }
 
-  Widget buildProfileImage(ShelterClinicViewModel viewModel) {
+  Widget buildProfileImage(EstablishmentViewModel viewModel) {
     ImageProvider? imageProvider;
 
     try {

@@ -6,7 +6,7 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
-import 'package:pet_welfrare_ph/src/view_model/ShelterClinicViewModel.dart';
+import 'package:pet_welfrare_ph/src/view_model/EstablishmentViewModel.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/AppColors.dart';
@@ -26,11 +26,11 @@ class _AddShelterClinicState extends State<AddShelterClinic> {
   @override
   void initState() {
     super.initState();
-    final viewModel = Provider.of<ShelterClinicViewModel>(context, listen: false);
+    final viewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
     _initializeDataFuture = _initializeData(viewModel);
   }
 
-  Future<void> _initializeData(ShelterClinicViewModel viewModel) async {
+  Future<void> _initializeData(EstablishmentViewModel viewModel) async {
     await viewModel.setInitialLocation();
     viewModel.clearTextFields();
   }
@@ -39,7 +39,7 @@ class _AddShelterClinicState extends State<AddShelterClinic> {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
-    final viewModel = Provider.of<ShelterClinicViewModel>(context, listen: false);
+    final viewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -60,7 +60,7 @@ class _AddShelterClinicState extends State<AddShelterClinic> {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return const Center(child: CircularProgressIndicator());
           } else {
-            return Consumer<ShelterClinicViewModel>(
+            return Consumer<EstablishmentViewModel>(
               builder: (context, viewModel, child) {
                 return SingleChildScrollView(
                   child: Padding(
@@ -133,7 +133,7 @@ class _AddShelterClinicState extends State<AddShelterClinic> {
                                   ),
                                   child: IconButton(
                                     icon: const Icon(Icons.photo_camera, color: AppColors.white),
-                                    onPressed: () => context.read<ShelterClinicViewModel>().pickImage(),
+                                    onPressed: () => context.read<EstablishmentViewModel>().pickImage(),
                                   ),
                                 ),
                               ),

@@ -27,7 +27,7 @@ import '../view/ChangePasswordView.dart';
 import '../view/ChatView.dart';
 import '../view/EditEstablishmentView.dart';
 import '../view/OTPView.dart';
-import '../view/Shelter_Clinic_View.dart';
+import '../view/UserEstablismentView.dart';
 import '../view/SplashView.dart';
 import '../view/LoadingView.dart';
 import '../view/SubscriptionView.dart';
@@ -95,7 +95,7 @@ class AppRoutes {
     about : (context) => const AboutView(), // About page
     viewUserInformation : (context) => const ViewUserData(), // This is where the user can view its status
     changeID : (context) => const ChangeIDView(), // This is where the user can change its ID
-    shelterClinic : (context) => const Shelter_Clinic_View(), // This is where the user can view the shelter clinic
+    shelterClinic : (context) => const UserEstablismentView(), // This is where the user can view the shelter clinic
     addSherterClinic : (context) => const AddShelterClinic(), // This is where the user can add the shelter clinic
     chatView : (context) => ChatView(), // This is where the user can chat
     editEstablishment : (context) => const EditEstablishmentScreen(), // This is where the user can edit the establishment

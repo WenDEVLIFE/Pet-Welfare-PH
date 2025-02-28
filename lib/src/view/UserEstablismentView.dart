@@ -1,27 +1,27 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/model/EstablishmentModel.dart';
-import 'package:pet_welfrare_ph/src/view_model/ShelterClinicViewModel.dart';
+import 'package:pet_welfrare_ph/src/view_model/EstablishmentViewModel.dart';
 import 'package:provider/provider.dart';
 
 import 'EditEstablishmentView.dart';
 import '../utils/AppColors.dart';
 import '../utils/Route.dart';
 
-class Shelter_Clinic_View extends StatefulWidget {
-  const Shelter_Clinic_View({Key? key}) : super(key: key);
+class UserEstablismentView extends StatefulWidget {
+  const UserEstablismentView({Key? key}) : super(key: key);
 
   @override
-  Shelter_Clinic_ViewState createState() => Shelter_Clinic_ViewState();
+  EstablismentState createState() => EstablismentState();
 }
 
-class Shelter_Clinic_ViewState extends State<Shelter_Clinic_View> {
-  late ShelterClinicViewModel establishmentViewModel;
+class EstablismentState extends State<UserEstablismentView> {
+  late EstablishmentViewModel establishmentViewModel;
 
   @override
   void initState() {
     super.initState();
-    establishmentViewModel = Provider.of<ShelterClinicViewModel>(context, listen: false);
+    establishmentViewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
 
   }
 
@@ -96,7 +96,7 @@ class Shelter_Clinic_ViewState extends State<Shelter_Clinic_View> {
                 } else {
                   final establishment = snapshot.data!;
                   establishmentViewModel.setEstablishment(establishment);
-                  return Consumer<ShelterClinicViewModel>(
+                  return Consumer<EstablishmentViewModel>(
                     builder: (context, viewModel, child) {
                       return Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0),

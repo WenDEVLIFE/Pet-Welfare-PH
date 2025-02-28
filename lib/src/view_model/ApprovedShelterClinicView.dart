@@ -8,7 +8,7 @@ import '../model/EstablishmentModel.dart';
 import '../utils/AppColors.dart';
 import '../utils/Route.dart';
 import '../utils/SessionManager.dart';
-import 'ShelterClinicViewModel.dart';
+import 'EstablishmentViewModel.dart';
 import 'package:provider/provider.dart';
 
 class ApprovedShelterClinicView extends StatefulWidget{
@@ -19,12 +19,12 @@ class ApprovedShelterClinicView extends StatefulWidget{
 }
 
 class ApprovedShelterClinicViewState extends State<ApprovedShelterClinicView> {
-  late ShelterClinicViewModel establishmentViewModel;
+  late EstablishmentViewModel establishmentViewModel;
 
   @override
   void initState() {
     super.initState();
-    establishmentViewModel = Provider.of<ShelterClinicViewModel>(context, listen: false);
+    establishmentViewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
   }
 
   @override
@@ -155,7 +155,7 @@ class ApprovedShelterClinicViewState extends State<ApprovedShelterClinicView> {
                 } else {
                   final establishment = snapshot.data!;
                   establishmentViewModel.setEstablishment(establishment);
-                  return Consumer<ShelterClinicViewModel>(
+                  return Consumer<EstablishmentViewModel>(
                     builder: (context, viewModel, child) {
                       return Container(
                         padding: const EdgeInsets.symmetric(horizontal: 10.0),
