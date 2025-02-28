@@ -15,7 +15,7 @@ import 'package:pet_welfrare_ph/src/view/UploadIDView.dart';
 import 'package:pet_welfrare_ph/src/view/VetClinicRegisterView.dart';
 import 'package:pet_welfrare_ph/src/view/ViewEstablishment.dart';
 import 'package:pet_welfrare_ph/src/view/ViewUserData.dart';
-import 'package:pet_welfrare_ph/src/view/ViewUserDataDialog.dart';
+import 'package:pet_welfrare_ph/src/view/ViewUserScreen.dart';
 import 'package:pet_welfrare_ph/src/view_model/ApprovedShelterClinicView.dart';
 
 import '../components/AdminNavigationComponent.dart';
@@ -93,7 +93,7 @@ class AppRoutes {
     goToSubscription : (context) => const AddSubscriptionView(),// This is where the user can go to the add subscription page
     viewUserData : (context) => const ViewUserDataPage(), // This is where the admin can view the user data
     about : (context) => const AboutView(), // About page
-    viewUserInformation : (context) => const ViewUserData(), // This is where the user can view its status
+    viewUserInformation : (context) => const ViewUserDataView(), // This is where the user can view its status
     changeID : (context) => const ChangeIDView(), // This is where the user can change its ID
     shelterClinic : (context) => const UserEstablismentView(), // This is where the user can view the shelter clinic
     addSherterClinic : (context) => const AddShelterClinic(), // This is where the user can add the shelter clinic

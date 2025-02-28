@@ -10,7 +10,7 @@ import '../utils/SessionManager.dart';
 import 'package:provider/provider.dart';
 
 import '../DialogView/BanDialogInformation.dart';
-import 'ViewUserDataDialog.dart';
+import 'ViewUserScreen.dart';
 
 class UserView extends StatefulWidget {
   const UserView({Key? key}) : super(key: key);

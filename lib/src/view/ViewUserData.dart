@@ -8,14 +8,14 @@ import 'package:provider/provider.dart';
 import '../DialogView/ChangeProfileDialog.dart';
 import '../view_model/UserDataViewModel.dart';
 
-class ViewUserData extends StatefulWidget {
-  const ViewUserData({Key? key}) : super(key: key);
+class ViewUserDataView extends StatefulWidget {
+  const ViewUserDataView({Key? key}) : super(key: key);
 
   @override
   _ViewUserDataState createState() => _ViewUserDataState();
 }
 
-class _ViewUserDataState extends State<ViewUserData> {
+class _ViewUserDataState extends State<ViewUserDataView> {
   late UserDataViewModel viewModel;
 
   @override
