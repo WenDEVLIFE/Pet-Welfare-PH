@@ -161,51 +161,13 @@ class ViewEstablishmentScreenState extends State<ViewEstablishmentView> {
                               fontFamily: 'SmoochSans',
                               color: Colors.black)),
                       SizedBox(height: screenHeight * 0.01),
-                      Container(
-                        width: screenWidth * 0.9,
-                        height: screenHeight * 0.08,
-                        decoration: BoxDecoration(
-                          color: AppColors.gray,
-                          border: Border.all(color: AppColors.gray, width: 2),
-                          borderRadius: BorderRadius.circular(10),
-                        ),
-                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                        child: Theme(
-                          data: Theme.of(context).copyWith(
-                            canvasColor: Colors.grey[800],
-                          ),
-                          child:Consumer<EstablishmentViewModel>(
-                            builder: (context, viewModel, child) {
-                              return DropdownButton<String>(
-                                value: viewModel.selectEstablishment,
-                                items: viewModel.establishmentType.map<DropdownMenuItem<String>>(
-                                      (String value) {
-                                    return DropdownMenuItem<String>(
-                                      value: value,
-                                      child: Text(
-                                        value,
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontFamily: 'SmoochSans',
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    );
-                                  },
-                                ).toList(),
-                                onChanged: (String? newValue) {
-                                  if (newValue != null) {
-                                    viewModel.updateEstablishmentType(newValue);
-                                  }
-                                },
-                                dropdownColor: AppColors.gray,
-                                iconEnabledColor: Colors.grey,
-                                style: const TextStyle(color: Colors.white),
-                                isExpanded: true,
-                                alignment: Alignment.bottomLeft,
-                              );
-                            },
-                          ),
+                      Text(
+                        viewModel.selectEstablishment,
+                        style: const TextStyle(
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontFamily: 'SmoochSans',
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.02),
@@ -315,33 +277,9 @@ class ViewEstablishmentScreenState extends State<ViewEstablishmentView> {
                               }
                             },
                             initialCameraPosition: CameraPosition(
-
-                              target: LatLng(viewModel.lat, viewModel.long),
+                              target: LatLng(viewModel.selectedLocation!.latitude, viewModel.selectedLocation!.longitude),
                               zoom: 15.0,
                             ),
-                            onMapClick: (point, coordinates) async {
-                              final viewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
-                              if (viewModel.mapController == null) return;
-
-                              // Update location
-                              viewModel.updateLocation(coordinates);
-
-                              // Remove previous markers
-                              await viewModel.mapController!.clearSymbols();
-
-                              // Add new marker
-                              await viewModel.mapController!.addSymbol(SymbolOptions(
-                                geometry: coordinates,
-                                iconImage: "custom_marker", // Use loaded image
-                                iconSize: 1.5,
-                              ));
-
-                              print("Pinned Location: ${coordinates.latitude}, ${coordinates.longitude}");
-                              ToastComponent().showMessage(AppColors.orange, 'Pinned Location: ${coordinates.latitude}, ${coordinates.longitude}');
-                            },
-                            gestureRecognizers: {
-                              Factory<OneSequenceGestureRecognizer>(() => EagerGestureRecognizer()),
-                            }
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.02),
@@ -360,8 +298,9 @@ class ViewEstablishmentScreenState extends State<ViewEstablishmentView> {
                               'EstablishmentType': viewModel.selectEstablishment,
                               'lat': viewModel.selectedLocation!.latitude,
                               'long': viewModel.selectedLocation!.longitude,
+                              'EstablishmentStatus': 'Approved',
                             };
-                            viewModel.updateEstablishment(data, context);
+                            viewModel.verifier(data, context);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.orange,
@@ -397,8 +336,9 @@ class ViewEstablishmentScreenState extends State<ViewEstablishmentView> {
                               'EstablishmentType': viewModel.selectEstablishment,
                               'lat': viewModel.selectedLocation!.latitude,
                               'long': viewModel.selectedLocation!.longitude,
+                              'EstablishmentStatus': 'Denied',
                             };
-                            viewModel.updateEstablishment(data, context);
+                            viewModel.verifier(data, context);
                           },
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.orange,

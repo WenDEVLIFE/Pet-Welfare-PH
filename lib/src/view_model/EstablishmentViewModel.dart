@@ -267,4 +267,18 @@ class EstablishmentViewModel extends ChangeNotifier {
     }
 
   }
+
+  // This will update the status to approve
+ Future <void> verifier(Map<String, dynamic> map, BuildContext context) async{
+    if(map['EstablishmentStatus'] == 'Approved'){
+      map['EstablishmentStatus'] = 'Approved';
+      _addLocationRespository.updateStatus(map, context);
+    }
+    else{
+      map['EstablishmentStatus'] = 'Denied';
+      _addLocationRespository.updateStatus(map, context);
+    }
+
+
+  }
 }

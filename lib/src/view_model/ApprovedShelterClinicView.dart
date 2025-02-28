@@ -25,6 +25,7 @@ class ApprovedShelterClinicViewState extends State<ApprovedShelterClinicView> {
   void initState() {
     super.initState();
     establishmentViewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
+    establishmentViewModel.setInitialLocation();
   }
 
   @override

@@ -22,7 +22,7 @@ class EstablismentState extends State<UserEstablismentView> {
   void initState() {
     super.initState();
     establishmentViewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
-
+    establishmentViewModel.setInitialLocation();
   }
 
   @override

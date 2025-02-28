@@ -25,6 +25,8 @@ abstract class Locationrespository {
   Future<bool> phoneNumberValidation(String phoneNumber);
 
   Stream<List<EstablishmentModel>> getData1();
+
+  Future<void> updateStatus(Map<String, dynamic> map , BuildContext context);
 }
 
 class LocationrespositoryImpl implements Locationrespository {
@@ -108,6 +110,12 @@ class LocationrespositoryImpl implements Locationrespository {
     } catch (e) {
       throw Exception(e);
     }
+  }
+
+  Future<bool> phoneNumberValidation(String phoneNumber) async {
+    String pattern = r'^\+?[0-9]\d{1,11}$';
+    RegExp regExp = new RegExp(pattern);
+    return regExp.hasMatch(phoneNumber);
   }
 
   // This will get the data from the database
@@ -251,10 +259,49 @@ class LocationrespositoryImpl implements Locationrespository {
     }
   }
 
-  Future<bool> phoneNumberValidation(String phoneNumber) async {
-    String pattern = r'^\+?[0-9]\d{1,11}$';
-    RegExp regExp = new RegExp(pattern);
-    return regExp.hasMatch(phoneNumber);
+  // Update the status
+  @override
+  Future<void> updateStatus(Map<String, dynamic> map , BuildContext context)async {
+    ProgressDialog pd = ProgressDialog(context: context);
+    pd.show(max: 100, msg: 'Updating Status...');
+    try {
+       QuerySnapshot userDoc = await _firestore.collection('LocationCollection').where('EstablishmentName', isEqualTo: map['EstablishmentName']).get();
+       if (userDoc.docs.isNotEmpty) {
+         var id = userDoc.docs[0].id;
+         var status = userDoc.docs[0].get('EstablishmentStatus');
+         var status1 = map ['EstablishmentStatus'];
+
+         if (status1=="Denied"){
+            if (status == 'Pending') {
+              await _firestore.collection('LocationCollection').doc(id).update({
+                'EstablishmentStatus': 'Denied',
+                "Denied By": "System Administrator",
+              });
+              ToastComponent().showMessage(Colors.green, 'Establishment denied successfully');
+            } else {
+              ToastComponent().showMessage(Colors.red, 'Establishment already denied');
+            }
+         }
+         else if (status1=="Approved") {
+           if (status == 'Pending') {
+             await _firestore.collection('LocationCollection').doc(id).update({
+               'EstablishmentStatus': 'Approved',
+               "Approved By": "System Administrator",
+             });
+             ToastComponent().showMessage(Colors.green, 'Establishment approved successfully');
+           } else {
+             ToastComponent().showMessage(Colors.red, 'Establishment already approved');
+           }
+         }
+       }
+    } catch (e) {
+      throw Exception(e);
+    }
+    finally {
+      pd.close();
+    }
+
   }
+
 
 }
