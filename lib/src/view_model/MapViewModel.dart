@@ -1,23 +1,26 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pet_welfrare_ph/src/respository/GenerateEstablismentRepository.dart';
 import 'package:pet_welfrare_ph/src/services/OpenStreetMapService.dart';
 import 'package:pet_welfrare_ph/src/utils/GeoUtils.dart';
-import 'package:pet_welfrare_ph/src/utils/SessionManager.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
-
-import '../respository/LoadProfileRespository.dart';
+import '../model/EstablishmentModel.dart';
 
 class MapViewModel extends ChangeNotifier {
   double lat = 0.0;
   double long = 0.0;
   final OpenStreetMapService _openStreetMapService = OpenStreetMapService();
+  final GenerateEstablismentRepository _generateEstablismentRepository = GenerateEstablismentRepositoryImpl();
   MaplibreMapController? mapController;
   List<Map<String, dynamic>> searchResults = [];
   List<Map<String, dynamic>> mapLocations = [];
+  List<EstablishmentModel> establishments = [];
+  bool _isLoadingMarkers = false;
 
   Future<void> requestPermissions() async {
     var status = await Permission.location.request();
@@ -39,7 +42,6 @@ class MapViewModel extends ChangeNotifier {
     }
   }
 
-  // This is the search locatons function
   Future<void> searchLocation(String query) async {
     try {
       final results = await _openStreetMapService.fetchOpenStreetMapData(query);
@@ -56,7 +58,6 @@ class MapViewModel extends ChangeNotifier {
     }
   }
 
-  // Load custom marker image
   Future<void> loadMarkerImage() async {
     ByteData data = await rootBundle.load('assets/icon/location.png');
     Uint8List bytes = data.buffer.asUint8List();
@@ -67,22 +68,19 @@ class MapViewModel extends ChangeNotifier {
   Future<void> loadMarkerClinic() async {
     ByteData data = await rootBundle.load('assets/images/hospital.png');
     Uint8List bytes = data.buffer.asUint8List();
-    await mapController?.addImage("custom_marker", bytes);
+    await mapController?.addImage("custom_marker_clinic", bytes);
     notifyListeners();
   }
 
   Future<void> loadMarkerShelter() async {
     ByteData data = await rootBundle.load('assets/images/shelter.png');
     Uint8List bytes = data.buffer.asUint8List();
-    await mapController?.addImage("custom_marker", bytes);
+    await mapController?.addImage("custom_marker_shelter", bytes);
     notifyListeners();
   }
 
-  // Add marker to map
   Future<void> addPin(LatLng position) async {
     if (mapController != null) {
-
-      // add await loadMarkerImage();
       await loadMarkerImage();
       print('Adding pin at: ${position.latitude}, ${position.longitude}');
       mapController!.clearSymbols();
@@ -95,25 +93,42 @@ class MapViewModel extends ChangeNotifier {
     }
   }
 
-  // Add marker to map for clinic and shelter
-  Future<void> addPinForEstablisment(LatLng position, Map<String, dynamic> establishment) async {
-    if (mapController != null) {
+  Future<void> fetchEstablishments() async {
+    _generateEstablismentRepository.getEstablisment().listen((data) async {
+      establishments = await compute(parseEstablishments, data.map((e) => e.toJson()).toList());
+      addEstablishmentPins();
+    });
+  }
 
-      // add await loadMarkerImage();
-      await loadMarkerImage();
-      print('Adding pin at: ${position.latitude}, ${position.longitude}');
-      mapController!.clearSymbols();
-      mapController!.addSymbol(SymbolOptions(
-        geometry: position,
-        iconImage: "custom_marker",
-        iconSize: 2.0,
-      ));
+  static List<EstablishmentModel> parseEstablishments(List<Map<String, dynamic>> data) {
+    return data.map((e) => EstablishmentModel.fromJson(e)).toList();
+  }
+
+  Future<void> addEstablishmentPins() async {
+    if (mapController != null && !_isLoadingMarkers) {
+      _isLoadingMarkers = true;
+      for (var establishment in establishments) {
+        if (establishment.establishmentType.toLowerCase() == 'clinic') {
+          await loadMarkerClinic();
+          mapController!.addSymbol(SymbolOptions(
+            geometry: LatLng(establishment.establishmentLat, establishment.establishmentLong),
+            iconImage: "custom_marker_clinic",
+            iconSize: 1.0,
+          ));
+        } else if (establishment.establishmentType.toLowerCase() == 'shelter') {
+          await loadMarkerShelter();
+          mapController!.addSymbol(SymbolOptions(
+            geometry: LatLng(establishment.establishmentLat, establishment.establishmentLong),
+            iconImage: "custom_marker_shelter",
+            iconSize: 1.0,
+          ));
+        }
+      }
+      _isLoadingMarkers = false;
       notifyListeners();
     }
   }
 
-
-  // Remove all markers from map
   void removePins() {
     if (mapController != null) {
       mapController!.clearSymbols();

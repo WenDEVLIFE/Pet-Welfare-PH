@@ -48,4 +48,40 @@ class EstablishmentModel {
       establishmentStatus: doc['EstablishmentStatus'],
     );
   }
+
+  Map<String, dynamic> toJson() {
+    return {
+      'id': id,
+      'establishmentName': establishmentName,
+      'establishmentDescription': establishmentDescription,
+      'establishmentAddress': establishmentAddress,
+      'establishmentPhoneNumber': establishmentPhoneNumber,
+      'establishmentEmail': establishmentEmail,
+      'establishmentPicture': establishmentPicture,
+      'establishmentLat': establishmentLat,
+      'establishmentLong': establishmentLong,
+      'establishmentType': establishmentType,
+      'establishmentOwnerID': establishmentOwnerID,
+      'establishmentOwnerName': establishmentOwnerName,
+      'establishmentStatus': establishmentStatus,
+    };
+  }
+
+  factory EstablishmentModel.fromJson(Map<String, dynamic> json) {
+    return EstablishmentModel(
+      id: json['id'],
+      establishmentName: json['establishmentName'],
+      establishmentDescription: json['establishmentDescription'],
+      establishmentAddress: json['establishmentAddress'],
+      establishmentPhoneNumber: json['establishmentPhoneNumber'],
+      establishmentEmail: json['establishmentEmail'],
+      establishmentPicture: json['establishmentPicture'],
+      establishmentLat: json['establishmentLat'],
+      establishmentLong: json['establishmentLong'],
+      establishmentType: json['establishmentType'],
+      establishmentOwnerID: json['establishmentOwnerID'],
+      establishmentOwnerName: json['establishmentOwnerName'],
+      establishmentStatus: json['establishmentStatus'],
+    );
+  }
 }

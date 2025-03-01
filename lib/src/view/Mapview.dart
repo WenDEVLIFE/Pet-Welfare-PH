@@ -55,7 +55,10 @@ class MapViewState extends State<MapView> {
 
   void onMapCreated(MaplibreMapController controller) {
     _mapViewModel.mapController = controller;
-    _mapViewModel.loadMarkerImage();
+    controller.addListener(() async {
+      await _mapViewModel.fetchEstablishments();
+        await _mapViewModel.addEstablishmentPins();
+    });
   }
 
   @override
