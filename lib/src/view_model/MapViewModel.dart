@@ -15,7 +15,7 @@ class MapViewModel extends ChangeNotifier {
   double lat = 0.0;
   double long = 0.0;
   final OpenStreetMapService _openStreetMapService = OpenStreetMapService();
-  final GenerateEstablismentRepository _generateEstablismentRepository = GenerateEstablismentRepositoryImpl();
+  final GenerateEstablishmentRepository _generateEstablismentRepository = GenerateEstablishmentRepositoryImpl();
   MaplibreMapController? mapController;
   List<Map<String, dynamic>> searchResults = [];
   List<Map<String, dynamic>> mapLocations = [];
@@ -93,7 +93,7 @@ class MapViewModel extends ChangeNotifier {
 
   Future<void> fetchEstablishments() async {
     print("Fetching establishments...");
-    _generateEstablismentRepository.getEstablisment().asyncMap((data) async {
+    _generateEstablismentRepository.getEstablishment().asyncMap((data) async {
       final jsonData = data.map((e) => e.toJson()).toList();
       establishments = await compute(parseEstablishments, jsonData);
       await addEstablishmentPins();
