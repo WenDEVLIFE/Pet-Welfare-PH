@@ -14,8 +14,6 @@ import '../respository/LoadProfileRespository.dart';
 class MapViewModel extends ChangeNotifier {
   double lat = 0.0;
   double long = 0.0;
-  final SessionManager _sessionManager = SessionManager();
-  final Loadprofilerespository _loadProfileRepository = LoadProfileImpl();
   final OpenStreetMapService _openStreetMapService = OpenStreetMapService();
   MaplibreMapController? mapController;
   List<Map<String, dynamic>> searchResults = [];
