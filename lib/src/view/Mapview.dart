@@ -56,8 +56,7 @@ class MapViewState extends State<MapView> {
   void onMapCreated(MaplibreMapController controller) async {
     _mapViewModel.mapController = controller;
     await _mapViewModel.fetchEstablishments().then((_) async {
-      await _mapViewModel.preloadMarkerImages();
-      await _mapViewModel.addEstablishmentPins();
+      _mapViewModel.initializeLoads();
     });
   }
 
@@ -195,6 +194,7 @@ class MapViewState extends State<MapView> {
                                     _showDropdown = false;
                                     _focusNode.unfocus();
                                     locationModal().ShowLocationModal(context, result, _mapViewModel);
+                                    _mapViewModel.initializeLoads();
                                   });
                                   _mapViewModel.addPin(LatLng(
                                     double.parse(result['lat']),

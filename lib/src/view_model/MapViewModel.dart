@@ -101,6 +101,13 @@ class MapViewModel extends ChangeNotifier {
     }).listen((_) {});
   }
 
+  @override
+  Future<void> initializeLoads() async {
+    await preloadMarkerImages();
+    await addEstablishmentPins();
+  }
+
+
   static List<EstablishmentModel> parseEstablishments(List<Map<String, dynamic>> data) {
     return data.map((e) => EstablishmentModel.fromJson(e)).toList();
   }
@@ -135,6 +142,7 @@ class MapViewModel extends ChangeNotifier {
   void removePins() {
     if (mapController != null) {
       mapController!.clearSymbols();
+      initializeLoads();
       notifyListeners();
     }
   }
