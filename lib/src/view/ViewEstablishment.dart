@@ -25,6 +25,7 @@ class ViewEstablishmentView extends StatefulWidget {
 class ViewEstablishmentScreenState extends State<ViewEstablishmentView> {
 
   late String id;
+  late String establismentStat;
 
   @override
   void initState() {
@@ -40,6 +41,7 @@ class ViewEstablishmentScreenState extends State<ViewEstablishmentView> {
         viewModel.shelterPhoneNumber.text = data['establishmentPhoneNumber'] ?? '';
         viewModel.shelterEmailController.text = data['establishmentEmail'] ?? '';
         viewModel.selectedLocation = LatLng(data['establishmentLat'], data['establishmentLong']);
+        establismentStat = data['establishmentStatus'];
         ToastComponent().showMessage(AppColors.orange, 'Pinned Location: ${data['establishmentLat']}, ${data['establishmentLong']}');
         id = data['establishmentId'];
 
@@ -283,81 +285,83 @@ class ViewEstablishmentScreenState extends State<ViewEstablishmentView> {
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.02),
-                      Center(
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            final viewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
-                            Map<String, dynamic> data = {
-                              'establishmentId': id,
-                              'establishmentName': viewModel.shelterNameController.text,
-                              'establishmentDescription': viewModel.shelterDescriptionController.text,
-                              'establishmentAddress': viewModel.shelterAddressController.text,
-                              'establishmentPhoneNumber': viewModel.shelterPhoneNumber.text,
-                              'establishmentEmail': viewModel.shelterEmailController.text,
-                              'establishmentPicture': viewModel.shelterImage,
-                              'EstablishmentType': viewModel.selectEstablishment,
-                              'lat': viewModel.selectedLocation!.latitude,
-                              'long': viewModel.selectedLocation!.longitude,
-                              'EstablishmentStatus': 'Approved',
-                            };
-                            viewModel.verifier(data, context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.orange,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
+                      if (establismentStat =='Pending') ...[
+                        Center(
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              final viewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
+                              Map<String, dynamic> data = {
+                                'establishmentId': id,
+                                'establishmentName': viewModel.shelterNameController.text,
+                                'establishmentDescription': viewModel.shelterDescriptionController.text,
+                                'establishmentAddress': viewModel.shelterAddressController.text,
+                                'establishmentPhoneNumber': viewModel.shelterPhoneNumber.text,
+                                'establishmentEmail': viewModel.shelterEmailController.text,
+                                'establishmentPicture': viewModel.shelterImage,
+                                'EstablishmentType': viewModel.selectEstablishment,
+                                'lat': viewModel.selectedLocation!.latitude,
+                                'long': viewModel.selectedLocation!.longitude,
+                                'EstablishmentStatus': 'Approved',
+                              };
+                              viewModel.verifier(data, context);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: AppColors.orange,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(30),
+                              ),
+                              padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
                             ),
-                            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-                          ),
-                          child: const Text(
-                            'Approve Establishment',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'SmoochSans',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
-                            ),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: screenHeight * 0.02),
-                      Center(
-                        child: ElevatedButton(
-                          onPressed: () async {
-                            final viewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
-                            Map<String, dynamic> data = {
-                              'establishmentId': id,
-                              'establishmentName': viewModel.shelterNameController.text,
-                              'establishmentDescription': viewModel.shelterDescriptionController.text,
-                              'establishmentAddress': viewModel.shelterAddressController.text,
-                              'establishmentPhoneNumber': viewModel.shelterPhoneNumber.text,
-                              'establishmentEmail': viewModel.shelterEmailController.text,
-                              'establishmentPicture': viewModel.shelterImage,
-                              'EstablishmentType': viewModel.selectEstablishment,
-                              'lat': viewModel.selectedLocation!.latitude,
-                              'long': viewModel.selectedLocation!.longitude,
-                              'EstablishmentStatus': 'Denied',
-                            };
-                            viewModel.verifier(data, context);
-                          },
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.orange,
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(30),
-                            ),
-                            padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-                          ),
-                          child: const Text(
-                            'Denied Establishment',
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontFamily: 'SmoochSans',
-                              fontWeight: FontWeight.w600,
-                              fontSize: 18,
+                            child: const Text(
+                              'Approve Establishment',
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontFamily: 'SmoochSans',
+                                fontWeight: FontWeight.w600,
+                                fontSize: 18,
+                              ),
                             ),
                           ),
                         ),
+                        SizedBox(height: screenHeight * 0.02),
+                Center(
+                  child: ElevatedButton(
+                    onPressed: () async {
+                      final viewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
+                      Map<String, dynamic> data = {
+                        'establishmentId': id,
+                        'establishmentName': viewModel.shelterNameController.text,
+                        'establishmentDescription': viewModel.shelterDescriptionController.text,
+                        'establishmentAddress': viewModel.shelterAddressController.text,
+                        'establishmentPhoneNumber': viewModel.shelterPhoneNumber.text,
+                        'establishmentEmail': viewModel.shelterEmailController.text,
+                        'establishmentPicture': viewModel.shelterImage,
+                        'EstablishmentType': viewModel.selectEstablishment,
+                        'lat': viewModel.selectedLocation!.latitude,
+                        'long': viewModel.selectedLocation!.longitude,
+                        'EstablishmentStatus': 'Denied',
+                      };
+                      viewModel.verifier(data, context);
+                    },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: AppColors.orange,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(30),
                       ),
+                      padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
+                    ),
+                    child: const Text(
+                      'Denied Establishment',
+                      style: TextStyle(
+                        color: Colors.white,
+                        fontFamily: 'SmoochSans',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 18,
+                      ),
+                    ),
+                  ),
+                ),
+                      ],
                       SizedBox(height: screenHeight * 0.02),
                     ],
                   ),
