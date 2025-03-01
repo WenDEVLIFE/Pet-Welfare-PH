@@ -66,6 +66,20 @@ class MapViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> loadMarkerClinic() async {
+    ByteData data = await rootBundle.load('assets/images/hospital.png');
+    Uint8List bytes = data.buffer.asUint8List();
+    await mapController?.addImage("custom_marker", bytes);
+    notifyListeners();
+  }
+
+  Future<void> loadMarkerShelter() async {
+    ByteData data = await rootBundle.load('assets/images/shelter.png');
+    Uint8List bytes = data.buffer.asUint8List();
+    await mapController?.addImage("custom_marker", bytes);
+    notifyListeners();
+  }
+
   // Add marker to map
   Future<void> addPin(LatLng position) async {
     if (mapController != null) {
@@ -82,6 +96,25 @@ class MapViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  // Add marker to map for clinic and shelter
+  Future<void> addPinForEstablisment(LatLng position, Map<String, dynamic> establishment) async {
+    if (mapController != null) {
+
+      // add await loadMarkerImage();
+      await loadMarkerImage();
+      print('Adding pin at: ${position.latitude}, ${position.longitude}');
+      mapController!.clearSymbols();
+      mapController!.addSymbol(SymbolOptions(
+        geometry: position,
+        iconImage: "custom_marker",
+        iconSize: 2.0,
+      ));
+      notifyListeners();
+    }
+  }
+
+
   // Remove all markers from map
   void removePins() {
     if (mapController != null) {
