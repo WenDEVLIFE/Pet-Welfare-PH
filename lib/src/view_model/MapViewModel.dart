@@ -65,18 +65,16 @@ class MapViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> loadMarkerClinic() async {
-    ByteData data = await rootBundle.load('assets/images/hospital.png');
-    Uint8List bytes = data.buffer.asUint8List();
-    await mapController?.addImage("custom_marker_clinic", bytes);
-    notifyListeners();
-  }
+  Future<void> preloadMarkerImages() async {
+    if (mapController == null) return;
 
-  Future<void> loadMarkerShelter() async {
-    ByteData data = await rootBundle.load('assets/images/shelter.png');
-    Uint8List bytes = data.buffer.asUint8List();
-    await mapController?.addImage("custom_marker_shelter", bytes);
-    notifyListeners();
+    ByteData clinicData = await rootBundle.load('assets/images/hospital.png');
+    Uint8List clinicBytes = clinicData.buffer.asUint8List();
+    await mapController!.addImage("custom_marker_clinic", clinicBytes);
+
+    ByteData shelterData = await rootBundle.load('assets/images/shelter.png');
+    Uint8List shelterBytes = shelterData.buffer.asUint8List();
+    await mapController!.addImage("custom_marker_shelter", shelterBytes);
   }
 
   Future<void> addPin(LatLng position) async {
@@ -94,10 +92,13 @@ class MapViewModel extends ChangeNotifier {
   }
 
   Future<void> fetchEstablishments() async {
-    _generateEstablismentRepository.getEstablisment().listen((data) async {
-      establishments = await compute(parseEstablishments, data.map((e) => e.toJson()).toList());
-      addEstablishmentPins();
-    });
+    print("Fetching establishments...");
+    _generateEstablismentRepository.getEstablisment().asyncMap((data) async {
+      final jsonData = data.map((e) => e.toJson()).toList();
+      establishments = await compute(parseEstablishments, jsonData);
+      await addEstablishmentPins();
+      print("Establishment pins added.");
+    }).listen((_) {});
   }
 
   static List<EstablishmentModel> parseEstablishments(List<Map<String, dynamic>> data) {
@@ -105,29 +106,31 @@ class MapViewModel extends ChangeNotifier {
   }
 
   Future<void> addEstablishmentPins() async {
-    if (mapController != null && !_isLoadingMarkers) {
-      _isLoadingMarkers = true;
-      for (var establishment in establishments) {
-        if (establishment.establishmentType.toLowerCase() == 'clinic') {
-          await loadMarkerClinic();
-          mapController!.addSymbol(SymbolOptions(
-            geometry: LatLng(establishment.establishmentLat, establishment.establishmentLong),
-            iconImage: "custom_marker_clinic",
-            iconSize: 1.0,
-          ));
-        } else if (establishment.establishmentType.toLowerCase() == 'shelter') {
-          await loadMarkerShelter();
-          mapController!.addSymbol(SymbolOptions(
-            geometry: LatLng(establishment.establishmentLat, establishment.establishmentLong),
-            iconImage: "custom_marker_shelter",
-            iconSize: 1.0,
-          ));
-        }
-      }
-      _isLoadingMarkers = false;
-      notifyListeners();
+    if (mapController == null || _isLoadingMarkers || establishments.isEmpty) return;
+
+    _isLoadingMarkers = true;
+    List<SymbolOptions> symbols = [];
+    for (var establishment in establishments) {
+      String markerType = establishment.establishmentType.toLowerCase() == 'clinic'
+          ? "custom_marker_clinic"
+          : "custom_marker_shelter";
+
+
+      preloadMarkerImages();
+      symbols.add(SymbolOptions(
+        geometry: LatLng(establishment.establishmentLat, establishment.establishmentLong),
+        iconImage: markerType,
+        iconSize: 1.0,
+      ));
     }
+
+    if (symbols.isNotEmpty) {
+      await mapController!.addSymbols(symbols);
+    }
+
+    _isLoadingMarkers = false;
   }
+
 
   void removePins() {
     if (mapController != null) {

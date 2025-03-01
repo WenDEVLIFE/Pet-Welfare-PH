@@ -53,13 +53,14 @@ class MapViewState extends State<MapView> {
     await Future.delayed(Duration(seconds: 1));
   }
 
-  void onMapCreated(MaplibreMapController controller) {
+  void onMapCreated(MaplibreMapController controller) async {
     _mapViewModel.mapController = controller;
-    controller.addListener(() async {
-      await _mapViewModel.fetchEstablishments();
-        await _mapViewModel.addEstablishmentPins();
+    await _mapViewModel.fetchEstablishments().then((_) async {
+      await _mapViewModel.preloadMarkerImages();
+      await _mapViewModel.addEstablishmentPins();
     });
   }
+
 
   @override
   void dispose() {
