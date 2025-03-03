@@ -160,6 +160,10 @@ class MapViewModel extends ChangeNotifier {
             'establishmentEmail': establishment.establishmentEmail,
             'establishmentLat': establishment.establishmentLat,
             'establishmentLong': establishment.establishmentLong,
+            'establishmentId': establishment.id,
+            'establishmentImage': establishment.establishmentPicture,
+            'establishmentDescription': establishment.establishmentDescription,
+            'establishmentOwnerID': establishment.establishmentOwnerID,
           };
           EstablismentModal().ShowEstablismentModal(context, establismentInfo, this);
         }
