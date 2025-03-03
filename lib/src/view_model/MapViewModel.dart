@@ -117,17 +117,20 @@ class MapViewModel extends ChangeNotifier {
 
     _isLoadingMarkers = true;
     List<SymbolOptions> symbols = [];
+
     for (var establishment in establishments) {
       String markerType = establishment.establishmentType.toLowerCase() == 'clinic'
           ? "custom_marker_clinic"
           : "custom_marker_shelter";
 
-
       preloadMarkerImages();
+
       symbols.add(SymbolOptions(
         geometry: LatLng(establishment.establishmentLat, establishment.establishmentLong),
         iconImage: markerType,
         iconSize: 1.0,
+        textField: establishment.establishmentName,  // Adding a label for identification
+        textOffset: const Offset(0, 1.5),  // Adjust the offset to place the text below the icon
       ));
     }
 
@@ -136,8 +139,18 @@ class MapViewModel extends ChangeNotifier {
     }
 
     _isLoadingMarkers = false;
-  }
 
+    // Set up the click listener
+    mapController!.onSymbolTapped.add((Symbol symbol) {
+      String name = symbol.options.textField ?? 'Unknown';
+
+        for (var establishment in establishments) {
+          if (establishment.establishmentName == name) {
+            ToastComponent().showMessage(Colors.green, 'Establishment: ${establishment.establishmentName}');
+          }
+        }
+    });
+  }
 
   void removePins() {
     if (mapController != null) {
@@ -146,4 +159,5 @@ class MapViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
 }
