@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
@@ -28,6 +29,38 @@ class EstablismentModal {
                 controller: scrollController,
                 child: Column(
                   children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Container(
+                          margin: const EdgeInsets.only(top: 10),
+                          width: screenWidth * 0.2,
+                          height: 5,
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.circular(10),
+                          ),
+                        ),
+                        IconButton(
+                          icon: const Icon(Icons.close, color: AppColors.white),
+                          onPressed: () {
+                            Navigator.pop(context);
+                          },
+                        ),
+                      ],
+                    ),
+                    SizedBox(height: screenHeight * 0.01),
+                    Center(
+                      child:CircleAvatar(
+                        radius: screenHeight * 0.06,
+                        backgroundColor: AppColors.black,
+                        child: CircleAvatar(
+                          radius: screenHeight * 0.05,
+                          backgroundImage: CachedNetworkImageProvider(maps['establishmentImage']!),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: screenHeight * 0.01),
                     ListTile(
                       leading: const Icon(Icons.home_work_outlined, color: Colors.white),
                       title: Text(
@@ -95,9 +128,8 @@ class EstablismentModal {
                     SizedBox(height: screenHeight * 0.01),
                     Padding(
                       padding: const EdgeInsets.all(10),
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                        children: [
+                      child: Center(
+                        child:
                           ElevatedButton(
                             onPressed: () {},
                             style: ButtonStyle(
@@ -113,24 +145,6 @@ class EstablismentModal {
                               ),
                             ),
                           ),
-                          ElevatedButton(
-                            onPressed: () {
-                              Navigator.pop(context);
-                            },
-                            style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(AppColors.black),
-                            ),
-                            child: const Text(
-                              'Close',
-                              style: TextStyle(
-                                color: Colors.white,
-                                fontSize: 16,
-                                fontFamily: 'SmoochSans',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
-                        ],
                       ),
                     ),
                   ],
