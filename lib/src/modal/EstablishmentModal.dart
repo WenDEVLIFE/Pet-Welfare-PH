@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 import '../utils/AppColors.dart';
+import '../utils/Route.dart';
 import '../view_model/MapViewModel.dart';
 
 class EstablismentModal {
@@ -131,7 +132,9 @@ class EstablismentModal {
                       child: Center(
                         child:
                           ElevatedButton(
-                            onPressed: () {},
+                            onPressed: () {
+                              Navigator.pushNamed(context, AppRoutes.message);
+                            },
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(AppColors.black),
                             ),
