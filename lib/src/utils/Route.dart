@@ -64,7 +64,7 @@ class AppRoutes {
   static const String shelterClinic = '/shelterClinic';
   static const String addSherterClinic = '/addSherterClinic';
   static const String chatView = '/chatView';
-  static const String message = '/messageView'
+  static const String message = '/messageView';
   static const String editEstablishment = '/editEstablishment';
   static const String adminViewEstablishment = '/adminViewEstablishment';
   static const String  viewEstablishment = '/viewEstablishment';
