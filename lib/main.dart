@@ -8,6 +8,7 @@ import 'package:pet_welfrare_ph/src/view_model/AddAdminViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/ChangePasswordViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/MapViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/MenuViewModel.dart';
+import 'package:pet_welfrare_ph/src/view_model/MessageViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/OTPViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/RegisterViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/LoginViewModel.dart';
@@ -53,7 +54,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => UserDataViewModel()),
         ChangeNotifierProvider(create: (_) => MapViewModel()),
         ChangeNotifierProvider(create: (_) => EstablishmentViewModel()),
-        ChangeNotifierProvider(create: (_) => ChatViewModel())
+        ChangeNotifierProvider(create: (_) => ChatViewModel()),
+        ChangeNotifierProvider(create: (_) => MessageViewModel())
       ],
       child: MaterialApp(
         key: GlobalKey(), //

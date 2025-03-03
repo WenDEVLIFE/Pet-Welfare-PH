@@ -26,6 +26,7 @@ import '../view/ChangeIDView.dart';
 import '../view/ChangePasswordView.dart';
 import '../view/ChatView.dart';
 import '../view/EditEstablishmentView.dart';
+import '../view/MessageView.dart';
 import '../view/OTPView.dart';
 import '../view/UserEstablismentView.dart';
 import '../view/SplashView.dart';
@@ -63,6 +64,7 @@ class AppRoutes {
   static const String shelterClinic = '/shelterClinic';
   static const String addSherterClinic = '/addSherterClinic';
   static const String chatView = '/chatView';
+  static const String message = '/messageView'
   static const String editEstablishment = '/editEstablishment';
   static const String adminViewEstablishment = '/adminViewEstablishment';
   static const String  viewEstablishment = '/viewEstablishment';
@@ -98,6 +100,7 @@ class AppRoutes {
     shelterClinic : (context) => const UserEstablismentView(), // This is where the user can view the shelter clinic
     addSherterClinic : (context) => const AddShelterClinic(), // This is where the user can add the shelter clinic
     chatView : (context) => ChatView(), // This is where the user can chat
+    message: (context) => const MessageView(), // This is where the user can view the message
     editEstablishment : (context) => const EditEstablishmentScreen(), // This is where the user can edit the establishment
     adminViewEstablishment : (context) => const ApprovedShelterClinicView(), // This is where the admin can view the establishment
     viewEstablishment : (context) => const ViewEstablishmentView(), // This is where the user can view the establishment
