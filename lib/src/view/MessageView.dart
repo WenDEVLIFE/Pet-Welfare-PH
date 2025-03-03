@@ -1,38 +1,74 @@
-import 'package:flutter/cupertino.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/material.dart';
-
+import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
+import 'package:pet_welfrare_ph/src/view_model/MessageViewModel.dart';
+import 'package:provider/provider.dart';
 import '../utils/AppColors.dart';
 
-class MessageView extends StatelessWidget {
+class MessageView extends StatefulWidget {
   const MessageView({Key? key}) : super(key: key);
 
   @override
+  MessageState createState() => MessageState();
+}
+
+class MessageState extends State<MessageView> {
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((_) => _loadData());
+  }
+
+  Future<void> _loadData() async {
+    final messageViewModel = Provider.of<MessageViewModel>(context, listen: false);
+    final Map<String, dynamic>? listdata =
+    ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+
+    if (listdata == null || listdata['establishmentOwnerID'] == null) {
+      ToastComponent().showMessage(Colors.red, 'Error: Missing User ID');
+      return;
+    }
+
+    ToastComponent().showMessage(Colors.green, 'UUID: ${listdata['establishmentOwnerID']}');
+    await messageViewModel.loadReceiver(listdata['establishmentOwnerID']);
+  }
+
+  @override
   Widget build(BuildContext context) {
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       appBar: AppBar(
         backgroundColor: AppColors.orange,
-        title: const Row(
-          children: [
-            CircleAvatar(
-              backgroundImage: AssetImage('assets/images/avatar.png'),
-            ),
-            SizedBox(width: 10),
-            Text('John Doe',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 16,
-                fontFamily: 'SmoochSans',
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-          ],
+        title: Consumer<MessageViewModel>(
+          builder: (context, messageViewModel, child) {
+            return Row(
+              children: [
+                CircleAvatar(
+                  radius: screenHeight * 0.03,
+                  backgroundImage: CachedNetworkImageProvider(messageViewModel.ImageReceiver),
+                ),
+                const SizedBox(width: 10),
+                Text(
+                  messageViewModel.receiverName,
+                  style: const TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                    fontFamily: 'SmoochSans',
+                    fontWeight: FontWeight.w600,
+                  ),
+                ),
+              ],
+            );
+          },
         ),
       ),
       body: Column(
         children: [
           Expanded(
             child: ListView.builder(
-              itemCount: 20,  // Example message count
+              itemCount: 20, // Example message count
               itemBuilder: (context, index) {
                 return Padding(
                   padding: const EdgeInsets.all(8.0),

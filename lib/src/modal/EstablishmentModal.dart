@@ -133,7 +133,9 @@ class EstablismentModal {
                         child:
                           ElevatedButton(
                             onPressed: () {
-                              Navigator.pushNamed(context, AppRoutes.message);
+                              Navigator.pushNamed(context, AppRoutes.message, arguments:{
+                                'establishmentOwnerID': maps['establishmentOwnerID'],
+                              });
                             },
                             style: ButtonStyle(
                               backgroundColor: MaterialStateProperty.all<Color>(AppColors.black),
