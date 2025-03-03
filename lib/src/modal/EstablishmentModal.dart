@@ -52,10 +52,10 @@ class EstablismentModal {
                     SizedBox(height: screenHeight * 0.01),
                     Center(
                       child:CircleAvatar(
-                        radius: screenHeight * 0.06,
+                        radius: screenHeight * 0.07,
                         backgroundColor: AppColors.black,
                         child: CircleAvatar(
-                          radius: screenHeight * 0.05,
+                          radius: screenHeight * 0.068,
                           backgroundImage: CachedNetworkImageProvider(maps['establishmentImage']!),
                         ),
                       ),

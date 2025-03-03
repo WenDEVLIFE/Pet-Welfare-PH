@@ -40,7 +40,7 @@ class MenuViewState extends State<MenuView> {
               width: screenWidth,
               height: screenHeight * 0.2, // Set to 20% of screen height
               color: AppColors.orange,
-              padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+              padding: const EdgeInsets.symmetric(vertical: 20, horizontal: 20),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -50,16 +50,16 @@ class MenuViewState extends State<MenuView> {
                       Consumer<MenuViewModel>(
                         builder: (context, viewModel, child) {
                           return CircleAvatar(
-                            radius: 50, // Adjust size as needed
+                            radius: screenHeight * 0.07,
                             backgroundColor: AppColors.black,
                             child: CircleAvatar(
-                              radius: 45,
+                              radius: screenHeight * 0.068,
                               backgroundImage: CachedNetworkImageProvider(viewModel.currentfilepath),
                             ),
                           );
                         },
                       ),
-                      SizedBox(width: 12.0),
+                      SizedBox(width: screenWidth * 0.05),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.center,
@@ -77,7 +77,7 @@ class MenuViewState extends State<MenuView> {
                               );
                             },
                           ),
-                          SizedBox(height: 4.0),
+                          SizedBox(height: screenHeight * 0.01),
                           Consumer<MenuViewModel>(
                             builder: (context, viewModel, child) {
                               return Text(

@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
@@ -51,7 +52,7 @@ class _ViewUserDataState extends State<ViewUserDataView> {
               width: screenWidth,
               height: screenHeight * 0.2,
               color: AppColors.orange,
-              padding: const EdgeInsets.symmetric(vertical: 12.0, horizontal: 20.0),
+              padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -60,18 +61,14 @@ class _ViewUserDataState extends State<ViewUserDataView> {
                       builder: (context, viewModel, child) {
                         return Stack(
                           children: [
-                            CircleAvatar(
-                              radius: 50,
-                              backgroundColor: AppColors.orange,
-                              child: CircleAvatar(
-                                radius: 60,
-                                backgroundColor: AppColors.black,
-                                child: CircleAvatar(
-                                  radius: 55,
-                                  backgroundImage: NetworkImage(viewModel.profilepath),
-                                ),
-                              ),
-                            ),
+                           CircleAvatar(
+                          radius: screenHeight * 0.07,
+                          backgroundColor: AppColors.black,
+                          child: CircleAvatar(
+                            radius: screenHeight * 0.068,
+                            backgroundImage: CachedNetworkImageProvider(viewModel.profilepath),
+                          ),
+                        ),
                             Positioned(
                               bottom: 0,
                               right: 0,
