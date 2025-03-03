@@ -4,11 +4,13 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
+import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pet_welfrare_ph/src/respository/GenerateEstablismentRepository.dart';
 import 'package:pet_welfrare_ph/src/services/OpenStreetMapService.dart';
 import 'package:pet_welfrare_ph/src/utils/GeoUtils.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
+import '../modal/EstablishmentModal.dart';
 import '../model/EstablishmentModel.dart';
 
 class MapViewModel extends ChangeNotifier {
@@ -20,6 +22,7 @@ class MapViewModel extends ChangeNotifier {
   List<Map<String, dynamic>> searchResults = [];
   List<Map<String, dynamic>> mapLocations = [];
   List<EstablishmentModel> establishments = [];
+  List<SymbolOptions> symbols = [];
   bool _isLoadingMarkers = false;
 
   Future<void> requestPermissions() async {
@@ -116,7 +119,6 @@ class MapViewModel extends ChangeNotifier {
     if (mapController == null || _isLoadingMarkers || establishments.isEmpty) return;
 
     _isLoadingMarkers = true;
-    List<SymbolOptions> symbols = [];
 
     for (var establishment in establishments) {
       String markerType = establishment.establishmentType.toLowerCase() == 'clinic'
@@ -139,16 +141,29 @@ class MapViewModel extends ChangeNotifier {
     }
 
     _isLoadingMarkers = false;
+  }
 
+  void initializeClickMarkers(BuildContext context) {
     // Set up the click listener
     mapController!.onSymbolTapped.add((Symbol symbol) {
       String name = symbol.options.textField ?? 'Unknown';
 
-        for (var establishment in establishments) {
-          if (establishment.establishmentName == name) {
-            ToastComponent().showMessage(Colors.green, 'Establishment: ${establishment.establishmentName}');
-          }
+      for (var establishment in establishments) {
+        if (establishment.establishmentName == name) {
+          ToastComponent().showMessage(Colors.green, 'Establishment: ${establishment.establishmentName}');
+
+          var establismentInfo = {
+            'establishmentName': establishment.establishmentName,
+            'establishmentType': establishment.establishmentType,
+            'establishmentAddress': establishment.establishmentAddress,
+            'establishmentContact': establishment.establishmentPhoneNumber,
+            'establishmentEmail': establishment.establishmentEmail,
+            'establishmentLat': establishment.establishmentLat,
+            'establishmentLong': establishment.establishmentLong,
+          };
+          EstablismentModal().ShowEstablismentModal(context, establismentInfo, this);
         }
+      }
     });
   }
 

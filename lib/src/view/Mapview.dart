@@ -57,6 +57,7 @@ class MapViewState extends State<MapView> {
     _mapViewModel.mapController = controller;
     await _mapViewModel.fetchEstablishments().then((_) async {
       _mapViewModel.initializeLoads();
+      _mapViewModel.initializeClickMarkers(context);
     });
   }
 
