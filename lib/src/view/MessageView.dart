@@ -93,15 +93,15 @@ class MessageState extends State<MessageView> {
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
                         child: Align(
-                          alignment: message.senderid == listdata[userid]
-                              ? Alignment.centerLeft
-                              : Alignment.centerRight,
+                          alignment: message.senderid == userid
+                              ? Alignment.centerRight
+                              : Alignment.centerLeft,
                           child: Container(
                             padding: const EdgeInsets.all(10),
                             decoration: BoxDecoration(
-                              color: message.senderid == listdata[userid]
-                                  ? Colors.grey[300]
-                                  : Colors.blue[300],
+                              color: message.senderid == userid
+                                  ? Colors.blue[300]
+                                  : Colors.grey[300],
                               borderRadius: BorderRadius.circular(10),
                             ),
                             child: Column(
@@ -127,7 +127,7 @@ class MessageState extends State<MessageView> {
                                   ),
                                 ),
                               ],
-                            )
+                            ),
                           ),
                         ),
                       );

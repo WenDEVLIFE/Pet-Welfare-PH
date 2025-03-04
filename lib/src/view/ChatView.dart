@@ -5,6 +5,8 @@ import 'package:provider/provider.dart';
 import 'package:pet_welfrare_ph/src/view_model/MessageViewModel.dart';
 import 'package:pet_welfrare_ph/src/model/ChatModel.dart';
 
+import '../utils/Route.dart';
+
 class ChatView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -91,6 +93,9 @@ class ChatView extends StatelessWidget {
                         subtitle: Text(chat.lastMessage),
                         onTap: () {
                           // Navigate to chat messages view
+                          Navigator.pushNamed(context, AppRoutes.message, arguments:{
+                            'receiverID': chat.receiverID
+                          });
                         },
                       );
                     },
