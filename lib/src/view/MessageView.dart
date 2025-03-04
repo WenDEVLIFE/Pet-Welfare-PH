@@ -1,9 +1,11 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:pet_welfrare_ph/src/view_model/MessageViewModel.dart';
 import 'package:provider/provider.dart';
 import '../utils/AppColors.dart';
+import 'package:pet_welfrare_ph/src/model/MessageModel.dart';
 
 class MessageView extends StatefulWidget {
   const MessageView({Key? key}) : super(key: key);
@@ -14,6 +16,8 @@ class MessageView extends StatefulWidget {
 
 class MessageState extends State<MessageView> {
   late Map<String, dynamic> listdata;
+  late String userid;
+
   @override
   void initState() {
     super.initState();
@@ -24,18 +28,22 @@ class MessageState extends State<MessageView> {
     final messageViewModel = Provider.of<MessageViewModel>(context, listen: false);
     listdata = (ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?)!;
 
-    if (listdata['establishmentOwnerID'] == null) {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User user = auth.currentUser!;
+
+    userid = user.uid;
+
+    if (listdata['receiverID'] == null) {
       ToastComponent().showMessage(Colors.red, 'Error: Missing User ID');
       return;
     }
 
-    ToastComponent().showMessage(Colors.green, 'UUID: ${listdata['establishmentOwnerID']}');
-    await messageViewModel.loadReceiver(listdata['establishmentOwnerID']);
+    ToastComponent().showMessage(Colors.green, 'UUID: ${listdata['receiverID']}');
+    await messageViewModel.loadReceiver(listdata['receiverID']);
   }
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
@@ -67,26 +75,65 @@ class MessageState extends State<MessageView> {
       body: Column(
         children: [
           Expanded(
-            child: ListView.builder(
-              itemCount: 20, // Example message count
-              itemBuilder: (context, index) {
-                return Padding(
-                  padding: const EdgeInsets.all(8.0),
-                  child: Align(
-                    alignment: index % 2 == 0 ? Alignment.centerLeft : Alignment.centerRight,
-                    child: Container(
-                      padding: const EdgeInsets.all(10),
-                      decoration: BoxDecoration(
-                        color: index % 2 == 0 ? Colors.grey[300] : Colors.blue[300],
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: Text(
-                        'Message $index',
-                        style: const TextStyle(color: Colors.black),
-                      ),
-                    ),
-                  ),
-                );
+            child: StreamBuilder<List<MessageModel>>(
+              stream: Provider.of<MessageViewModel>(context).messagesStream,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return Center(child: Text('Error: ${snapshot.error}'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No messages'));
+                } else {
+                  final messages = snapshot.data!;
+                  return ListView.builder(
+                    itemCount: messages.length,
+                    itemBuilder: (context, index) {
+                      final message = messages[index];
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Align(
+                          alignment: message.senderid == listdata[userid]
+                              ? Alignment.centerLeft
+                              : Alignment.centerRight,
+                          child: Container(
+                            padding: const EdgeInsets.all(10),
+                            decoration: BoxDecoration(
+                              color: message.senderid == listdata[userid]
+                                  ? Colors.grey[300]
+                                  : Colors.blue[300],
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  message.message,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'SmoochSans',
+                                  ),
+                                ),
+                                const SizedBox(height: 5),
+                                Text(
+                                  message.timestamp,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontSize: 12,
+                                    fontWeight: FontWeight.w400,
+                                    fontFamily: 'SmoochSans',
+                                  ),
+                                ),
+                              ],
+                            )
+                          ),
+                        ),
+                      );
+                    },
+                  );
+                }
               },
             ),
           ),
@@ -114,7 +161,7 @@ class MessageState extends State<MessageView> {
                 IconButton(
                   icon: const Icon(Icons.send),
                   onPressed: () {
-                    Provider.of<MessageViewModel>(context, listen: false).sendMessage(listdata['establishmentOwnerID']);
+                    Provider.of<MessageViewModel>(context, listen: false).sendMessage(listdata['receiverID']);
                   },
                 ),
               ],

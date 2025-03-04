@@ -134,7 +134,7 @@ class EstablismentModal {
                           ElevatedButton(
                             onPressed: () {
                               Navigator.pushNamed(context, AppRoutes.message, arguments:{
-                                'establishmentOwnerID': maps['establishmentOwnerID'],
+                                'receiverID': maps['establishmentOwnerID'],
                               });
                             },
                             style: ButtonStyle(
