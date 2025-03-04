@@ -1,22 +1,28 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pet_welfrare_ph/src/model/ChatModel.dart';
 import 'package:pet_welfrare_ph/src/model/MessageModel.dart';
 import 'package:pet_welfrare_ph/src/respository/LoadProfileRespository.dart';
 import 'package:pet_welfrare_ph/src/respository/MessageRepository.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 
+import '../utils/SessionManager.dart';
+
 class MessageViewModel extends ChangeNotifier {
   final TextEditingController messageController = TextEditingController();
+  final TextEditingController searchMessageController = TextEditingController();
 
   String ImageReceiver = '';
   String receiverName = '';
 
   final MessageRepository messageRepository = MessageRepositoryImpl();
   final Loadprofilerespository _loadprofilerespository = LoadProfileImpl();
-
+  final SessionManager sessionManager = SessionManager();
   List<MessageModel> _messages = [];
-
+  List<ChatModel> _chats = [];
   Stream<List<MessageModel>> get messagesStream => messageRepository.getMessage();
+  Stream<List<ChatModel>> get chatsStream => messageRepository.getChat();
+
 
   Future<void> loadReceiver(String uid) async {
     try {
@@ -46,6 +52,18 @@ class MessageViewModel extends ChangeNotifier {
       };
       await messageRepository.sendMessage(message);
       messageController.clear();
+    }
+
+
+  }
+
+  Future<void> initializeChats() async {
+    var userdata = await sessionManager.getUserInfo();
+    var role = userdata?['role'];
+    if (role != null) {
+      messageRepository.getChat().listen((event) {
+        print('Chat data: $event');
+      });
     }
 
 
