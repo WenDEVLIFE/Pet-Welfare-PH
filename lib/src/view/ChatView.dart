@@ -1,3 +1,4 @@
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
@@ -38,8 +39,10 @@ class ChatView extends StatelessWidget {
               border: Border.all(color: Colors.transparent, width: 7),
             ),
             child: TextField(
+              controller: messageViewModel.searchMessageController,
               onChanged: (query) {
                 // Implement search functionality if needed
+                messageViewModel.filteredchats(query);
               },
               decoration: InputDecoration(
                 filled: true,
@@ -75,13 +78,14 @@ class ChatView extends StatelessWidget {
                   return Center(child: Text('No chatrooms found'));
                 } else {
                   List<ChatModel> chatrooms = snapshot.data!;
+                  messageViewModel.setChats(chatrooms);
                   return ListView.builder(
                     itemCount: chatrooms.length,
                     itemBuilder: (context, index) {
                       ChatModel chat = chatrooms[index];
                       return ListTile(
                         leading: CircleAvatar(
-                          backgroundImage: NetworkImage(chat.profilepath),
+                          backgroundImage: CachedNetworkImageProvider(chat.profilepath),
                         ),
                         title: Text(chat.name),
                         subtitle: Text(chat.lastMessage),

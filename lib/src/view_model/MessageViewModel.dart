@@ -20,9 +20,10 @@ class MessageViewModel extends ChangeNotifier {
   final SessionManager sessionManager = SessionManager();
   List<MessageModel> _messages = [];
   List<ChatModel> _chats = [];
+  List<ChatModel> filteredChats = [];
+
   Stream<List<MessageModel>> get messagesStream => messageRepository.getMessage();
   Stream<List<ChatModel>> get chatsStream => messageRepository.getChat();
-
 
   Future<void> loadReceiver(String uid) async {
     try {
@@ -41,11 +42,11 @@ class MessageViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> sendMessage(String uid)async {
-    if(messageController.text.isEmpty){
+  Future<void> sendMessage(String uid) async {
+    if (messageController.text.isEmpty) {
       ToastComponent().showMessage(Colors.red, 'Message cannot be empty');
       return;
-    } else{
+    } else {
       Map<String, dynamic> message = {
         'receiverID': uid,
         'content': messageController.text,
@@ -53,8 +54,6 @@ class MessageViewModel extends ChangeNotifier {
       await messageRepository.sendMessage(message);
       messageController.clear();
     }
-
-
   }
 
   Future<void> initializeChats() async {
@@ -65,9 +64,24 @@ class MessageViewModel extends ChangeNotifier {
         print('Chat data: $event');
       });
     }
-
-
   }
 
+  Future<void> filteredchats(String query) async {
+    // Implement filtering logic here
+    if (query.isEmpty) {
+      filteredChats = _chats;
+    } else {
+      filteredChats = _chats.where((chats) {
+        return chats.name.toLowerCase().contains(query.toLowerCase()) ||
+            chats.name.toLowerCase().contains(query.toLowerCase());
+      }).toList();
+    }
+    notifyListeners();
+  }
 
+  Future<void> setChats(List<ChatModel> chats) async {
+    _chats = chats;
+    filteredchats(searchMessageController.text);
+    notifyListeners();
+  }
 }

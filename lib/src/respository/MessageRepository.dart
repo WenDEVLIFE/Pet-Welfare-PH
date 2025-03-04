@@ -124,6 +124,8 @@ class MessageRepositoryImpl implements MessageRepository {
          name: displayName,
           profilepath: profilePath,
           lastMessage: chatData['lastMessage'],
+          senderID: senderID,
+          receiverID: receiverID
         ));
       }
       return chatList;
