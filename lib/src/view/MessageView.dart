@@ -13,6 +13,7 @@ class MessageView extends StatefulWidget {
 }
 
 class MessageState extends State<MessageView> {
+  late Map<String, dynamic> listdata;
   @override
   void initState() {
     super.initState();
@@ -21,10 +22,9 @@ class MessageState extends State<MessageView> {
 
   Future<void> _loadData() async {
     final messageViewModel = Provider.of<MessageViewModel>(context, listen: false);
-    final Map<String, dynamic>? listdata =
-    ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?;
+    listdata = (ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?)!;
 
-    if (listdata == null || listdata['establishmentOwnerID'] == null) {
+    if (listdata['establishmentOwnerID'] == null) {
       ToastComponent().showMessage(Colors.red, 'Error: Missing User ID');
       return;
     }
@@ -102,6 +102,7 @@ class MessageState extends State<MessageView> {
                 ),
                 Expanded(
                   child: TextField(
+                    controller: Provider.of<MessageViewModel>(context).messageController,
                     decoration: InputDecoration(
                       hintText: 'Type a message',
                       border: OutlineInputBorder(
@@ -113,7 +114,7 @@ class MessageState extends State<MessageView> {
                 IconButton(
                   icon: const Icon(Icons.send),
                   onPressed: () {
-                    // Handle send message
+                    Provider.of<MessageViewModel>(context, listen: false).sendMessage(listdata['establishmentOwnerID']);
                   },
                 ),
               ],

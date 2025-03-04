@@ -34,4 +34,22 @@ class MessageViewModel extends ChangeNotifier {
       ToastComponent().showMessage(Colors.red, 'Error loading profile: $e');
     }
   }
+
+  Future<void> sendMessage(String uid)async {
+    if(messageController.text.isEmpty){
+      ToastComponent().showMessage(Colors.red, 'Message cannot be empty');
+      return;
+    } else{
+      Map<String, dynamic> message = {
+        'receiverID': uid,
+        'content': messageController.text,
+      };
+      await messageRepository.sendMessage(message);
+      messageController.clear();
+    }
+
+
+  }
+
+
 }

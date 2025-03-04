@@ -1,4 +1,10 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/model/MessageModel.dart';
+import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
+
+import '../utils/AppColors.dart';
 
 abstract class MessageRepository {
   Stream<List<MessageModel>> getMessage();
@@ -8,6 +14,10 @@ abstract class MessageRepository {
 }
 
 class MessageRepositoryImpl implements MessageRepository {
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+  final FirebaseAuth _auth = FirebaseAuth.instance;
+
+
   @override
   Stream<List<MessageModel>> getMessage() {
     // TODO: implement getMessage
@@ -15,8 +25,55 @@ class MessageRepositoryImpl implements MessageRepository {
   }
 
   @override
-  Future<void> sendMessage(Map<String, dynamic> message) {
-    throw UnimplementedError();
+  Future<void> sendMessage(Map<String, dynamic> message) async {
+    User user = _auth.currentUser!;
+
+    String senderID = user.uid;
+
+    try {
+      // Check if a chatroom document already exists between the sender and receiver
+      QuerySnapshot querySnapshot = await _firestore.collection('Chatrooms')
+          .where('participants', arrayContains: senderID)
+          .get();
+
+      DocumentSnapshot? chatroomData;
+      for (var doc in querySnapshot.docs) {
+        if ((doc['participants'] as List).contains(message['receiverID'])) {
+          chatroomData = doc;
+          break;
+        }
+      }
+
+      if (chatroomData != null) {
+        // Insert the message into the existing chatroom's nested collection
+        await _firestore.collection('Chatrooms').doc(chatroomData.id)
+            .collection('Messages').add({
+          'senderID': senderID,
+          'receiverID': message['receiverID'],
+          'Message': message['content'],
+          'timestamp': FieldValue.serverTimestamp()
+        });
+      } else {
+        // Create a new chatroom document
+        DocumentReference newChatroomDoc = await _firestore.collection('Chatrooms').add({
+          'participants': [senderID, message['receiverID']],
+          'lastMessage': message['content'],
+          'createdAt': FieldValue.serverTimestamp()
+        });
+
+        // Insert the message into the new chatroom's nested collection
+        await newChatroomDoc.collection('Messages').add({
+          'senderID': senderID,
+          'receiverID': message['receiverID'],
+          'Message': message['content'],
+          'timestamp': FieldValue.serverTimestamp()
+        });
+      }
+
+      ToastComponent().showMessage(AppColors.orange, 'Message sent successfully');
+    } catch (e) {
+      throw Exception('Error sending message: $e');
+    }
   }
 
 
