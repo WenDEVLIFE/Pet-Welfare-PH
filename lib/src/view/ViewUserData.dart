@@ -106,10 +106,23 @@ class _ViewUserDataState extends State<ViewUserDataView> {
                       ],
                     ),
                   ),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 16.0, top: 16.0),
+                    child: Text(
+                      'Name:',
+                      style: TextStyle(
+                        color: AppColors.black,
+                        fontFamily: 'SmoochSans',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: screenHeight * 0.001),
                   Padding(
                     padding: const EdgeInsets.only(left: 16.0, top: 16.0),
                     child: Text(
-                      'Name: ${viewModel.name}',
+                      viewModel.name,
                       style: const TextStyle(
                         color: AppColors.black,
                         fontFamily: 'SmoochSans',
@@ -119,6 +132,19 @@ class _ViewUserDataState extends State<ViewUserDataView> {
                     ),
                   ),
                   SizedBox(height: screenHeight * 0.005),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 16.0, top: 16.0),
+                    child: Text(
+                      'Email:',
+                      style: TextStyle(
+                        color: AppColors.black,
+                        fontFamily: 'SmoochSans',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: screenHeight * 0.001),
                   Padding(
                     padding: const EdgeInsets.only(left: 16.0, top: 16.0),
                     child: Text(
@@ -132,10 +158,23 @@ class _ViewUserDataState extends State<ViewUserDataView> {
                     ),
                   ),
                   SizedBox(height: screenHeight * 0.005),
+                  const Padding(
+                    padding: EdgeInsets.only(left: 16.0, top: 16.0),
+                    child: Text(
+                      'Role:',
+                      style: TextStyle(
+                        color: AppColors.black,
+                        fontFamily: 'SmoochSans',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: screenHeight * 0.001),
                   Padding(
                     padding: const EdgeInsets.only(left: 16.0, top: 16.0),
                     child: Text(
-                      'Role: ${viewModel.role}',
+                      viewModel.role,
                       style: const TextStyle(
                         color: AppColors.black,
                         fontFamily: 'SmoochSans',
@@ -146,10 +185,23 @@ class _ViewUserDataState extends State<ViewUserDataView> {
                   ),
                   SizedBox(height: screenHeight * 0.005),
                   if (viewModel.role.toLowerCase() != 'admin') ...[
+                    const Padding(
+                      padding: EdgeInsets.only(left: 16.0, top: 16.0),
+                      child: Text(
+                        'ID Type:',
+                        style: TextStyle(
+                          color: AppColors.black,
+                          fontFamily: 'SmoochSans',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: screenHeight * 0.001),
                     Padding(
                       padding: const EdgeInsets.only(left: 16.0, top: 16.0),
                       child: Text(
-                        'ID Type: ${viewModel.idType}',
+                        viewModel.idType,
                         style: const TextStyle(
                           color: AppColors.black,
                           fontFamily: 'SmoochSans',
@@ -158,6 +210,7 @@ class _ViewUserDataState extends State<ViewUserDataView> {
                         ),
                       ),
                     ),
+                    SizedBox(height: screenHeight * 0.005),
                     const Padding(
                       padding: EdgeInsets.only(left: 16.0, top: 16.0),
                       child: Text(
