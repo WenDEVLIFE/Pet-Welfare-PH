@@ -23,7 +23,10 @@ class _ViewUserDataState extends State<ViewUserDataView> {
   void didChangeDependencies() {
     super.didChangeDependencies();
     viewModel = Provider.of<UserDataViewModel>(context, listen: false);
-    Provider.of<UserDataViewModel>(context, listen: false).loadInformation();
+  }
+
+  Future<void> _loadData() async {
+    await viewModel.loadInformation();
   }
 
   @override
@@ -44,234 +47,244 @@ class _ViewUserDataState extends State<ViewUserDataView> {
         ),
         backgroundColor: AppColors.orange,
       ),
-      body: SingleChildScrollView(
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Container(
-              width: screenWidth,
-              height: screenHeight * 0.2,
-              color: AppColors.orange,
-              padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+      body: FutureBuilder(
+        future: _loadData(),
+        builder: (context, snapshot) {
+          if (snapshot.connectionState == ConnectionState.waiting) {
+            return const Center(child: CircularProgressIndicator());
+          } else if (snapshot.hasError) {
+            return Center(child: Text('Error: ${snapshot.error}'));
+          } else {
+            return SingleChildScrollView(
               child: Column(
-                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Center(
-                    child: Consumer<UserDataViewModel>(
-                      builder: (context, viewModel, child) {
-                        return Stack(
-                          children: [
-                           CircleAvatar(
-                          radius: screenHeight * 0.07,
-                          backgroundColor: AppColors.black,
-                          child: CircleAvatar(
-                            radius: screenHeight * 0.068,
-                            backgroundImage: CachedNetworkImageProvider(viewModel.profilepath),
+                  Container(
+                    width: screenWidth,
+                    height: screenHeight * 0.2,
+                    color: AppColors.orange,
+                    padding: const EdgeInsets.symmetric(vertical: 20.0, horizontal: 20.0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Center(
+                          child: Consumer<UserDataViewModel>(
+                            builder: (context, viewModel, child) {
+                              return Stack(
+                                children: [
+                                  CircleAvatar(
+                                    radius: screenHeight * 0.07,
+                                    backgroundColor: AppColors.black,
+                                    child: CircleAvatar(
+                                      radius: screenHeight * 0.068,
+                                      backgroundImage: CachedNetworkImageProvider(viewModel.profilepath),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    bottom: 0,
+                                    right: 0,
+                                    child: Container(
+                                      decoration: const BoxDecoration(
+                                        color: Colors.black,
+                                        shape: BoxShape.circle,
+                                      ),
+                                      child: IconButton(
+                                        icon: const Icon(Icons.photo_camera, color: Colors.white),
+                                        onPressed: () {
+                                          showDialog(context: context, builder: (BuildContext context){
+                                            return const ChangeProfileDialog();
+                                          });
+                                        },
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              );
+                            },
                           ),
                         ),
-                            Positioned(
-                              bottom: 0,
-                              right: 0,
-                              child: Container(
-                                decoration: const BoxDecoration(
-                                  color: Colors.black,
-                                  shape: BoxShape.circle,
-                                ),
-                                child: IconButton(
-                                  icon: const Icon(Icons.photo_camera, color: Colors.white),
-                                  onPressed: () {
-                                    showDialog(context: context, builder: (BuildContext context){
-                                      return const ChangeProfileDialog();
-                                    });
-                                  },
-                                ),
-                              ),
-                            ),
-                          ],
-                        );
-                      },
+                      ],
                     ),
                   ),
-                ],
-              ),
-            ),
-            Padding(
-                padding:  const EdgeInsets.only(left: 16.0, top: 16.0),
-               child: Text(
-                 'Name: ${viewModel.name}',
-                 style: const TextStyle(
-                   color: AppColors.black,
-                   fontFamily: 'SmoochSans',
-                   fontWeight: FontWeight.w600,
-                   fontSize: 16,
-                 ),
-               ),
-            ),
-            SizedBox(height: screenHeight * 0.005),
-            Padding(
-              padding:  const EdgeInsets.only(left: 16.0, top: 16.0),
-              child: Text(
-                'Email: ${viewModel.email}',
-                style: const TextStyle(
-                  color: AppColors.black,
-                  fontFamily: 'SmoochSans',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-            SizedBox(height: screenHeight * 0.005),
-            Padding(
-              padding:  const EdgeInsets.only(left: 16.0, top: 16.0),
-              child: Text(
-                'Role: ${viewModel.role}',
-                style: const TextStyle(
-                  color: AppColors.black,
-                  fontFamily: 'SmoochSans',
-                  fontWeight: FontWeight.w600,
-                  fontSize: 16,
-                ),
-              ),
-            ),
-            SizedBox(height: screenHeight * 0.005),
-            if (viewModel.role.toLowerCase() != 'admin') ...[
-              Padding(
-                padding:  const EdgeInsets.only(left: 16.0, top: 16.0),
-                child: Text(
-                  'ID Type: ${viewModel.idType}',
-                  style: const TextStyle(
-                    color: AppColors.black,
-                    fontFamily: 'SmoochSans',
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-              const Padding(
-                padding:  EdgeInsets.only(left: 16.0, top: 16.0),
-                child: Text(
-                  'ID Front:',
-                  style: TextStyle(
-                    color: AppColors.black,
-                    fontFamily: 'SmoochSans',
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-              SizedBox(height: screenHeight * 0.005),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: Center(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: Image.network(
-                      viewModel.idfrontpath ?? '',
-                      width: screenWidth * 0.8,
-                      height: screenHeight * 0.4,
-                      fit: BoxFit.cover,
-                    ),
-                  ),
-                ),
-              ),
-              SizedBox(height: screenHeight * 0.005),
-              if (viewModel.status == 'Pending') ...[
-                Center(
-                  child: Padding(
-                    padding:  const EdgeInsets.only(left: 16.0, top: 16.0),
-                    child: ElevatedButton(
-                      onPressed: () {
-                        Navigator.pushNamed(context, AppRoutes.changeID);
-                      },
-                      style: ElevatedButton.styleFrom(
-                        backgroundColor: Colors.black,
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16.0, top: 16.0),
+                    child: Text(
+                      'Name: ${viewModel.name}',
+                      style: const TextStyle(
+                        color: AppColors.black,
+                        fontFamily: 'SmoochSans',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
                       ),
-                      child: const Text('Change ID Front',
-                        style: TextStyle(
-                          fontSize: 20,
-                          color: Colors.white,
-                          fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                  SizedBox(height: screenHeight * 0.005),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16.0, top: 16.0),
+                    child: Text(
+                      'Email: ${viewModel.email}',
+                      style: const TextStyle(
+                        color: AppColors.black,
+                        fontFamily: 'SmoochSans',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: screenHeight * 0.005),
+                  Padding(
+                    padding: const EdgeInsets.only(left: 16.0, top: 16.0),
+                    child: Text(
+                      'Role: ${viewModel.role}',
+                      style: const TextStyle(
+                        color: AppColors.black,
+                        fontFamily: 'SmoochSans',
+                        fontWeight: FontWeight.w600,
+                        fontSize: 16,
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: screenHeight * 0.005),
+                  if (viewModel.role.toLowerCase() != 'admin') ...[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0, top: 16.0),
+                      child: Text(
+                        'ID Type: ${viewModel.idType}',
+                        style: const TextStyle(
+                          color: AppColors.black,
                           fontFamily: 'SmoochSans',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
                         ),
                       ),
                     ),
-                  ),
-                ),
-                SizedBox(height: screenHeight * 0.005),
-              ],
-              SizedBox(height: screenHeight * 0.005),
-              const Padding(
-                padding:  EdgeInsets.only(left: 16.0, top: 16.0),
-                child: Text(
-                  'ID Back:',
-                  style: TextStyle(
-                    color: AppColors.black,
-                    fontFamily: 'SmoochSans',
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-              SizedBox(height: screenHeight * 0.005),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: Center(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: Image.network(
-                      viewModel.idbackpath ?? '',
-                      width: screenWidth * 0.8,
-                      height: screenHeight * 0.4,
-                      fit: BoxFit.cover,
+                    const Padding(
+                      padding: EdgeInsets.only(left: 16.0, top: 16.0),
+                      child: Text(
+                        'ID Front:',
+                        style: TextStyle(
+                          color: AppColors.black,
+                          fontFamily: 'SmoochSans',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                        ),
+                      ),
                     ),
-                  ),
-                ),
+                    SizedBox(height: screenHeight * 0.005),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: Center(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10.0),
+                          child: Image.network(
+                            viewModel.idfrontpath ?? '',
+                            width: screenWidth * 0.8,
+                            height: screenHeight * 0.4,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: screenHeight * 0.005),
+                    if (viewModel.status == 'Pending') ...[
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 16.0, top: 16.0),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, AppRoutes.changeID);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.black,
+                            ),
+                            child: const Text('Change ID Front',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'SmoochSans',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: screenHeight * 0.005),
+                    ],
+                    SizedBox(height: screenHeight * 0.005),
+                    const Padding(
+                      padding: EdgeInsets.only(left: 16.0, top: 16.0),
+                      child: Text(
+                        'ID Back:',
+                        style: TextStyle(
+                          color: AppColors.black,
+                          fontFamily: 'SmoochSans',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: screenHeight * 0.005),
+                    Padding(
+                      padding: const EdgeInsets.only(top: 16.0),
+                      child: Center(
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(10.0),
+                          child: Image.network(
+                            viewModel.idbackpath ?? '',
+                            width: screenWidth * 0.8,
+                            height: screenHeight * 0.4,
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: screenHeight * 0.005),
+                    if (viewModel.status == 'Pending') ...[
+                      Center(
+                        child: Padding(
+                          padding: const EdgeInsets.only(left: 16.0, top: 16.0),
+                          child: ElevatedButton(
+                            onPressed: () {
+                              Navigator.pushNamed(context, AppRoutes.changeID);
+                            },
+                            style: ElevatedButton.styleFrom(
+                              backgroundColor: Colors.black,
+                            ),
+                            child: const Text('Change ID Back',
+                              style: TextStyle(
+                                fontSize: 20,
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600,
+                                fontFamily: 'SmoochSans',
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                      SizedBox(height: screenHeight * 0.005),
+                    ],
+                  ],
+                  SizedBox(height: screenHeight * 0.005),
+                  if (viewModel.role == 'pet rescuer' || viewModel.role.toLowerCase() == 'pet shelter') ...[
+                    Padding(
+                      padding: const EdgeInsets.only(left: 16.0, top: 16.0),
+                      child: Text(
+                        'Address: ${viewModel.address}',
+                        style: const TextStyle(
+                          color: AppColors.black,
+                          fontFamily: 'SmoochSans',
+                          fontWeight: FontWeight.w600,
+                          fontSize: 16,
+                        ),
+                      ),
+                    ),
+                    SizedBox(height: screenHeight * 0.005),
+                  ],
+                ],
               ),
-              SizedBox(height: screenHeight * 0.005),
-             if (viewModel.status == 'Pending') ...[
-               Center(
-                 child: Padding(
-                   padding:  const EdgeInsets.only(left: 16.0, top: 16.0),
-                   child: ElevatedButton(
-                     onPressed: () {
-                       Navigator.pushNamed(context, AppRoutes.changeID);
-
-                     },
-                     style: ElevatedButton.styleFrom(
-                       backgroundColor: Colors.black,
-                     ),
-                     child: const Text('Change ID Back',
-                       style: TextStyle(
-                         fontSize: 20,
-                         color: Colors.white,
-                         fontWeight: FontWeight.w600,
-                         fontFamily: 'SmoochSans',
-                       ),
-                     ),
-                   ),
-                 ),
-               ),
-               SizedBox(height: screenHeight * 0.005),
-             ],
-            ],
-            SizedBox(height: screenHeight * 0.005),
-            if (viewModel.role == 'pet rescuer' || viewModel.role.toLowerCase() == 'pet shelter') ...[
-              Padding(
-                padding:  const EdgeInsets.only(left: 16.0, top: 16.0),
-                child: Text(
-                  'Address: ${viewModel.address }',
-                  style: const TextStyle(
-                    color: AppColors.black,
-                    fontFamily: 'SmoochSans',
-                    fontWeight: FontWeight.w600,
-                    fontSize: 16,
-                  ),
-                ),
-              ),
-              SizedBox(height: screenHeight * 0.005),
-            ],
-          ],
-        ),
+            );
+          }
+        },
       ),
     );
   }
