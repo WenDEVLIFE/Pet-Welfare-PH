@@ -1,31 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class ViewImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     var imageData = (ModalRoute.of(context)?.settings.arguments as Map<String, dynamic>?)!;
     return Scaffold(
+      backgroundColor: Colors.black,
       appBar: AppBar(
-        title: const Text('View Image' , style: TextStyle(color: Colors.white)),
-        backgroundColor: Colors.black,
+        backgroundColor: Colors.transparent,
         actions: [
           IconButton(
-            icon: const Icon(Icons.close , color: Colors.white),
+            icon: const Icon(Icons.close, color: Colors.white),
             onPressed: () {
-              // Implement share functionality here
               Navigator.pop(context);
             },
           ),
         ],
       ),
       body: Center(
-        child: Container(
+        child:Expanded(
+          child: Container(
           alignment: Alignment.center,
-          child: Image.network(
-            imageData['imagePath']!,
-            fit: BoxFit.contain, // Ensures the image fits well
+          child: CachedNetworkImage(
+            imageUrl: imageData['imagePath']!,
+            fit: BoxFit.contain,
+            placeholder: (context, url) => const CircularProgressIndicator(), // Shows a loading spinner
+            errorWidget: (context, url, error) => const Icon(Icons.error, color: Colors.red), // Shows error icon if loading fails
           ),
-        ),
+        ),),
       ),
     );
   }
