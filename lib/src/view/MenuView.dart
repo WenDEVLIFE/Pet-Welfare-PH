@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/view_model/MenuViewModel.dart';
+import '../utils/Route.dart';
 import 'MenuListView.dart';
 import '../utils/AppColors.dart';
 import '../utils/ImageUtils.dart';
@@ -49,13 +50,22 @@ class MenuViewState extends State<MenuView> {
                     children: [
                       Consumer<MenuViewModel>(
                         builder: (context, viewModel, child) {
-                          return CircleAvatar(
+                          return GestureDetector(
+                            child:CircleAvatar(
                             radius: screenHeight * 0.07,
                             backgroundColor: AppColors.black,
                             child: CircleAvatar(
                               radius: screenHeight * 0.068,
                               backgroundImage: CachedNetworkImageProvider(viewModel.currentfilepath),
                             ),
+                          ),
+                            onTap: () {
+                              // Implement image upload functionality here
+                              Navigator.pushNamed(context, AppRoutes.viewImageData, arguments: {
+                                'imagePath': viewModel.currentfilepath,
+                              });
+                            },
+
                           );
                         },
                       ),
