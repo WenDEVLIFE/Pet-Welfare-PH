@@ -200,6 +200,7 @@ class CreatePostView extends StatelessWidget {
             Center(
               child: ElevatedButton(
                 onPressed: () async {
+                  createPostViewModel.PostNow(context);
 
                 },
                 style: ElevatedButton.styleFrom(
