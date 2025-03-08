@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../utils/AppColors.dart';
+
 class RescueShelterView extends StatefulWidget {
   const RescueShelterView({Key? key}) : super(key: key);
 
@@ -12,8 +14,15 @@ class RescueState extends State<RescueShelterView> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build of RescueShelterView
-    return const Scaffold(
-        body: Center(child: Text('Find a Home: Rescue & Shelter'))
+    return Scaffold(
+        body: Center(child: Text('Find a Home: Rescue & Shelter')),
+      floatingActionButton:  FloatingActionButton(
+        backgroundColor: AppColors.orange,
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: const Icon(Icons.add_photo_alternate_outlined, color: AppColors.white),
+      ),
     );
   }
 

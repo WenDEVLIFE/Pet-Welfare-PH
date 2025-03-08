@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../utils/AppColors.dart';
+
 class PetAppreciateView extends StatefulWidget {
   const PetAppreciateView({Key? key}) : super(key: key);
 
@@ -12,8 +14,15 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build
-   return const Scaffold(
-       body: Center(child: Text('Pet Appreciation'))
+   return Scaffold(
+       body: const Center(child: Text('Pet Appreciation')),
+     floatingActionButton:  FloatingActionButton(
+       backgroundColor: AppColors.orange,
+       onPressed: () {
+         Navigator.pop(context);
+       },
+       child: const Icon(Icons.add_photo_alternate_outlined, color: AppColors.white),
+     ),
    );
   }
 

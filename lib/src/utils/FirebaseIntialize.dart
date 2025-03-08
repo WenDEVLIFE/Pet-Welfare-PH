@@ -16,26 +16,8 @@ class FirebaseRestAPI {
     );
 
     if (Firebase.apps.isEmpty) {
-      Fluttertoast.showToast(
-        msg:  'App is not connected to Database',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor:  Colors.red,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
       print('Firebase is not initialized');
     } else {
-      Fluttertoast.showToast(
-        msg: 'App is connected to Database',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor:  Colors.green,
-        textColor: Colors.white,
-        fontSize: 16.0,
-      );
       print('Firebase is initialized');
     }
   }

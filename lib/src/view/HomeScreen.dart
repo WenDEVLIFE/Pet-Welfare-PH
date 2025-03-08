@@ -1,17 +1,17 @@
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 import 'package:pet_welfrare_ph/src/components/BaseScreen.dart';
-import 'package:pet_welfrare_ph/src/view/CallofAidView.dart';
-import 'package:pet_welfrare_ph/src/view/CommunityView.dart';
-import 'package:pet_welfrare_ph/src/view/FoundPetView.dart';
-import 'package:pet_welfrare_ph/src/view/MissingPetView.dart';
-import 'package:pet_welfrare_ph/src/view/PawSomeView.dart';
-import 'package:pet_welfrare_ph/src/view/PetAdoptionView.dart';
-import 'package:pet_welfrare_ph/src/view/ProtectView.dart';
-import 'package:pet_welfrare_ph/src/view/RescueShelterView.dart';
-import 'package:pet_welfrare_ph/src/view/VetAndTravelView.dart';
+import 'package:pet_welfrare_ph/src/view/petmenuView/CallofAidView.dart';
+import 'package:pet_welfrare_ph/src/view/petmenuView/CommunityView.dart';
+import 'package:pet_welfrare_ph/src/view/petmenuView/FoundPetView.dart';
+import 'package:pet_welfrare_ph/src/view/petmenuView/MissingPetView.dart';
+import 'package:pet_welfrare_ph/src/view/petmenuView/PawSomeView.dart';
+import 'package:pet_welfrare_ph/src/view/petmenuView/PetAdoptionView.dart';
+import 'package:pet_welfrare_ph/src/view/petmenuView/ProtectView.dart';
+import 'package:pet_welfrare_ph/src/view/petmenuView/RescueShelterView.dart';
+import 'package:pet_welfrare_ph/src/view/petmenuView/VetAndTravelView.dart';
 
-import 'PetAppreciationView.dart';
+import 'petmenuView/PetAppreciationView.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
