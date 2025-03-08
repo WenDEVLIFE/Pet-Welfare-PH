@@ -13,9 +13,9 @@ class PostRepositoryImpl implements PostRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseStorage _firebaseStorage = FirebaseStorage.instance;
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
+
   @override
   Future<void> uploadPost(String postText, List<File> images, String category) async {
-
     User user = _firebaseAuth.currentUser!;
     String uuid = user.uid;
     var postID = Uuid().v4();
@@ -31,8 +31,8 @@ class PostRepositoryImpl implements PostRepository {
         'Timestamp': FieldValue.serverTimestamp(),
       });
 
-      // Upload images and store their URLs in the images sub-collection
-      for (File image in images) {
+      // Upload images concurrently and store their URLs in the images sub-collection
+      List<Future<void>> uploadTasks = images.map((File image) async {
         String fileName = DateTime.now().millisecondsSinceEpoch.toString();
         Reference storageRef = _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
         UploadTask uploadTask = storageRef.putFile(image);
@@ -44,7 +44,10 @@ class PostRepositoryImpl implements PostRepository {
           'FileUrl': downloadUrl,
           'FileName': '$fileName.jpg',
         });
-      }
+      }).toList();
+
+      // Wait for all uploads to complete
+      await Future.wait(uploadTasks);
     } catch (e) {
       throw Exception('Failed to upload post: $e');
     }
