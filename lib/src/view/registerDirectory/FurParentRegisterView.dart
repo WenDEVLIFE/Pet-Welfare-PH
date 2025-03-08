@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/view_model/RegisterViewModel.dart';
 import 'package:provider/provider.dart';
-import '../utils/AppColors.dart';
-import 'TermsAndConditionDialog.dart';
-import '../view_model/LoginViewModel.dart';
+import '../../utils/AppColors.dart';
+import '../../view_model/LoginViewModel.dart';
 
-class PetrShelterRegisterview extends StatefulWidget {
-  const PetrShelterRegisterview({Key? key}) : super(key: key);
+class FurParentRegisterView extends StatefulWidget {
+  const FurParentRegisterView({Key? key}) : super(key: key);
 
   @override
   RegisterState createState() => RegisterState();
 }
 
-class RegisterState extends State<PetrShelterRegisterview> {
+class RegisterState extends State<FurParentRegisterView> {
+
   late RegisterViewModel viewModel;
 
   @override
@@ -41,8 +41,8 @@ class RegisterState extends State<PetrShelterRegisterview> {
               color: Colors.orange,
               child: Center(
                 child: Container(
-                  width: screenWidth * 0.5,
-                  height: screenHeight * 0.25,
+                  width: 200,
+                  height: 200,
                   decoration: const BoxDecoration(
                     image: DecorationImage(
                       image: AssetImage('assets/icon/Logo.png'),
@@ -68,167 +68,85 @@ class RegisterState extends State<PetrShelterRegisterview> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           const Center(
-                            child: Text('SIGN UP FOR PET SHELTER & RESCUE',
-                                style: TextStyle(
-                                    fontSize: 30,
+                            child: Text('SIGN UP FOR FUR',
+                                style: TextStyle(fontSize: 30,
                                     fontWeight: FontWeight.w700,
                                     fontFamily: 'SmoochSans',
                                     color: Colors.black)),
                           ),
                           SizedBox(height: screenHeight * 0.02),
-                          TextField(
-                            controller: viewModel.nameController,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: AppColors.gray,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                              ),
-                              hintText: 'Enter your name',
-                              hintStyle: const TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'SmoochSans',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'SmoochSans',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          SizedBox(height: screenHeight * 0.02),
-                          const Text('EMAIL', style: TextStyle(
-                              fontSize: 18,
+                          const Text('NAME', style: TextStyle(fontSize: 18,
                               fontWeight: FontWeight.w700,
                               fontFamily: 'SmoochSans',
                               color: Colors.black)),
                           SizedBox(height: screenHeight * 0.01),
-                          TextField(
-                            controller: viewModel.emailController,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: AppColors.gray,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                              ),
-                              hintText: 'Enter your email',
-                              hintStyle: const TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'SmoochSans',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'SmoochSans',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                          SizedBox(height: screenHeight * 0.02),
-                          const Text('SELECT YOUR USER CLASSIFICATION',
-                              style: TextStyle(
-                                  fontSize: 18,
-                                  fontWeight: FontWeight.w700,
+                          Consumer<RegisterViewModel>(
+                            builder: (context, viewmodel, child) {
+                              return TextField(
+                                controller: viewmodel.nameController,
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: AppColors.gray,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                                  ),
+                                  hintText: 'Enter your name',
+                                  hintStyle: const TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'SmoochSans',
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                style: const TextStyle(
+                                  color: Colors.black,
                                   fontFamily: 'SmoochSans',
-                                  color: Colors.black)),
-                          SizedBox(height: screenHeight * 0.01),
-                          Container(
-                            width: screenWidth * 0.9,
-                            height: screenHeight * 0.08,
-                            decoration: BoxDecoration(
-                              color: AppColors.gray,
-                              border: Border.all(color: AppColors.gray, width: 2),
-                              borderRadius: BorderRadius.circular(10),
-                            ),
-                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                            child: Theme(
-                              data: Theme.of(context).copyWith(
-                                canvasColor: Colors.grey[800],
-                              ),
-                              child: DropdownButton<String>(
-                                value: viewModel.selectedRole,
-                                items: viewModel.role.map<DropdownMenuItem<String>>((String value) {
-                                  return DropdownMenuItem<String>(
-                                    value: value,
-                                    child: Text(
-                                      value,
-                                      style: const TextStyle(
-                                        color: Colors.black,
-                                        fontFamily: 'SmoochSans',
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                    ),
-                                  );
-                                }).toList(),
-                                onChanged: (String? newValue) {
-                                  setState(() {
-                                    viewModel.selectedRole = newValue!;
-                                  });
-                                },
-                                dropdownColor: AppColors.gray,
-                                iconEnabledColor: Colors.grey,
-                                style: const TextStyle(color: Colors.white),
-                                selectedItemBuilder: (BuildContext context) {
-                                  return viewModel.role.map<Widget>((String item) {
-                                    return Align(
-                                      alignment: Alignment.centerLeft,
-                                      child: Text(
-                                        item,
-                                        style: const TextStyle(
-                                          color: Colors.black,
-                                          fontFamily: 'SmoochSans',
-                                          fontWeight: FontWeight.w600,
-                                        ),
-                                      ),
-                                    );
-                                  }).toList();
-                                },
-                                isExpanded: true,
-                                alignment: Alignment.bottomLeft,
-                              ),
-                            ),
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              );
+                            },
                           ),
                           SizedBox(height: screenHeight * 0.02),
-                          const Text('ADDRESS', style: TextStyle(
-                              fontSize: 18,
+                          const Text('EMAIL', style: TextStyle(fontSize: 18,
                               fontWeight: FontWeight.w700,
                               fontFamily: 'SmoochSans',
                               color: Colors.black)),
                           SizedBox(height: screenHeight * 0.01),
-                          TextField(
-                            controller: viewModel.addressController,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: AppColors.gray,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                              ),
-                              hintText: 'Enter your address',
-                              hintStyle: const TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'SmoochSans',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'SmoochSans',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
+                          Consumer<RegisterViewModel>(
+                            builder: (context, viewmodel, child) {
+                              return TextField(
+                                controller: viewmodel.emailController,
+                                decoration: InputDecoration(
+                                  filled: true,
+                                  fillColor: AppColors.gray,
+                                  border: OutlineInputBorder(
+                                    borderRadius: BorderRadius.circular(30),
+                                    borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                                  ),
+                                  hintText: 'Enter your email',
+                                  hintStyle: const TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'SmoochSans',
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: 'SmoochSans',
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              );
+                            },
                           ),
                           SizedBox(height: screenHeight * 0.02),
-                          const Text('PASSWORD', style: TextStyle(
-                              fontSize: 18,
+                          const Text('PASSWORD', style:
+                          TextStyle(fontSize: 18,
                               fontWeight: FontWeight.w700,
                               fontFamily: 'SmoochSans',
-                              color: Colors.black)),
+                              color: Colors.black
+                          )),
                           SizedBox(height: screenHeight * 0.01),
                           Consumer<RegisterViewModel>(
                             builder: (context, viewmodel, child) {
@@ -266,8 +184,7 @@ class RegisterState extends State<PetrShelterRegisterview> {
                             },
                           ),
                           SizedBox(height: screenHeight * 0.02),
-                          const Text('CONFIRM PASSWORD', style: TextStyle(
-                              fontSize: 18,
+                          const Text('CONFIRM PASSWORD', style: TextStyle(fontSize: 18,
                               fontWeight: FontWeight.w600,
                               fontFamily: 'SmoochSans',
                               color: Colors.black)),
@@ -338,7 +255,6 @@ class RegisterState extends State<PetrShelterRegisterview> {
                               child: GestureDetector(
                                 onTap: () {
                                   Provider.of<RegisterViewModel>(context, listen: false).showTermsAndConditionDialog(context);
-
                                 },
                                 child: const Text(
                                   'Click here to view terms and conditions',
@@ -363,7 +279,15 @@ class RegisterState extends State<PetrShelterRegisterview> {
                               ),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Provider.of<RegisterViewModel>(context, listen: false).checkData(context, viewModel.selectedRole);
+                                  if(viewModel.isChecked) {
+                                    Provider.of<RegisterViewModel>(context, listen: false).checkData(context, "FurUser");
+                                  } else {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                      const SnackBar(
+                                        content: Text('Please agree to the terms and conditions'),
+                                      ),
+                                    );
+                                  }
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.black,

@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
+import '../../utils/AppColors.dart';
+
 class CallOfAidView extends StatefulWidget {
   const CallOfAidView({Key? key}) : super(key: key);
 
@@ -13,8 +15,15 @@ class AidState extends State<CallOfAidView> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build of the Call for Aid view
-    return const Scaffold(
-        body: Center(child: Text('Call for Aid'))
+    return Scaffold(
+        body: Center(child: Text('Call for Aid')),
+      floatingActionButton:  FloatingActionButton(
+        backgroundColor: AppColors.orange,
+        onPressed: () {
+          Navigator.pop(context);
+        },
+        child: const Icon(Icons.local_hospital, color: AppColors.white),
+      ),
     );
   }
 

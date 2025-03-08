@@ -1,8 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/view_model/RegisterViewModel.dart';
 import 'package:provider/provider.dart';
-import '../utils/AppColors.dart';
-import '../view_model/LoginViewModel.dart';
+import '../../utils/AppColors.dart';
+import '../../view_model/LoginViewModel.dart';
 
 class VetClinicRegisterView extends StatefulWidget {
   const VetClinicRegisterView({Key? key}) : super(key: key);
