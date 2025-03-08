@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/FirebaseIntialize.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
 import 'package:pet_welfrare_ph/src/view_model/ChatViewModel.dart';
+import 'package:pet_welfrare_ph/src/view_model/CreatePostViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/DrawerHeadViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/AddAdminViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/ChangePasswordViewModel.dart';
@@ -55,7 +56,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => MapViewModel()),
         ChangeNotifierProvider(create: (_) => EstablishmentViewModel()),
         ChangeNotifierProvider(create: (_) => ChatViewModel()),
-        ChangeNotifierProvider(create: (_) => MessageViewModel())
+        ChangeNotifierProvider(create: (_) => MessageViewModel()),
+        ChangeNotifierProvider(create: (_) => CreatePostViewModel())
       ],
       child: MaterialApp(
         key: GlobalKey(), //

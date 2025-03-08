@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:pet_welfrare_ph/src/components/UserNavigationComponent.dart';
 import 'package:pet_welfrare_ph/src/view/AddSubscriptionView.dart';
 import 'package:pet_welfrare_ph/src/view/DashboardView.dart';
+import 'package:pet_welfrare_ph/src/view/petmenuView/CreatePostView.dart';
 import 'package:pet_welfrare_ph/src/view/registerDirectory/FurParentRegisterView.dart';
 import 'package:pet_welfrare_ph/src/view/HomeScreen.dart';
 import 'package:pet_welfrare_ph/src/view/registerDirectory/LegalFirmRegisterView.dart';
@@ -70,6 +71,7 @@ class AppRoutes {
   static const String adminViewEstablishment = '/adminViewEstablishment';
   static const String  viewEstablishment = '/viewEstablishment';
   static const String viewImageData = '/viewImageData';
+  static const String createpost = '/createpost';
 
   // Assign routes to the screens
   static Map<String, WidgetBuilder> routes = {
@@ -107,5 +109,6 @@ class AppRoutes {
     adminViewEstablishment : (context) => const ApprovedShelterClinicView(), // This is where the admin can view the establishment
     viewEstablishment : (context) => const ViewEstablishmentView(), // This is where the user can view the establishment
     viewImageData : (context) => ViewImage(), // This is where the user can view the image data
+    createpost : (context) => CreatePostView(), // This is where the user can create a post
   };
 }
