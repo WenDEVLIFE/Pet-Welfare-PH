@@ -18,13 +18,21 @@ class PostModel {
   });
 
   factory PostModel.fromDocument(DocumentSnapshot doc) {
+    var imageUrls = <String>[];
+    var imagesCollection = doc.reference.collection('ImageCollection');
+    imagesCollection.get().then((querySnapshot) {
+      for (var imageDoc in querySnapshot.docs) {
+        imageUrls.add(imageDoc['FileUrl']);
+      }
+    });
+
     return PostModel(
       postId: doc['PostID'],
       postDescription: doc['PostDescription'],
       postOwnerId: doc['PostOwnerID'],
       category: doc['Category'],
       timestamp: doc['Timestamp'],
-      imageUrls: List<String>.from(doc['ImageCollection'].map((image) => image['FileUrl'])),
+      imageUrls: imageUrls,
     );
   }
 }

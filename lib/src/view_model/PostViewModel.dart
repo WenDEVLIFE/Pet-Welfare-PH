@@ -13,6 +13,16 @@ class PostViewModel extends ChangeNotifier {
 
   Stream <List<PostModel>> get posTream => postRepository.getPosts();
 
+  void searchPost(String search) {
+    filteredPost.clear();
+    if (search.isEmpty) {
+      filteredPost.addAll(_posts);
+    } else {
+      filteredPost.addAll(_posts.where((post) => post.postDescription.toLowerCase().contains(search.toLowerCase())));
+    }
+    notifyListeners();
+  }
+
 
 
 }

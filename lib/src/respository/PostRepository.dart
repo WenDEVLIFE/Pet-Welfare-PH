@@ -58,8 +58,13 @@ class PostRepositoryImpl implements PostRepository {
   // Added get post
   @override
   Stream<List<PostModel>> getPosts() {
-    return _firestore.collection('PostCollection').snapshots().map((snapshot) {
-      return snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
+    return _firestore.collection('PostCollection').snapshots().asyncMap((snapshot) async {
+      List<PostModel> posts = [];
+      for (var doc in snapshot.docs) {
+        var post = await PostModel.fromDocument(doc);
+        posts.add(post);
+      }
+      return posts;
     });
   }
 }
