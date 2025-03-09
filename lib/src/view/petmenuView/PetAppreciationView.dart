@@ -17,6 +17,11 @@ class PetAppreciateView extends StatefulWidget {
 
 class _PetAppreciateViewState extends State<PetAppreciateView> {
   @override
+  void initState(){
+    super.initState();
+    Provider.of<PostViewModel>(context, listen: false).postRepository.getPosts();
+  }
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       body: Consumer<PostViewModel>(

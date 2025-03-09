@@ -1,5 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pet_welfrare_ph/src/view_model/MessageViewModel.dart';
@@ -43,8 +44,7 @@ class ChatView extends StatelessWidget {
             child: TextField(
               controller: messageViewModel.searchMessageController,
               onChanged: (query) {
-                // Implement search functionality if needed
-                messageViewModel.filteredchats(query);
+                messageViewModel.filterChats(query);
               },
               decoration: InputDecoration(
                 filled: true,
@@ -73,18 +73,20 @@ class ChatView extends StatelessWidget {
               stream: messageViewModel.chatsStream,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return Center(child: Text('No chatrooms found'));
+                  return const Center(child: Text('No Chats found'));
                 } else {
                   List<ChatModel> chatrooms = snapshot.data!;
-                  messageViewModel.setChats(chatrooms);
+                  if (messageViewModel.filteredChats.isEmpty) {
+                    messageViewModel.setChats(chatrooms);
+                  }
                   return ListView.builder(
-                    itemCount: chatrooms.length,
+                    itemCount: messageViewModel.filteredChats.length,
                     itemBuilder: (context, index) {
-                      ChatModel chat = chatrooms[index];
+                      ChatModel chat = messageViewModel.filteredChats[index];
                       return ListTile(
                         leading: CircleAvatar(
                           backgroundImage: CachedNetworkImageProvider(chat.profilepath),
@@ -92,8 +94,7 @@ class ChatView extends StatelessWidget {
                         title: Text(chat.name),
                         subtitle: Text(chat.lastMessage),
                         onTap: () {
-                          // Navigate to chat messages view
-                          Navigator.pushNamed(context, AppRoutes.message, arguments:{
+                          Navigator.pushNamed(context, AppRoutes.message, arguments: {
                             'receiverID': chat.receiverID
                           });
                         },

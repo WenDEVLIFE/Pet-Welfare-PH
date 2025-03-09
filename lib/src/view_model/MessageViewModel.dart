@@ -66,8 +66,7 @@ class MessageViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> filteredchats(String query) async {
-    // Implement filtering logic here
+  void filterChats(String query) {
     if (query.isEmpty) {
       filteredChats = _chats;
     } else {
@@ -79,9 +78,8 @@ class MessageViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> setChats(List<ChatModel> chats) async {
+  void setChats(List<ChatModel> chats) {
     _chats = chats;
-    filteredchats(searchMessageController.text);
-    notifyListeners();
+    filterChats(searchMessageController.text);
   }
 }
