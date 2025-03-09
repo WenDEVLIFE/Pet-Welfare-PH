@@ -31,7 +31,31 @@ class EstablishmentViewModel extends ChangeNotifier {
   double newlat = 0.0;
   double newlong = 0.0;
   MaplibreMapController? mapController;
-  var establishmentType = ['Shelter', 'Clinic'];
+  var establishmentType = [
+    'Shelter',
+    'Clinic',
+    'Pet Store',
+    'Grooming',
+    'Training',
+    'Transportation & Daycare',
+    'Vet Clinic',
+    'Pet Grooming Services',
+    'Pet Sitting & Dog Walking',
+    'Pet Training',
+    'Pet Boarding & Daycare',
+    'Pet Bakery',
+    'Pet Adoption Agency',
+    'Pet Transportation',
+    'Mobile Pet Grooming',
+    'Pet Spa',
+    'Pet Insurance Agency',
+    'Pet Waste Removal Service',
+    'Pet Clothing & Apparel',
+    'Pet Training Supplies Store',
+    'Pet Food & Treats Store',
+    'Pet Accessories Store'
+  ];
+  var selectedEstablishmentRole ='Vet Clinic personnel';
   var selectEstablishment = 'Shelter';
   List<EstablishmentModel> establismentList = [];
   List<EstablishmentModel> filteredEstablisment = [];

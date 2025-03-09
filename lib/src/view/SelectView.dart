@@ -116,7 +116,7 @@ class _SelectViewState extends State<SelectView> {
                                     Provider.of<SelectViewModel>(context, listen: false).navigateToClinicRegistration(context);
                                   },
                                   child: const Text(
-                                    'Vet Clinic Personnel',
+                                    'Vet Clinic Personnel & Other Pet-related Businesses',
                                     style: TextStyle(
                                       fontFamily: 'SmoochSans',
                                       color: Colors.white,

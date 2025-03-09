@@ -135,6 +135,69 @@ class RegisterState extends State<VetClinicRegisterView> {
                               );
                             },
                           ),
+                          const Text('SELECT YOUR PET BUSINESS ROLE',
+                              style: TextStyle(
+                                  fontSize: 18,
+                                  fontWeight: FontWeight.w700,
+                                  fontFamily: 'SmoochSans',
+                                  color: Colors.black)),
+                          SizedBox(height: screenHeight * 0.01),
+                          Container(
+                            width: screenWidth * 0.9,
+                            height: screenHeight * 0.08,
+                            decoration: BoxDecoration(
+                              color: AppColors.gray,
+                              border: Border.all(color: AppColors.gray, width: 2),
+                              borderRadius: BorderRadius.circular(10),
+                            ),
+                            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                            child: Theme(
+                              data: Theme.of(context).copyWith(
+                                canvasColor: Colors.grey[800],
+                              ),
+                              child: DropdownButton<String>(
+                                value: viewModel.selectedEstablishmentRole,
+                                items: viewModel.establismentrole.map<DropdownMenuItem<String>>((String value) {
+                                  return DropdownMenuItem<String>(
+                                    value: value,
+                                    child: Text(
+                                      value,
+                                      style: const TextStyle(
+                                        color: Colors.black,
+                                        fontFamily: 'SmoochSans',
+                                        fontWeight: FontWeight.w600,
+                                      ),
+                                    ),
+                                  );
+                                }).toList(),
+                                onChanged: (String? newValue) {
+                                  setState(() {
+                                    viewModel.selectedEstablishmentRole = newValue!;
+                                  });
+                                },
+                                dropdownColor: AppColors.gray,
+                                iconEnabledColor: Colors.grey,
+                                style: const TextStyle(color: Colors.white),
+                                selectedItemBuilder: (BuildContext context) {
+                                  return viewModel.establismentrole.map<Widget>((String item) {
+                                    return Align(
+                                      alignment: Alignment.centerLeft,
+                                      child: Text(
+                                        item,
+                                        style: const TextStyle(
+                                          color: Colors.black,
+                                          fontFamily: 'SmoochSans',
+                                          fontWeight: FontWeight.w600,
+                                        ),
+                                      ),
+                                    );
+                                  }).toList();
+                                },
+                                isExpanded: true,
+                                alignment: Alignment.bottomLeft,
+                              ),
+                            ),
+                          ),
                           SizedBox(height: screenHeight * 0.02),
                           const Text('PASSWORD', style:
                           TextStyle(fontSize: 18,
@@ -253,7 +316,7 @@ class RegisterState extends State<VetClinicRegisterView> {
                               ),
                               child: ElevatedButton(
                                 onPressed: () {
-                                  Provider.of<RegisterViewModel>(context, listen: false).checkData(context , 'Vet Personnel');
+                                  Provider.of<RegisterViewModel>(context, listen: false).checkData(context , viewModel.selectedEstablishmentRole);
                                 },
                                 style: ElevatedButton.styleFrom(
                                   backgroundColor: Colors.black,
