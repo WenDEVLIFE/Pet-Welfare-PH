@@ -1,4 +1,5 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class PostModel {
   final String postId;
@@ -7,6 +8,8 @@ class PostModel {
   final String category;
   final Timestamp timestamp;
   final List<String> imageUrls;
+  final String postOwnerName;
+  final String profileUrl;
 
   PostModel({
     required this.postId,
@@ -15,6 +18,8 @@ class PostModel {
     required this.category,
     required this.timestamp,
     required this.imageUrls,
+    required this.postOwnerName,
+    required this.profileUrl,
   });
 
   static Future<PostModel> fromDocument(DocumentSnapshot doc) async {
@@ -24,13 +29,17 @@ class PostModel {
       imageUrls.add(imageDoc['FileUrl']);
     }
 
+    var userDoc = await FirebaseFirestore.instance.collection('Users').doc(doc['PostOwnerID']).get();
+
     return PostModel(
-      postId: doc['PostID'],
+      postId: doc.id,
       postDescription: doc['PostDescription'],
       postOwnerId: doc['PostOwnerID'],
       category: doc['Category'],
       timestamp: doc['Timestamp'],
       imageUrls: imageUrls,
+      postOwnerName: userDoc['Name'],
+      profileUrl: userDoc['ProfileUrl'],
     );
   }
 }
