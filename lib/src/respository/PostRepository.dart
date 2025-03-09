@@ -1,12 +1,14 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 import 'dart:io';
 
 import 'package:uuid/uuid.dart';
 
 abstract class PostRepository {
   Future<void> uploadPost(String postText, List<File> images, String category);
+  Stream<List<PostModel>> getPosts();
 }
 
 class PostRepositoryImpl implements PostRepository {
@@ -51,5 +53,13 @@ class PostRepositoryImpl implements PostRepository {
     } catch (e) {
       throw Exception('Failed to upload post: $e');
     }
+  }
+
+  // Added get post
+  @override
+  Stream<List<PostModel>> getPosts() {
+    return _firestore.collection('PostCollection').snapshots().map((snapshot) {
+      return snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
+    });
   }
 }
