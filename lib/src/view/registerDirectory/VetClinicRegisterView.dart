@@ -135,6 +135,7 @@ class RegisterState extends State<VetClinicRegisterView> {
                               );
                             },
                           ),
+                          SizedBox(height: screenHeight * 0.02),
                           const Text('SELECT YOUR PET BUSINESS ROLE',
                               style: TextStyle(
                                   fontSize: 18,
