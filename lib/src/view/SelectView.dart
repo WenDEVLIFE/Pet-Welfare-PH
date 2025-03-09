@@ -123,6 +123,7 @@ class _SelectViewState extends State<SelectView> {
                                       fontSize: 20,
                                       letterSpacing: 0.5,
                                     ),
+                                    textAlign: TextAlign.center,
                                   ),
                                 ),
                               ),
