@@ -23,6 +23,10 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
   }
   @override
   Widget build(BuildContext context) {
+
+    double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+
     return Scaffold(
       body: Consumer<PostViewModel>(
         builder: (context, postViewModel, child) {
@@ -53,28 +57,45 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
                           ),
                         ),
                         SizedBox(
-                          height: 200,
+                          height: screenHeight * 0.3,
                           child: PageView.builder(
                             itemCount: post.imageUrls.length,
                             itemBuilder: (context, imageIndex) {
-                              return CachedNetworkImage(imageUrl: post.imageUrls[imageIndex]);
+                              return Container(
+                                width: screenWidth * 0.8, // Adjust the width as needed
+                                height: screenHeight * 0.3, // Adjust the height as needed
+                                child: CachedNetworkImage(
+                                  imageUrl: post.imageUrls[imageIndex],
+                                  fit: BoxFit.cover, // Adjust the fit as needed
+                                ),
+                              );
                             },
                           ),
                         ),
                         Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            IconButton(
-                              icon: Icon(Icons.thumb_up),
-                              onPressed: () {
-                                // Implement like functionality here
-                              },
+                            Row(
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.thumb_up),
+                                  onPressed: () {
+                                    // Implement like functionality here
+                                  },
+                                ),
+                                Text('0 likes'),
+                              ],
                             ),
-                            IconButton(
-                              icon: Icon(Icons.comment),
-                              onPressed: () {
-                                // Implement comment functionality here
-                              },
+                            Row(
+                              children: [
+                                IconButton(
+                                  icon: Icon(Icons.comment),
+                                  onPressed: () {
+                                    // Implement comment functionality here
+                                  },
+                                ),
+                                Text('0 comments'),
+                              ],
                             ),
                           ],
                         ),

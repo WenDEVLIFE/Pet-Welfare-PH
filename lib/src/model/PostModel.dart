@@ -17,14 +17,12 @@ class PostModel {
     required this.imageUrls,
   });
 
-  factory PostModel.fromDocument(DocumentSnapshot doc) {
+  static Future<PostModel> fromDocument(DocumentSnapshot doc) async {
     var imageUrls = <String>[];
-    var imagesCollection = doc.reference.collection('ImageCollection');
-    imagesCollection.get().then((querySnapshot) {
-      for (var imageDoc in querySnapshot.docs) {
-        imageUrls.add(imageDoc['FileUrl']);
-      }
-    });
+    var imagesCollection = await doc.reference.collection('ImageCollection').get();
+    for (var imageDoc in imagesCollection.docs) {
+      imageUrls.add(imageDoc['FileUrl']);
+    }
 
     return PostModel(
       postId: doc['PostID'],

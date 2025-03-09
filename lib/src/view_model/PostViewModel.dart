@@ -5,13 +5,20 @@ import 'package:pet_welfrare_ph/src/respository/PostRepository.dart';
 class PostViewModel extends ChangeNotifier {
   final TextEditingController searchPostController = TextEditingController();
 
-  final List<PostModel> _posts = [];
-
-  final List <PostModel> filteredPost = [];
+  List<PostModel> _posts = [];
+  List<PostModel> filteredPost = [];
 
   final PostRepository postRepository = PostRepositoryImpl();
 
-  Stream <List<PostModel>> get posTream => postRepository.getPosts();
+  Stream<List<PostModel>> get posTream => postRepository.getPosts();
+
+  PostViewModel() {
+    posTream.listen((posts) {
+      _posts = posts;
+      searchPost(searchPostController.text);
+      print(_posts);
+    });
+  }
 
   void searchPost(String search) {
     filteredPost.clear();
@@ -23,6 +30,8 @@ class PostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-
-
+  void addPost() {
+    print(_posts);
+    notifyListeners();
+  }
 }
