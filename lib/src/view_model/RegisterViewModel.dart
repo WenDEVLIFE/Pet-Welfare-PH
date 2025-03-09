@@ -16,7 +16,7 @@ class RegisterViewModel extends ChangeNotifier {
   var role = ['Pet Shelter', 'Pet Rescuer'];
   var establismentrole =['Vet Clinic personnel', 'Pet Grooming Services personnel', 'Pet Sitting & Dog Walking personnel',
   'Pet Training personnel', 'Pet Boarding & Daycare personnel','Pet Bakery personnel', 'Pet Adoption Agency personnel',
-  'Pet Transportation personnel', 'Mobile Pet Grooming' 'Pet Spa personnel', 'Pet Insurance Agency personnel', 'Pet Waste Removal Service personnel'
+  'Pet Transportation personnel', 'Mobile Pet Grooming', 'Pet Spa personnel', 'Pet Insurance Agency personnel', 'Pet Waste Removal Service personnel',
   'Pet Clothing & Apparel personnel', 'Pet Training Supplies Store personnel', 'Pet Food & Treats Store personnel', 'Pet Accessories Store personnel',];
   var selectedEstablishmentRole ='Vet Clinic personnel';
   var selectedRole = 'Pet Shelter';
