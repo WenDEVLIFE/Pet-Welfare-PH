@@ -20,7 +20,6 @@ class MessageRepositoryImpl implements MessageRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-
   @override
   Stream<List<MessageModel>> getMessage() {
     User user = _auth.currentUser!;
@@ -32,16 +31,15 @@ class MessageRepositoryImpl implements MessageRepository {
         return doc.reference.collection('Messages')
             .orderBy('timestamp', descending: true)
             .snapshots()
-            .map((messageSnapshot) {
-          List<MessageModel> messages = [];
-          for (var messageDoc in messageSnapshot.docs) {
-            messages.add(MessageModel.fromDocumentSnapshot(messageDoc));
-          }
-          return messages;
+            .asyncMap((messageSnapshot) async {
+          return Future.wait(messageSnapshot.docs.map((messageDoc) async {
+            return await MessageModel.fromDocumentSnapshotWithUserData(messageDoc);
+          }).toList());
         }).first;
       }));
     });
   }
+
   @override
   Future<void> sendMessage(Map<String, dynamic> message) async {
     User user = _auth.currentUser!;

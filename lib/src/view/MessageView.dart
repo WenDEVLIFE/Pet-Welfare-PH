@@ -45,6 +45,7 @@ class MessageState extends State<MessageView> {
   @override
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
 
     return Scaffold(
       appBar: AppBar(
@@ -107,6 +108,44 @@ class MessageState extends State<MessageView> {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
+                                Container(
+                                  width: screenWidth * 0.6,
+                                  child:  Row(
+                                    children: [
+                                      if (message.senderid == userid) ...[
+                                        CircleAvatar(
+                                          radius: screenHeight * 0.03,
+                                          backgroundImage: CachedNetworkImageProvider(message.senderProfileImage),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          message.senderName,
+                                          style: const TextStyle(
+                                            color: Colors.white,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                            fontFamily: 'SmoochSans',
+                                          ),
+                                        ),
+                                      ] else ...[
+                                        CircleAvatar(
+                                          radius: screenHeight * 0.03,
+                                          backgroundImage: CachedNetworkImageProvider(message.senderProfileImage),
+                                        ),
+                                        const SizedBox(width: 10),
+                                        Text(
+                                          message.senderName,
+                                          style: const TextStyle(
+                                            color: Colors.black,
+                                            fontSize: 16,
+                                            fontWeight: FontWeight.w600,
+                                            fontFamily: 'SmoochSans',
+                                          ),
+                                        ),
+                                      ],
+                                    ],
+                                  ),
+                                ),
                                 Text(
                                   message.message,
                                   style: const TextStyle(
