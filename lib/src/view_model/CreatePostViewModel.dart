@@ -18,6 +18,7 @@ class CreatePostViewModel extends ChangeNotifier {
   final TextEditingController ageController = TextEditingController();
   final TextEditingController petName = TextEditingController();
   final TextEditingController searchController = TextEditingController();
+  final TextEditingController provinceCityMunicipalityBarangayController = TextEditingController();
   final FocusNode focusNode = FocusNode();
 
   final List<File> _images = [];
