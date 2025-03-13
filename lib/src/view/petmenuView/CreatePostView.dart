@@ -1,8 +1,13 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
+import '../../services/MapTilerKey.dart';
 import '../../utils/AppColors.dart';
+import '../../utils/ToastComponent.dart';
 import '../../view_model/CreatePostViewModel.dart';
 
 class CreatePostView extends StatelessWidget {
@@ -155,6 +160,48 @@ class CreatePostView extends StatelessWidget {
                 ),
               ),
             ),
+            if (createPostViewModel.selectedChip =="Missing Pets" || createPostViewModel.selectedChip =="Found Pets") ...[
+              Container(
+                height: screenHeight * 0.4,
+                child: MaplibreMap(
+                  styleString: "${MapTilerKey.styleUrl}?key=${MapTilerKey.apikey}",
+                  myLocationEnabled: true,
+                  initialCameraPosition: CameraPosition(
+                    target: LatLng(createPostViewModel.lat, createPostViewModel.long),
+                    zoom: 15.0,
+                  ),
+                  onMapCreated: (MaplibreMapController controller) async {
+                    createPostViewModel.mapController = controller;
+                    await createPostViewModel.loadMarkerImage(controller); // Load custom marker
+                    if (createPostViewModel.selectedLocation != null) {
+                      createPostViewModel.addPin(createPostViewModel.selectedLocation!);
+                    }
+                  },
+                  onMapClick: (point, coordinates) async {
+                    if (createPostViewModel.mapController == null) return;
+
+                    // Update location
+                    createPostViewModel.updateLocation(coordinates);
+
+                    // Remove previous markers
+                    await createPostViewModel.mapController!.clearSymbols();
+
+                    // Add new marker
+                    await createPostViewModel.mapController!.addSymbol(SymbolOptions(
+                      geometry: coordinates,
+                      iconImage: "custom_marker", // Use loaded image
+                      iconSize: 1.5,
+                    ));
+
+                    print("Pinned Location: ${coordinates.latitude}, ${coordinates.longitude}");
+                    ToastComponent().showMessage(AppColors.orange, 'Pinned Location: ${coordinates.latitude}, ${coordinates.longitude}');
+                  },
+                  gestureRecognizers: {
+                    Factory<OneSequenceGestureRecognizer>(() => EagerGestureRecognizer()),
+                  },
+                ),
+              ),
+    ],
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Container(

@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:pet_welfrare_ph/src/respository/PostRepository.dart';
@@ -198,6 +200,14 @@ class CreatePostViewModel extends ChangeNotifier {
   double newlong = 0.0;
   MaplibreMapController? mapController;
 
+  CreatePostViewModel () {
+    loadUserLocation();
+  }
+
+  Future<void> loadUserLocation() async{
+    await setInitialLocation();
+  }
+
   Future<void> pickImage() async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
@@ -254,5 +264,64 @@ class CreatePostViewModel extends ChangeNotifier {
         }
       }
     }
+  }
+
+  // Set initial location
+  Future<void> setInitialLocation() async {
+    if (_locationInitialized) return; // Prevent multiple calls
+    _locationInitialized = true;
+
+    bool serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) return;
+
+    LocationPermission permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) return;
+    }
+
+    if (permission == LocationPermission.deniedForever) return;
+
+    Position position = await Geolocator.getCurrentPosition();
+    lat = position.latitude;
+    long = position.longitude;
+    notifyListeners();
+
+    if (mapController != null) {
+      mapController!.animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, long), 15.0));
+      addPin(LatLng(lat, long));
+      notifyListeners();
+    }
+  }
+
+  // Update location when map is clicked
+  void updateLocation(LatLng newLocation) {
+    if (selectedLocation == newLocation) return; // Avoid redundant updates
+    selectedLocation = newLocation;
+    addPin(newLocation);
+
+    print('New location: $newLocation');
+    notifyListeners();
+  }
+
+  // Add marker to map
+  void addPin(LatLng position) {
+    if (mapController != null) {
+      mapController!.clearSymbols(); // Remove previous marker
+      mapController!.addSymbol(SymbolOptions(
+        geometry: position,
+        iconImage: "custom_marker", // Default MapLibre marker
+        iconSize: 2.0, // Adjust size if needed
+      ));
+      notifyListeners();
+    }
+  }
+
+  // Load custom marker image
+  Future<void> loadMarkerImage(MaplibreMapController controller) async {
+    ByteData data = await rootBundle.load('assets/icon/location.png');
+    Uint8List bytes = data.buffer.asUint8List();
+    await controller.addImage("custom_marker", bytes);
+    notifyListeners();
   }
 }
