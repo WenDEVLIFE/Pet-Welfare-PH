@@ -161,47 +161,152 @@ class CreatePostView extends StatelessWidget {
               ),
             ),
             if (createPostViewModel.selectedChip =="Missing Pets" || createPostViewModel.selectedChip =="Found Pets") ...[
-              Container(
-                height: screenHeight * 0.4,
-                child: MaplibreMap(
-                  styleString: "${MapTilerKey.styleUrl}?key=${MapTilerKey.apikey}",
-                  myLocationEnabled: true,
-                  initialCameraPosition: CameraPosition(
-                    target: LatLng(createPostViewModel.lat, createPostViewModel.long),
-                    zoom: 15.0,
+              Stack(
+                children: [
+                  Container(
+                    height: screenHeight * 0.4,
+                    child: MaplibreMap(
+                      styleString: "${MapTilerKey.styleUrl}?key=${MapTilerKey.apikey}",
+                      myLocationEnabled: true,
+                      initialCameraPosition: CameraPosition(
+                        target: LatLng(createPostViewModel.lat, createPostViewModel.long),
+                        zoom: 15.0,
+                      ),
+                      onMapCreated: (MaplibreMapController controller) async {
+                        createPostViewModel.mapController = controller;
+                        await createPostViewModel.loadMarkerImage(controller); // Load custom marker
+                        if (createPostViewModel.selectedLocation != null) {
+                          createPostViewModel.addPin(createPostViewModel.selectedLocation!);
+                        }
+                      },
+                      onMapClick: (point, coordinates) async {
+                        if (createPostViewModel.mapController == null) return;
+
+                        // Update location
+                        createPostViewModel.updateLocation(coordinates);
+
+                        // Remove previous markers
+                        await createPostViewModel.mapController!.clearSymbols();
+
+                        // Add new marker
+                        await createPostViewModel.mapController!.addSymbol(SymbolOptions(
+                          geometry: coordinates,
+                          iconImage: "custom_marker", // Use loaded image
+                          iconSize: 1.5,
+                        ));
+
+                        print("Pinned Location: ${coordinates.latitude}, ${coordinates.longitude}");
+                        ToastComponent().showMessage(AppColors.orange, 'Pinned Location: ${coordinates.latitude}, ${coordinates.longitude}');
+                      },
+                      gestureRecognizers: {
+                        Factory<OneSequenceGestureRecognizer>(() => EagerGestureRecognizer()),
+                      },
+                    ),
                   ),
-                  onMapCreated: (MaplibreMapController controller) async {
-                    createPostViewModel.mapController = controller;
-                    await createPostViewModel.loadMarkerImage(controller); // Load custom marker
-                    if (createPostViewModel.selectedLocation != null) {
-                      createPostViewModel.addPin(createPostViewModel.selectedLocation!);
-                    }
-                  },
-                  onMapClick: (point, coordinates) async {
-                    if (createPostViewModel.mapController == null) return;
+                  Padding(
+                    padding: const EdgeInsets.all(8.0),
+                    child: Column(
+                      children: [
+                        Container(
+                          width: screenWidth * 0.99,
+                          height: screenHeight * 0.08,
+                          padding: const EdgeInsets.symmetric(horizontal: 10.0),
+                          decoration: BoxDecoration(
+                            color: Colors.transparent,
+                            borderRadius: BorderRadius.circular(30),
+                            border: Border.all(color: Colors.transparent, width: 7),
+                          ),
+                          child: TextField(
+                            controller: createPostViewModel.searchController,
+                            focusNode: createPostViewModel.focusNode,
+                            onChanged: (query) {
+                              createPostViewModel.searchLocation(query);
+                            },
+                            decoration: InputDecoration(
+                              filled: true,
+                              prefixIcon: const Icon(Icons.search, color: Colors.black),
+                              suffixIcon: createPostViewModel.searchController.text.isNotEmpty
+                                  ? IconButton(
+                                icon: const Icon(Icons.clear, color: Colors.black),
+                                onPressed: () {
+                                  createPostViewModel.searchController.clear();
+                                  createPostViewModel.removePins();
+                                  createPostViewModel.showDropdown = false; // Hide dropdown when cleared
+                                },
+                              )
+                                  : null,
+                              fillColor: Colors.grey[200],
+                              border: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                              ),
+                              enabledBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(color: AppColors.orange, width: 2),
+                              ),
+                              focusedBorder: OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(10),
+                                borderSide: const BorderSide(color: AppColors.orange, width: 2),
+                              ),
+                              hintText: 'Search an address....',
+                              hintStyle: const TextStyle(
+                                color: Colors.black,
+                              ),
+                              contentPadding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 0),
+                            ),
+                            style: const TextStyle(
+                              fontFamily: 'LeagueSpartan',
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        if (createPostViewModel.showDropdown)
+                          Consumer<CreatePostViewModel>(
+                            builder: (context, viewModel, child) {
+                              return Container(
+                                height: screenHeight * 0.3,
+                                decoration: BoxDecoration(
+                                  color: Colors.white, // Set the background color
+                                  borderRadius: BorderRadius.circular(10),
+                                ),
+                                child: ListView.builder(
+                                  itemCount: viewModel.searchResults.length,
+                                  itemBuilder: (context, index) {
+                                    final result = viewModel.searchResults[index];
+                                    return ListTile(
+                                      title: Text(result['display_name']),
+                                      onTap: () {
 
-                    // Update location
-                    createPostViewModel.updateLocation(coordinates);
-
-                    // Remove previous markers
-                    await createPostViewModel.mapController!.clearSymbols();
-
-                    // Add new marker
-                    await createPostViewModel.mapController!.addSymbol(SymbolOptions(
-                      geometry: coordinates,
-                      iconImage: "custom_marker", // Use loaded image
-                      iconSize: 1.5,
-                    ));
-
-                    print("Pinned Location: ${coordinates.latitude}, ${coordinates.longitude}");
-                    ToastComponent().showMessage(AppColors.orange, 'Pinned Location: ${coordinates.latitude}, ${coordinates.longitude}');
-                  },
-                  gestureRecognizers: {
-                    Factory<OneSequenceGestureRecognizer>(() => EagerGestureRecognizer()),
-                  },
-                ),
+                                        createPostViewModel.searchController.text = result['display_name'];
+                                        createPostViewModel.showDropdown = false;
+                                        createPostViewModel.focusNode.unfocus();
+                                        createPostViewModel.addPin(LatLng(
+                                          double.parse(result['lat']),
+                                          double.parse(result['lon']),
+                                        ));
+                                        createPostViewModel.mapController?.animateCamera(
+                                          CameraUpdate.newLatLng(
+                                            LatLng(
+                                              double.parse(result['lat']),
+                                              double.parse(result['lon']),
+                                            ),
+                                          ),
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                              );
+                            },
+                          ),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-    ],
+            ],
             Padding(
               padding: const EdgeInsets.all(10.0),
               child: Container(

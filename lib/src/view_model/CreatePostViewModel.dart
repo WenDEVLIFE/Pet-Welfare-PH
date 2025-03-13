@@ -5,6 +5,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:pet_welfrare_ph/src/respository/PostRepository.dart';
+import 'package:pet_welfrare_ph/src/services/OpenStreetMapService.dart';
 import 'dart:io';
 
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
@@ -16,6 +17,8 @@ class CreatePostViewModel extends ChangeNotifier {
   final TextEditingController address = TextEditingController();
   final TextEditingController ageController = TextEditingController();
   final TextEditingController petName = TextEditingController();
+  final TextEditingController searchController = TextEditingController();
+  final FocusNode focusNode = FocusNode();
 
   final List<File> _images = [];
   var collarList = ['Select a collar','With Collar', 'Without Collar'];
@@ -199,9 +202,17 @@ class CreatePostViewModel extends ChangeNotifier {
   double newlat = 0.0;
   double newlong = 0.0;
   MaplibreMapController? mapController;
+  List<Map<String, dynamic>> searchResults = [];
+
+  final OpenStreetMapService _openStreetMapService = OpenStreetMapService();
+  bool showDropdown = false;
 
   CreatePostViewModel () {
     loadUserLocation();
+
+    searchController.addListener(() {
+        showDropdown = searchController.text.isNotEmpty;
+    });
   }
 
   Future<void> loadUserLocation() async{
@@ -323,5 +334,28 @@ class CreatePostViewModel extends ChangeNotifier {
     Uint8List bytes = data.buffer.asUint8List();
     await controller.addImage("custom_marker", bytes);
     notifyListeners();
+  }
+
+  Future<void> searchLocation(String query) async {
+    try {
+      final results = await _openStreetMapService.fetchOpenStreetMapData(query);
+
+      if (results.isEmpty) {
+        print('No results found.');
+      } else {
+        print('Results found: $results');
+      }
+      searchResults = results;
+      notifyListeners();
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
+  }
+
+  void removePins() {
+    if (mapController != null) {
+      mapController!.clearSymbols();
+      notifyListeners();
+    }
   }
 }
