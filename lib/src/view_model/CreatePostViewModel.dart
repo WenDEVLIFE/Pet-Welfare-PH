@@ -195,6 +195,18 @@ class CreatePostViewModel extends ChangeNotifier {
 
   List<File> get images => _images;
 
+  // Add these fields
+  String? selectedRegion;
+  String? selectedProvince;
+  String? selectedCity;
+  String? selectedBarangay;
+
+  List<String> regions = ['Region 1', 'Region 2']; // Add your regions
+  List<String> provinces = [];
+  List<String> cities = [];
+  List<String> barangays = [];
+
+
   // This is for the maps selection
   LatLng? selectedLocation;
   bool _locationInitialized = false;
@@ -358,5 +370,37 @@ class CreatePostViewModel extends ChangeNotifier {
       mapController!.clearSymbols();
       notifyListeners();
     }
+  }
+
+  void setSelectedRegion(String? region) {
+    selectedRegion = region;
+    // Update provinces based on selected region
+    provinces = ['Province 1', 'Province 2']; // Update with actual data
+    selectedProvince = null;
+    selectedCity = null;
+    selectedBarangay = null;
+    notifyListeners();
+  }
+
+  void setSelectedProvince(String? province) {
+    selectedProvince = province;
+    // Update cities based on selected province
+    cities = ['City 1', 'City 2']; // Update with actual data
+    selectedCity = null;
+    selectedBarangay = null;
+    notifyListeners();
+  }
+
+  void setSelectedCity(String? city) {
+    selectedCity = city;
+    // Update barangays based on selected city
+    barangays = ['Barangay 1', 'Barangay 2']; // Update with actual data
+    selectedBarangay = null;
+    notifyListeners();
+  }
+
+  void setSelectedBarangay(String? barangay) {
+    selectedBarangay = barangay;
+    notifyListeners();
   }
 }

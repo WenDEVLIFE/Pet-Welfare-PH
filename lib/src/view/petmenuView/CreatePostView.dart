@@ -465,36 +465,168 @@ class CreatePostView extends StatelessWidget {
                   ),
                 ),
               ),
-              const Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Select Region, Province, City and Barangay',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontFamily: 'SmoochSans',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
               Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: TextField(
-                  controller: createPostViewModel.address,
-                  decoration: InputDecoration(
-                    hintText: 'Street, Building, House No...',
-                    hintStyle: const TextStyle(
-                      color: Colors.black,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Select Region, Province, City and Barangay',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontFamily: 'SmoochSans',
+                        fontWeight: FontWeight.w600,
+                      ),
                     ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                    SizedBox(height: screenHeight * 0.01),
+                    Container(
+                      width: double.infinity,
+                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                      decoration: BoxDecoration(
+                        color: AppColors.gray,
+                        border: Border.all(color: AppColors.gray, width: 2),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: DropdownButtonHideUnderline(
+                        child: DropdownButton<String>(
+                          value: createPostViewModel.selectedRegion,
+                          hint: const Text('Select Region'),
+                          items: createPostViewModel.regions.map((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(
+                                value,
+                                style: const TextStyle(
+                                  color: Colors.black,
+                                  fontFamily: 'SmoochSans',
+                                  fontWeight: FontWeight.w600,
+                                ),
+                              ),
+                            );
+                          }).toList(),
+                          onChanged: (String? newValue) {
+                            createPostViewModel.setSelectedRegion(newValue);
+                          },
+                          dropdownColor: AppColors.gray,
+                          iconEnabledColor: Colors.grey,
+                          isExpanded: true,
+                        ),
+                      ),
                     ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 0),
-                  ),
+                    SizedBox(height: screenHeight * 0.01),
+                    if (createPostViewModel.selectedRegion != null)
+                      SizedBox(height: screenHeight * 0.01),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: AppColors.gray,
+                          border: Border.all(color: AppColors.gray, width: 2),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            value: createPostViewModel.selectedProvince,
+                            hint: const Text('Select Province'),
+                            items: createPostViewModel.provinces.map((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(
+                                  value,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'SmoochSans',
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              createPostViewModel.setSelectedProvince(newValue);
+                            },
+                            dropdownColor: AppColors.gray,
+                            iconEnabledColor: Colors.grey,
+                            isExpanded: true,
+                          ),
+                        ),
+                      ),
+                    SizedBox(height: screenHeight * 0.01),
+                    if (createPostViewModel.selectedProvince != null)
+                      SizedBox(height: screenHeight * 0.01),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: AppColors.gray,
+                          border: Border.all(color: AppColors.gray, width: 2),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            value: createPostViewModel.selectedCity,
+                            hint: const Text('Select City'),
+                            items: createPostViewModel.cities.map((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(
+                                  value,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'SmoochSans',
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              createPostViewModel.setSelectedCity(newValue);
+                            },
+                            dropdownColor: AppColors.gray,
+                            iconEnabledColor: Colors.grey,
+                            isExpanded: true,
+                          ),
+                        ),
+                      ),
+                    SizedBox(height: screenHeight * 0.01),
+                    if (createPostViewModel.selectedCity != null)
+                      SizedBox(height: screenHeight * 0.01),
+                      Container(
+                        width: double.infinity,
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: AppColors.gray,
+                          border: Border.all(color: AppColors.gray, width: 2),
+                          borderRadius: BorderRadius.circular(10),
+                        ),
+                        child: DropdownButtonHideUnderline(
+                          child: DropdownButton<String>(
+                            value: createPostViewModel.selectedBarangay,
+                            hint: const Text('Select Barangay'),
+                            items: createPostViewModel.barangays.map((String value) {
+                              return DropdownMenuItem<String>(
+                                value: value,
+                                child: Text(
+                                  value,
+                                  style: const TextStyle(
+                                    color: Colors.black,
+                                    fontFamily: 'SmoochSans',
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              );
+                            }).toList(),
+                            onChanged: (String? newValue) {
+                              createPostViewModel.setSelectedBarangay(newValue);
+                            },
+                            dropdownColor: AppColors.gray,
+                            iconEnabledColor: Colors.grey,
+                            isExpanded: true,
+                          ),
+                        ),
+                      ),
+                    SizedBox(height: screenHeight * 0.01),
+                  ],
                 ),
               ),
               Padding(
