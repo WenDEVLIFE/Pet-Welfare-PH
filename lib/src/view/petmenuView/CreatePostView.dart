@@ -14,9 +14,15 @@ class CreatePostView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text(
-          'Create a post',
-          style: TextStyle(
+        title: Text(
+          createPostViewModel.selectedChip == "Missing Pets"
+              ? 'Post a missing pets'
+              : createPostViewModel.selectedChip == "Found Pets"
+              ? 'Post a found pets'
+              : createPostViewModel.selectedChip == "Pet Adoption"
+              ? 'Post for adoption'
+              : 'Create a post',
+          style: const TextStyle(
             color: AppColors.white,
             fontSize: 20,
             fontFamily: 'SmoochSans',
@@ -28,13 +34,19 @@ class CreatePostView extends StatelessWidget {
       body: SingleChildScrollView(
         child: Column(
           children: [
-            const Padding(
-              padding: EdgeInsets.all(10.0),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
               child: Align(
                 alignment: Alignment.centerLeft,
                 child: Text(
-                  'Create a post to share with the community',
-                  style: TextStyle(
+                  createPostViewModel.selectedChip == "Missing Pets"
+                      ? 'Enter the details of the missing pet'
+                      : createPostViewModel.selectedChip == "Found Pets"
+                      ? 'Enter the details of the found pet'
+                      : createPostViewModel.selectedChip == "Pet Adoption"
+                      ? 'Enter the details of the pet for adoption'
+                      : 'Create a post',
+                  style: const TextStyle(
                     color: Colors.black,
                     fontSize: 18,
                     fontFamily: 'SmoochSans',
