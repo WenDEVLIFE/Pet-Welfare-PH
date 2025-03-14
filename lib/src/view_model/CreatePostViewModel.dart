@@ -17,6 +17,7 @@ import 'package:pet_welfrare_ph/src/model/CityModel.dart';
 import 'package:pet_welfrare_ph/src/model/BarangayModel.dart';
 
 import '../model/BreedModel.dart';
+import '../services/LocationService.dart';
 import '../services/PetAPI.dart';
 
 class CreatePostViewModel extends ChangeNotifier {
@@ -83,8 +84,13 @@ class CreatePostViewModel extends ChangeNotifier {
 
   // OpenStreetMapService
   final OpenStreetMapService _openStreetMapService = OpenStreetMapService();
+
+  // LocationService
+  final LocationService locationService = LocationService();
+
   bool showDropdown = false;
 
+  // Constructor
   CreatePostViewModel() {
     loadUserLocation();
     fetchRegions();
@@ -94,6 +100,7 @@ class CreatePostViewModel extends ChangeNotifier {
     });
   }
 
+  // Load user location
   Future<void> loadUserLocation() async {
     await setInitialLocation();
     await fetchCatBreeds(); // Fetch cat breeds
@@ -225,6 +232,7 @@ class CreatePostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // This is used for searched Locations
   Future<void> searchLocation(String query) async {
     try {
       final results = await _openStreetMapService.fetchOpenStreetMapData(query);
@@ -241,6 +249,7 @@ class CreatePostViewModel extends ChangeNotifier {
     }
   }
 
+  // Remove the pins on the map
   void removePins() {
     if (mapController != null) {
       mapController!.clearSymbols();
@@ -276,67 +285,66 @@ class CreatePostViewModel extends ChangeNotifier {
     }
   }
 
+  // Fetch Regions
   Future<void> fetchRegions() async {
     isLoading = true;
     notifyListeners();
-    final response = await http.get(Uri.parse('https://psgc.gitlab.io/api/regions'));
-    if (response.statusCode == 200) {
-      List data = jsonDecode(response.body);
-      regions = data.map((e) => RegionModel(region: e['name'], regionCode: e['code'])).toList();
+    try {
+      regions = await locationService.fetchRegions();
+    } catch (e) {
+      print('Failed to fetch regions: $e');
+    } finally {
+      isLoading = false;
+      notifyListeners();
     }
-    isLoading = false;
-    notifyListeners();
   }
 
+  // Fetch Provinces
   Future<void> fetchProvinces(String regionCode) async {
     isLoading = true;
     notifyListeners();
-    final response = await http.get(Uri.parse('https://psgc.gitlab.io/api/provinces'));
-    if (response.statusCode == 200) {
-      List data = jsonDecode(response.body);
-      provinces = data
-          .where((e) => e['regionCode'].toString() == regionCode)
-          .map((e) => ProvinceModel(provinceName: e['name'], provinceCode: e['code']))
-          .toList();
+    try {
+      provinces = await locationService.fetchProvinces(regionCode);
+    } catch (e) {
+      print('Failed to fetch provinces: $e');
+    } finally {
+      selectedProvince = null;
+      selectedCity = null;
+      selectedBarangay = null;
+      isLoading = false;
+      notifyListeners();
     }
-    selectedProvince = null; // Reset selected province
-    selectedCity = null; // Reset selected city
-    selectedBarangay = null; // Reset selected barangay
-    isLoading = false;
-    notifyListeners();
   }
 
+  // Fetch Cities
   Future<void> fetchCities(String provinceCode) async {
     isLoading = true;
     notifyListeners();
-    final response = await http.get(Uri.parse('https://psgc.gitlab.io/api/cities-municipalities'));
-    if (response.statusCode == 200) {
-      List data = jsonDecode(response.body);
-      cities = data
-          .where((e) => e['provinceCode'] == provinceCode)
-          .map((e) => CityModel(cityName: e['name'], cityCode: e['code']))
-          .toList();
+    try {
+      cities = await locationService.fetchCities(provinceCode);
+    } catch (e) {
+      print('Failed to fetch cities: $e');
+    } finally {
+      selectedCity = null;
+      selectedBarangay = null;
+      isLoading = false;
+      notifyListeners();
     }
-    selectedCity = null; // Reset selected city
-    selectedBarangay = null; // Reset selected barangay
-    isLoading = false;
-    notifyListeners();
   }
 
+  // Fetch Barrangay
   Future<void> fetchBarangays(String municipalityCode) async {
     isLoading = true;
     notifyListeners();
-    final response = await http.get(Uri.parse('https://psgc.gitlab.io/api/barangays'));
-    if (response.statusCode == 200) {
-      List data = jsonDecode(response.body);
-      barangays = data
-          .where((e) => e['municipalityCode'] == municipalityCode)
-          .map((e) => BarangayModel(barangayName: e['name'], municipalityCode: e['code']))
-          .toList();
+    try {
+      barangays = await locationService.fetchBarangays(municipalityCode);
+    } catch (e) {
+      print('Failed to fetch barangays: $e');
+    } finally {
+      selectedBarangay = null;
+      isLoading = false;
+      notifyListeners();
     }
-    selectedBarangay = null; // Reset selected barangay
-    isLoading = false;
-    notifyListeners();
   }
 
   void setSelectedRegion(RegionModel? region) {

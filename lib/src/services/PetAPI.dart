@@ -43,6 +43,7 @@ class PetAPI {
         Breed(id: "8", name: "British Shorthair", temperament: "Easygoing, Affectionate", imageUrl: ""),
         Breed(id: "9", name: "Sphynx", temperament: "Friendly, Energetic", imageUrl: ""),
         Breed(id: "10", name: "Russian Blue", temperament: "Shy, Loyal", imageUrl: ""),
+        Breed(id: "11", name: "Others", temperament: "Shy, Loyal", imageUrl: ""),
       ];
     }
   }
@@ -101,6 +102,7 @@ class PetAPI {
         Breed(id: "18", name: "Shih Tzu", temperament: "Affectionate, Friendly", imageUrl: ""),
         Breed(id: "19", name: "Pug", temperament: "Loving, Mischievous", imageUrl: ""),
         Breed(id: "20", name: "Dachshund", temperament: "Curious, Brave", imageUrl: ""),
+        Breed(id: "21", name: "Others", temperament: "Shy, Loyal", imageUrl: ""),
       ];
     }
   }
