@@ -127,10 +127,32 @@ class CreatePostViewModel extends ChangeNotifier {
   }
 
   void clearPost() {
+    if(selectedChip =='Lost pets' || selectedChip == 'Found Pets'){
+    postController.clear();
+    _images.clear();
+    selectedChip = 'Pet Appreciation';
+    petName.clear();
+    colorController.clear();
+    ageController.clear();
+    selectedPetType = 'Cat';
+    selectPedBreed = null;
+    selectedRegion = null;
+    provinces = [];
+    selectedProvince = null;
+    cities = [];
+    selectedCity = null;
+    barangays = [];
+    selectedBarangay = null;
+    address.clear();
+    searchController.clear();
+    notifyListeners();
+    }
+    else{
     postController.clear();
     _images.clear();
     selectedChip = 'Pet Appreciation';
     notifyListeners();
+    }
   }
 
   Future<void> PostNow(BuildContext context) async {
@@ -154,6 +176,65 @@ class CreatePostViewModel extends ChangeNotifier {
       }
     } else if (selectedChip == 'Missing Pets' || selectedChip == 'Found Pets') {
       // Implement functionality for Missing Pets or Found Pets
+      if (postController.text.isEmpty) {
+        ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
+      } else if (_images.isEmpty) {
+        ToastComponent().showMessage(Colors.red, 'Please select an image');
+      }
+      else if (petName.text.isEmpty) {
+        ToastComponent().showMessage(Colors.red , 'Please enter the name of the pet');
+      }
+
+     else if (colorController.text.isEmpty) {
+        ToastComponent().showMessage(Colors.red, 'Please enter the color of the pet');
+      }
+
+     else if (ageController.text.isEmpty) {
+        ToastComponent().showMessage(Colors.red, 'Please enter the age of the pet');
+      }
+      else if (selectedPetType == 'Cat' && selectPedBreed == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select the breed of the cat');
+      }
+      else if (selectedPetType == 'Dog' && selectPedBreed == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select the breed of the dog');
+      }
+      else if (selectedRegion == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a region');
+      } else if (selectedProvince == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a province');
+      } else if (selectedCity == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a city');
+      } else if (selectedBarangay == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a barangay');
+      } else {
+        ProgressDialog pd = ProgressDialog(context: context);
+        pd.show(max: 100, msg: 'Posting...');
+        try {
+         var petData = {
+           'post': postController.text,
+            'pet_name': petName.text,
+            'pet_type': selectedPetType,
+            'pet_breed': selectPedBreed!,
+            'pet_color': colorController.text,
+            'pet_age': ageController.text,
+            'region': selectedRegion!.region,
+            'province': selectedProvince!.provinceName,
+            'city': selectedCity!.cityName,
+            'barangay': selectedBarangay!.barangayName,
+            'address': address.text,
+            'lat': selectedLocation!.latitude,
+            'long': selectedLocation!.longitude,
+          };
+
+          await postRepository.uploadPetData(_images, selectedChip, petData);
+          ToastComponent().showMessage(Colors.green, '$selectedChip successful');
+          clearPost();
+        } catch (e) {
+          ToastComponent().showMessage(Colors.red, 'Failed to upload post: $e');
+        } finally {
+          pd.close();
+        }
+      }
     } else if (selectedChip == 'Find a Home: Rescue & Shelter') {
       // Implement functionality for Find a Home: Rescue & Shelter
     } else if (selectedChip == 'Call for Aid') {
@@ -347,6 +428,7 @@ class CreatePostViewModel extends ChangeNotifier {
     }
   }
 
+  // This is for the region
   void setSelectedRegion(RegionModel? region) {
     selectedRegion = region;
     selectedProvince = null;
@@ -373,6 +455,7 @@ class CreatePostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // This is for set city
   void setSelectedCity(CityModel? city) {
     selectedCity = city;
     selectedBarangay = null;
@@ -383,16 +466,19 @@ class CreatePostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // This is for the barangay
   void setSelectedBarangay(BarangayModel? barangay) {
     selectedBarangay = barangay;
     notifyListeners();
   }
 
+   // This is for the breed
   void selectedBreed(Breed? newValue) {
     selectPedBreed = newValue;
     notifyListeners();
   }
 
+  // This is for the pet type
   void setPetType(String? newValue) {
     selectedPetType = newValue!;
     notifyListeners();
