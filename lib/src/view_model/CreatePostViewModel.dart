@@ -1,3 +1,4 @@
+import 'dart:convert';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -7,13 +8,13 @@ import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:pet_welfrare_ph/src/respository/PostRepository.dart';
 import 'package:pet_welfrare_ph/src/services/OpenStreetMapService.dart';
 import 'dart:io';
-
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
+import 'package:http/http.dart' as http;
 
 class CreatePostViewModel extends ChangeNotifier {
   final TextEditingController postController = TextEditingController();
-  final TextEditingController  dateController = TextEditingController();
+  final TextEditingController dateController = TextEditingController();
   final TextEditingController address = TextEditingController();
   final TextEditingController ageController = TextEditingController();
   final TextEditingController petName = TextEditingController();
@@ -22,7 +23,7 @@ class CreatePostViewModel extends ChangeNotifier {
   final FocusNode focusNode = FocusNode();
 
   final List<File> _images = [];
-  var collarList = ['Select a collar','With Collar', 'Without Collar'];
+  var collarList = ['Select a collar', 'With Collar', 'Without Collar'];
   var catBreed = [
     'Select a breed',
     'Abyssinian',
@@ -201,11 +202,10 @@ class CreatePostViewModel extends ChangeNotifier {
   String? selectedCity;
   String? selectedBarangay;
 
-  List<String> regions = ['Region 1', 'Region 2']; // Add your regions
+  List<String> regions = []; // Add your regions
   List<String> provinces = [];
   List<String> cities = [];
   List<String> barangays = [];
-
 
   // This is for the maps selection
   LatLng? selectedLocation;
@@ -220,15 +220,16 @@ class CreatePostViewModel extends ChangeNotifier {
   final OpenStreetMapService _openStreetMapService = OpenStreetMapService();
   bool showDropdown = false;
 
-  CreatePostViewModel () {
+  CreatePostViewModel() {
     loadUserLocation();
+    fetchRegions();
 
     searchController.addListener(() {
-        showDropdown = searchController.text.isNotEmpty;
+      showDropdown = searchController.text.isNotEmpty;
     });
   }
 
-  Future<void> loadUserLocation() async{
+  Future<void> loadUserLocation() async {
     await setInitialLocation();
   }
 
@@ -259,70 +260,41 @@ class CreatePostViewModel extends ChangeNotifier {
   }
 
   Future<void> PostNow(BuildContext context) async {
-
-    if(selectedChip =='Pet Appreciation'){
+    if (selectedChip == 'Pet Appreciation') {
       if (postController.text.isEmpty) {
-        // Implement post functionality here
         ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
-      }
-
-      else if (_images.isEmpty) {
-        // Implement post functionality here
+      } else if (_images.isEmpty) {
         ToastComponent().showMessage(Colors.red, 'Please select an image');
-      }
-
-      else {
-        // Implement post functionality here
+      } else {
         ProgressDialog pd = ProgressDialog(context: context);
         pd.show(max: 100, msg: 'Posting...');
-        try{
+        try {
           await postRepository.uploadPost(postController.text, _images, selectedChip);
           ToastComponent().showMessage(Colors.green, 'Post successful');
           clearPost();
-        }
-        catch(e){
+        } catch (e) {
           ToastComponent().showMessage(Colors.red, 'Failed to upload post: $e');
-        }
-        finally{
+        } finally {
           pd.close();
         }
       }
-    } if (selectedChip == 'Missing Pets' || selectedChip =='Found Pets'){
-
-
-
-
-    }
-
-    if (selectedChip =='Find a Home: Rescue & Shelter'){
-
-    }
-
-    if (selectedChip =='Call for Aid'){
-
-    }
-
-    if (selectedChip =='Paw-some Experience'){
-
-    }
-
-    if (selectedChip =='Pet Adoption'){
-
-    }
-
-    if (selectedChip =='Protect Our Pets: Report Abuse'){
-
-    }
-
-    if (selectedChip =='Caring for Pets: Vet & Travel Insights'){
-
-    }
-
-    if (selectedChip =='Community Announcements'){
-
-    }
-
-    else{
+    } else if (selectedChip == 'Missing Pets' || selectedChip == 'Found Pets') {
+      // Implement functionality for Missing Pets or Found Pets
+    } else if (selectedChip == 'Find a Home: Rescue & Shelter') {
+      // Implement functionality for Find a Home: Rescue & Shelter
+    } else if (selectedChip == 'Call for Aid') {
+      // Implement functionality for Call for Aid
+    } else if (selectedChip == 'Paw-some Experience') {
+      // Implement functionality for Paw-some Experience
+    } else if (selectedChip == 'Pet Adoption') {
+      // Implement functionality for Pet Adoption
+    } else if (selectedChip == 'Protect Our Pets: Report Abuse') {
+      // Implement functionality for Protect Our Pets: Report Abuse
+    } else if (selectedChip == 'Caring for Pets: Vet & Travel Insights') {
+      // Implement functionality for Caring for Pets: Vet & Travel Insights
+    } else if (selectedChip == 'Community Announcements') {
+      // Implement functionality for Community Announcements
+    } else {
       ToastComponent().showMessage(Colors.red, 'This feature is not yet available');
     }
   }
@@ -409,30 +381,74 @@ class CreatePostViewModel extends ChangeNotifier {
     }
   }
 
+  Future<void> fetchRegions() async {
+    final response = await http.get(Uri.parse('https://psgc.gitlab.io/api/regions'));
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body);
+      regions = data.map((e) => e['name'].toString()).toList();
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchProvinces(String regionCode) async {
+    final response = await http.get(Uri.parse('https://psgc.gitlab.io/api/provinces'));
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body);
+      provinces = data
+          .where((e) => e['regionCode'].toString() == regionCode) // Convert to String for safe comparison
+          .map((e) => e['name'].toString())
+          .toList();
+      notifyListeners();
+    } else {
+      print("Failed to fetch provinces. Status Code: ${response.statusCode}");
+    }
+  }
+
+  Future<void> fetchCities(String provinceCode) async {
+    final response = await http.get(Uri.parse('https://psgc.gitlab.io/api/cities-municipalities'));
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body);
+      cities = data
+          .where((e) => e['provinceCode'] == provinceCode)
+          .map((e) => e['name'].toString())
+          .toList();
+      notifyListeners();
+    }
+  }
+
+  Future<void> fetchBarangays(String cityCode) async {
+    final response = await http.get(Uri.parse('https://psgc.gitlab.io/api/barangays'));
+    if (response.statusCode == 200) {
+      List data = jsonDecode(response.body);
+      barangays = data
+          .where((e) => e['cityCode'] == cityCode)
+          .map((e) => e['name'].toString())
+          .toList();
+      notifyListeners();
+    }
+  }
+
   void setSelectedRegion(String? region) {
     selectedRegion = region;
-    // Update provinces based on selected region
-    provinces = ['Province 1', 'Province 2']; // Update with actual data
     selectedProvince = null;
     selectedCity = null;
     selectedBarangay = null;
+    fetchProvinces(region!);
     notifyListeners();
   }
 
   void setSelectedProvince(String? province) {
     selectedProvince = province;
-    // Update cities based on selected province
-    cities = ['City 1', 'City 2']; // Update with actual data
     selectedCity = null;
     selectedBarangay = null;
+    fetchCities(province!);
     notifyListeners();
   }
 
   void setSelectedCity(String? city) {
     selectedCity = city;
-    // Update barangays based on selected city
-    barangays = ['Barangay 1', 'Barangay 2']; // Update with actual data
     selectedBarangay = null;
+    fetchBarangays(city!);
     notifyListeners();
   }
 
