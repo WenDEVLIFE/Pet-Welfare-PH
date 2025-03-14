@@ -16,6 +16,9 @@ import 'package:pet_welfrare_ph/src/model/ProvinceModel.dart';
 import 'package:pet_welfrare_ph/src/model/CityModel.dart';
 import 'package:pet_welfrare_ph/src/model/BarangayModel.dart';
 
+import '../model/BreedModel.dart';
+import '../services/PetAPI.dart';
+
 class CreatePostViewModel extends ChangeNotifier {
   final TextEditingController postController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
@@ -29,158 +32,12 @@ class CreatePostViewModel extends ChangeNotifier {
 
   final List<File> _images = [];
   var collarList = ['Select a collar', 'With Collar', 'Without Collar'];
-  var catBreed = [
-    'Select a breed',
-    'Abyssinian',
-    'American Bobtail',
-    'American Curl',
-    'American Shorthair',
-    'American Wirehair',
-    'Balinese',
-    'Bengal',
-    'Birman',
-    'Bombay',
-    'British Shorthair',
-    'Burmese',
-    'Burmilla',
-    'Chartreux',
-    'Cornish Rex',
-    'Devon Rex',
-    'Egyptian Mau',
-    'European Shorthair',
-    'Exotic Shorthair',
-    'Himalayan',
-    'Japanese Bobtail',
-    'Javanese',
-    'Korat',
-    'LaPerm',
-    'Maine Coon',
-    'Manx',
-    'Munchkin',
-    'Norwegian Forest Cat',
-    'Ocicat',
-    'Oriental Shorthair',
-    'Persian',
-    'Peterbald',
-    'Pixie-bob',
-    'Ragdoll',
-    'Russian Blue',
-    'Scottish Fold',
-    'Selkirk Rex',
-    'Siamese',
-    'Siberian',
-    'Singapura',
-    'Snowshoe',
-    'Somali',
-    'Sphynx',
-    'Tonkinese',
-    'Toyger',
-    'Turkish Angora',
-    'Turkish Van',
-    'Puspin'  // Mixed-breed in the Philippines
-  ];
-
-  var dogBreed = [
-    'Select a breed',
-    'Affenpinscher',
-    'Afghan Hound',
-    'Airedale Terrier',
-    'Akita',
-    'Alaskan Malamute',
-    'American Bulldog',
-    'American Eskimo Dog',
-    'American Pit Bull Terrier',
-    'American Staffordshire Terrier',
-    'Anatolian Shepherd Dog',
-    'Australian Cattle Dog',
-    'Australian Shepherd',
-    'Australian Terrier',
-    'Basenji',
-    'Basset Hound',
-    'Beagle',
-    'Bearded Collie',
-    'Beauceron',
-    'Bedlington Terrier',
-    'Belgian Malinois',
-    'Belgian Sheepdog',
-    'Belgian Tervuren',
-    'Bernese Mountain Dog',
-    'Bichon Frise',
-    'Black and Tan Coonhound',
-    'Bloodhound',
-    'Border Collie',
-    'Border Terrier',
-    'Borzoi',
-    'Boston Terrier',
-    'Bouvier des Flandres',
-    'Boxer',
-    'Boykin Spaniel',
-    'Briard',
-    'Brittany Spaniel',
-    'Bull Terrier',
-    'Bulldog',
-    'Bullmastiff',
-    'Cairn Terrier',
-    'Cavalier King Charles Spaniel',
-    'Chesapeake Bay Retriever',
-    'Chihuahua',
-    'Chinese Crested',
-    'Chow Chow',
-    'Cocker Spaniel',
-    'Collie',
-    'Coonhound',
-    'Corgi',
-    'Dachshund',
-    'Dalmatian',
-    'Doberman Pinscher',
-    'Dogo Argentino',
-    'English Bulldog',
-    'English Setter',
-    'English Springer Spaniel',
-    'French Bulldog',
-    'German Shepherd',
-    'Golden Retriever',
-    'Great Dane',
-    'Great Pyrenees',
-    'Greyhound',
-    'Havanese',
-    'Irish Setter',
-    'Irish Wolfhound',
-    'Jack Russell Terrier',
-    'Labrador Retriever',
-    'Lhasa Apso',
-    'Maltese',
-    'Mastiff',
-    'Miniature Pinscher',
-    'Miniature Schnauzer',
-    'Newfoundland',
-    'Papillon',
-    'Pekingese',
-    'Pembroke Welsh Corgi',
-    'Pit Bull',
-    'Pointer',
-    'Pomeranian',
-    'Poodle',
-    'Portuguese Water Dog',
-    'Pug',
-    'Puli',
-    'Puspin', // Mixed-breed in the Philippines
-    'Rottweiler',
-    'Saint Bernard',
-    'Samoyed',
-    'Schnauzer',
-    'Scottish Terrier',
-    'Shetland Sheepdog',
-    'Shih Tzu',
-    'Siberian Husky',
-    'Staffordshire Bull Terrier',
-    'Tibetan Mastiff',
-    'Tibetan Terrier',
-    'Weimaraner',
-    'West Highland White Terrier',
-    'Whippet',
-    'Yorkshire Terrier'
-  ];
+  // Add these fields to store the breeds
+  List<String> petTypes = ['Cat', 'Dog'];
+  String selectedPetType = 'Cat';
+  List<Breed> catBreeds = [];
+  List<Breed> dogBreeds = [];
+  Breed? selectPedBreed;
 
   var chipLabels1 = [
     'Pet Appreciation',
@@ -231,6 +88,8 @@ class CreatePostViewModel extends ChangeNotifier {
   CreatePostViewModel() {
     loadUserLocation();
     fetchRegions();
+    fetchCatBreeds(); // Fetch cat breeds
+    fetchDogBreeds(); // Fetch dog breeds
 
     searchController.addListener(() {
       showDropdown = searchController.text.isNotEmpty;
@@ -389,6 +248,34 @@ class CreatePostViewModel extends ChangeNotifier {
     }
   }
 
+  // Method to fetch cat breeds
+  Future<void> fetchCatBreeds() async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      catBreeds = await PetAPI.fetchCatBreeds();
+    } catch (e) {
+      print('Failed to fetch cat breeds: $e');
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
+  // Method to fetch dog breeds
+  Future<void> fetchDogBreeds() async {
+    isLoading = true;
+    notifyListeners();
+    try {
+      dogBreeds = await PetAPI.fetchDogBreeds();
+    } catch (e) {
+      print('Failed to fetch dog breeds: $e');
+    } finally {
+      isLoading = false;
+      notifyListeners();
+    }
+  }
+
   Future<void> fetchRegions() async {
     isLoading = true;
     notifyListeners();
@@ -491,6 +378,21 @@ class CreatePostViewModel extends ChangeNotifier {
 
   void setSelectedBarangay(BarangayModel? barangay) {
     selectedBarangay = barangay;
+    notifyListeners();
+  }
+
+  void selectedBreed(Breed? newValue) {
+    if (selectedPetType == 'Cat') {
+      selectPedBreed = newValue;
+    } else {
+      selectPedBreed = newValue;
+    }
+    notifyListeners();
+
+  }
+
+  void setPetType(String? newValue) {
+    selectedPetType = newValue!;
     notifyListeners();
   }
 }

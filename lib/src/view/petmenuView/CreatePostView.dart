@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import 'dart:io';
 import '../../model/BarangayModel.dart';
 import '../../model/BarangayModel.dart';
+import '../../model/BreedModel.dart';
 import '../../model/CityModel.dart';
 import '../../model/ProvinceModel.dart';
 import '../../model/RegionModel.dart';
@@ -502,6 +503,166 @@ class CreatePostView extends StatelessWidget {
                   ),
                 ),
               ),
+              const Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Select a Pet Type',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontFamily: 'SmoochSans',
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child:  Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                  decoration: BoxDecoration(
+                    color: AppColors.gray,
+                    border: Border.all(color: AppColors.gray, width: 2),
+                    borderRadius: BorderRadius.circular(10),
+                  ),
+                  child: DropdownButtonHideUnderline(
+                    child: DropdownButton<String>(
+                      value: createPostViewModel.selectedPetType,
+                      hint: const Text('Select Pet Type'),
+                      items: createPostViewModel.petTypes.map((String value) {
+                        return DropdownMenuItem<String>(
+                          value: value,
+                          child: Text(
+                            value,
+                            style: const TextStyle(
+                              color: Colors.black,
+                              fontFamily: 'SmoochSans',
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        );
+                      }).toList(),
+                      onChanged: (String? newValue) {
+                        createPostViewModel.setPetType(newValue);
+                      },
+                      dropdownColor: AppColors.gray,
+                      iconEnabledColor: Colors.grey,
+                      isExpanded: true,
+                    ),
+                  ),
+                ),
+              ),
+               if (createPostViewModel.selectedPetType == 'Cat' ) ...[
+                 const Padding(
+                   padding: EdgeInsets.all(10.0),
+                   child: Align(
+                     alignment: Alignment.centerLeft,
+                     child: Text(
+                       'Cat Breed',
+                       style: TextStyle(
+                         color: Colors.black,
+                         fontSize: 18,
+                         fontFamily: 'SmoochSans',
+                         fontWeight: FontWeight.w600,
+                       ),
+                     ),
+                   ),
+                 ),
+                 Padding(
+                   padding: const EdgeInsets.all(10.0),
+                   child:  Container(
+                     width: double.infinity,
+                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                     decoration: BoxDecoration(
+                       color: AppColors.gray,
+                       border: Border.all(color: AppColors.gray, width: 2),
+                       borderRadius: BorderRadius.circular(10),
+                     ),
+                     child: DropdownButtonHideUnderline(
+                       child: DropdownButton<Breed>(
+                         value: createPostViewModel.selectPedBreed,
+                         hint: const Text('Select Cat Breed'),
+                         items: createPostViewModel.catBreeds.map((Breed region) {
+                           return DropdownMenuItem<Breed>(
+                             value: region,
+                             child: Text(
+                               region.name,
+                               style: const TextStyle(
+                                 color: Colors.black,
+                                 fontFamily: 'SmoochSans',
+                                 fontWeight: FontWeight.w600,
+                               ),
+                             ),
+                           );
+                         }).toList(),
+                         onChanged: (Breed? newValue) {
+                           createPostViewModel.selectedBreed(newValue);
+                         },
+                         dropdownColor: AppColors.gray,
+                         iconEnabledColor: Colors.grey,
+                         isExpanded: true,
+                       ),
+                     ),
+                   ),
+                 ),
+               ],
+              if (createPostViewModel.selectedPetType == 'Dog' ) ...[
+                const Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Dog Breed',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontFamily: 'SmoochSans',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child:  Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: AppColors.gray,
+                      border: Border.all(color: AppColors.gray, width: 2),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<Breed>(
+                        value: createPostViewModel.selectPedBreed,
+                        hint: const Text('Select Dog Breed'),
+                        items: createPostViewModel.dogBreeds.map((Breed region) {
+                          return DropdownMenuItem<Breed>(
+                            value: region,
+                            child: Text(
+                              region.name,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'SmoochSans',
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (Breed? newValue) {
+                          createPostViewModel.selectedBreed(newValue);
+                        },
+                        dropdownColor: AppColors.gray,
+                        iconEnabledColor: Colors.grey,
+                        isExpanded: true,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Column(
