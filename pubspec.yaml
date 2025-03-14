@@ -48,6 +48,7 @@ dependencies:
   cloud_functions: ^5.3.2
   http: ^0.13.3
   timeago: ^3.0.2
+  philippines_rpcmb: ^0.0.3
 
 dev_dependencies:
   flutter_test:

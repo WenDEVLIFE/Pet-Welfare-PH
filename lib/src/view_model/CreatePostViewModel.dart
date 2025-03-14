@@ -287,6 +287,43 @@ class CreatePostViewModel extends ChangeNotifier {
           pd.close();
         }
       }
+    } if (selectedChip == 'Missing Pets' || selectedChip =='Found Pets'){
+
+
+
+
+    }
+
+    if (selectedChip =='Find a Home: Rescue & Shelter'){
+
+    }
+
+    if (selectedChip =='Call for Aid'){
+
+    }
+
+    if (selectedChip =='Paw-some Experience'){
+
+    }
+
+    if (selectedChip =='Pet Adoption'){
+
+    }
+
+    if (selectedChip =='Protect Our Pets: Report Abuse'){
+
+    }
+
+    if (selectedChip =='Caring for Pets: Vet & Travel Insights'){
+
+    }
+
+    if (selectedChip =='Community Announcements'){
+
+    }
+
+    else{
+      ToastComponent().showMessage(Colors.red, 'This feature is not yet available');
     }
   }
 
