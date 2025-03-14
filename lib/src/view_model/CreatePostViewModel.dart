@@ -11,6 +11,10 @@ import 'dart:io';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
 import 'package:http/http.dart' as http;
+import 'package:pet_welfrare_ph/src/model/RegionModel.dart';
+import 'package:pet_welfrare_ph/src/model/ProvinceModel.dart';
+import 'package:pet_welfrare_ph/src/model/CityModel.dart';
+import 'package:pet_welfrare_ph/src/model/BarangayModel.dart';
 
 class CreatePostViewModel extends ChangeNotifier {
   final TextEditingController postController = TextEditingController();
@@ -197,15 +201,15 @@ class CreatePostViewModel extends ChangeNotifier {
   List<File> get images => _images;
 
   // Add these fields
-  String? selectedRegion;
-  String? selectedProvince;
-  String? selectedCity;
-  String? selectedBarangay;
+  RegionModel? selectedRegion;
+  ProvinceModel? selectedProvince;
+  CityModel? selectedCity;
+  BarangayModel? selectedBarangay;
 
-  List<String> regions = []; // Add your regions
-  List<String> provinces = [];
-  List<String> cities = [];
-  List<String> barangays = [];
+  List<RegionModel> regions = [];
+  List<ProvinceModel> provinces = [];
+  List<CityModel> cities = [];
+  List<BarangayModel> barangays = [];
 
   // This is for the maps selection
   LatLng? selectedLocation;
@@ -385,7 +389,7 @@ class CreatePostViewModel extends ChangeNotifier {
     final response = await http.get(Uri.parse('https://psgc.gitlab.io/api/regions'));
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body);
-      regions = data.map((e) => e['name'].toString()).toList();
+      regions = data.map((e) => RegionModel(region: e['name'], regionCode: e['code'])).toList();
       notifyListeners();
     }
   }
@@ -396,7 +400,7 @@ class CreatePostViewModel extends ChangeNotifier {
       List data = jsonDecode(response.body);
       provinces = data
           .where((e) => e['regionCode'].toString() == regionCode) // Convert to String for safe comparison
-          .map((e) => e['name'].toString())
+          .map((e) => ProvinceModel(provinceName: e['name'], provinceCode: e['code']))
           .toList();
       notifyListeners();
     } else {
@@ -410,49 +414,49 @@ class CreatePostViewModel extends ChangeNotifier {
       List data = jsonDecode(response.body);
       cities = data
           .where((e) => e['provinceCode'] == provinceCode)
-          .map((e) => e['name'].toString())
+          .map((e) => CityModel(cityName: e['name'], cityCode: e['code']))
           .toList();
       notifyListeners();
     }
   }
 
-  Future<void> fetchBarangays(String cityCode) async {
+  Future<void> fetchBarangays(String municipalityCode) async {
     final response = await http.get(Uri.parse('https://psgc.gitlab.io/api/barangays'));
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body);
       barangays = data
-          .where((e) => e['cityCode'] == cityCode)
-          .map((e) => e['name'].toString())
+          .where((e) => e['municipalityCode'] == municipalityCode)
+          .map((e) => BarangayModel(barangayName: e['name'], municipalityCode: e['code']))
           .toList();
       notifyListeners();
     }
   }
 
-  void setSelectedRegion(String? region) {
+  void setSelectedRegion(RegionModel? region) {
     selectedRegion = region;
     selectedProvince = null;
     selectedCity = null;
     selectedBarangay = null;
-    fetchProvinces(region!);
+    fetchProvinces(region!.regionCode);
     notifyListeners();
   }
 
-  void setSelectedProvince(String? province) {
+  void setSelectedProvince(ProvinceModel? province) {
     selectedProvince = province;
     selectedCity = null;
     selectedBarangay = null;
-    fetchCities(province!);
+    fetchCities(province!.provinceCode);
     notifyListeners();
   }
 
-  void setSelectedCity(String? city) {
+  void setSelectedCity(CityModel? city) {
     selectedCity = city;
     selectedBarangay = null;
-    fetchBarangays(city!);
+    fetchBarangays(city!.cityCode);
     notifyListeners();
   }
 
-  void setSelectedBarangay(String? barangay) {
+  void setSelectedBarangay(BarangayModel? barangay) {
     selectedBarangay = barangay;
     notifyListeners();
   }
