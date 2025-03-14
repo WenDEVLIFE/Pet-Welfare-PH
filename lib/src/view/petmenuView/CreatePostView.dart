@@ -6,7 +6,6 @@ import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 import '../../model/BarangayModel.dart';
-import '../../model/BarangayModel.dart';
 import '../../model/BreedModel.dart';
 import '../../model/CityModel.dart';
 import '../../model/ProvinceModel.dart';

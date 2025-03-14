@@ -85,36 +85,67 @@ class PostRepositoryImpl implements PostRepository {
       String petName = petData['pet_name'];
       String petType = petData['pet_type'];
       String petBreed = petData['pet_breed'];
-      String petColor = petData['pet_color'];
       String petAge = petData['pet_age'];
       String region = petData['region'];
       String province = petData['province'];
       String city = petData['city'];
+      String gender = petData['gender'];
+      String size = petData['size'];
+      String color = petData['color'];
+      String collar = petData['collar'];
       String barangay = petData['barangay'];
       String address = petData['address'];
       double lat = petData['lat'];
       double long = petData['long'];
 
+      if(petType=='Cat' ||petType== 'Dog'){
+        await postRef.set({
+          'PostID': postID,
+          'PostOwnerID': uuid,
+          'PostDescription': post,
+          'Category': selectedChip,
+          'Timestamp': FieldValue.serverTimestamp(),
+          'PetName': petName,
+          'PetType': petType,
+          'PetGender':gender,
+          'PetSize': size,
+          'PetColor': color,
+          'PetCollar': collar,
+          'PetBreed': petBreed,
+          'PetAge': petAge,
+          'Region': region,
+          'Province': province,
+          'City': city,
+          'Barangay': barangay,
+          'Address': address,
+          'Latitude': lat,
+          'Longitude': long,
+        });
+      }
 
-      await postRef.set({
-        'PostID': postID,
-        'PostOwnerID': uuid,
-        'PostDescription': post,
-        'Category': selectedChip,
-        'Timestamp': FieldValue.serverTimestamp(),
-        'PetName': petName,
-        'PetType': petType,
-        'PetBreed': petBreed,
-        'PetColor': petColor,
-        'PetAge': petAge,
-        'Region': region,
-        'Province': province,
-        'City': city,
-        'Barangay': barangay,
-        'Address': address,
-        'Latitude': lat,
-        'Longitude': long,
-      });
+      else{
+        await postRef.set({
+          'PostID': postID,
+          'PostOwnerID': uuid,
+          'PostDescription': post,
+          'Category': selectedChip,
+          'Timestamp': FieldValue.serverTimestamp(),
+          'PetName': petName,
+          'PetType': petType,
+          'PetGender':gender,
+          'PetSize': size,
+          'PetColor': color,
+          'PetBreed': petBreed,
+          'PetAge': petAge,
+          'Region': region,
+          'Province': province,
+          'City': city,
+          'Barangay': barangay,
+          'Address': address,
+          'Latitude': lat,
+          'Longitude': long,
+        });
+      }
 
       // Upload images concurrently and store their URLs in the images sub-collection
       List<Future<void>> uploadTasks = images.map((File image) async {
