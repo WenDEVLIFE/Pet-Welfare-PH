@@ -24,6 +24,7 @@ class CreatePostViewModel extends ChangeNotifier {
   final TextEditingController petName = TextEditingController();
   final TextEditingController searchController = TextEditingController();
   final TextEditingController provinceCityMunicipalityBarangayController = TextEditingController();
+  final TextEditingController colorController = TextEditingController();
   final FocusNode focusNode = FocusNode();
 
   final List<File> _images = [];
@@ -206,6 +207,7 @@ class CreatePostViewModel extends ChangeNotifier {
   CityModel? selectedCity;
   BarangayModel? selectedBarangay;
 
+  // This is for the dropdowns for lost and found pets
   List<RegionModel> regions = [];
   List<ProvinceModel> provinces = [];
   List<CityModel> cities = [];
@@ -222,6 +224,7 @@ class CreatePostViewModel extends ChangeNotifier {
   MaplibreMapController? mapController;
   List<Map<String, dynamic>> searchResults = [];
 
+  // OpenStreetMapService
   final OpenStreetMapService _openStreetMapService = OpenStreetMapService();
   bool showDropdown = false;
 
