@@ -555,61 +555,61 @@ class CreatePostView extends StatelessWidget {
                   ),
                 ),
               ),
-               if (createPostViewModel.selectedPetType == 'Cat' ) ...[
-                 const Padding(
-                   padding: EdgeInsets.all(10.0),
-                   child: Align(
-                     alignment: Alignment.centerLeft,
-                     child: Text(
-                       'Cat Breed',
-                       style: TextStyle(
-                         color: Colors.black,
-                         fontSize: 18,
-                         fontFamily: 'SmoochSans',
-                         fontWeight: FontWeight.w600,
-                       ),
-                     ),
-                   ),
-                 ),
-                 Padding(
-                   padding: const EdgeInsets.all(10.0),
-                   child:  Container(
-                     width: double.infinity,
-                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                     decoration: BoxDecoration(
-                       color: AppColors.gray,
-                       border: Border.all(color: AppColors.gray, width: 2),
-                       borderRadius: BorderRadius.circular(10),
-                     ),
-                     child: DropdownButtonHideUnderline(
-                       child: DropdownButton<Breed>(
-                         value: createPostViewModel.selectPedBreed,
-                         hint: const Text('Select Cat Breed'),
-                         items: createPostViewModel.catBreeds.map((Breed region) {
-                           return DropdownMenuItem<Breed>(
-                             value: region,
-                             child: Text(
-                               region.name,
-                               style: const TextStyle(
-                                 color: Colors.black,
-                                 fontFamily: 'SmoochSans',
-                                 fontWeight: FontWeight.w600,
-                               ),
-                             ),
-                           );
-                         }).toList(),
-                         onChanged: (Breed? newValue) {
-                           createPostViewModel.selectedBreed(newValue);
-                         },
-                         dropdownColor: AppColors.gray,
-                         iconEnabledColor: Colors.grey,
-                         isExpanded: true,
-                       ),
-                     ),
-                   ),
-                 ),
-               ],
-              if (createPostViewModel.selectedPetType == 'Dog' ) ...[
+              if (createPostViewModel.selectedPetType == 'Cat') ...[
+                const Padding(
+                  padding: EdgeInsets.all(10.0),
+                  child: Align(
+                    alignment: Alignment.centerLeft,
+                    child: Text(
+                      'Cat Breed',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontFamily: 'SmoochSans',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                  ),
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: Container(
+                    width: double.infinity,
+                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                    decoration: BoxDecoration(
+                      color: AppColors.gray,
+                      border: Border.all(color: AppColors.gray, width: 2),
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: DropdownButtonHideUnderline(
+                      child: DropdownButton<Breed>(
+                        value: createPostViewModel.selectPedBreed,
+                        hint: const Text('Select Cat Breed'),
+                        items: createPostViewModel.catBreeds.map((Breed breed) {
+                          return DropdownMenuItem<Breed>(
+                            value: breed,
+                            child: Text(
+                              breed.name,
+                              style: const TextStyle(
+                                color: Colors.black,
+                                fontFamily: 'SmoochSans',
+                                fontWeight: FontWeight.w600,
+                              ),
+                            ),
+                          );
+                        }).toList(),
+                        onChanged: (Breed? newValue) {
+                          createPostViewModel.selectedBreed(newValue);
+                        },
+                        dropdownColor: AppColors.gray,
+                        iconEnabledColor: Colors.grey,
+                        isExpanded: true,
+                      ),
+                    ),
+                  ),
+                ),
+              ],
+              if (createPostViewModel.selectedPetType == 'Dog') ...[
                 const Padding(
                   padding: EdgeInsets.all(10.0),
                   child: Align(
@@ -627,7 +627,7 @@ class CreatePostView extends StatelessWidget {
                 ),
                 Padding(
                   padding: const EdgeInsets.all(10.0),
-                  child:  Container(
+                  child: Container(
                     width: double.infinity,
                     padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
                     decoration: BoxDecoration(
@@ -639,11 +639,11 @@ class CreatePostView extends StatelessWidget {
                       child: DropdownButton<Breed>(
                         value: createPostViewModel.selectPedBreed,
                         hint: const Text('Select Dog Breed'),
-                        items: createPostViewModel.dogBreeds.map((Breed region) {
+                        items: createPostViewModel.dogBreeds.map((Breed breed) {
                           return DropdownMenuItem<Breed>(
-                            value: region,
+                            value: breed,
                             child: Text(
-                              region.name,
+                              breed.name,
                               style: const TextStyle(
                                 color: Colors.black,
                                 fontFamily: 'SmoochSans',

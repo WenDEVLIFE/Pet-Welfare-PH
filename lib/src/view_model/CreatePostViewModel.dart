@@ -88,8 +88,6 @@ class CreatePostViewModel extends ChangeNotifier {
   CreatePostViewModel() {
     loadUserLocation();
     fetchRegions();
-    fetchCatBreeds(); // Fetch cat breeds
-    fetchDogBreeds(); // Fetch dog breeds
 
     searchController.addListener(() {
       showDropdown = searchController.text.isNotEmpty;
@@ -98,6 +96,8 @@ class CreatePostViewModel extends ChangeNotifier {
 
   Future<void> loadUserLocation() async {
     await setInitialLocation();
+    await fetchCatBreeds(); // Fetch cat breeds
+    await fetchDogBreeds(); // Fetch dog breeds
   }
 
   Future<void> pickImage() async {
@@ -365,7 +365,6 @@ class CreatePostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-
   void setSelectedCity(CityModel? city) {
     selectedCity = city;
     selectedBarangay = null;
@@ -382,13 +381,8 @@ class CreatePostViewModel extends ChangeNotifier {
   }
 
   void selectedBreed(Breed? newValue) {
-    if (selectedPetType == 'Cat') {
-      selectPedBreed = newValue;
-    } else {
-      selectPedBreed = newValue;
-    }
+    selectPedBreed = newValue;
     notifyListeners();
-
   }
 
   void setPetType(String? newValue) {
