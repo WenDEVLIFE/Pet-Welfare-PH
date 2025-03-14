@@ -24,21 +24,60 @@ class CreatePostViewModel extends ChangeNotifier {
   final TextEditingController postController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
   final TextEditingController address = TextEditingController();
-  final TextEditingController ageController = TextEditingController();
   final TextEditingController petName = TextEditingController();
   final TextEditingController searchController = TextEditingController();
   final TextEditingController provinceCityMunicipalityBarangayController = TextEditingController();
-  final TextEditingController colorController = TextEditingController();
   final FocusNode focusNode = FocusNode();
 
   final List<File> _images = [];
-  var collarList = ['Select a collar', 'With Collar', 'Without Collar'];
+  var collarList = ['With Collar', 'Without Collar'];
+  String selectedCollar = 'With Collar';
   // Add these fields to store the breeds
-  List<String> petTypes = ['Cat', 'Dog'];
+  List<String> petTypes = ['Cat', 'Dog', 'Others (for birds, reptiles, etc.)'];
   String selectedPetType = 'Cat';
   List<Breed> catBreeds = [];
   List<Breed> dogBreeds = [];
+  List<String> petSize =['Tiny' , 'Small', 'Medium', 'Large'];
+  String selectedPetSize = 'Tiny';
   Breed? selectPedBreed;
+
+  List <String> petGender = ['Male', 'Female', 'Can’t determine (for found pets)'];
+  String selectedPetGender ='Male';
+
+  var petAgeList = ['1 month', '2 months', '3 months', '4 months', '5 months', '6 months', '7 months', '8 months', '9 months', '10 months', '11 months', '1 year', '2 years', '3 years', '4 years', '5 years', '6 years', '7 years', '8 years', '9 years', '10 years', '11 years', '12 years', '13 years', '14 years', '15 years', '16 years', '17 years', '18 years', '19 years', '20 years', '21 years', '22 years', '23 years', '24 years', '25 years', '26 years', '27 years', '28 years', '29 years', '30 years', '31 years', '32 years', '33 years', '34 years', '35 years' ];
+  var selectedPetAge = '1 month';
+
+  List<String> colorpatter = [
+    'Calico',
+    'Tortoiseshell',
+    'Tabby',
+    'Short hair',
+    'Fluffy/Long hair',
+    'Tilapia/Tiger',
+    'Cow',
+    'Tuxedo',
+    'Pointed',
+    'Orange',
+    'Smoke',
+    'Cinnamon',
+    'White/Cream',
+    'Black/Black and Tan',
+    'Brown',
+    'Blue/Blue-gray',
+    'Fawn',
+    'Sable',
+    'Merle/Dapple',
+    'Brindle',
+    'Bicolor',
+    'Tricolor',
+    'Spotted',
+    'Piebald',
+    'Ticked/Flecked',
+    'Mask',
+    'Others'
+  ];
+
+  String selectedColorPattern = 'Calico';
 
   var chipLabels1 = [
     'Pet Appreciation',
@@ -132,8 +171,8 @@ class CreatePostViewModel extends ChangeNotifier {
     _images.clear();
     selectedChip = 'Pet Appreciation';
     petName.clear();
-    colorController.clear();
-    ageController.clear();
+    selectedColorPattern = 'Calico';
+     selectedPetAge = '1 month';
     selectedPetType = 'Cat';
     selectPedBreed = null;
     selectedRegion = null;
@@ -185,13 +224,6 @@ class CreatePostViewModel extends ChangeNotifier {
         ToastComponent().showMessage(Colors.red , 'Please enter the name of the pet');
       }
 
-     else if (colorController.text.isEmpty) {
-        ToastComponent().showMessage(Colors.red, 'Please enter the color of the pet');
-      }
-
-     else if (ageController.text.isEmpty) {
-        ToastComponent().showMessage(Colors.red, 'Please enter the age of the pet');
-      }
       else if (selectedPetType == 'Cat' && selectPedBreed == null) {
         ToastComponent().showMessage(Colors.red, 'Please select the breed of the cat');
       }
@@ -215,8 +247,8 @@ class CreatePostViewModel extends ChangeNotifier {
             'pet_name': petName.text,
             'pet_type': selectedPetType,
             'pet_breed': selectPedBreed!,
-            'pet_color': colorController.text,
-            'pet_age': ageController.text,
+            'pet_color': selectedColorPattern,
+            'pet_age': selectedPetAge,
             'region': selectedRegion!.region,
             'province': selectedProvince!.provinceName,
             'city': selectedCity!.cityName,
@@ -343,7 +375,7 @@ class CreatePostViewModel extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
     try {
-      catBreeds = await PetAPI.fetchCatBreeds();
+      catBreeds = PetAPI.getDefaultCatBreeds();
     } catch (e) {
       print('Failed to fetch cat breeds: $e');
     } finally {
@@ -357,7 +389,7 @@ class CreatePostViewModel extends ChangeNotifier {
     isLoading = true;
     notifyListeners();
     try {
-      dogBreeds = await PetAPI.fetchDogBreeds();
+      dogBreeds = PetAPI.getDefaultDogBreeds();
     } catch (e) {
       print('Failed to fetch dog breeds: $e');
     } finally {
@@ -481,6 +513,36 @@ class CreatePostViewModel extends ChangeNotifier {
   // This is for the pet type
   void setPetType(String? newValue) {
     selectedPetType = newValue!;
+    notifyListeners();
+  }
+
+  // This is for the color or pattern
+  void setColor(String? newValue) {
+    selectedColorPattern = newValue!;
+    notifyListeners();
+  }
+
+  // This is for the color type
+  void setCollarType(String? newValue) {
+    selectedCollar = newValue!;
+    notifyListeners();
+  }
+
+  // This is for the gender
+  void setPetGender(String? newValue) {
+    selectedPetGender = newValue!;
+    notifyListeners();
+  }
+
+  // This is for the size
+  void setPetSize(String? newValue) {
+    selectedPetSize = newValue!;
+    notifyListeners();
+  }
+
+  // This is for the age
+  void setPetAge(String? newValue) {
+    selectedPetAge = newValue!;
     notifyListeners();
   }
 }
