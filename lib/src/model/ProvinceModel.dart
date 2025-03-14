@@ -4,7 +4,7 @@ class ProvinceModel {
 
   ProvinceModel({
     required this.provinceName,
-    required this.provinceCode
+    required this.provinceCode,
   });
 
   @override

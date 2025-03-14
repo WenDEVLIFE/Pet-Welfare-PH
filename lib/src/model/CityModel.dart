@@ -1,10 +1,10 @@
-class CityModel{
+class CityModel {
   String cityName;
   String cityCode;
 
   CityModel({
     required this.cityName,
-    required this.cityCode
+    required this.cityCode,
   });
 
   @override

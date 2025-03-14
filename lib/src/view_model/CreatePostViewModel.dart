@@ -210,6 +210,7 @@ class CreatePostViewModel extends ChangeNotifier {
   List<ProvinceModel> provinces = [];
   List<CityModel> cities = [];
   List<BarangayModel> barangays = [];
+  bool isLoading = false;
 
   // This is for the maps selection
   LatLng? selectedLocation;
@@ -386,29 +387,38 @@ class CreatePostViewModel extends ChangeNotifier {
   }
 
   Future<void> fetchRegions() async {
+    isLoading = true;
+    notifyListeners();
     final response = await http.get(Uri.parse('https://psgc.gitlab.io/api/regions'));
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body);
       regions = data.map((e) => RegionModel(region: e['name'], regionCode: e['code'])).toList();
-      notifyListeners();
     }
+    isLoading = false;
+    notifyListeners();
   }
 
   Future<void> fetchProvinces(String regionCode) async {
+    isLoading = true;
+    notifyListeners();
     final response = await http.get(Uri.parse('https://psgc.gitlab.io/api/provinces'));
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body);
       provinces = data
-          .where((e) => e['regionCode'].toString() == regionCode) // Convert to String for safe comparison
+          .where((e) => e['regionCode'].toString() == regionCode)
           .map((e) => ProvinceModel(provinceName: e['name'], provinceCode: e['code']))
           .toList();
-      notifyListeners();
-    } else {
-      print("Failed to fetch provinces. Status Code: ${response.statusCode}");
     }
+    selectedProvince = null; // Reset selected province
+    selectedCity = null; // Reset selected city
+    selectedBarangay = null; // Reset selected barangay
+    isLoading = false;
+    notifyListeners();
   }
 
   Future<void> fetchCities(String provinceCode) async {
+    isLoading = true;
+    notifyListeners();
     final response = await http.get(Uri.parse('https://psgc.gitlab.io/api/cities-municipalities'));
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body);
@@ -416,11 +426,16 @@ class CreatePostViewModel extends ChangeNotifier {
           .where((e) => e['provinceCode'] == provinceCode)
           .map((e) => CityModel(cityName: e['name'], cityCode: e['code']))
           .toList();
-      notifyListeners();
     }
+    selectedCity = null; // Reset selected city
+    selectedBarangay = null; // Reset selected barangay
+    isLoading = false;
+    notifyListeners();
   }
 
   Future<void> fetchBarangays(String municipalityCode) async {
+    isLoading = true;
+    notifyListeners();
     final response = await http.get(Uri.parse('https://psgc.gitlab.io/api/barangays'));
     if (response.statusCode == 200) {
       List data = jsonDecode(response.body);
@@ -428,31 +443,46 @@ class CreatePostViewModel extends ChangeNotifier {
           .where((e) => e['municipalityCode'] == municipalityCode)
           .map((e) => BarangayModel(barangayName: e['name'], municipalityCode: e['code']))
           .toList();
-      notifyListeners();
     }
+    selectedBarangay = null; // Reset selected barangay
+    isLoading = false;
+    notifyListeners();
   }
 
   void setSelectedRegion(RegionModel? region) {
     selectedRegion = region;
     selectedProvince = null;
+    provinces = [];
     selectedCity = null;
+    cities = [];
     selectedBarangay = null;
-    fetchProvinces(region!.regionCode);
+    barangays = [];
+    if (region != null) {
+      fetchProvinces(region.regionCode);
+    }
     notifyListeners();
   }
 
   void setSelectedProvince(ProvinceModel? province) {
     selectedProvince = province;
     selectedCity = null;
+    cities = [];
     selectedBarangay = null;
-    fetchCities(province!.provinceCode);
+    barangays = [];
+    if (province != null) {
+      fetchCities(province.provinceCode);
+    }
     notifyListeners();
   }
+
 
   void setSelectedCity(CityModel? city) {
     selectedCity = city;
     selectedBarangay = null;
-    fetchBarangays(city!.cityCode);
+    barangays = [];
+    if (city != null) {
+      fetchBarangays(city.cityCode);
+    }
     notifyListeners();
   }
 
