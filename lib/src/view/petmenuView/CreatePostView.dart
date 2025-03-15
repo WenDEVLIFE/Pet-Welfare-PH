@@ -683,10 +683,10 @@ class CreatePostView extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Text(
                     createPostViewModel.selectedChip == "Missing Pets"
-                        ? 'Select a date of the missing pet'
+                        ? 'Select the date the pet went missing'
                         : createPostViewModel.selectedChip == "Found Pets"
-                        ? 'Select a date of the found pet'
-                        : 'Select a date of the found pet',
+                        ? 'Select the date the pet was found'
+                        : 'Select the date the pet was found',
                     style: const TextStyle(
                       color: Colors.black,
                       fontSize: 18,
