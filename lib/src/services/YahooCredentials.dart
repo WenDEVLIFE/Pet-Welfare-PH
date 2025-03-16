@@ -1,5 +1,5 @@
 class YahooCredentials {
 
  String email ='newbie_gwapo@yahoo.com';
-  String password = 'fuadqaefshzkyaty';
+  String password = 'pmwrilrjwpmxhqsi';
 }
