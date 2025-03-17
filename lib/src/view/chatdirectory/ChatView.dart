@@ -1,12 +1,11 @@
+
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pet_welfrare_ph/src/view_model/MessageViewModel.dart';
 import 'package:pet_welfrare_ph/src/model/ChatModel.dart';
 
-import '../utils/Route.dart';
+import '../../utils/Route.dart';
 
 class ChatView extends StatelessWidget {
   @override

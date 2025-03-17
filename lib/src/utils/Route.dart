@@ -1,6 +1,7 @@
+
 import 'package:flutter/cupertino.dart';
-import 'package:pet_welfrare_ph/src/components/UserNavigationComponent.dart';
-import 'package:pet_welfrare_ph/src/view/AddSubscriptionView.dart';
+import 'package:pet_welfrare_ph/src/widgets/UserNavigationComponent.dart';
+import 'package:pet_welfrare_ph/src/view/admindirectory/AddSubscriptionView.dart';
 import 'package:pet_welfrare_ph/src/view/DashboardView.dart';
 import 'package:pet_welfrare_ph/src/view/petmenuView/CreatePostView.dart';
 import 'package:pet_welfrare_ph/src/view/registerDirectory/FurParentRegisterView.dart';
@@ -20,20 +21,20 @@ import 'package:pet_welfrare_ph/src/view/ViewUserData.dart';
 import 'package:pet_welfrare_ph/src/view/ViewUserScreen.dart';
 import 'package:pet_welfrare_ph/src/view_model/ApprovedShelterClinicView.dart';
 
-import '../components/AdminNavigationComponent.dart';
+import '../widgets/AdminNavigationComponent.dart';
 import '../view/AboutView.dart';
-import '../view/AddAdminView.dart';
+import '../view/admindirectory/AddAdminView.dart';
 import '../view/AddShelterClinicScreen.dart';
 import '../view/ChangeIDView.dart';
 import '../view/ChangePasswordView.dart';
-import '../view/ChatView.dart';
+import '../view/chatdirectory/ChatView.dart';
 import '../view/EditEstablishmentView.dart';
-import '../view/MessageView.dart';
+import '../view/chatdirectory/MessageView.dart';
 import '../view/OTPView.dart';
 import '../view/UserEstablismentView.dart';
 import '../view/SplashView.dart';
 import '../view/LoadingView.dart';
-import '../view/SubscriptionView.dart';
+import '../view/admindirectory/SubscriptionView.dart';
 import '../view/UserView.dart';
 
 class AppRoutes {
@@ -86,7 +87,7 @@ class AppRoutes {
     uploadIDScreen: (context) => const UploadIDView(), //  This is the upload ID screen
     otpScreen: (context) => const OTPView(), //  This is the OTP screen
     user: (context) => const UserNavigationComponent(), //  This is the user navigation component
-    admin: (context) => const AdminNavigationComponent(), //  This is the admin navigation component
+    admin: (context) => const AdminNavigationWidget(), //  This is the admin navigation component
     termsAndConditions: (context) => const TermsAndConditionView(), //  This is the terms and conditions
     privacyPolicy: (context) => const Privacyview(), //  This is the privacy policy
     changePassword: (context) => const ChangePasswordView(), //  This is the change password

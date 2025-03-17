@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pet_welfrare_ph/src/components/AlertMenuDialog.dart';
+import 'package:pet_welfrare_ph/src/widgets/AlertMenuDialog.dart';
 import 'package:pet_welfrare_ph/src/view_model/UserViewModel.dart';
 import 'package:provider/provider.dart';
 

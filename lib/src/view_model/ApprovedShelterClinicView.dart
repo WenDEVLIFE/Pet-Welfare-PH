@@ -2,8 +2,8 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../components/DrawerHeaderWidget.dart';
-import '../components/LogoutDialog.dart';
+import '../widgets/DrawerHeaderWidget.dart';
+import '../widgets/LogoutDialog.dart';
 import '../model/EstablishmentModel.dart';
 import '../utils/AppColors.dart';
 import '../utils/Route.dart';

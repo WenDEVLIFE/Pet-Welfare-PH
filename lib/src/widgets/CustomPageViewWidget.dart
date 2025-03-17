@@ -1,15 +1,16 @@
+
 import 'package:flutter/cupertino.dart';
 
-class CustomPageView extends StatelessWidget {
+class CustomPageViewWidget extends StatelessWidget {
   final PageController controller;
   final ValueChanged<int> onPageChanged;
   final List<Widget> children;
 
-  const CustomPageView({
+  const CustomPageViewWidget({Key? key,
     required this.controller,
     required this.onPageChanged,
     required this.children,
-  });
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

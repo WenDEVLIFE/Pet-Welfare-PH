@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
-import 'package:pet_welfrare_ph/src/components/BaseScreen.dart';
+import 'package:pet_welfrare_ph/src/widgets/BaseScreenWidget.dart';
 import 'package:pet_welfrare_ph/src/view/petmenuView/CallofAidView.dart';
 import 'package:pet_welfrare_ph/src/view/petmenuView/CommunityView.dart';
 import 'package:pet_welfrare_ph/src/view/petmenuView/FoundPetView.dart';

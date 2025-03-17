@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/view_model/OTPViewModel.dart';
 import 'package:provider/provider.dart';
 import '../utils/AppColors.dart';
-import 'OTPField.dart';
+import '../widgets/OTPFieldWidget.dart';
 
 class OTPView extends StatefulWidget {
   const OTPView({Key? key}) : super(key: key);
@@ -100,7 +100,7 @@ class RegisterState extends State<OTPView> {
                                 color: Colors.black,
                               ),
                             ),
-                            OTPField(controllers: _viewModel.controllers),
+                            OTPFieldWidget(controllers: _viewModel.controllers),
                             SizedBox(height: screenHeight * 0.01),
                             Consumer<OTPViewModel>(
                               builder: (context, viewModel, child) {

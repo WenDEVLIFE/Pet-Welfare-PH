@@ -1,3 +1,4 @@
+
 import 'package:flutter/material.dart';
 
 class BaseScreen extends StatefulWidget {
@@ -6,10 +7,10 @@ class BaseScreen extends StatefulWidget {
   const BaseScreen({Key? key, required this.child}) : super(key: key);
 
   @override
-  _BaseScreenState createState() => _BaseScreenState();
+  BaseScreenState createState() => BaseScreenState();
 }
 
-class _BaseScreenState extends State<BaseScreen> with AutomaticKeepAliveClientMixin {
+class BaseScreenState extends State<BaseScreen> with AutomaticKeepAliveClientMixin<BaseScreen> {
   @override
   Widget build(BuildContext context) {
     super.build(context);

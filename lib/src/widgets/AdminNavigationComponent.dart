@@ -1,17 +1,17 @@
-import 'package:flutter/cupertino.dart';
+
 import 'package:flutter/material.dart';
 
 import 'BaseNavigationComponent.dart';
 
 
-class AdminNavigationComponent extends BaseNavigationComponent {
-  const AdminNavigationComponent({Key? key}) : super(key: key);
+class AdminNavigationWidget extends BaseNavigationWidget {
+  const AdminNavigationWidget ({Key? key}) : super(key: key);
 
   @override
   _AdminNavigationComponentState createState() => _AdminNavigationComponentState();
 }
 
-class _AdminNavigationComponentState extends BaseNavigationComponentState<AdminNavigationComponent> {
+class _AdminNavigationComponentState extends BaseNavigationComponentState<AdminNavigationWidget> {
   @override
   List<Widget> getNavBarItems() {
     return [

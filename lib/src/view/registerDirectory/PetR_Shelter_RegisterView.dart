@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/view_model/RegisterViewModel.dart';
 import 'package:provider/provider.dart';
 import '../../utils/AppColors.dart';
-import '../TermsAndConditionDialog.dart';
+import '../../widgets/TermsAndConditionDialogWidget.dart';
 import '../../view_model/LoginViewModel.dart';
 
 class PetrShelterRegisterview extends StatefulWidget {

@@ -4,7 +4,7 @@ import 'package:pet_welfrare_ph/src/view_model/AddAdminViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/SubcriptionViewModel.dart';
 import 'package:provider/provider.dart';
 
-import '../utils/AppColors.dart';
+import '../../utils/AppColors.dart';
 
 class AddSubscriptionView extends StatefulWidget {
   const AddSubscriptionView({Key? key}) : super(key: key);

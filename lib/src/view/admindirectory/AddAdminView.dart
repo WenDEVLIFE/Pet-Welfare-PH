@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/view_model/AddAdminViewModel.dart';
 import 'package:provider/provider.dart';
 
-import '../utils/AppColors.dart';
+import '../../utils/AppColors.dart';
 
 class AddAdminView extends StatefulWidget {
   const AddAdminView({Key? key}) : super(key: key);

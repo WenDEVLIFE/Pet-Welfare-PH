@@ -1,13 +1,12 @@
 
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 
-class OTPField extends StatelessWidget {
+class OTPFieldWidget extends StatelessWidget {
   final List<TextEditingController> controllers;
 
-  const OTPField({Key? key, required this.controllers}) : super(key: key);
+  const OTPFieldWidget({Key? key, required this.controllers}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

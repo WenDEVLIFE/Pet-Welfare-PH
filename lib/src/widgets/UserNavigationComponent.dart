@@ -1,12 +1,13 @@
+
 import 'package:flutter/material.dart';
-import 'package:pet_welfrare_ph/src/view/ChatView.dart';
+import 'package:pet_welfrare_ph/src/view/chatdirectory/ChatView.dart';
 import 'package:pet_welfrare_ph/src/view/HomeScreen.dart';
 import 'package:pet_welfrare_ph/src/view/Mapview.dart';
 import 'package:pet_welfrare_ph/src/view/MenuView.dart';
 
 import 'BaseNavigationComponent.dart';
 
-class UserNavigationComponent extends BaseNavigationComponent {
+class UserNavigationComponent extends BaseNavigationWidget {
   const UserNavigationComponent({Key? key}) : super(key: key);
 
   @override

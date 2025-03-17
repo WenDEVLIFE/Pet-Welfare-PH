@@ -1,10 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:pet_welfrare_ph/src/components/AlertMenuDialog.dart';
+import 'package:pet_welfrare_ph/src/widgets/AlertMenuDialog.dart';
 import 'package:pet_welfrare_ph/src/model/UserModel.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 import 'package:pet_welfrare_ph/src/view_model/UserViewModel.dart';
-import '../components/DrawerHeaderWidget.dart';
-import '../components/LogoutDialog.dart';
+import '../widgets/DrawerHeaderWidget.dart';
+import '../widgets/LogoutDialog.dart';
 import '../utils/Route.dart';
 import '../utils/SessionManager.dart';
 import 'package:provider/provider.dart';

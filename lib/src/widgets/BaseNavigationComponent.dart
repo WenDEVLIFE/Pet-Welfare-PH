@@ -3,11 +3,11 @@ import 'package:flutter/material.dart';
 
 import '../utils/AppColors.dart';
 
-abstract class BaseNavigationComponent extends StatefulWidget {
-  const BaseNavigationComponent({Key? key}) : super(key: key);
+abstract class BaseNavigationWidget extends StatefulWidget {
+  const BaseNavigationWidget({Key? key}) : super(key: key);
 }
 
-abstract class BaseNavigationComponentState<T extends BaseNavigationComponent> extends State<T> {
+abstract class BaseNavigationComponentState<T extends BaseNavigationWidget> extends State<T> {
   int _currentIndex = 0;
 
   List<Widget> getNavBarItems();

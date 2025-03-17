@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import '../components/LogoutDialog.dart';
+import '../widgets/LogoutDialog.dart';
 import '../model/MenuList.dart';
 import '../utils/AppColors.dart';
 import '../utils/Route.dart';

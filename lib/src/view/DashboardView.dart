@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/SessionManager.dart';
-import '../components/DrawerHeaderWidget.dart';
-import '../components/LogoutDialog.dart';
+import '../widgets/DrawerHeaderWidget.dart';
+import '../widgets/LogoutDialog.dart';
 import '../utils/AppColors.dart';
 import '../utils/Route.dart';
 

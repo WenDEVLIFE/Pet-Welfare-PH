@@ -1,12 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
-import '../components/DrawerHeaderWidget.dart';
-import '../components/LogoutDialog.dart';
-import '../model/SubcriptionModel.dart';
-import '../utils/Route.dart';
-import '../utils/SessionManager.dart';
+import '../../widgets/DrawerHeaderWidget.dart';
+import '../../widgets/LogoutDialog.dart';
+import '../../model/SubcriptionModel.dart';
+import '../../utils/Route.dart';
+import '../../utils/SessionManager.dart';
 import 'package:provider/provider.dart';
-import '../view_model/SubcriptionViewModel.dart';
+import '../../view_model/SubcriptionViewModel.dart';
 
 class SubscriptionView extends StatefulWidget {
   const SubscriptionView({Key? key}) : super(key: key);
