@@ -56,9 +56,11 @@ class MessageViewModel extends ChangeNotifier {
       Map<String, dynamic> message = {
         'receiverID': uid,
         'content': messageController.text,
+        'image': selectedImagePath,
       };
       await messageRepository.sendMessage(message);
       messageController.clear();
+      removeSelectedImage();
     }
   }
 

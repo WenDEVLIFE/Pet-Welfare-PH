@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:pet_welfrare_ph/src/view_model/MessageViewModel.dart';
 import 'package:provider/provider.dart';
+import 'package:sn_progress_dialog/progress_dialog.dart';
 import '../utils/AppColors.dart';
 import 'package:pet_welfrare_ph/src/model/MessageModel.dart';
 
@@ -148,6 +149,23 @@ class MessageState extends State<MessageView> {
                                     ],
                                   ),
                                 ),
+                                 SizedBox(height: screenHeight * 0.01),
+                                  Padding(padding: const EdgeInsets.all(8.0),
+                                    child:  Container(
+                                      decoration: BoxDecoration(
+                                        borderRadius: BorderRadius.circular(10),
+                                      ),
+                                        width: screenWidth * 0.6,
+                                        child: message.imageMessagePath.isNotEmpty
+                                            ? Image.network(
+                                          message.imageMessagePath,
+                                          height: screenHeight * 0.2,
+                                          width: screenWidth * 0.2,
+                                          fit: BoxFit.cover,
+                                        ) : const SizedBox.shrink(),
+                                    ),
+
+                                ),
                                 Text(
                                   message.message,
                                   style: const TextStyle(
@@ -225,7 +243,21 @@ class MessageState extends State<MessageView> {
                 IconButton(
                   icon: const Icon(Icons.send),
                   onPressed: () {
-                    Provider.of<MessageViewModel>(context, listen: false).sendMessage(listdata['receiverID']);
+                    ProgressDialog pd = ProgressDialog(context: context);
+                    pd.show(
+                      backgroundColor: AppColors.orange,
+                      max: 100,
+                      msg: 'Sending message...',
+                    );
+                    try{
+                      Provider.of<MessageViewModel>(context, listen: false).sendMessage(listdata['receiverID']);
+                    }
+                    catch(e){
+                      ToastComponent().showMessage(Colors.red, 'Error: $e');
+                    }
+                    finally{
+                      pd.close();
+                    }
                   },
                 ),
               ],
