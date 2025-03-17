@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:pet_welfrare_ph/src/model/ChatModel.dart';
 import 'package:pet_welfrare_ph/src/model/MessageModel.dart';
 import 'package:pet_welfrare_ph/src/respository/LoadProfileRespository.dart';
@@ -13,6 +16,7 @@ class MessageViewModel extends ChangeNotifier {
   final TextEditingController searchMessageController = TextEditingController();
 
   String ImageReceiver = '';
+  String selectedImagePath= '';
   String receiverName = '';
 
   final MessageRepository messageRepository = MessageRepositoryImpl();
@@ -25,6 +29,7 @@ class MessageViewModel extends ChangeNotifier {
   Stream<List<MessageModel>> get messagesStream => messageRepository.getMessage();
   Stream<List<ChatModel>> get chatsStream => messageRepository.getChat();
 
+  // Load the receiver's profile
   Future<void> loadReceiver(String uid) async {
     try {
       var profileData = await _loadprofilerespository.loadProfile2(uid).first;
@@ -42,6 +47,7 @@ class MessageViewModel extends ChangeNotifier {
     }
   }
 
+  // Send a message to the user
   Future<void> sendMessage(String uid) async {
     if (messageController.text.isEmpty) {
       ToastComponent().showMessage(Colors.red, 'Message cannot be empty');
@@ -56,6 +62,7 @@ class MessageViewModel extends ChangeNotifier {
     }
   }
 
+  // Initialize the chats
   Future<void> initializeChats() async {
     var userdata = await sessionManager.getUserInfo();
     var role = userdata?['role'];
@@ -66,6 +73,7 @@ class MessageViewModel extends ChangeNotifier {
     }
   }
 
+  // Filter the chats
   void filterChats(String query) {
     if (query.isEmpty) {
       filteredChats = _chats;
@@ -78,8 +86,19 @@ class MessageViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Get the messages
   void setChats(List<ChatModel> chats) {
     _chats = chats;
     filterChats(searchMessageController.text);
+  }
+
+  // Select an image from the gallery
+  Future<void> pickImage() async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      selectedImagePath = image.path;
+      notifyListeners();
+    }
   }
 }

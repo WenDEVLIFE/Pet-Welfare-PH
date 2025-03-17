@@ -183,7 +183,7 @@ class MessageState extends State<MessageView> {
                 IconButton(
                   icon: const Icon(Icons.image),
                   onPressed: () {
-                    // Handle image upload
+                    Provider.of<MessageViewModel>(context, listen: false).pickImage();
                   },
                 ),
                 Expanded(
