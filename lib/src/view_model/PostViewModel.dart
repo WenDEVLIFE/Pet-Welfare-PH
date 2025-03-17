@@ -15,6 +15,13 @@ class PostViewModel extends ChangeNotifier {
 
   Stream<List<PostModel>> get posTream => postRepository.getPosts();
 
+  PostViewModel() {
+
+    searchPostController.addListener(() {
+      searchPost(searchPostController.text);
+    });
+  }
+
   void searchPost(String search) {
     filteredPost.clear();
     if (search.isEmpty) {
@@ -25,9 +32,10 @@ class PostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setPost(List<PostModel> posts) {
+  void setPost(List<PostModel> posts, {bool notify = true}) {
     _posts = posts;
     searchPost(searchPostController.text);
+
   }
 
   String formatTimestamp(Timestamp timestamp) {

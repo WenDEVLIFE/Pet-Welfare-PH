@@ -19,11 +19,13 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
   @override
   void initState(){
     super.initState();
-    Provider.of<PostViewModel>(context, listen: false).postRepository.getPosts();
   }
 
   @override
   Widget build(BuildContext context) {
+
+    PostViewModel postViewModel = Provider.of<PostViewModel>(context, listen: false);
+
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
@@ -72,13 +74,20 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
                 child: StreamBuilder<List<PostModel>>(
                   stream: postViewModel.posTream,
                   builder: (context, snapshot) {
-                    if (!snapshot.hasData) {
+                    if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
                     }
 
-                    postViewModel.setPost(snapshot.data!);
+                    if (snapshot.hasError) {
+                      return Center(child: Text('Error: ${snapshot.error}'));
+                    }
 
-                    var posts = postViewModel.filteredPost;
+                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                      return const Center(child: Text('No posts available'));
+                    }
+
+                    // Directly use snapshot data without modifying state inside the builder
+                    var posts = snapshot.data!;
 
                     return ListView.builder(
                       itemCount: posts.length,
@@ -211,6 +220,7 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
         },
       ),
       floatingActionButton: FloatingActionButton(
+        heroTag: 'uniqueTag',
         backgroundColor: AppColors.orange,
         onPressed: () {
           Navigator.pushNamed(context, AppRoutes.createpost);

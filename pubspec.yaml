@@ -39,7 +39,7 @@ dependencies:
   gal: ^2.3.1
   permission_handler: ^11.3.1
   video_player: ^2.1.10
-  maplibre_gl: ^0.20.0
+  maplibre_gl: ^0.21.0
   chewie: ^1.10.0
   docx_to_text: ^1.0.1
   docx_template: ^0.4.0

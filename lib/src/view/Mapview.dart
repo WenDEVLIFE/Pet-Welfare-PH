@@ -22,7 +22,7 @@ class MapViewState extends State<MapView> {
   late Future<void> _mapFuture;
   late MapViewModel _mapViewModel;
   final sessionManager = SessionManager();
-  late String role;
+  String role ='';
   bool _showDropdown = false;
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
@@ -57,7 +57,9 @@ class MapViewState extends State<MapView> {
     _mapViewModel.mapController = controller;
     await _mapViewModel.fetchEstablishments().then((_) async {
       _mapViewModel.initializeLoads();
-      _mapViewModel.initializeClickMarkers(context);
+       if (mounted){
+         _mapViewModel.initializeClickMarkers(context);
+       }
     });
   }
 

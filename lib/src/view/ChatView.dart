@@ -14,7 +14,7 @@ class ChatView extends StatelessWidget {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    final messageViewModel = Provider.of<MessageViewModel>(context);
+    MessageViewModel messageViewModel = Provider.of<MessageViewModel>(context);
 
     return Scaffold(
       appBar: AppBar(

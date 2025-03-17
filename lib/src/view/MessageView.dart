@@ -60,7 +60,12 @@ class MessageState extends State<MessageView> {
               children: [
                 CircleAvatar(
                   radius: screenHeight * 0.03,
-                  backgroundImage: CachedNetworkImageProvider(messageViewModel.ImageReceiver),
+                  backgroundImage: messageViewModel.ImageReceiver.isNotEmpty
+                      ? CachedNetworkImageProvider(messageViewModel.ImageReceiver)
+                      : null,
+                  child: messageViewModel.ImageReceiver.isEmpty
+                      ? Icon(Icons.person, size: screenHeight * 0.03)
+                      : null,
                 ),
                 const SizedBox(width: 10),
                 Text(
@@ -114,43 +119,31 @@ class MessageState extends State<MessageView> {
                               children: [
                                 Container(
                                   width: screenWidth * 0.6,
-                                  child:  Row(
+                                  child: Row(
                                     children: [
-                                      if (message.senderid == userid) ...[
-                                        CircleAvatar(
-                                          radius: screenHeight * 0.03,
-                                          backgroundImage: CachedNetworkImageProvider(message.senderProfileImage),
+                                      CircleAvatar(
+                                        radius: screenHeight * 0.03,
+                                        backgroundImage: message.senderProfileImage.isNotEmpty
+                                            ? CachedNetworkImageProvider(message.senderProfileImage)
+                                            : null,
+                                        child: message.senderProfileImage.isEmpty
+                                            ? Icon(Icons.person, size: screenHeight * 0.03)
+                                            : null,
+                                      ),
+                                      const SizedBox(width: 10),
+                                      Text(
+                                        message.senderName,
+                                        style: TextStyle(
+                                          color: message.senderid == userid ? Colors.white : Colors.black,
+                                          fontSize: 16,
+                                          fontWeight: FontWeight.w600,
+                                          fontFamily: 'SmoochSans',
                                         ),
-                                        const SizedBox(width: 10),
-                                        Text(
-                                          message.senderName,
-                                          style: const TextStyle(
-                                            color: Colors.white,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            fontFamily: 'SmoochSans',
-                                          ),
-                                        ),
-                                      ] else ...[
-                                        CircleAvatar(
-                                          radius: screenHeight * 0.03,
-                                          backgroundImage: CachedNetworkImageProvider(message.senderProfileImage),
-                                        ),
-                                        const SizedBox(width: 10),
-                                        Text(
-                                          message.senderName,
-                                          style: const TextStyle(
-                                            color: Colors.black,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                            fontFamily: 'SmoochSans',
-                                          ),
-                                        ),
-                                      ],
+                                      ),
                                     ],
                                   ),
                                 ),
-                                 SizedBox(height: screenHeight * 0.01),
+                                SizedBox(height: screenHeight * 0.01),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: GestureDetector(
@@ -171,10 +164,10 @@ class MessageState extends State<MessageView> {
                                       )
                                           : const SizedBox.shrink(),
                                     ),
-                                    onTap: (){
+                                    onTap: () {
                                       Navigator.pushNamed(context, AppRoutes.viewImageData, arguments: {'imagePath': message.imageMessagePath});
                                     },
-                                  )
+                                  ),
                                 ),
                                 Text(
                                   message.message,
@@ -211,7 +204,7 @@ class MessageState extends State<MessageView> {
               return messageViewModel.selectedImagePath.isNotEmpty
                   ? Column(
                 children: [
-                  SizedBox(height:  screenHeight * 0.1),
+                  SizedBox(height: screenHeight * 0.1),
                   Image.file(
                     File(messageViewModel.selectedImagePath),
                     height: screenHeight * 0.2,

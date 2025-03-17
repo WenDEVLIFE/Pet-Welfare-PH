@@ -89,7 +89,7 @@ class MessageViewModel extends ChangeNotifier {
   }
 
   // Get the messages
-  void setChats(List<ChatModel> chats) {
+  void setChats(List<ChatModel> chats, {bool notify = true}) {
     _chats = chats;
     filterChats(searchMessageController.text);
   }

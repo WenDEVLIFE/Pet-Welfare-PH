@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
@@ -14,8 +15,8 @@ import '../modal/EstablishmentModal.dart';
 import '../model/EstablishmentModel.dart';
 
 class MapViewModel extends ChangeNotifier {
-  double lat = 0.0;
-  double long = 0.0;
+  double lat = 14.5995;  // Example: Manila, Philippines
+  double long = 120.9842;
   final OpenStreetMapService _openStreetMapService = OpenStreetMapService();
   final GenerateEstablishmentRepository _generateEstablismentRepository = GenerateEstablishmentRepositoryImpl();
   MaplibreMapController? mapController;
@@ -25,26 +26,26 @@ class MapViewModel extends ChangeNotifier {
   List<SymbolOptions> symbols = [];
   bool _isLoadingMarkers = false;
 
+  // get permissions
   Future<void> requestPermissions() async {
     var status = await Permission.location.request();
+
     if (status.isGranted) {
-      lat = 14.5995;  // Example: Manila, Philippines
-      long = 120.9842;
-      notifyListeners();
-
-      Position? position = await GeoUtils().getLocation();
-      if (position != null) {
-        lat = position.latitude;
-        long = position.longitude;
-      }
-
-      notifyListeners();
+      SchedulerBinding.instance.addPostFrameCallback((_) async {
+        Position? position = await GeoUtils().getLocation();
+        if (position != null) {
+          lat = position.latitude;
+          long = position.longitude;
+        }
+        notifyListeners();
+      });
     } else {
       ToastComponent().showMessage(Colors.red, 'Location permissions are denied.');
       notifyListeners();
     }
   }
 
+  // search locations
   Future<void> searchLocation(String query) async {
     try {
       final results = await _openStreetMapService.fetchOpenStreetMapData(query);
@@ -109,7 +110,6 @@ class MapViewModel extends ChangeNotifier {
     await preloadMarkerImages();
     await addEstablishmentPins();
   }
-
 
   static List<EstablishmentModel> parseEstablishments(List<Map<String, dynamic>> data) {
     return data.map((e) => EstablishmentModel.fromJson(e)).toList();
@@ -178,5 +178,4 @@ class MapViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
-
 }
