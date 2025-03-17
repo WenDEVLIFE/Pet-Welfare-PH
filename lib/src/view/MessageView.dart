@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pet_welfrare_ph/src/utils/Route.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:pet_welfrare_ph/src/view_model/MessageViewModel.dart';
 import 'package:provider/provider.dart';
@@ -150,21 +151,30 @@ class MessageState extends State<MessageView> {
                                   ),
                                 ),
                                  SizedBox(height: screenHeight * 0.01),
-                                  Padding(padding: const EdgeInsets.all(8.0),
-                                    child:  Container(
+                                Padding(
+                                  padding: const EdgeInsets.all(8.0),
+                                  child: GestureDetector(
+                                    child: Container(
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
                                       ),
-                                        width: screenWidth * 0.6,
-                                        child: message.imageMessagePath.isNotEmpty
-                                            ? Image.network(
+                                      width: screenWidth * 0.6,
+                                      child: message.imageMessagePath.isNotEmpty
+                                          ? ClipRRect(
+                                        borderRadius: BorderRadius.circular(10),
+                                        child: Image.network(
                                           message.imageMessagePath,
                                           height: screenHeight * 0.2,
                                           width: screenWidth * 0.2,
                                           fit: BoxFit.cover,
-                                        ) : const SizedBox.shrink(),
+                                        ),
+                                      )
+                                          : const SizedBox.shrink(),
                                     ),
-
+                                    onTap: (){
+                                      Navigator.pushNamed(context, AppRoutes.viewImageData, arguments: {'imagePath': message.imageMessagePath});
+                                    },
+                                  )
                                 ),
                                 Text(
                                   message.message,
@@ -242,20 +252,19 @@ class MessageState extends State<MessageView> {
                 ),
                 IconButton(
                   icon: const Icon(Icons.send),
-                  onPressed: () {
+                  onPressed: () async {
                     ProgressDialog pd = ProgressDialog(context: context);
                     pd.show(
                       backgroundColor: AppColors.orange,
                       max: 100,
                       msg: 'Sending message...',
                     );
-                    try{
-                      Provider.of<MessageViewModel>(context, listen: false).sendMessage(listdata['receiverID']);
-                    }
-                    catch(e){
+                    try {
+                      await Provider.of<MessageViewModel>(context, listen: false).sendMessage(listdata['receiverID']);
+                      ToastComponent().showMessage(AppColors.orange, 'Message sent successfully');
+                    } catch (e) {
                       ToastComponent().showMessage(Colors.red, 'Error: $e');
-                    }
-                    finally{
+                    } finally {
                       pd.close();
                     }
                   },
