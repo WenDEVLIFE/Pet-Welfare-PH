@@ -5,6 +5,7 @@ import 'package:pet_welfrare_ph/src/utils/Route.dart';
 import 'package:provider/provider.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
+import 'package:pet_welfrare_ph/src/modal/ReactionModal.dart';
 
 import '../../utils/AppColors.dart';
 
@@ -176,7 +177,17 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
                                       IconButton(
                                         icon: Icon(Icons.thumb_up),
                                         onPressed: () {
-                                          // Implement like functionality here
+                                          showModalBottomSheet(
+                                            context: context,
+                                            builder: (context) {
+                                              return ReactionModal(
+                                                onReactionSelected: (reaction) {
+                                                  // Handle reaction selection
+                                                  print('Selected reaction: $reaction');
+                                                },
+                                              );
+                                            },
+                                          );
                                         },
                                       ),
                                       Text('0 likes',  style: const TextStyle(
