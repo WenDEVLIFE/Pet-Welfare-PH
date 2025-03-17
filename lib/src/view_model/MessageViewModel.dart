@@ -101,4 +101,10 @@ class MessageViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+
+  // Remove the selected Image
+  void removeSelectedImage() {
+    selectedImagePath = '';
+    notifyListeners();
+  }
 }

@@ -10,6 +10,7 @@ class MessageModel {
   String receiverProfileImage;
   String senderName;
   String senderProfileImage;
+  String imageMessagePath = '';
 
   MessageModel({
     required this.id,
@@ -21,15 +22,18 @@ class MessageModel {
     this.receiverProfileImage = '',
     this.senderName = '',
     this.senderProfileImage = '',
+    this.imageMessagePath='',
   });
 
   factory MessageModel.fromDocumentSnapshot(DocumentSnapshot doc) {
+    final data = doc.data() as Map<String, dynamic>;
     return MessageModel(
       id: doc.id,
-      message: doc['Message'] ?? '',
-      timestamp: (doc['timestamp'] as Timestamp?)?.toDate().toString() ?? '',
-      senderid: doc['senderID'] ?? '',
-      receiverid: doc['receiverID'] ?? '',
+      message: data['Message'] ?? '',
+      timestamp: (data['timestamp'] as Timestamp?)?.toDate().toString() ?? '',
+      senderid: data['senderID'] ?? '',
+      receiverid: data['receiverID'] ?? '',
+      imageMessagePath: data.containsKey('imageUrl') ? data['imageUrl'] : '',
     );
   }
 

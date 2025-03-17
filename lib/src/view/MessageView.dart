@@ -7,6 +7,8 @@ import 'package:provider/provider.dart';
 import '../utils/AppColors.dart';
 import 'package:pet_welfrare_ph/src/model/MessageModel.dart';
 
+import 'dart:io';
+
 class MessageView extends StatefulWidget {
   const MessageView({Key? key}) : super(key: key);
 
@@ -175,6 +177,29 @@ class MessageState extends State<MessageView> {
                 }
               },
             ),
+          ),
+          Consumer<MessageViewModel>(
+            builder: (context, messageViewModel, child) {
+              return messageViewModel.selectedImagePath.isNotEmpty
+                  ? Column(
+                children: [
+                  SizedBox(height:  screenHeight * 0.1),
+                  Image.file(
+                    File(messageViewModel.selectedImagePath),
+                    height: screenHeight * 0.2,
+                    width: screenWidth * 0.2,
+                    fit: BoxFit.cover,
+                  ),
+                  IconButton(
+                    icon: const Icon(Icons.cancel),
+                    onPressed: () {
+                      messageViewModel.removeSelectedImage();
+                    },
+                  ),
+                ],
+              )
+                  : Container();
+            },
           ),
           Padding(
             padding: const EdgeInsets.all(8.0),
