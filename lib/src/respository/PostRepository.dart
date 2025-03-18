@@ -7,6 +7,7 @@ import 'dart:io';
 
 import 'package:uuid/uuid.dart';
 
+import '../model/CommentModel.dart';
 import '../utils/AppColors.dart';
 
 abstract class PostRepository {
@@ -24,6 +25,13 @@ abstract class PostRepository {
   Future<void> removeReaction(String postId);
 
   Future<String?> getUserReaction(String postId);
+
+  Future<void> addComment(String postId, String commentText);
+
+  Stream<List<CommentModel>> getComments(String postId);
+
+  Future <void> deleteComment(String postId, String commentId);
+
 }
 
 class PostRepositoryImpl implements PostRepository {
@@ -259,5 +267,52 @@ class PostRepositoryImpl implements PostRepository {
       return null;
     }
   }
+
+  Future<void> addComment(String postId, String commentText) async {
+    User user = _firebaseAuth.currentUser!;
+    String userId = user.uid;
+
+    DocumentReference userRef = _firestore.collection('Users').doc(userId);
+    DocumentSnapshot userSnapshot = await userRef.get();
+
+    if (!userSnapshot.exists) {
+      throw Exception('User not found');
+    }
+
+    DocumentReference commentRef = _firestore.collection('PostCollection').doc(postId).collection('CommentCollection').doc();
+
+    await commentRef.set({
+      'UserId': userId,
+      'CommentText': commentText,
+      'Timestamp': FieldValue.serverTimestamp(),
+    });
+  }
+
+  @override
+  Stream<List<CommentModel>> getComments(String postId) {
+    return FirebaseFirestore.instance
+        .collection('PostCollection')
+        .doc(postId)
+        .collection('CommentCollection')
+        .orderBy('Timestamp', descending: true)
+        .snapshots()
+        .asyncMap((snapshot) async {
+      List<CommentModel> comments = [];
+      for (var doc in snapshot.docs) {
+        comments.add(await CommentModel.fromDocument(doc));
+      }
+      return comments;
+    });
+  }
+
+  @override
+  Future<void> deleteComment(String postId, String commentId) async{
+    // TODO: implement deleteComment
+    return await _firestore.collection('PostCollection').doc(postId).collection('CommentCollection').doc(commentId).delete();
+  }
+
+
+
+
 
 }

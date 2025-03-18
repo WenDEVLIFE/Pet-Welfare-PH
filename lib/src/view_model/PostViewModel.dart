@@ -1,21 +1,32 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 import 'package:pet_welfrare_ph/src/respository/PostRepository.dart';
+import 'package:pet_welfrare_ph/src/utils/SessionManager.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:intl/intl.dart';
 
+import '../modal/CommentModal.dart';
+import '../model/CommentModel.dart';
+
 class PostViewModel extends ChangeNotifier {
   final TextEditingController searchPostController = TextEditingController();
+  String role = '';
 
   List<PostModel> _posts = [];
   List<PostModel> filteredPost = [];
+
+  List<CommentModel> comments = [];
+
+ // Stream <List<CommentModel>> get commentStream => postRepository.getComments();
 
   final PostRepository postRepository = PostRepositoryImpl();
 
   Stream<List<PostModel>> get posTream => postRepository.getPosts();
 
   PostViewModel() {
+
 
     searchPostController.addListener(() {
       searchPost(searchPostController.text);
@@ -77,6 +88,38 @@ class PostViewModel extends ChangeNotifier {
    }
     catch(e){
       throw Exception('Failed to add reaction: $e');
+    }
+  }
+
+  Future<void> addComment(String postId, String commentText) async {
+    try {
+      await postRepository.addComment(postId, commentText);
+      notifyListeners();
+    } catch (e) {
+      throw Exception('Failed to add comment: $e');
+    }
+  }
+
+  Stream<List<CommentModel>> getComments(String postId) {
+    return postRepository.getComments(postId);
+  }
+
+  void showComments(BuildContext context, String postId) {
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return CommentModal(postId: postId);
+      },
+    );
+  }
+
+  Future<void> deleteComment(String postId, String commentId) async {
+    try {
+      await postRepository.deleteComment(postId, commentId);
+      notifyListeners();
+    } catch (e) {
+      throw Exception('Failed to delete comment: $e');
     }
   }
 }

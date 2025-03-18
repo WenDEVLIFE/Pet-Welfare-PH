@@ -207,6 +207,7 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
                                                 icon: const Icon(Icons.comment),
                                                 onPressed: () {
                                                   // Implement comment functionality here
+                                                  postViewModel.showComments(context, post.postId);
                                                 },
                                               ),
                                               const Text('0 comments', style: TextStyle(
@@ -245,4 +246,6 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
       ),
     );
   }
+
+
 }
