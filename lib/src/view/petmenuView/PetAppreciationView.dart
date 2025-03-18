@@ -8,6 +8,7 @@ import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 import 'package:pet_welfrare_ph/src/modal/ReactionModal.dart';
 
 import '../../utils/AppColors.dart';
+import '../../utils/ReactionUtils.dart';
 import '../../widgets/SearchTextField.dart';
 
 class PetAppreciateView extends StatefulWidget {
@@ -169,9 +170,9 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
                                               IconButton(
                                                 icon: Icon(
                                                   hasReacted
-                                                      ? _getReactionIcon(userReaction!)
+                                                      ? ReactionUtils.getReactionIcon(userReaction!)
                                                       : Icons.thumb_up_outlined,
-                                                  color: hasReacted ? _getReactionColor(userReaction!) : null,
+                                                  color: hasReacted ? ReactionUtils.getReactionColor(userReaction!) : null,
                                                 ),
                                                 onPressed: () async {
                                                   if (hasReacted) {
@@ -244,37 +245,4 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
     );
   }
 
-  IconData _getReactionIcon(String reaction) {
-    switch (reaction) {
-      case 'like':
-        return Icons.thumb_up;
-      case 'heart':
-        return Icons.favorite;
-      case 'HAHA':
-        return Icons.emoji_emotions;
-      case 'angry':
-        return Icons.sentiment_very_dissatisfied_sharp;
-      case 'sad':
-        return Icons.sentiment_dissatisfied;
-      default:
-        return Icons.thumb_up_outlined;
-    }
-  }
-
-  Color _getReactionColor(String reaction) {
-    switch (reaction) {
-      case 'like':
-        return Colors.blue;
-      case 'heart':
-        return Colors.red;
-      case 'HAHA':
-        return Colors.yellow;
-      case 'angry':
-        return Colors.red;
-      case 'sad':
-        return Colors.white;
-      default:
-        return Colors.black;
-    }
-  }
 }
