@@ -182,8 +182,9 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
                                                       context: context,
                                                       builder: (context) {
                                                         return ReactionModal(
-                                                          onReactionSelected: (reaction) {
-                                                            postViewModel.addReaction(post.postId, reaction);
+                                                          onReactionSelected: (reaction) async {
+                                                            await postViewModel.addReaction(post.postId, reaction);
+                                                            setState(() {});
                                                           },
                                                         );
                                                       },
@@ -244,5 +245,4 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
       ),
     );
   }
-
 }
