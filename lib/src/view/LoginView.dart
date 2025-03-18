@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pet_welfrare_ph/src/widgets/CustomTextField.dart';
 import 'package:provider/provider.dart';
 import '../utils/AppColors.dart';
 import '../view_model/LoginViewModel.dart';
+import '../widgets/CustomPasswordField.dart';
 
 class Loginview extends StatefulWidget {
   const Loginview({Key? key}) : super(key: key);
@@ -75,25 +77,12 @@ class _LoginScreenState extends State<Loginview> {
                               fontFamily: 'SmoochSans',
                               color: Colors.black)),
                           SizedBox(height: screenHeight * 0.01),
-                          TextField(
+                          CustomTextField(
                             controller: loginViewModel.emailController,
-                            decoration: const InputDecoration(
-                              filled: true,
-                              fillColor: AppColors.gray,
-                              border: OutlineInputBorder(),
-                              hintText: 'Enter your email',
-                              hintStyle: TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'SmoochSans',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontFamily: 'SmoochSans',
-                              fontWeight: FontWeight.w600,
-                            ),
+                            screenHeight: screenHeight,
+                            hintText: 'Enter your email',
+                            fontSize: 16,
+                            keyboardType: TextInputType.text,
                           ),
                           SizedBox(height: screenHeight * 0.02),
                           const Text('PASSWORD', style: TextStyle(
@@ -104,32 +93,12 @@ class _LoginScreenState extends State<Loginview> {
                           SizedBox(height: screenHeight * 0.01),
                           Consumer<LoginViewModel>(
                             builder: (context, loginViewModel, child) {
-                              return TextField(
+                              return  CustomPasswordField(
+                                screenHeight: screenHeight,
+                                hintText: 'Enter your password',
                                 controller: loginViewModel.passwordController,
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: AppColors.gray,
-                                  border: const OutlineInputBorder(),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      loginViewModel.obscureText1 ? Icons.visibility : Icons.visibility_off,
-                                    ),
-                                    onPressed: () {
-                                      loginViewModel.togglePasswordVisibility1();
-                                    },
-                                  ),
-                                  hintText: 'Enter your password',
-                                  hintStyle: const TextStyle(
-                                    color: Colors.black,
-                                  ),
-                                ),
-                                obscureText: loginViewModel.obscureText1,
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  fontFamily: 'SmoochSans',
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                isPasswordVisible: loginViewModel.obscureText1,
+                                togglePasswordVisibility: loginViewModel.togglePasswordVisibility1,
                               );
                             },
                           ),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/view_model/RegisterViewModel.dart';
+import 'package:pet_welfrare_ph/src/widgets/CustomTextField.dart';
 import 'package:provider/provider.dart';
 import '../../utils/AppColors.dart';
 import '../../view_model/LoginViewModel.dart';
+import '../../widgets/CustomPasswordField.dart';
 
 class FurParentRegisterView extends StatefulWidget {
   const FurParentRegisterView({Key? key}) : super(key: key);
@@ -82,28 +84,12 @@ class RegisterState extends State<FurParentRegisterView> {
                           SizedBox(height: screenHeight * 0.01),
                           Consumer<RegisterViewModel>(
                             builder: (context, viewmodel, child) {
-                              return TextField(
+                              return CustomTextField(
                                 controller: viewmodel.nameController,
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: AppColors.gray,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                    borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                                  ),
-                                  hintText: 'Enter your name',
-                                  hintStyle: const TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: 'SmoochSans',
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'SmoochSans',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                screenHeight: screenHeight,
+                                hintText: 'Enter your name',
+                                fontSize: 16,
+                                keyboardType: TextInputType.text,
                               );
                             },
                           ),
@@ -115,28 +101,12 @@ class RegisterState extends State<FurParentRegisterView> {
                           SizedBox(height: screenHeight * 0.01),
                           Consumer<RegisterViewModel>(
                             builder: (context, viewmodel, child) {
-                              return TextField(
+                              return CustomTextField(
                                 controller: viewmodel.emailController,
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: AppColors.gray,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                    borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                                  ),
-                                  hintText: 'Enter your email',
-                                  hintStyle: const TextStyle(
-                                    color: Colors.black,
-                                    fontFamily: 'SmoochSans',
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'SmoochSans',
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                screenHeight: screenHeight,
+                                hintText: 'Enter your email',
+                                fontSize: 16,
+                                keyboardType: TextInputType.text,
                               );
                             },
                           ),
@@ -150,36 +120,12 @@ class RegisterState extends State<FurParentRegisterView> {
                           SizedBox(height: screenHeight * 0.01),
                           Consumer<RegisterViewModel>(
                             builder: (context, viewmodel, child) {
-                              return TextField(
+                              return CustomPasswordField(
+                                screenHeight: screenHeight,
+                                hintText: 'Enter your password',
                                 controller: viewmodel.passwordController,
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: AppColors.gray,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                    borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                                  ),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      viewmodel.obscureText1 ? Icons.visibility : Icons.visibility_off,
-                                    ),
-                                    onPressed: () {
-                                      viewmodel.togglePasswordVisibility1();
-                                    },
-                                  ),
-                                  hintText: 'Enter your password',
-                                  hintStyle: const TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'SmoochSans',
-                                  ),
-                                ),
-                                obscureText: viewmodel.obscureText1,
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
+                                isPasswordVisible: viewmodel.obscureText1,
+                                togglePasswordVisibility: viewmodel.togglePasswordVisibility1,
                               );
                             },
                           ),
@@ -191,37 +137,12 @@ class RegisterState extends State<FurParentRegisterView> {
                           SizedBox(height: screenHeight * 0.01),
                           Consumer<RegisterViewModel>(
                             builder: (context, viewmodel, child) {
-                              return TextField(
+                              return CustomPasswordField(
+                                screenHeight: screenHeight,
+                                hintText: 'Re-enter your password',
                                 controller: viewmodel.confirmPasswordController,
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: AppColors.gray,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                    borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                                  ),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      viewmodel.obscureText2 ? Icons.visibility : Icons.visibility_off,
-                                    ),
-                                    onPressed: () {
-                                      viewmodel.togglePasswordVisibility2();
-                                    },
-                                  ),
-                                  hintText: 'Enter confirm password',
-                                  hintStyle: const TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'SmoochSans',
-                                  ),
-                                ),
-                                obscureText: viewmodel.obscureText2,
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: 'SmoochSans',
-                                ),
+                                isPasswordVisible: viewmodel.obscureText2,
+                                togglePasswordVisibility: viewmodel.togglePasswordVisibility2,
                               );
                             },
                           ),

@@ -4,6 +4,7 @@ import 'package:pet_welfrare_ph/src/view_model/ChangePasswordViewModel.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/AppColors.dart';
+import '../widgets/CustomPasswordField.dart';
 
 class ChangePasswordView extends StatefulWidget {
   const ChangePasswordView({Key? key}) : super(key: key);
@@ -56,36 +57,12 @@ class ChangePasswordState extends State<ChangePasswordView> {
                 ),
               ),
               SizedBox(height: screenHeight * 0.01),
-              Consumer<ChangePasswordViewModel>(
-                builder: (context, changeViewModel, child) {
-                  return TextField(
-                    controller: viewModel.oldPasswordController,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: AppColors.gray,
-                      border: const OutlineInputBorder(),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          changeViewModel.obscureText1 ? Icons.visibility : Icons.visibility_off,
-                        ),
-                        onPressed: () {
-                          changeViewModel.togglePasswordVisibility1();
-                        },
-                      ),
-                      hintText: 'Enter your old password',
-                      hintStyle: const TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                    obscureText: changeViewModel.obscureText1,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontFamily: 'SmoochSans',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  );
-                },
+              CustomPasswordField(
+                screenHeight: screenHeight,
+                hintText: 'Enter your old password',
+                controller: viewModel.oldPasswordController,
+                isPasswordVisible: viewModel.obscureText1,
+                togglePasswordVisibility: viewModel.togglePasswordVisibility1,
               ),
               SizedBox(height: screenHeight * 0.02),
               const Text(
@@ -98,36 +75,12 @@ class ChangePasswordState extends State<ChangePasswordView> {
                 ),
               ),
               SizedBox(height: screenHeight * 0.01),
-              Consumer<ChangePasswordViewModel>(
-                builder: (context, changeViewModel, child) {
-                  return TextField(
-                    controller: viewModel.newPasswordController,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: AppColors.gray,
-                      border: const OutlineInputBorder(),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          changeViewModel.obscureText2 ? Icons.visibility : Icons.visibility_off,
-                        ),
-                        onPressed: () {
-                          changeViewModel.togglePasswordVisibility2();
-                        },
-                      ),
-                      hintText: 'Enter your new password',
-                      hintStyle: const TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                    obscureText: changeViewModel.obscureText2,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontFamily: 'SmoochSans',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  );
-                },
+              CustomPasswordField(
+                screenHeight: screenHeight,
+                hintText: 'Enter your new password',
+                controller: viewModel.newPasswordController,
+                isPasswordVisible: viewModel.obscureText2,
+                togglePasswordVisibility: viewModel.togglePasswordVisibility2,
               ),
               SizedBox(height: screenHeight * 0.02),
               Center(

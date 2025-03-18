@@ -3,6 +3,8 @@ import 'package:pet_welfrare_ph/src/view_model/RegisterViewModel.dart';
 import 'package:provider/provider.dart';
 import '../../utils/AppColors.dart';
 import '../../view_model/LoginViewModel.dart';
+import '../../widgets/CustomPasswordField.dart';
+import '../../widgets/CustomTextField.dart';
 
 class LegalFirmRegisterView extends StatefulWidget {
   const LegalFirmRegisterView({Key? key}) : super(key: key);
@@ -81,28 +83,12 @@ class RegisterState extends State<LegalFirmRegisterView> {
                                 fontFamily: 'SmoochSans',
                                 color: Colors.black)),
                             SizedBox(height: screenHeight * 0.01),
-                            TextField(
+                            CustomTextField(
                               controller: viewModel.nameController,
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: AppColors.gray,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                  borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                                ),
-                                hintText: 'Enter your name',
-                                hintStyle: const TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'SmoochSans',
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'SmoochSans',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
+                              screenHeight: screenHeight,
+                              hintText: 'Enter your name',
+                              fontSize: 16,
+                              keyboardType: TextInputType.text,
                             ),
                             SizedBox(height: screenHeight * 0.02),
                             const Text('EMAIL', style: TextStyle(fontSize: 18,
@@ -110,28 +96,12 @@ class RegisterState extends State<LegalFirmRegisterView> {
                                 fontFamily: 'SmoochSans',
                                 color: Colors.black)),
                             SizedBox(height: screenHeight * 0.01),
-                            TextField(
+                            CustomTextField(
                               controller: viewModel.emailController,
-                              decoration: InputDecoration(
-                                filled: true,
-                                fillColor: AppColors.gray,
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(30),
-                                  borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                                ),
-                                hintText: 'Enter your email',
-                                hintStyle: const TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'SmoochSans',
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'SmoochSans',
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
+                              screenHeight: screenHeight,
+                              hintText: 'Enter your email',
+                              fontSize: 16,
+                              keyboardType: TextInputType.text,
                             ),
                             SizedBox(height: screenHeight * 0.02),
                             const Text('PASSWORD', style:
@@ -141,40 +111,12 @@ class RegisterState extends State<LegalFirmRegisterView> {
                                 color: Colors.black
                             )),
                             SizedBox(height: screenHeight * 0.01),
-                            Consumer<RegisterViewModel>(
-                              builder: (context, viewmodel, child) {
-                                return TextField(
-                                  controller: viewmodel.passwordController,
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: AppColors.gray,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                      borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                                    ),
-                                    suffixIcon: IconButton(
-                                      icon: Icon(
-                                        viewmodel.obscureText1 ? Icons.visibility : Icons.visibility_off,
-                                      ),
-                                      onPressed: () {
-                                        viewmodel.togglePasswordVisibility1();
-                                      },
-                                    ),
-                                    hintText: 'Enter your password',
-                                    hintStyle: const TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: 'SmoochSans',
-                                    ),
-                                  ),
-                                  obscureText: viewmodel.obscureText1,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                );
-                              },
+                            CustomPasswordField(
+                              screenHeight: screenHeight,
+                              hintText: 'Enter your password',
+                              controller: viewModel.passwordController,
+                              isPasswordVisible: viewModel.obscureText2,
+                              togglePasswordVisibility: viewModel.togglePasswordVisibility1,
                             ),
                             SizedBox(height: screenHeight * 0.02),
                             const Text('CONFIRM PASSWORD', style: TextStyle(fontSize: 18,
@@ -182,41 +124,12 @@ class RegisterState extends State<LegalFirmRegisterView> {
                                 fontFamily: 'SmoochSans',
                                 color: Colors.black)),
                             SizedBox(height: screenHeight * 0.01),
-                            Consumer<RegisterViewModel>(
-                              builder: (context, viewmodel, child) {
-                                return TextField(
-                                  controller: viewmodel.confirmPasswordController,
-                                  decoration: InputDecoration(
-                                    filled: true,
-                                    fillColor: AppColors.gray,
-                                    border: OutlineInputBorder(
-                                      borderRadius: BorderRadius.circular(30),
-                                      borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                                    ),
-                                    suffixIcon: IconButton(
-                                      icon: Icon(
-                                        viewmodel.obscureText2 ? Icons.visibility : Icons.visibility_off,
-                                      ),
-                                      onPressed: () {
-                                        viewmodel.togglePasswordVisibility2();
-                                      },
-                                    ),
-                                    hintText: 'Enter confirm password',
-                                    hintStyle: const TextStyle(
-                                      color: Colors.black,
-                                      fontWeight: FontWeight.w600,
-                                      fontFamily: 'SmoochSans',
-                                    ),
-                                  ),
-                                  obscureText: viewmodel.obscureText2,
-                                  style: const TextStyle(
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'SmoochSans',
-                                  ),
-                                );
-                              },
+                            CustomPasswordField(
+                              screenHeight: screenHeight,
+                              hintText: 'Re-enter your password',
+                              controller: viewModel.confirmPasswordController,
+                              isPasswordVisible: viewModel.obscureText2,
+                              togglePasswordVisibility: viewModel.togglePasswordVisibility2,
                             ),
                             SizedBox(height: screenHeight * 0.02),
                             Consumer<RegisterViewModel>(

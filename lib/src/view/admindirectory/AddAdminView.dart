@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/view_model/AddAdminViewModel.dart';
+import 'package:pet_welfrare_ph/src/widgets/CustomPasswordField.dart';
+import 'package:pet_welfrare_ph/src/widgets/CustomTextField.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/AppColors.dart';
@@ -61,27 +63,11 @@ class AddAdminViewState extends State<AddAdminView> {
                 ),
               ),
               SizedBox(height: screenHeight * 0.01),
-              Consumer<AddAdminViewModel>(
-                builder: (context, changeViewModel, child) {
-                  return TextField(
-                    controller: viewModel.email,
-                    decoration: const InputDecoration(
-                      filled: true,
-                      fillColor: AppColors.gray,
-                      border: OutlineInputBorder(),
-                      hintText: 'Enter the email address',
-                      hintStyle: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontFamily: 'SmoochSans',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  );
-                },
+              CustomTextField(controller: viewModel.email,
+                  screenHeight: screenHeight,
+                  hintText: 'Enter the email address',
+                  fontSize: 16,
+                  keyboardType: TextInputType.text,
               ),
               SizedBox(height: screenHeight * 0.02),
               const Text(
@@ -94,27 +80,12 @@ class AddAdminViewState extends State<AddAdminView> {
                 ),
               ),
               SizedBox(height: screenHeight * 0.01),
-              Consumer<AddAdminViewModel>(
-                builder: (context, changeViewModel, child) {
-                  return TextField(
-                    controller: viewModel.name,
-                    decoration: const InputDecoration(
-                      filled: true,
-                      fillColor: AppColors.gray,
-                      border: OutlineInputBorder(),
-                      hintText: 'Enter the full name',
-                      hintStyle: TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontFamily: 'SmoochSans',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  );
-                },
+              CustomTextField(
+                controller: viewModel.name,
+                  screenHeight: screenHeight,
+                  hintText: 'Enter full name',
+                  fontSize: 16,
+                  keyboardType: TextInputType.text,
               ),
               SizedBox(height: screenHeight * 0.02),
               const Text('SELECT YOUR USER CLASSIFICATION',
@@ -193,36 +164,11 @@ class AddAdminViewState extends State<AddAdminView> {
                 ),
               ),
               SizedBox(height: screenHeight * 0.02),
-              Consumer<AddAdminViewModel>(
-                builder: (context, changeViewModel, child) {
-                  return TextField(
-                    controller: viewModel.password,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: AppColors.gray,
-                      border: const OutlineInputBorder(),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          changeViewModel.obscureText1 ? Icons.visibility : Icons.visibility_off,
-                        ),
-                        onPressed: () {
-                          changeViewModel.togglePasswordVisibility1();
-                        },
-                      ),
-                      hintText: 'Enter the password password',
-                      hintStyle: const TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                    obscureText: changeViewModel.obscureText1,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontFamily: 'SmoochSans',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  );
-                },
+              CustomPasswordField(screenHeight: screenHeight,
+                  hintText: 'Enter the password',
+                  controller: viewModel.password,
+                  isPasswordVisible: viewModel.obscureText1,
+                  togglePasswordVisibility: viewModel.togglePasswordVisibility1
               ),
               SizedBox(height: screenHeight * 0.02),
               const Text(
@@ -235,36 +181,11 @@ class AddAdminViewState extends State<AddAdminView> {
                 ),
               ),
               SizedBox(height: screenHeight * 0.01),
-              Consumer<AddAdminViewModel>(
-                builder: (context, changeViewModel, child) {
-                  return TextField(
-                    controller: viewModel.confirmpassword,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: AppColors.gray,
-                      border: const OutlineInputBorder(),
-                      suffixIcon: IconButton(
-                        icon: Icon(
-                          changeViewModel.obscureText2 ? Icons.visibility : Icons.visibility_off,
-                        ),
-                        onPressed: () {
-                          changeViewModel.togglePasswordVisibility2();
-                        },
-                      ),
-                      hintText: 'Enter the confirm password',
-                      hintStyle: const TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                    obscureText: changeViewModel.obscureText2,
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontFamily: 'SmoochSans',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  );
-                },
+              CustomPasswordField(screenHeight: screenHeight,
+                  hintText: 'Re-enter the password',
+                  controller: viewModel.confirmpassword,
+                  isPasswordVisible: viewModel.obscureText2,
+                  togglePasswordVisibility: viewModel.togglePasswordVisibility2
               ),
               SizedBox(height: screenHeight * 0.02),
               Center(

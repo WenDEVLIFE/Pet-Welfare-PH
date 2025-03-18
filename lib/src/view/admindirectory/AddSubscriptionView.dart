@@ -5,6 +5,7 @@ import 'package:pet_welfrare_ph/src/view_model/SubcriptionViewModel.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/AppColors.dart';
+import '../../widgets/CustomTextField.dart';
 
 class AddSubscriptionView extends StatefulWidget {
   const AddSubscriptionView({Key? key}) : super(key: key);
@@ -61,30 +62,12 @@ class AddAdminViewState extends State<AddSubscriptionView> {
                 ),
               ),
               SizedBox(height: screenHeight * 0.01),
-              Consumer<SubscriptionViewModel>(
-                builder: (context, changeViewModel, child) {
-                  return TextField(
-                    controller: viewModel.subscriptionNameController,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: AppColors.gray,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                      ),
-                      hintText: 'Enter the subscription name',
-                      hintStyle: const TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontFamily: 'SmoochSans',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  );
-                },
+              CustomTextField(controller:
+                 viewModel.subscriptionNameController,
+                  screenHeight: screenHeight,
+                  hintText: 'Enter the subscription name',
+                  fontSize: 16,
+                  keyboardType: TextInputType.text,
               ),
               SizedBox(height: screenHeight * 0.02),
               const Text(
@@ -97,31 +80,12 @@ class AddAdminViewState extends State<AddSubscriptionView> {
                 ),
               ),
               SizedBox(height: screenHeight * 0.01),
-              Consumer<SubscriptionViewModel>(
-                builder: (context, changeViewModel, child) {
-                  return TextField(
-                    controller: viewModel.subscriptionPriceController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: AppColors.gray,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                      ),
-                      hintText: 'Enter the subscription price',
-                      hintStyle: const TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontFamily: 'SmoochSans',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  );
-                },
+              CustomTextField(controller:
+                 viewModel.subscriptionPriceController,
+                  screenHeight: screenHeight,
+                  hintText: 'Enter the subscription price',
+                  fontSize: 16,
+                  keyboardType: TextInputType.number,
               ),
               SizedBox(height: screenHeight * 0.02),
               const Text(
@@ -134,31 +98,12 @@ class AddAdminViewState extends State<AddSubscriptionView> {
                 ),
               ),
               SizedBox(height: screenHeight * 0.01),
-              Consumer<SubscriptionViewModel>(
-                builder: (context, changeViewModel, child) {
-                  return TextField(
-                    controller: viewModel.subscriptionDurationController,
-                    keyboardType: TextInputType.number,
-                    decoration: InputDecoration(
-                      filled: true,
-                      fillColor: AppColors.gray,
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(30),
-                        borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                      ),
-                      hintText: 'Enter the subscription duration',
-                      hintStyle: const TextStyle(
-                        color: Colors.black,
-                      ),
-                    ),
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 16,
-                      fontFamily: 'SmoochSans',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  );
-                },
+              CustomTextField(controller:
+                 viewModel.subscriptionDurationController,
+                  screenHeight: screenHeight,
+                  hintText: 'Enter the subscription duration',
+                  fontSize: 16,
+                  keyboardType: TextInputType.number,
               ),
               SizedBox(height: screenHeight * 0.02),
               Center(

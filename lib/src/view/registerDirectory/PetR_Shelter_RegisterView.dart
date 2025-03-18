@@ -1,7 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/view_model/RegisterViewModel.dart';
+import 'package:pet_welfrare_ph/src/widgets/CustomTextField.dart';
 import 'package:provider/provider.dart';
 import '../../utils/AppColors.dart';
+import '../../widgets/CustomPasswordField.dart';
 import '../../widgets/TermsAndConditionDialogWidget.dart';
 import '../../view_model/LoginViewModel.dart';
 
@@ -76,28 +78,18 @@ class RegisterState extends State<PetrShelterRegisterview> {
                                     color: Colors.black)),
                           ),
                           SizedBox(height: screenHeight * 0.02),
-                          TextField(
-                            controller: viewModel.nameController,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: AppColors.gray,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                              ),
-                              hintText: 'Enter your name',
-                              hintStyle: const TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'SmoochSans',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            style: const TextStyle(
-                              color: Colors.black,
+                          const Text('Full Name', style: TextStyle(
+                              fontSize: 18,
+                              fontWeight: FontWeight.w700,
                               fontFamily: 'SmoochSans',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
+                              color: Colors.black)),
+                          SizedBox(height: screenHeight * 0.01),
+                          CustomTextField(
+                            screenHeight: screenHeight,
+                            hintText: 'Enter your full name',
+                            controller: viewModel.nameController,
+                            fontSize: 16,
+                            keyboardType: TextInputType.text,
                           ),
                           SizedBox(height: screenHeight * 0.02),
                           const Text('EMAIL', style: TextStyle(
@@ -106,28 +98,12 @@ class RegisterState extends State<PetrShelterRegisterview> {
                               fontFamily: 'SmoochSans',
                               color: Colors.black)),
                           SizedBox(height: screenHeight * 0.01),
-                          TextField(
+                          CustomTextField(
+                            screenHeight: screenHeight,
+                            hintText: 'Enter your email',
                             controller: viewModel.emailController,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: AppColors.gray,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                              ),
-                              hintText: 'Enter your email',
-                              hintStyle: const TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'SmoochSans',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'SmoochSans',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            fontSize: 16,
+                            keyboardType: TextInputType.text,
                           ),
                           SizedBox(height: screenHeight * 0.02),
                           const Text('SELECT YOUR USER CLASSIFICATION',
@@ -200,28 +176,12 @@ class RegisterState extends State<PetrShelterRegisterview> {
                               fontFamily: 'SmoochSans',
                               color: Colors.black)),
                           SizedBox(height: screenHeight * 0.01),
-                          TextField(
+                          CustomTextField(
+                            screenHeight: screenHeight,
+                            hintText: 'Enter your address',
                             controller: viewModel.addressController,
-                            decoration: InputDecoration(
-                              filled: true,
-                              fillColor: AppColors.gray,
-                              border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                              ),
-                              hintText: 'Enter your address',
-                              hintStyle: const TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'SmoochSans',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'SmoochSans',
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
+                            fontSize: 16,
+                            keyboardType: TextInputType.text,
                           ),
                           SizedBox(height: screenHeight * 0.02),
                           const Text('PASSWORD', style: TextStyle(
@@ -230,40 +190,12 @@ class RegisterState extends State<PetrShelterRegisterview> {
                               fontFamily: 'SmoochSans',
                               color: Colors.black)),
                           SizedBox(height: screenHeight * 0.01),
-                          Consumer<RegisterViewModel>(
-                            builder: (context, viewmodel, child) {
-                              return TextField(
-                                controller: viewmodel.passwordController,
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: AppColors.gray,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                    borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                                  ),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      viewmodel.obscureText1 ? Icons.visibility : Icons.visibility_off,
-                                    ),
-                                    onPressed: () {
-                                      viewmodel.togglePasswordVisibility1();
-                                    },
-                                  ),
-                                  hintText: 'Enter your password',
-                                  hintStyle: const TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'SmoochSans',
-                                  ),
-                                ),
-                                obscureText: viewmodel.obscureText1,
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              );
-                            },
+                          CustomPasswordField(
+                            screenHeight: screenHeight,
+                            hintText: 'Enter your password',
+                            controller: viewModel.passwordController,
+                            isPasswordVisible: viewModel.obscureText1,
+                            togglePasswordVisibility: viewModel.togglePasswordVisibility1,
                           ),
                           SizedBox(height: screenHeight * 0.02),
                           const Text('CONFIRM PASSWORD', style: TextStyle(
@@ -272,41 +204,12 @@ class RegisterState extends State<PetrShelterRegisterview> {
                               fontFamily: 'SmoochSans',
                               color: Colors.black)),
                           SizedBox(height: screenHeight * 0.01),
-                          Consumer<RegisterViewModel>(
-                            builder: (context, viewmodel, child) {
-                              return TextField(
-                                controller: viewmodel.confirmPasswordController,
-                                decoration: InputDecoration(
-                                  filled: true,
-                                  fillColor: AppColors.gray,
-                                  border: OutlineInputBorder(
-                                    borderRadius: BorderRadius.circular(30),
-                                    borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                                  ),
-                                  suffixIcon: IconButton(
-                                    icon: Icon(
-                                      viewmodel.obscureText2 ? Icons.visibility : Icons.visibility_off,
-                                    ),
-                                    onPressed: () {
-                                      viewmodel.togglePasswordVisibility2();
-                                    },
-                                  ),
-                                  hintText: 'Enter confirm password',
-                                  hintStyle: const TextStyle(
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'SmoochSans',
-                                  ),
-                                ),
-                                obscureText: viewmodel.obscureText2,
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontSize: 16,
-                                  fontWeight: FontWeight.w600,
-                                  fontFamily: 'SmoochSans',
-                                ),
-                              );
-                            },
+                          CustomPasswordField(
+                            screenHeight: screenHeight,
+                            hintText: 'Confirm your password',
+                            controller: viewModel.confirmPasswordController,
+                            isPasswordVisible: viewModel.obscureText2,
+                            togglePasswordVisibility: viewModel.togglePasswordVisibility2,
                           ),
                           SizedBox(height: screenHeight * 0.02),
                           Consumer<RegisterViewModel>(

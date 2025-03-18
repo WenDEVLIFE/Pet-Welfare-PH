@@ -14,6 +14,7 @@ import '../../services/MapTilerKey.dart';
 import '../../utils/AppColors.dart';
 import '../../utils/ToastComponent.dart';
 import '../../view_model/CreatePostViewModel.dart';
+import '../../widgets/CustomTextField.dart';
 
 class CreatePostView extends StatelessWidget {
   @override
@@ -65,27 +66,12 @@ class CreatePostView extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(padding: const EdgeInsets.all(10.0),
-              child: Container(
-                width: screenWidth * 0.99,
-                height: screenHeight * 0.3,
-                child: TextField(
-                  controller: createPostViewModel.postController,
-                  maxLines: null,
-                  expands: true,
-                  decoration: InputDecoration(
-                    hintText: 'Enter your post here...',
-                    hintStyle: const TextStyle(
-                      color: Colors.black,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 0),
-                  ),
-                ),
-              ),
+            CustomTextField(
+              controller: createPostViewModel.postController,
+              screenHeight: screenHeight,
+              hintText: 'Enter your post here...',
+              fontSize: 16,
+              keyboardType: TextInputType.text,
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),
@@ -292,19 +278,12 @@ class CreatePostView extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: TextField(
+                child: CustomTextField(
                   controller: createPostViewModel.petName,
-                  decoration: InputDecoration(
-                    hintText: 'Enter the pet name...',
-                    hintStyle: const TextStyle(
-                      color: Colors.black,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 0),
-                  ),
+                  screenHeight: screenHeight,
+                  hintText: 'Enter pet name...',
+                  fontSize: 16,
+                  keyboardType: TextInputType.text,
                 ),
               ),
               if(createPostViewModel.selectedPetType =='Cat' || createPostViewModel.selectedPetType =='Dog') ...[
@@ -1075,19 +1054,12 @@ class CreatePostView extends StatelessWidget {
               ),
               Padding(
                 padding: const EdgeInsets.all(10.0),
-                child: TextField(
+                child: CustomTextField(
                   controller: createPostViewModel.address,
-                  decoration: InputDecoration(
-                    hintText: 'Street, Building, House No...',
-                    hintStyle: const TextStyle(
-                      color: Colors.black,
-                    ),
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(10),
-                      borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 0),
-                  ),
+                  screenHeight: screenHeight,
+                  hintText: 'Enter Street Address, Building, House No...',
+                  fontSize: 16,
+                  keyboardType: TextInputType.text,
                 ),
               ),
             ],

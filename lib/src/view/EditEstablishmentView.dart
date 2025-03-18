@@ -14,6 +14,7 @@ import '../services/MapTilerKey.dart';
 import '../utils/ImageUtils.dart';
 import '../utils/ToastComponent.dart';
 import '../view_model/EstablishmentViewModel.dart';
+import '../widgets/CustomTextField.dart';
 
 class EditEstablishmentScreen extends StatefulWidget {
   const EditEstablishmentScreen({Key? key}) : super(key: key);
@@ -117,26 +118,12 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.01),
-                      TextField(
+                      CustomTextField(
                         controller: viewModel.shelterNameController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: AppColors.gray,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                          ),
-                          hintText: 'Enter Shelter/Clinic Name',
-                          hintStyle: const TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontFamily: 'SmoochSans',
-                          fontWeight: FontWeight.w600,
-                        ),
+                        screenHeight: screenHeight,
+                        hintText: 'Enter Shelter/Clinic Name',
+                        fontSize: 16,
+                        keyboardType: TextInputType.text,
                       ),
                       SizedBox(height: screenHeight * 0.02),
                       const Text(
@@ -240,26 +227,12 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.01),
-                      TextField(
+                      CustomTextField(
                         controller: viewModel.shelterDescriptionController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: AppColors.gray,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                          ),
-                          hintText: 'Enter Shelter/Clinic Description',
-                          hintStyle: const TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontFamily: 'SmoochSans',
-                          fontWeight: FontWeight.w600,
-                        ),
+                        screenHeight: screenHeight,
+                        hintText: 'Enter Shelter/Clinic Description',
+                        fontSize: 16,
+                        keyboardType: TextInputType.text,
                       ),
                       SizedBox(height: screenHeight * 0.02),
                       const Text(
@@ -272,26 +245,12 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.01),
-                      TextField(
+                      CustomTextField(
                         controller: viewModel.shelterAddressController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: AppColors.gray,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                          ),
-                          hintText: 'Enter Shelter/Clinic Address',
-                          hintStyle: const TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontFamily: 'SmoochSans',
-                          fontWeight: FontWeight.w600,
-                        ),
+                        screenHeight: screenHeight,
+                        hintText: 'Enter Shelter/Clinic Address',
+                        fontSize: 16,
+                        keyboardType: TextInputType.text,
                       ),
                       SizedBox(height: screenHeight * 0.02),
                       const Text(
@@ -304,26 +263,12 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.01),
-                      TextField(
+                      CustomTextField(
                         controller: viewModel.shelterPhoneNumber,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: AppColors.gray,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                          ),
-                          hintText: 'Enter Shelter/Clinic Phone Number',
-                          hintStyle: const TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontFamily: 'SmoochSans',
-                          fontWeight: FontWeight.w600,
-                        ),
+                        screenHeight: screenHeight,
+                        hintText: 'Enter Shelter/Clinic Phone Number',
+                        fontSize: 16,
+                        keyboardType: TextInputType.number,
                       ),
                       SizedBox(height: screenHeight * 0.02),
                       const Text(
@@ -336,26 +281,12 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.01),
-                      TextField(
+                      CustomTextField(
                         controller: viewModel.shelterEmailController,
-                        decoration: InputDecoration(
-                          filled: true,
-                          fillColor: AppColors.gray,
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(30),
-                            borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                          ),
-                          hintText: 'Enter Shelter/Clinic Email',
-                          hintStyle: const TextStyle(
-                            color: Colors.black,
-                          ),
-                        ),
-                        style: const TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                          fontFamily: 'SmoochSans',
-                          fontWeight: FontWeight.w600,
-                        ),
+                        screenHeight: screenHeight,
+                        hintText: 'Enter Shelter/Clinic Email',
+                        fontSize: 16,
+                        keyboardType: TextInputType.text,
                       ),
                       SizedBox(height: screenHeight * 0.02),
                       const Text(

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:pet_welfrare_ph/src/view_model/MessageViewModel.dart';
+import 'package:pet_welfrare_ph/src/widgets/CustomTextField.dart';
 import 'package:provider/provider.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
 import '../../utils/AppColors.dart';
@@ -233,14 +234,12 @@ class MessageState extends State<MessageView> {
                   },
                 ),
                 Expanded(
-                  child: TextField(
-                    controller: Provider.of<MessageViewModel>(context).messageController,
-                    decoration: InputDecoration(
-                      hintText: 'Type a message',
-                      border: OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(20),
-                      ),
-                    ),
+                  child: CustomTextField(
+                      controller: Provider.of<MessageViewModel>(context).messageController,
+                      screenHeight: screenHeight,
+                      hintText: 'Type your message here',
+                      fontSize: 16,
+                      keyboardType: TextInputType.text
                   ),
                 ),
                 IconButton(
