@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
+import 'package:pet_welfrare_ph/src/widgets/MapSearchTextField.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
 import '../../model/BarangayModel.dart';
@@ -945,65 +946,19 @@ class CreatePostView extends StatelessWidget {
                         },
                       ),
                     ),
+
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         children: [
-                          Container(
-                            width: screenWidth * 0.99,
-                            height: screenHeight * 0.08,
-                            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                            decoration: BoxDecoration(
-                              color: Colors.transparent,
-                              borderRadius: BorderRadius.circular(30),
-                              border: Border.all(color: Colors.transparent, width: 7),
-                            ),
-                            child: TextField(
-                              controller: createPostViewModel.searchController,
-                              focusNode: createPostViewModel.focusNode,
-                              onChanged: (query) {
-                                createPostViewModel.searchLocation(query);
-                              },
-                              decoration: InputDecoration(
-                                filled: true,
-                                prefixIcon: const Icon(Icons.search, color: Colors.black),
-                                suffixIcon: createPostViewModel.searchController.text.isNotEmpty
-                                    ? IconButton(
-                                  icon: const Icon(Icons.clear, color: Colors.black),
-                                  onPressed: () {
-                                    createPostViewModel.searchController.clear();
-                                    createPostViewModel.removePins();
-                                    createPostViewModel.showDropdown = false; // Hide dropdown when cleared
-                                  },
-                                )
-                                    : null,
-                                fillColor: Colors.grey[200],
-                                border: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                                ),
-                                enabledBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(color: AppColors.orange, width: 2),
-                                ),
-                                focusedBorder: OutlineInputBorder(
-                                  borderRadius: BorderRadius.circular(10),
-                                  borderSide: const BorderSide(color: AppColors.orange, width: 2),
-                                ),
-                                hintText: 'Search an address....',
-                                hintStyle: const TextStyle(
-                                  color: Colors.black,
-                                ),
-                                contentPadding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 0),
-                              ),
-                              style: const TextStyle(
-                                fontFamily: 'LeagueSpartan',
-                                color: Colors.black,
-                                fontSize: 16,
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          ),
+                        MapSearchTextField(
+                            controller: createPostViewModel.searchController,
+                            focusNode: createPostViewModel.focusNode,
+                            onSearch: createPostViewModel.searchLocation,
+                            onClear: createPostViewModel.clearSearch,
+                            hintText: 'Search your address...',
+
+                        ),
                           if (createPostViewModel.showDropdown)
                             Consumer<CreatePostViewModel>(
                               builder: (context, viewModel, child) {
@@ -1101,6 +1056,7 @@ class CreatePostView extends StatelessWidget {
                 ),
               ),
             ),
+            SizedBox(height: screenHeight * 0.02),
           ],
         ),
       ),

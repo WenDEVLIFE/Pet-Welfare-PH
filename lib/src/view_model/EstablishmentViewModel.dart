@@ -10,6 +10,8 @@ import 'package:pet_welfrare_ph/src/respository/AddUserRespository.dart';
 import 'package:pet_welfrare_ph/src/respository/LocationRespository.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 
+import '../services/OpenStreetMapService.dart';
+
 class EstablishmentViewModel extends ChangeNotifier {
   final TextEditingController shelterNameController = TextEditingController();
   final TextEditingController shelterDescriptionController = TextEditingController();
@@ -18,6 +20,10 @@ class EstablishmentViewModel extends ChangeNotifier {
   final TextEditingController shelterEmailController = TextEditingController();
   final TextEditingController searchController = TextEditingController();
   final ImagePicker imagePicker = ImagePicker();
+
+  final FocusNode focusNode = FocusNode();
+
+  bool showDropdown = false;
 
   final Locationrespository _addLocationRespository = LocationrespositoryImpl();
   final AddUserRepository _addUserRepository = AddUserImpl();
@@ -30,7 +36,13 @@ class EstablishmentViewModel extends ChangeNotifier {
   double long = 0.0;
   double newlat = 0.0;
   double newlong = 0.0;
+
   MaplibreMapController? mapController;
+  List<Map<String, dynamic>> searchResults = [];
+
+  // OpenStreetMapService
+  final OpenStreetMapService _openStreetMapService = OpenStreetMapService();
+
   var establishmentType = [
     'Shelter',
     'Clinic',
@@ -302,7 +314,28 @@ class EstablishmentViewModel extends ChangeNotifier {
       map['EstablishmentStatus'] = 'Denied';
       _addLocationRespository.updateStatus(map, context);
     }
+  }
 
+  // This is used for searched Locations
+  Future<void> searchLocation(String query) async {
+    try {
+      final results = await _openStreetMapService.fetchOpenStreetMapData(query);
 
+      if (results.isEmpty) {
+        print('No results found.');
+      } else {
+        print('Results found: $results');
+      }
+      searchResults = results;
+      notifyListeners();
+    } catch (e) {
+      print('Error fetching data: $e');
+    }
+  }
+
+  void clearSearch() {
+    searchController.clear();
+    showDropdown = false;
+    notifyListeners();
   }
 }

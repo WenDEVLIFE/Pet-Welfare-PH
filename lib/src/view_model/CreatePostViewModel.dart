@@ -549,4 +549,10 @@ class CreatePostViewModel extends ChangeNotifier {
     selectedPetAge = newValue!;
     notifyListeners();
   }
+
+  void clearSearch() {
+    searchController.clear();
+    showDropdown = false;
+    notifyListeners();
+  }
 }

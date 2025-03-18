@@ -12,6 +12,7 @@ import 'package:provider/provider.dart';
 import '../utils/AppColors.dart';
 import '../utils/ImageUtils.dart';
 import '../services/MapTilerKey.dart';
+import '../widgets/MapSearchTextField.dart';
 
 class AddShelterClinic extends StatefulWidget {
   const AddShelterClinic({Key? key}) : super(key: key);
@@ -332,38 +333,6 @@ class _AddShelterClinicState extends State<AddShelterClinic> {
                         ),
                         SizedBox(height: screenHeight * 0.02),
                         const Text(
-                          'Shelter/Clinic Address',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.w900,
-                            fontFamily: 'SmoochSans',
-                            color: Colors.black,
-                          ),
-                        ),
-                        SizedBox(height: screenHeight * 0.01),
-                        TextField(
-                          controller: viewModel.shelterAddressController,
-                          decoration: InputDecoration(
-                            filled: true,
-                            fillColor: AppColors.gray,
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(30),
-                              borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                            ),
-                            hintText: 'Enter Shelter/Clinic Address',
-                            hintStyle: const TextStyle(
-                              color: Colors.black,
-                            ),
-                          ),
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontFamily: 'SmoochSans',
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                        SizedBox(height: screenHeight * 0.02),
-                        const Text(
                           'Location',
                           style: TextStyle(
                             fontSize: 18,
@@ -373,45 +342,101 @@ class _AddShelterClinicState extends State<AddShelterClinic> {
                           ),
                         ),
                         SizedBox(height: screenHeight * 0.01),
-                        Container(
-                          height: screenHeight * 0.4,
-                          child: MaplibreMap(
-                            styleString: "${MapTilerKey.styleUrl}?key=${MapTilerKey.apikey}",
-                            myLocationEnabled: true,
-                            initialCameraPosition: CameraPosition(
-                              target: LatLng(viewModel.lat, viewModel.long),
-                              zoom: 15.0,
+                        Stack(
+                          children: [
+                            Container(
+                              height: screenHeight * 0.4,
+                              child: MaplibreMap(
+                                styleString: "${MapTilerKey.styleUrl}?key=${MapTilerKey.apikey}",
+                                myLocationEnabled: true,
+                                initialCameraPosition: CameraPosition(
+                                  target: LatLng(viewModel.lat, viewModel.long),
+                                  zoom: 15.0,
+                                ),
+                                onMapCreated: (MaplibreMapController controller) async {
+                                  viewModel.mapController = controller;
+                                  await viewModel.loadMarkerImage(controller); // Load custom marker
+                                  if (viewModel.selectedLocation != null) {
+                                    viewModel.addPin(viewModel.selectedLocation!);
+                                  }
+                                },
+                                onMapClick: (point, coordinates) async {
+                                  if (viewModel.mapController == null) return;
+
+                                  // Update location
+                                  viewModel.updateLocation(coordinates);
+
+                                  // Remove previous markers
+                                  await viewModel.mapController!.clearSymbols();
+
+                                  // Add new marker
+                                  await viewModel.mapController!.addSymbol(SymbolOptions(
+                                    geometry: coordinates,
+                                    iconImage: "custom_marker", // Use loaded image
+                                    iconSize: 1.5,
+                                  ));
+
+                                  print("Pinned Location: ${coordinates.latitude}, ${coordinates.longitude}");
+                                  ToastComponent().showMessage(AppColors.orange, 'Pinned Location: ${coordinates.latitude}, ${coordinates.longitude}');
+                                },
+                                gestureRecognizers: {
+                                  Factory<OneSequenceGestureRecognizer>(() => EagerGestureRecognizer()),
+                                },
+                              ),
                             ),
-                            onMapCreated: (MaplibreMapController controller) async {
-                              viewModel.mapController = controller;
-                              await viewModel.loadMarkerImage(controller); // Load custom marker
-                              if (viewModel.selectedLocation != null) {
-                                viewModel.addPin(viewModel.selectedLocation!);
-                              }
-                            },
-                            onMapClick: (point, coordinates) async {
-                              if (viewModel.mapController == null) return;
-
-                              // Update location
-                              viewModel.updateLocation(coordinates);
-
-                              // Remove previous markers
-                              await viewModel.mapController!.clearSymbols();
-
-                              // Add new marker
-                              await viewModel.mapController!.addSymbol(SymbolOptions(
-                                geometry: coordinates,
-                                iconImage: "custom_marker", // Use loaded image
-                                iconSize: 1.5,
-                              ));
-
-                              print("Pinned Location: ${coordinates.latitude}, ${coordinates.longitude}");
-                              ToastComponent().showMessage(AppColors.orange, 'Pinned Location: ${coordinates.latitude}, ${coordinates.longitude}');
-                            },
-                            gestureRecognizers: {
-                              Factory<OneSequenceGestureRecognizer>(() => EagerGestureRecognizer()),
-                            },
-                          ),
+                            Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Column(
+                                children: [
+                                  MapSearchTextField(
+                                    controller: viewModel.searchController,
+                                    focusNode: viewModel.focusNode,
+                                    onSearch: viewModel.searchLocation,
+                                    onClear: viewModel.clearSearch,
+                                    hintText: 'Search your address...',
+                                  ),
+                                  if (viewModel.showDropdown)
+                                    Consumer<EstablishmentViewModel>(
+                                      builder: (context, viewModel, child) {
+                                        return Container(
+                                          height: screenHeight * 0.3,
+                                          decoration: BoxDecoration(
+                                            color: Colors.white, // Set the background color
+                                            borderRadius: BorderRadius.circular(10),
+                                          ),
+                                          child: ListView.builder(
+                                            itemCount: viewModel.searchResults.length,
+                                            itemBuilder: (context, index) {
+                                              final result = viewModel.searchResults[index];
+                                              return ListTile(
+                                                title: Text(result['display_name']),
+                                                onTap: () {
+                                                  viewModel.searchController.text = result['display_name'];
+                                                  viewModel.showDropdown = false;
+                                                  viewModel.focusNode.unfocus();
+                                                  viewModel.addPin(LatLng(
+                                                    double.parse(result['lat']),
+                                                    double.parse(result['lon']),
+                                                  ));
+                                                  viewModel.mapController?.animateCamera(
+                                                    CameraUpdate.newLatLng(
+                                                      LatLng(
+                                                        double.parse(result['lat']),
+                                                        double.parse(result['lon']),
+                                                      ),
+                                                    ),
+                                                  );
+                                                },
+                                              );
+                                            },
+                                          ),
+                                        );
+                                      },
+                                    ),
+                                ],
+                              ),
+                            ),
+                          ],
                         ),
                         SizedBox(height: screenHeight * 0.02),
                         Center(
