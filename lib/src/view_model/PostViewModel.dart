@@ -49,4 +49,34 @@ class PostViewModel extends ChangeNotifier {
       return timeago.format(postDate);
     }
   }
+
+
+  Future<bool> hasUserReacted(String postId) async {
+    return await postRepository.hasUserReacted(postId);
+  }
+
+  Future<String?> getUserReaction(String postId) async {
+    return await postRepository.getUserReaction(postId);
+  }
+
+  Future<int> getReactionCount(String postId) async {
+    return await postRepository.getReactionCount(postId);
+  }
+
+  Future<void> removeReaction(String postId) async {
+    try {
+      await postRepository.removeReaction(postId);
+    } catch (e) {
+      throw Exception('Failed to remove reaction: $e');
+    }
+  }
+
+  Future <void> addReaction(String postId, String reaction) async{
+   try{
+     await postRepository.addReaction(postId, reaction);
+   }
+    catch(e){
+      throw Exception('Failed to add reaction: $e');
+    }
+  }
 }

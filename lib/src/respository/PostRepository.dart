@@ -2,15 +2,28 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
+import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'dart:io';
 
 import 'package:uuid/uuid.dart';
+
+import '../utils/AppColors.dart';
 
 abstract class PostRepository {
   Future<void> uploadPost(String postText, List<File> images, String category);
   Stream<List<PostModel>> getPosts();
 
   Future <void> uploadPetData(List<File> images, String selectedChip, Map<String, Object> petData);
+
+  Future <void> addReaction(String postId, String reaction);
+
+  Future<bool> hasUserReacted(String postId);
+
+  Future<int> getReactionCount(String postId);
+
+  Future<void> removeReaction(String postId);
+
+  Future<String?> getUserReaction(String postId);
 }
 
 class PostRepositoryImpl implements PostRepository {
@@ -171,6 +184,80 @@ class PostRepositoryImpl implements PostRepository {
       throw Exception('Failed to upload post: $e');
     }
 
+  }
+
+  // Added reaction functions
+  @override
+  Future<void> addReaction(String postId, String reaction) async {
+    User user = _firebaseAuth.currentUser!;
+    String userId = user.uid;
+
+    try {
+      // Reference to the reaction document
+      DocumentReference reactionRef = _firestore.collection('PostCollection').doc(postId).collection('ReactionCollection').doc(userId);
+
+      // Check if the user has already reacted
+      DocumentSnapshot reactionSnapshot = await reactionRef.get();
+
+      if (reactionSnapshot.exists) {
+        // Update the existing reaction
+        await reactionRef.update({
+          'Reaction': reaction,
+          'Timestamp': FieldValue.serverTimestamp(),
+        });
+      } else {
+        // Add a new reaction
+        await reactionRef.set({
+          'Reaction': reaction,
+          'Timestamp': FieldValue.serverTimestamp(),
+        });
+      }
+
+      ToastComponent().showMessage(AppColors.orange, 'Reaction added successfully');
+    } catch (e) {
+      throw Exception('Failed to add reaction: $e');
+    }
+  }
+
+  @override
+  Future<bool> hasUserReacted(String postId) async {
+    User user = _firebaseAuth.currentUser!;
+    String userId = user.uid;
+
+    DocumentReference reactionRef = _firestore.collection('PostCollection').doc(postId).collection('ReactionCollection').doc(userId);
+    DocumentSnapshot reactionSnapshot = await reactionRef.get();
+
+    return reactionSnapshot.exists;
+  }
+
+  @override
+  Future<int> getReactionCount(String postId) async {
+    QuerySnapshot reactionSnapshot = await _firestore.collection('PostCollection').doc(postId).collection('ReactionCollection').get();
+    return reactionSnapshot.docs.length;
+  }
+
+  @override
+  Future<void> removeReaction(String postId) async {
+    User user = _firebaseAuth.currentUser!;
+    String userId = user.uid;
+
+    DocumentReference reactionRef = _firestore.collection('PostCollection').doc(postId).collection('ReactionCollection').doc(userId);
+    await reactionRef.delete();
+  }
+
+  @override
+  Future<String?> getUserReaction(String postId) async {
+    User user = _firebaseAuth.currentUser!;
+    String userId = user.uid;
+
+    DocumentReference reactionRef = _firestore.collection('PostCollection').doc(postId).collection('ReactionCollection').doc(userId);
+    DocumentSnapshot reactionSnapshot = await reactionRef.get();
+
+    if (reactionSnapshot.exists) {
+      return reactionSnapshot['Reaction'];
+    } else {
+      return null;
+    }
   }
 
 }

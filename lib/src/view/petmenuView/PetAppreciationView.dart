@@ -19,13 +19,12 @@ class PetAppreciateView extends StatefulWidget {
 
 class _PetAppreciateViewState extends State<PetAppreciateView> {
   @override
-  void initState(){
+  void initState() {
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-
     PostViewModel postViewModel = Provider.of<PostViewModel>(context, listen: false);
 
     double screenWidth = MediaQuery.of(context).size.width;
@@ -62,7 +61,6 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
                       return const Center(child: Text('No posts available'));
                     }
 
-                    // Directly use snapshot data without modifying state inside the builder
                     var posts = snapshot.data!;
 
                     return ListView.builder(
@@ -71,27 +69,74 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
                         var post = posts[index];
                         var formattedDate = postViewModel.formatTimestamp(post.timestamp);
 
-                        return Card(
-                          margin: const EdgeInsets.all(10),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Row(
-                                children: [
-                                  Padding(
-                                    padding: const EdgeInsets.all(10),
-                                    child: CircleAvatar(
-                                      radius: screenHeight * 0.03,
-                                      backgroundImage: CachedNetworkImageProvider(post.profileUrl),
-                                    ),
-                                  ),
-                                  Column(
+                        return FutureBuilder<String?>(
+                          future: postViewModel.getUserReaction(post.postId),
+                          builder: (context, userReactionSnapshot) {
+                            if (userReactionSnapshot.connectionState == ConnectionState.waiting) {
+                              return const Center(child: CircularProgressIndicator());
+                            }
+
+                            String? userReaction = userReactionSnapshot.data;
+                            bool hasReacted = userReaction != null;
+
+                            return FutureBuilder<int>(
+                              future: postViewModel.getReactionCount(post.postId),
+                              builder: (context, reactionCountSnapshot) {
+                                if (reactionCountSnapshot.connectionState == ConnectionState.waiting) {
+                                  return const Center(child: CircularProgressIndicator());
+                                }
+
+                                int reactionCount = reactionCountSnapshot.data ?? 0;
+
+                                return Card(
+                                  margin: const EdgeInsets.all(10),
+                                  child: Column(
                                     crossAxisAlignment: CrossAxisAlignment.start,
                                     children: [
+                                      Row(
+                                        children: [
+                                          Padding(
+                                            padding: const EdgeInsets.all(10),
+                                            child: CircleAvatar(
+                                              radius: screenHeight * 0.03,
+                                              backgroundImage: CachedNetworkImageProvider(post.profileUrl),
+                                            ),
+                                          ),
+                                          Column(
+                                            crossAxisAlignment: CrossAxisAlignment.start,
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.all(5),
+                                                child: Text(
+                                                  post.postOwnerName,
+                                                  style: const TextStyle(
+                                                    fontFamily: 'SmoochSans',
+                                                    color: Colors.black,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ),
+                                              Padding(
+                                                padding: const EdgeInsets.all(5),
+                                                child: Text(
+                                                  formattedDate,
+                                                  style: const TextStyle(
+                                                    fontFamily: 'SmoochSans',
+                                                    color: Colors.black,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w600,
+                                                  ),
+                                                ),
+                                              ),
+                                            ],
+                                          )
+                                        ],
+                                      ),
                                       Padding(
-                                        padding: const EdgeInsets.all(5),
+                                        padding: const EdgeInsets.all(10),
                                         child: Text(
-                                          post.postOwnerName,
+                                          post.postDescription,
                                           style: const TextStyle(
                                             fontFamily: 'SmoochSans',
                                             color: Colors.black,
@@ -100,101 +145,84 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
                                           ),
                                         ),
                                       ),
-                                      Padding(
-                                        padding: const EdgeInsets.all(5),
-                                        child: Text(
-                                          formattedDate,
-                                          style: const TextStyle(
-                                            fontFamily: 'SmoochSans',
-                                            color: Colors.black,
-                                            fontSize: 16,
-                                            fontWeight: FontWeight.w600,
-                                          ),
+                                      SizedBox(
+                                        height: screenHeight * 0.3,
+                                        child: PageView.builder(
+                                          itemCount: post.imageUrls.length,
+                                          itemBuilder: (context, imageIndex) {
+                                            return Container(
+                                              width: screenWidth * 0.8,
+                                              height: screenHeight * 0.5,
+                                              child: CachedNetworkImage(
+                                                imageUrl: post.imageUrls[imageIndex],
+                                                fit: BoxFit.cover,
+                                              ),
+                                            );
+                                          },
                                         ),
                                       ),
-                                    ],
-                                  )
-                                ],
-                              ),
-                              Padding(
-                                padding: const EdgeInsets.all(10),
-                                child: Text(
-                                  post.postDescription,
-                                  style: const TextStyle(
-                                    fontFamily: 'SmoochSans',
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                  ),
-                                ),
-                              ),
-                              SizedBox(
-                                height: screenHeight * 0.3,
-                                child: PageView.builder(
-                                  itemCount: post.imageUrls.length,
-                                  itemBuilder: (context, imageIndex) {
-                                    return Container(
-                                      width: screenWidth * 0.8,
-                                      height: screenHeight * 0.5,
-                                      child: CachedNetworkImage(
-                                        imageUrl: post.imageUrls[imageIndex],
-                                        fit: BoxFit.cover,
-                                      ),
-                                    );
-                                  },
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                        icon: Icon(Icons.thumb_up),
-                                        onPressed: () {
-                                          showModalBottomSheet(
-                                            context: context,
-                                            builder: (context) {
-                                              return ReactionModal(
-                                                onReactionSelected: (reaction) {
-                                                  // Handle reaction selection
-                                                  print('Selected reaction: $reaction');
+                                      Row(
+                                        mainAxisAlignment: MainAxisAlignment.start,
+                                        children: [
+                                          Row(
+                                            children: [
+                                              IconButton(
+                                                icon: Icon(
+                                                  hasReacted
+                                                      ? _getReactionIcon(userReaction!)
+                                                      : Icons.thumb_up_outlined,
+                                                  color: hasReacted ? _getReactionColor(userReaction!) : null,
+                                                ),
+                                                onPressed: () async {
+                                                  if (hasReacted) {
+                                                    await postViewModel.removeReaction(post.postId);
+                                                  } else {
+                                                    showModalBottomSheet(
+                                                      context: context,
+                                                      builder: (context) {
+                                                        return ReactionModal(
+                                                          onReactionSelected: (reaction) {
+                                                            postViewModel.addReaction(post.postId, reaction);
+                                                          },
+                                                        );
+                                                      },
+                                                    );
+                                                  }
+                                                  setState(() {});
                                                 },
-                                              );
-                                            },
-                                          );
-                                        },
-                                      ),
-                                      Text('0 likes',  style: const TextStyle(
-                                        fontFamily: 'SmoochSans',
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                      ),
-                                      ),
-                                    ],
-                                  ),
-                                  Row(
-                                    children: [
-                                      IconButton(
-                                        icon: Icon(Icons.comment),
-                                        onPressed: () {
-                                          // Implement comment functionality here
-                                        },
-                                      ),
-                                      Text('0 comments' , style: const TextStyle(
-                                        fontFamily: 'SmoochSans',
-                                        color: Colors.black,
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w600,
-                                      ),
+                                              ),
+                                              Text('$reactionCount likes', style: const TextStyle(
+                                                fontFamily: 'SmoochSans',
+                                                color: Colors.black,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                              )),
+                                            ],
+                                          ),
+                                          Row(
+                                            children: [
+                                              IconButton(
+                                                icon: const Icon(Icons.comment),
+                                                onPressed: () {
+                                                  // Implement comment functionality here
+                                                },
+                                              ),
+                                              const Text('0 comments', style: TextStyle(
+                                                fontFamily: 'SmoochSans',
+                                                color: Colors.black,
+                                                fontSize: 16,
+                                                fontWeight: FontWeight.w600,
+                                              )),
+                                            ],
+                                          ),
+                                        ],
                                       ),
                                     ],
                                   ),
-                                ],
-                              ),
-                            ],
-                          ),
+                                );
+                              },
+                            );
+                          },
                         );
                       },
                     );
@@ -214,5 +242,39 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
         child: const Icon(Icons.add_photo_alternate_outlined, color: AppColors.white),
       ),
     );
+  }
+
+  IconData _getReactionIcon(String reaction) {
+    switch (reaction) {
+      case 'like':
+        return Icons.thumb_up;
+      case 'heart':
+        return Icons.favorite;
+      case 'HAHA':
+        return Icons.emoji_emotions;
+      case 'angry':
+        return Icons.sentiment_very_dissatisfied_sharp;
+      case 'sad':
+        return Icons.sentiment_dissatisfied;
+      default:
+        return Icons.thumb_up_outlined;
+    }
+  }
+
+  Color _getReactionColor(String reaction) {
+    switch (reaction) {
+      case 'like':
+        return Colors.blue;
+      case 'heart':
+        return Colors.red;
+      case 'HAHA':
+        return Colors.yellow;
+      case 'angry':
+        return Colors.red;
+      case 'sad':
+        return Colors.white;
+      default:
+        return Colors.black;
+    }
   }
 }

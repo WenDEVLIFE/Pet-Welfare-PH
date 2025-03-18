@@ -50,9 +50,9 @@ class _ReactionModalState extends State<ReactionModal> with SingleTickerProvider
         child: Column(
           mainAxisSize: MainAxisSize.min,
           children: [
-            Text(
+            const Text(
               'Select a reaction',
-              style: const TextStyle(
+              style: TextStyle(
                 fontFamily: 'SmoochSans',
                 color: Colors.white,
                 fontSize: 16,
