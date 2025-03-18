@@ -32,6 +32,8 @@ abstract class PostRepository {
 
   Future <void> deleteComment(String postId, String commentId);
 
+  Future<int> getCommentCount(String postId);
+
 }
 
 class PostRepositoryImpl implements PostRepository {
@@ -227,6 +229,7 @@ class PostRepositoryImpl implements PostRepository {
     }
   }
 
+  // Added has user reacted function
   @override
   Future<bool> hasUserReacted(String postId) async {
     User user = _firebaseAuth.currentUser!;
@@ -238,12 +241,14 @@ class PostRepositoryImpl implements PostRepository {
     return reactionSnapshot.exists;
   }
 
+  // Added get reaction count function
   @override
   Future<int> getReactionCount(String postId) async {
     QuerySnapshot reactionSnapshot = await _firestore.collection('PostCollection').doc(postId).collection('ReactionCollection').get();
     return reactionSnapshot.docs.length;
   }
 
+  // Added remove reaction function
   @override
   Future<void> removeReaction(String postId) async {
     User user = _firebaseAuth.currentUser!;
@@ -253,6 +258,7 @@ class PostRepositoryImpl implements PostRepository {
     await reactionRef.delete();
   }
 
+  // Added get user reaction function
   @override
   Future<String?> getUserReaction(String postId) async {
     User user = _firebaseAuth.currentUser!;
@@ -268,6 +274,12 @@ class PostRepositoryImpl implements PostRepository {
     }
   }
 
+  Future<int> getCommentCount(String postId) async {
+    QuerySnapshot commentSnapshot = await _firestore.collection('PostCollection').doc(postId).collection('CommentCollection').get();
+    return commentSnapshot.docs.length;
+  }
+
+  // Added add comment function
   Future<void> addComment(String postId, String commentText) async {
     User user = _firebaseAuth.currentUser!;
     String userId = user.uid;
@@ -286,8 +298,11 @@ class PostRepositoryImpl implements PostRepository {
       'CommentText': commentText,
       'Timestamp': FieldValue.serverTimestamp(),
     });
+
+    ToastComponent().showMessage(AppColors.orange, 'Comment added successfully');
   }
 
+  // Added get comments function
   @override
   Stream<List<CommentModel>> getComments(String postId) {
     return FirebaseFirestore.instance
@@ -305,9 +320,9 @@ class PostRepositoryImpl implements PostRepository {
     });
   }
 
+  // Added delete comment function
   @override
   Future<void> deleteComment(String postId, String commentId) async{
-    // TODO: implement deleteComment
     return await _firestore.collection('PostCollection').doc(postId).collection('CommentCollection').doc(commentId).delete();
   }
 

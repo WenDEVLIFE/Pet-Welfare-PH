@@ -74,6 +74,10 @@ class PostViewModel extends ChangeNotifier {
     return await postRepository.getReactionCount(postId);
   }
 
+  Future<int> getCommentCount(String postId) async {
+    return await postRepository.getCommentCount(postId);
+  }
+
   Future<void> removeReaction(String postId) async {
     try {
       await postRepository.removeReaction(postId);
