@@ -10,6 +10,7 @@ import '../utils/SessionManager.dart';
 import 'package:provider/provider.dart';
 
 import '../DialogView/BanDialogInformation.dart';
+import '../widgets/SearchTextField.dart';
 import 'ViewUserScreen.dart';
 
 class UserView extends StatefulWidget {
@@ -138,38 +139,15 @@ class UserViewState extends State<UserView> {
       body: Column(
         children: [
           SizedBox(height: screenHeight * 0.005),
-          Container(
-            width: screenWidth * 0.99,
-            height: screenHeight * 0.08,
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            decoration: BoxDecoration(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Colors.transparent, width: 7),
-            ),
-            child: TextField(
-              controller: _searchController,
-              decoration: InputDecoration(
-                filled: true,
-                prefixIcon: const Icon(Icons.search, color: Colors.black),
-                fillColor: Colors.grey[200],
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(30),
-                  borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                ),
-                hintText: 'Search a name or email....',
-                hintStyle: const TextStyle(
-                  color: Colors.black,
-                ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 0),
-              ),
-              style: const TextStyle(
-                fontFamily: 'LeagueSpartan',
-                color: Colors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+          CustomSearchTextField(
+            controller: _searchController,
+            screenHeight: screenHeight,
+            hintText: 'Search a subscription....',
+            fontSize: 16,
+            keyboardType: TextInputType.text,
+            onChanged: (searchText) {
+              _userViewModel.filterUser(searchText);
+            },
           ),
           SizedBox(height: screenHeight * 0.005),
           Padding(

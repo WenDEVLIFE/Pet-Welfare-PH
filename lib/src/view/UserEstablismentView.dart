@@ -4,6 +4,7 @@ import 'package:pet_welfrare_ph/src/model/EstablishmentModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/EstablishmentViewModel.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/SearchTextField.dart';
 import 'EditEstablishmentView.dart';
 import '../utils/AppColors.dart';
 import '../utils/Route.dart';
@@ -46,41 +47,15 @@ class EstablismentState extends State<UserEstablismentView> {
       body: Column(
         children: [
           SizedBox(height: screenHeight * 0.005),
-          Container(
-            width: screenWidth * 0.99,
-            height: screenHeight * 0.08,
-            padding: const EdgeInsets.symmetric(horizontal: 10.0),
-            decoration: BoxDecoration(
-              color: Colors.transparent,
-              borderRadius: BorderRadius.circular(10),
-              border: Border.all(color: Colors.transparent, width: 7),
-            ),
-            child: TextField(
-              controller: establishmentViewModel.searchController,
-              onChanged: (query) {
-                establishmentViewModel.filterSubscriptions(query);
-              },
-              decoration: InputDecoration(
-                filled: true,
-                prefixIcon: const Icon(Icons.search, color: Colors.black),
-                fillColor: Colors.grey[200],
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(10),
-                  borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                ),
-                hintText: 'Search a establishment name....',
-                hintStyle: const TextStyle(
-                  color: Colors.black,
-                ),
-                contentPadding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 0),
-              ),
-              style: const TextStyle(
-                fontFamily: 'SmoochSans',
-                color: Colors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
+          CustomSearchTextField(
+            controller: establishmentViewModel.searchController,
+            screenHeight: screenHeight,
+            hintText: 'Search a subscription....',
+            fontSize: 16,
+            keyboardType: TextInputType.text,
+            onChanged: (searchText) {
+              establishmentViewModel.filterSubscriptions(searchText);
+            },
           ),
           SizedBox(height: screenHeight * 0.005),
           Expanded(

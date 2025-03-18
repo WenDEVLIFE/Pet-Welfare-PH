@@ -66,12 +66,27 @@ class CreatePostView extends StatelessWidget {
                 ),
               ),
             ),
-            CustomTextField(
-              controller: createPostViewModel.postController,
-              screenHeight: screenHeight,
-              hintText: 'Enter your post here...',
-              fontSize: 16,
-              keyboardType: TextInputType.text,
+            Padding(padding: const EdgeInsets.all(10.0),
+              child: Container(
+                width: screenWidth * 0.99,
+                height: screenHeight * 0.3,
+                child: TextField(
+                  controller: createPostViewModel.postController,
+                  maxLines: null,
+                  expands: true,
+                  decoration: InputDecoration(
+                    hintText: 'Enter your post here...',
+                    hintStyle: const TextStyle(
+                      color: Colors.black,
+                    ),
+                    border: OutlineInputBorder(
+                      borderRadius: BorderRadius.circular(10),
+                      borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                    ),
+                    contentPadding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 0),
+                  ),
+                ),
+              ),
             ),
             Padding(
               padding: const EdgeInsets.all(10.0),

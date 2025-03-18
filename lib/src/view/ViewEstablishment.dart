@@ -156,7 +156,7 @@ class ViewEstablishmentScreenState extends State<ViewEstablishmentView> {
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.02),
-                      const Text('SELECT YOUR ESTABLISHMENT TYPE',
+                      const Text('ESTABLISHMENT TYPE',
                           style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,

@@ -8,6 +8,7 @@ import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 import 'package:pet_welfrare_ph/src/modal/ReactionModal.dart';
 
 import '../../utils/AppColors.dart';
+import '../../widgets/SearchTextField.dart';
 
 class PetAppreciateView extends StatefulWidget {
   const PetAppreciateView({Key? key}) : super(key: key);
@@ -35,41 +36,15 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
         builder: (context, postViewModel, child) {
           return Column(
             children: [
-              Container(
-                width: screenWidth * 0.99,
-                height: screenHeight * 0.08,
-                padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                decoration: BoxDecoration(
-                  color: Colors.transparent,
-                  borderRadius: BorderRadius.circular(30),
-                  border: Border.all(color: Colors.transparent, width: 7),
-                ),
-                child: TextField(
-                  controller: postViewModel.searchPostController,
-                  onChanged: (query) {
-                    postViewModel.searchPost(query);
-                  },
-                  decoration: InputDecoration(
-                    filled: true,
-                    prefixIcon: const Icon(Icons.search, color: Colors.black),
-                    fillColor: Colors.grey[200],
-                    border: OutlineInputBorder(
-                      borderRadius: BorderRadius.circular(30),
-                      borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                    ),
-                    hintText: 'Search a post....',
-                    hintStyle: const TextStyle(
-                      color: Colors.black,
-                    ),
-                    contentPadding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 0),
-                  ),
-                  style: const TextStyle(
-                    fontFamily: 'SmoochSans',
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
+              CustomSearchTextField(
+                controller: postViewModel.searchPostController,
+                screenHeight: screenHeight,
+                hintText: 'Search for pets',
+                fontSize: 16,
+                keyboardType: TextInputType.text,
+                onChanged: (searchText) {
+                  postViewModel.searchPost(searchText);
+                },
               ),
               Expanded(
                 child: StreamBuilder<List<PostModel>>(
