@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
+import 'package:pet_welfrare_ph/src/widgets/CustomText.dart';
 import 'package:provider/provider.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
@@ -170,6 +171,144 @@ class MissingPetState extends State<MissingPetView> {
                                                 );
                                               },
                                             ),
+                                          ),
+                                          ExpansionTile(
+                                            title:  CustomText(
+                                              text: 'Pet Details',
+                                              size: 24,
+                                              color: AppColors.black,
+                                              weight: FontWeight.w700,
+                                              align: TextAlign.left,
+                                              screenHeight: screenHeight,
+                                              alignment: Alignment.centerLeft,
+                                            ),
+                                            children: [
+                                              Padding(
+                                                padding: const EdgeInsets.all(10),
+                                                child: Column(
+                                                  children: [
+                                                    CustomText(
+                                                        text: 'Pet Name: ${post.petName}',
+                                                        size: 16,
+                                                        color: AppColors.black,
+                                                        weight: FontWeight.w700,
+                                                        align: TextAlign.left,
+                                                        screenHeight: screenHeight,
+                                                        alignment: Alignment.centerLeft,
+                                                    ),
+                                                    CustomText(
+                                                      text: 'Pet Type: ${post.petType}',
+                                                      size: 16,
+                                                      color: AppColors.black,
+                                                      weight: FontWeight.w700,
+                                                      align: TextAlign.left,
+                                                      screenHeight: screenHeight,
+                                                      alignment: Alignment.centerLeft,
+                                                    ),
+                                                    CustomText(
+                                                      text: 'Pet Breed: ${post.petBreed}',
+                                                      size: 16,
+                                                      color: AppColors.black,
+                                                      weight: FontWeight.w700,
+                                                      align: TextAlign.left,
+                                                      screenHeight: screenHeight,
+                                                      alignment: Alignment.centerLeft,
+                                                    ),
+                                                    CustomText(
+                                                      text:'Pet Gender: ${post.petGender}',
+                                                      size: 16,
+                                                      color: AppColors.black,
+                                                      weight: FontWeight.w700,
+                                                      align: TextAlign.left,
+                                                      screenHeight: screenHeight,
+                                                      alignment: Alignment.centerLeft,
+                                                    ),
+                                                    CustomText(
+                                                      text: 'Pet Age: ${post.petAge}',
+                                                      size: 16,
+                                                      color: AppColors.black,
+                                                      weight: FontWeight.w700,
+                                                      align: TextAlign.left,
+                                                      screenHeight: screenHeight,
+                                                      alignment: Alignment.centerLeft,
+                                                    ),
+                                                    CustomText(
+                                                      text: 'Pet Color: ${post.petColor}',
+                                                      size: 16,
+                                                      color: AppColors.black,
+                                                      weight: FontWeight.w700,
+                                                      align: TextAlign.left,
+                                                      screenHeight: screenHeight,
+                                                      alignment: Alignment.centerLeft,
+                                                    ),
+                                                    CustomText(
+                                                      text: 'Pet Collar: ${post.petCollar}',
+                                                      size: 16,
+                                                      color: AppColors.black,
+                                                      weight: FontWeight.w700,
+                                                      align: TextAlign.left,
+                                                      screenHeight: screenHeight,
+                                                      alignment: Alignment.centerLeft,
+                                                    ),
+                                                    CustomText(
+                                                      text: 'Pet Size: ${post.petSize}',
+                                                      size: 16,
+                                                      color: AppColors.black,
+                                                      weight: FontWeight.w700,
+                                                      align: TextAlign.left,
+                                                      screenHeight: screenHeight,
+                                                      alignment: Alignment.centerLeft,
+                                                    ),
+                                                    CustomText(
+                                                      text: 'PetAddress:',
+                                                      size: 16,
+                                                      color: AppColors.black,
+                                                      weight: FontWeight.w700,
+                                                      align: TextAlign.left,
+                                                      screenHeight: screenHeight,
+                                                      alignment: Alignment.centerLeft,
+                                                    ),
+                                                    CustomText(
+                                                      text: 'PetAddress: ${post.petAddress}',
+                                                      size: 16,
+                                                      color: AppColors.black,
+                                                      weight: FontWeight.w700,
+                                                      align: TextAlign.left,
+                                                      screenHeight: screenHeight,
+                                                      alignment: Alignment.centerLeft,
+                                                    ),
+                                                    CustomText(
+                                                      text: 'Region/Province/City/Barangay:',
+                                                      size: 16,
+                                                      color: AppColors.black,
+                                                      weight: FontWeight.w700,
+                                                      align: TextAlign.left,
+                                                      screenHeight: screenHeight,
+                                                      alignment: Alignment.centerLeft,
+                                                    ),
+                                                    CustomText(
+                                                      text: post.regProCiBag,
+                                                      size: 16,
+                                                      color: AppColors.black,
+                                                      weight: FontWeight.w700,
+                                                      align: TextAlign.left,
+                                                      screenHeight: screenHeight,
+                                                      alignment: Alignment.centerLeft,
+                                                    ),
+                                                    CustomText(
+                                                      text: 'Status: ${post.Status}',
+                                                      size: 16,
+                                                      color: AppColors.black,
+                                                      weight: FontWeight.w700,
+                                                      align: TextAlign.left,
+                                                      screenHeight: screenHeight,
+                                                      alignment: Alignment.centerLeft,
+                                                    ),
+
+                                                  ],
+                                                ),
+                                              ),
+                                            ],
                                           ),
                                           Row(
                                             mainAxisAlignment: MainAxisAlignment.start,

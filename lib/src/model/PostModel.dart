@@ -22,6 +22,7 @@ class PostModel {
   String date = '';
   String petSize = '';
   String PetType = '';
+  String Status = '';
 
   PostModel({
     required this.postId,
@@ -64,6 +65,7 @@ class PostModel {
       ..petCollar = petDoc.data()?['PetCollar'] ?? ''
       ..regProCiBag = '${petDoc.data()?['Region'] ?? ''}, ${petDoc.data()?['Province'] ?? ''}, ${petDoc.data()?['City'] ?? ''}, ${petDoc.data()?['Barangay'] ?? ''}'
       ..date = petDoc.data()?['Date'] ?? ''
-      ..petSize = petDoc.data()?['PetSize'] ?? '';
+      ..petSize = petDoc.data()?['PetSize'] ?? ''
+      ..Status = petDoc.data()?['Status'] ?? '';
   }
 }

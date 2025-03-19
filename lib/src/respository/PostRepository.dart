@@ -153,6 +153,7 @@ class PostRepositoryImpl implements PostRepository {
         'Latitude': lat,
         'Date': date,
         'Longitude': long,
+        'Status': 'pending',
       });
 
       ToastComponent().showMessage(AppColors.orange, '$selectedChip data added successfully');
