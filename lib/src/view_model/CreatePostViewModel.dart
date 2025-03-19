@@ -249,7 +249,7 @@ class CreatePostViewModel extends ChangeNotifier {
            'post': postController.text,
             'pet_name': petName.text,
             'pet_type': selectedPetType..toString(),
-            'pet_breed': selectPedBreed!.toString(),
+            'pet_breed': selectPedBreed!.name,
             'pet_color': selectedColorPattern,
             'pet_age': selectedPetAge,
             'region': selectedRegion!.region,
