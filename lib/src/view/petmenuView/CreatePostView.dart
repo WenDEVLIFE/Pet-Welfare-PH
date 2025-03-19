@@ -266,7 +266,7 @@ class CreatePostView extends StatelessWidget {
               CustomDropDown(value: createPostViewModel.selectedPetSize,
                 items: createPostViewModel.petSize,
                 onChanged: (String? newValue) {
-                  createPostViewModel.setPetGender(newValue);
+                  createPostViewModel.setPetSize(newValue);
                 },
                 itemLabel: (String value) => value,
                 hint: 'Select Pet Size',

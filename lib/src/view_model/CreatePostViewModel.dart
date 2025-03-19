@@ -37,7 +37,7 @@ class CreatePostViewModel extends ChangeNotifier {
   String selectedPetType = 'Cat';
   List<Breed> catBreeds = [];
   List<Breed> dogBreeds = [];
-  List<String> petSize =['Tiny' , 'Small', 'Medium', 'Large'];
+  List<String> petSize =['Tiny', 'Small', 'Medium', 'Large'];
   String selectedPetSize = 'Tiny';
   Breed? selectPedBreed;
 
@@ -245,8 +245,8 @@ class CreatePostViewModel extends ChangeNotifier {
          var petData = {
            'post': postController.text,
             'pet_name': petName.text,
-            'pet_type': selectedPetType,
-            'pet_breed': selectPedBreed!,
+            'pet_type': selectedPetType..toString(),
+            'pet_breed': selectPedBreed!.toString(),
             'pet_color': selectedColorPattern,
             'pet_age': selectedPetAge,
             'region': selectedRegion!.region,

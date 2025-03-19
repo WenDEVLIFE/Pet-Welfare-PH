@@ -131,6 +131,10 @@ class PostRepositoryImpl implements PostRepository {
           'PostDescription': post,
           'Category': selectedChip,
           'Timestamp': FieldValue.serverTimestamp(),
+        });
+
+        DocumentReference petRef = _firestore.collection('PetData').doc(postID);
+        await petRef.collection('PetData').add({
           'PetName': petName,
           'PetType': petType,
           'PetGender':gender,
@@ -147,6 +151,9 @@ class PostRepositoryImpl implements PostRepository {
           'Latitude': lat,
           'Longitude': long,
         });
+
+        ToastComponent().showMessage(AppColors.orange, '$selectedChip data added successfully');
+
       }
 
       else{
@@ -171,6 +178,8 @@ class PostRepositoryImpl implements PostRepository {
           'Latitude': lat,
           'Longitude': long,
         });
+
+        ToastComponent().showMessage(AppColors.orange, '$selectedChip data added successfully');
       }
 
       // Upload images concurrently and store their URLs in the images sub-collection
