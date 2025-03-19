@@ -34,6 +34,8 @@ abstract class PostRepository {
 
   Future<int> getCommentCount(String postId);
 
+  Stream<List<PostModel>>getMissingPosts();
+
 }
 
 class PostRepositoryImpl implements PostRepository {
@@ -46,7 +48,6 @@ class PostRepositoryImpl implements PostRepository {
     User user = _firebaseAuth.currentUser!;
     String uuid = user.uid;
     var postID = Uuid().v4();
-
     try {
       // Create a new post document
       DocumentReference postRef = _firestore.collection('PostCollection').doc(postID);
@@ -123,6 +124,7 @@ class PostRepositoryImpl implements PostRepository {
       String address = petData['address'];
       double lat = petData['lat'];
       double long = petData['long'];
+      String date = petData['date'];
 
       await postRef.set({
         'PostID': postID,
@@ -149,6 +151,7 @@ class PostRepositoryImpl implements PostRepository {
         'Barangay': barangay,
         'Address': address,
         'Latitude': lat,
+        'Date': date,
         'Longitude': long,
       });
 
@@ -304,6 +307,21 @@ class PostRepositoryImpl implements PostRepository {
   @override
   Future<void> deleteComment(String postId, String commentId) async{
     return await _firestore.collection('PostCollection').doc(postId).collection('CommentCollection').doc(commentId).delete();
+  }
+
+  @override
+  Stream<List<PostModel>> getMissingPosts() {
+    return _firestore.collection('PostCollection')
+        .where('Category', isEqualTo: 'Missing Pets')
+        .snapshots()
+        .asyncMap((snapshot) async {
+      List<PostModel> posts = [];
+      for (var doc in snapshot.docs) {
+        var post = await PostModel.fromDocument(doc);
+        posts.add(post);
+      }
+      return posts;
+    });
   }
 
 

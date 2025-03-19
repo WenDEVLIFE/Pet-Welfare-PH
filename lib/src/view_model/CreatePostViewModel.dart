@@ -261,6 +261,7 @@ class CreatePostViewModel extends ChangeNotifier {
             'collar': selectedCollar,
             'barangay': selectedBarangay!.barangayName,
             'address': address.text,
+            'date': dateController.text,
             'lat': selectedLocation!.latitude,
             'long': selectedLocation!.longitude,
           };

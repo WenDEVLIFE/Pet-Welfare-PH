@@ -17,13 +17,16 @@ class PostViewModel extends ChangeNotifier {
   List<PostModel> _posts = [];
   List<PostModel> filteredPost = [];
 
-  List<CommentModel> comments = [];
+  List<PostModel> missingPost = [];
+  List<PostModel> filterMissingPost = [];
 
- // Stream <List<CommentModel>> get commentStream => postRepository.getComments();
+  List<CommentModel> comments = [];
 
   final PostRepository postRepository = PostRepositoryImpl();
 
   Stream<List<PostModel>> get posTream => postRepository.getPosts();
+  Stream<List<PostModel>> get missingPostStream => postRepository.getMissingPosts();
+
 
   PostViewModel() {
 
@@ -125,5 +128,28 @@ class PostViewModel extends ChangeNotifier {
     } catch (e) {
       throw Exception('Failed to delete comment: $e');
     }
+  }
+
+  void searchMissingPost(String searchText) {
+   filterMissingPost.clear();
+    if (searchText.isEmpty) {
+      filterMissingPost.addAll(missingPost);
+    } else {
+      filterMissingPost.addAll(missingPost.where((post) => post.postDescription.toLowerCase().contains(
+          searchText.toLowerCase()) ||
+          post.petName.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.petType.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.petBreed.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.petGender.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.petAge.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.petColor.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.petAddress.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.petCollar.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.regProCiBag.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.date.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.petSize.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.PetType.toLowerCase().contains(searchText.toLowerCase())));
+    }
+    notifyListeners();
   }
 }

@@ -10,6 +10,18 @@ class PostModel {
   final List<String> imageUrls;
   final String postOwnerName;
   final String profileUrl;
+  String petName = '';
+  String petType = '';
+  String petBreed = '';
+  String petGender = '';
+  String petAge = '';
+  String petColor = '';
+  String petAddress = '';
+  String petCollar = '';
+  String regProCiBag = '';
+  String date = '';
+  String petSize = '';
+  String PetType = '';
 
   PostModel({
     required this.postId,
@@ -30,6 +42,7 @@ class PostModel {
     }
 
     var userDoc = await FirebaseFirestore.instance.collection('Users').doc(doc['PostOwnerID']).get();
+    var petDoc = await FirebaseFirestore.instance.collection('PetDetailsCollection').doc(doc.id).get();
 
     return PostModel(
       postId: doc.id,
@@ -40,6 +53,17 @@ class PostModel {
       imageUrls: imageUrls,
       postOwnerName: userDoc['Name'],
       profileUrl: userDoc['ProfileUrl'],
-    );
+    )
+      ..petName = petDoc.data()?['PetName'] ?? ''
+      ..petType = petDoc.data()?['PetType'] ?? ''
+      ..petBreed = petDoc.data()?['PetBreed'] ?? ''
+      ..petGender = petDoc.data()?['PetGender'] ?? ''
+      ..petAge = petDoc.data()?['PetAge'] ?? ''
+      ..petColor = petDoc.data()?['PetColor'] ?? ''
+      ..petAddress = petDoc.data()?['Address'] ?? ''
+      ..petCollar = petDoc.data()?['PetCollar'] ?? ''
+      ..regProCiBag = '${petDoc.data()?['Region'] ?? ''}, ${petDoc.data()?['Province'] ?? ''}, ${petDoc.data()?['City'] ?? ''}, ${petDoc.data()?['Barangay'] ?? ''}'
+      ..date = petDoc.data()?['Date'] ?? ''
+      ..petSize = petDoc.data()?['PetSize'] ?? '';
   }
 }
