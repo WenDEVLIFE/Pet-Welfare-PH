@@ -184,6 +184,9 @@ class CreatePostViewModel extends ChangeNotifier {
     selectedBarangay = null;
     address.clear();
     searchController.clear();
+    dateController.clear();
+    selectedLocation = null;
+    mapController!.clearSymbols();
     notifyListeners();
     }
     else{

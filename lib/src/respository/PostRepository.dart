@@ -96,9 +96,9 @@ class PostRepositoryImpl implements PostRepository {
     });
   }
 
+  // Added upload pet data
   @override
-  Future <void> uploadPetData(List<File> images, String selectedChip, Map<String, dynamic> petData) async {
-
+  Future<void> uploadPetData(List<File> images, String selectedChip, Map<String, dynamic> petData) async {
     User user = _firebaseAuth.currentUser!;
     String uuid = user.uid;
     var postID = Uuid().v4();
@@ -124,63 +124,35 @@ class PostRepositoryImpl implements PostRepository {
       double lat = petData['lat'];
       double long = petData['long'];
 
-      if(petType=='Cat' ||petType== 'Dog'){
-        await postRef.set({
-          'PostID': postID,
-          'PostOwnerID': uuid,
-          'PostDescription': post,
-          'Category': selectedChip,
-          'Timestamp': FieldValue.serverTimestamp(),
-        });
+      await postRef.set({
+        'PostID': postID,
+        'PostOwnerID': uuid,
+        'PostDescription': post,
+        'Category': selectedChip,
+        'Timestamp': FieldValue.serverTimestamp(),
+      });
 
-        DocumentReference petRef = _firestore.collection('PetData').doc(postID);
-        await petRef.collection('PetData').add({
-          'PetName': petName,
-          'PetType': petType,
-          'PetGender':gender,
-          'PetSize': size,
-          'PetColor': color,
-          'PetCollar': collar,
-          'PetBreed': petBreed,
-          'PetAge': petAge,
-          'Region': region,
-          'Province': province,
-          'City': city,
-          'Barangay': barangay,
-          'Address': address,
-          'Latitude': lat,
-          'Longitude': long,
-        });
+      // Create a new document in PetDetailsCollection
+      DocumentReference petRef = _firestore.collection('PetDetailsCollection').doc(postID);
+      await petRef.set({
+        'PetName': petName,
+        'PetType': petType,
+        'PetGender': gender,
+        'PetSize': size,
+        'PetColor': color,
+        'PetCollar': collar,
+        'PetBreed': petBreed,
+        'PetAge': petAge,
+        'Region': region,
+        'Province': province,
+        'City': city,
+        'Barangay': barangay,
+        'Address': address,
+        'Latitude': lat,
+        'Longitude': long,
+      });
 
-        ToastComponent().showMessage(AppColors.orange, '$selectedChip data added successfully');
-
-      }
-
-      else{
-        await postRef.set({
-          'PostID': postID,
-          'PostOwnerID': uuid,
-          'PostDescription': post,
-          'Category': selectedChip,
-          'Timestamp': FieldValue.serverTimestamp(),
-          'PetName': petName,
-          'PetType': petType,
-          'PetGender':gender,
-          'PetSize': size,
-          'PetColor': color,
-          'PetBreed': petBreed,
-          'PetAge': petAge,
-          'Region': region,
-          'Province': province,
-          'City': city,
-          'Barangay': barangay,
-          'Address': address,
-          'Latitude': lat,
-          'Longitude': long,
-        });
-
-        ToastComponent().showMessage(AppColors.orange, '$selectedChip data added successfully');
-      }
+      ToastComponent().showMessage(AppColors.orange, '$selectedChip data added successfully');
 
       // Upload images concurrently and store their URLs in the images sub-collection
       List<Future<void>> uploadTasks = images.map((File image) async {
@@ -202,7 +174,6 @@ class PostRepositoryImpl implements PostRepository {
     } catch (e) {
       throw Exception('Failed to upload post: $e');
     }
-
   }
 
   // Added reaction functions
