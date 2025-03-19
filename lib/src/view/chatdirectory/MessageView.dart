@@ -236,6 +236,7 @@ class MessageState extends State<MessageView> {
                 Expanded(
                   child: CustomTextField(
                       controller: Provider.of<MessageViewModel>(context).messageController,
+                      screenWidth: screenWidth,
                       screenHeight: screenHeight,
                       hintText: 'Type your message here',
                       fontSize: 16,

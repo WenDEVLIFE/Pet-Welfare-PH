@@ -3,6 +3,7 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
+import 'package:pet_welfrare_ph/src/widgets/CustomButton.dart';
 import 'package:pet_welfrare_ph/src/widgets/CustomDropdown.dart';
 import 'package:pet_welfrare_ph/src/widgets/CustomText.dart';
 import 'package:pet_welfrare_ph/src/widgets/MapSearchTextField.dart';
@@ -37,7 +38,7 @@ class CreatePostView extends StatelessWidget {
               ? 'Post for adoption'
               : 'Create a post',
           size: 18,
-          color: Colors.black,
+          color: Colors.white,
           weight: FontWeight.w700,
           align: TextAlign.left,
           screenHeight: screenHeight,
@@ -190,15 +191,13 @@ class CreatePostView extends StatelessWidget {
                 screenHeight: screenHeight,
                 alignment: Alignment.centerLeft,
               ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: CustomTextField(
-                  controller: createPostViewModel.petName,
-                  screenHeight: screenHeight,
-                  hintText: 'Enter pet name...',
-                  fontSize: 16,
-                  keyboardType: TextInputType.text,
-                ),
+              CustomTextField(
+                controller: createPostViewModel.petName,
+                screenWidth: screenWidth,
+                screenHeight: screenHeight,
+                hintText: 'Enter pet name...',
+                fontSize: 16,
+                keyboardType: TextInputType.text,
               ),
               if(createPostViewModel.selectedPetType =='Cat' || createPostViewModel.selectedPetType =='Dog') ...[
                 CustomText(
@@ -571,39 +570,29 @@ class CreatePostView extends StatelessWidget {
                   screenHeight: screenHeight,
                 alignment: Alignment.centerLeft,
               ),
-              CustomTextField(
-                controller: createPostViewModel.address,
-                screenHeight: screenHeight,
-                hintText: 'Enter Street Address, Building, House No...',
-                fontSize: 16,
-                keyboardType: TextInputType.text,
-              ),
+                CustomTextField(
+                  controller: createPostViewModel.address,
+                  screenWidth: screenWidth,
+                  screenHeight: screenHeight,
+                  hintText: 'Enter Street Address, Building, House No...',
+                  fontSize: 16,
+                  keyboardType: TextInputType.text,
+                ),
+
             ],
                if (createPostViewModel.selectedChip == "Pet Adoption") ...[
 
                  ],
             Center(
-              child: ElevatedButton(
+              child: CustomButton(
+                  hint: 'Post Now',
+                  size: 18,
+                  color1: AppColors.orange,
+                  textcolor2: Colors.white,
                 onPressed: () async {
-                  createPostViewModel.PostNow(context);
+                createPostViewModel.PostNow(context);
                 },
-                style: ElevatedButton.styleFrom(
-                  backgroundColor: AppColors.orange,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(30),
-                  ),
-                  padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
-                ),
-                child: const Text(
-                  'Post Now',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontFamily: 'SmoochSans',
-                    fontWeight: FontWeight.w600,
-                    fontSize: 18,
-                  ),
-                ),
-              ),
+              )
             ),
             SizedBox(height: screenHeight * 0.02),
           ],

@@ -63,7 +63,9 @@ class AddAdminViewState extends State<AddAdminView> {
                 ),
               ),
               SizedBox(height: screenHeight * 0.01),
-              CustomTextField(controller: viewModel.email,
+              CustomTextField(
+                controller: viewModel.email,
+                screenWidth: screenWidth,
                   screenHeight: screenHeight,
                   hintText: 'Enter the email address',
                   fontSize: 16,
@@ -82,6 +84,7 @@ class AddAdminViewState extends State<AddAdminView> {
               SizedBox(height: screenHeight * 0.01),
               CustomTextField(
                 controller: viewModel.name,
+                screenWidth: screenWidth,
                   screenHeight: screenHeight,
                   hintText: 'Enter full name',
                   fontSize: 16,

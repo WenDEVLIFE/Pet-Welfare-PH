@@ -86,6 +86,7 @@ class RegisterState extends State<FurParentRegisterView> {
                             builder: (context, viewmodel, child) {
                               return CustomTextField(
                                 controller: viewmodel.nameController,
+                                screenWidth: screenWidth,
                                 screenHeight: screenHeight,
                                 hintText: 'Enter your name',
                                 fontSize: 16,
@@ -103,6 +104,7 @@ class RegisterState extends State<FurParentRegisterView> {
                             builder: (context, viewmodel, child) {
                               return CustomTextField(
                                 controller: viewmodel.emailController,
+                                screenWidth: screenWidth,
                                 screenHeight: screenHeight,
                                 hintText: 'Enter your email',
                                 fontSize: 16,

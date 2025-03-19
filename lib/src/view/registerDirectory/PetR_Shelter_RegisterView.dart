@@ -85,6 +85,7 @@ class RegisterState extends State<PetrShelterRegisterview> {
                               color: Colors.black)),
                           SizedBox(height: screenHeight * 0.01),
                           CustomTextField(
+                            screenWidth: screenWidth,
                             screenHeight: screenHeight,
                             hintText: 'Enter your full name',
                             controller: viewModel.nameController,
@@ -99,6 +100,7 @@ class RegisterState extends State<PetrShelterRegisterview> {
                               color: Colors.black)),
                           SizedBox(height: screenHeight * 0.01),
                           CustomTextField(
+                            screenWidth: screenWidth,
                             screenHeight: screenHeight,
                             hintText: 'Enter your email',
                             controller: viewModel.emailController,
@@ -177,6 +179,7 @@ class RegisterState extends State<PetrShelterRegisterview> {
                               color: Colors.black)),
                           SizedBox(height: screenHeight * 0.01),
                           CustomTextField(
+                            screenWidth: screenWidth,
                             screenHeight: screenHeight,
                             hintText: 'Enter your address',
                             controller: viewModel.addressController,

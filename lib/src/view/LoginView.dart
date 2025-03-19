@@ -79,6 +79,7 @@ class _LoginScreenState extends State<Loginview> {
                           SizedBox(height: screenHeight * 0.01),
                           CustomTextField(
                             controller: loginViewModel.emailController,
+                            screenWidth: screenWidth,
                             screenHeight: screenHeight,
                             hintText: 'Enter your email',
                             fontSize: 16,

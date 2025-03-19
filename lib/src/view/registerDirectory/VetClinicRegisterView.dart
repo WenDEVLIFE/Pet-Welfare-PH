@@ -87,6 +87,7 @@ class RegisterState extends State<VetClinicRegisterView> {
                           SizedBox(height: screenHeight * 0.01),
                           CustomTextField(
                             controller: viewModel.nameController,
+                            screenWidth: screenWidth,
                             screenHeight: screenHeight,
                             hintText: 'Enter your full name',
                             fontSize: 16,
@@ -100,6 +101,7 @@ class RegisterState extends State<VetClinicRegisterView> {
                           SizedBox(height: screenHeight * 0.01),
                           CustomTextField(
                             controller: viewModel.emailController,
+                            screenWidth: screenWidth,
                             screenHeight: screenHeight,
                             hintText: 'Enter your email',
                             fontSize: 16,
