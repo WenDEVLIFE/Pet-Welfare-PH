@@ -120,7 +120,6 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                       SizedBox(height: screenHeight * 0.01),
                       CustomTextField(
                         controller: viewModel.shelterNameController,
-                        screenWidth: screenWidth,
                         screenHeight: screenHeight,
                         hintText: 'Enter Shelter/Clinic Name',
                         fontSize: 16,
@@ -230,7 +229,6 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                       SizedBox(height: screenHeight * 0.01),
                       CustomTextField(
                         controller: viewModel.shelterDescriptionController,
-                        screenWidth: screenWidth,
                         screenHeight: screenHeight,
                         hintText: 'Enter Shelter/Clinic Description',
                         fontSize: 16,
@@ -249,7 +247,6 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                       SizedBox(height: screenHeight * 0.01),
                       CustomTextField(
                         controller: viewModel.shelterAddressController,
-                        screenWidth: screenWidth,
                         screenHeight: screenHeight,
                         hintText: 'Enter Shelter/Clinic Address',
                         fontSize: 16,
@@ -268,7 +265,6 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                       SizedBox(height: screenHeight * 0.01),
                       CustomTextField(
                         controller: viewModel.shelterPhoneNumber,
-                        screenWidth: screenWidth,
                         screenHeight: screenHeight,
                         hintText: 'Enter Shelter/Clinic Phone Number',
                         fontSize: 16,
@@ -287,7 +283,6 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                       SizedBox(height: screenHeight * 0.01),
                       CustomTextField(
                         controller: viewModel.shelterEmailController,
-                        screenWidth: screenWidth,
                         screenHeight: screenHeight,
                         hintText: 'Enter Shelter/Clinic Email',
                         fontSize: 16,

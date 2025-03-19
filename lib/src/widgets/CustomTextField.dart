@@ -4,7 +4,6 @@ import '../utils/AppColors.dart';
 class CustomTextField extends StatelessWidget {
   final TextEditingController controller;
   final double screenHeight;
-  final double screenWidth;
   final String hintText;
   final double fontSize;
   final TextInputType keyboardType;
@@ -13,7 +12,6 @@ class CustomTextField extends StatelessWidget {
     Key? key,
     required this.controller,
     required this.screenHeight,
-    required this.screenWidth,
     required this.hintText,
     required this.fontSize,
     required this.keyboardType,
@@ -22,7 +20,7 @@ class CustomTextField extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02, horizontal: screenWidth * 0.04),
+      padding: EdgeInsets.symmetric(vertical: screenHeight * 0.02),
       child: TextField(
         controller: controller,
         decoration: InputDecoration(
@@ -39,6 +37,7 @@ class CustomTextField extends StatelessWidget {
             fontFamily: 'SmoochSans',
             fontWeight: FontWeight.w600,
           ),
+
         ),
         keyboardType: keyboardType,
         style: TextStyle(

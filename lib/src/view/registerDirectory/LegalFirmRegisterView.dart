@@ -85,7 +85,6 @@ class RegisterState extends State<LegalFirmRegisterView> {
                             SizedBox(height: screenHeight * 0.01),
                             CustomTextField(
                               controller: viewModel.nameController,
-                              screenWidth: screenWidth,
                               screenHeight: screenHeight,
                               hintText: 'Enter your name',
                               fontSize: 16,
@@ -99,7 +98,6 @@ class RegisterState extends State<LegalFirmRegisterView> {
                             SizedBox(height: screenHeight * 0.01),
                             CustomTextField(
                               controller: viewModel.emailController,
-                              screenWidth: screenWidth,
                               screenHeight: screenHeight,
                               hintText: 'Enter your email',
                               fontSize: 16,

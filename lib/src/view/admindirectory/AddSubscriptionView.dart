@@ -64,7 +64,6 @@ class AddAdminViewState extends State<AddSubscriptionView> {
               SizedBox(height: screenHeight * 0.01),
               CustomTextField(controller:
                  viewModel.subscriptionNameController,
-                screenWidth: screenWidth,
                   screenHeight: screenHeight,
                   hintText: 'Enter the subscription name',
                   fontSize: 16,
@@ -83,7 +82,6 @@ class AddAdminViewState extends State<AddSubscriptionView> {
               SizedBox(height: screenHeight * 0.01),
               CustomTextField(controller:
                  viewModel.subscriptionPriceController,
-                screenWidth: screenWidth,
                   screenHeight: screenHeight,
                   hintText: 'Enter the subscription price',
                   fontSize: 16,
@@ -102,7 +100,6 @@ class AddAdminViewState extends State<AddSubscriptionView> {
               SizedBox(height: screenHeight * 0.01),
               CustomTextField(controller:
                  viewModel.subscriptionDurationController,
-                screenWidth: screenWidth,
                   screenHeight: screenHeight,
                   hintText: 'Enter the subscription duration',
                   fontSize: 16,

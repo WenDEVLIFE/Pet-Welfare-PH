@@ -191,13 +191,15 @@ class CreatePostView extends StatelessWidget {
                 screenHeight: screenHeight,
                 alignment: Alignment.centerLeft,
               ),
-              CustomTextField(
-                controller: createPostViewModel.petName,
-                screenWidth: screenWidth,
-                screenHeight: screenHeight,
-                hintText: 'Enter pet name...',
-                fontSize: 16,
-                keyboardType: TextInputType.text,
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: CustomTextField(
+                  controller: createPostViewModel.petName,
+                  screenHeight: screenHeight,
+                  hintText: 'Enter pet name...',
+                  fontSize: 16,
+                  keyboardType: TextInputType.text,
+                ),
               ),
               if(createPostViewModel.selectedPetType =='Cat' || createPostViewModel.selectedPetType =='Dog') ...[
                 CustomText(
@@ -570,15 +572,15 @@ class CreatePostView extends StatelessWidget {
                   screenHeight: screenHeight,
                 alignment: Alignment.centerLeft,
               ),
-                CustomTextField(
+              Padding(padding: const EdgeInsets.all(10.0),
+                child:CustomTextField(
                   controller: createPostViewModel.address,
-                  screenWidth: screenWidth,
                   screenHeight: screenHeight,
                   hintText: 'Enter Street Address, Building, House No...',
                   fontSize: 16,
                   keyboardType: TextInputType.text,
                 ),
-
+              ),
             ],
                if (createPostViewModel.selectedChip == "Pet Adoption") ...[
 
