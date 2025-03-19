@@ -8,6 +8,8 @@ class CustomText extends StatelessWidget {
   final Color color;
   final FontWeight weight;
   final TextAlign align;
+  final double screenHeight;
+  final Alignment alignment;
 
   const CustomText({
     required this.text,
@@ -15,23 +17,28 @@ class CustomText extends StatelessWidget {
     required this.color,
     required this.weight,
     required this.align,
+    required this.screenHeight,
+    required this.alignment,
     Key? key,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(10.0),
-    child: Text(
-      text,
-      textAlign: align,
-      style: TextStyle(
-        fontSize: size,
-        color: color,
-        fontWeight: weight,
-        fontFamily: 'SmoochSans',
+      padding: screenHeight < 600 ? const EdgeInsets.all(5) : const EdgeInsets.all(10),
+    child:Align(
+      alignment: alignment,
+      child:  Text(
+        text,
+        textAlign: align,
+        style: TextStyle(
+          fontSize: size,
+          color: color,
+          fontWeight: weight,
+          fontFamily: 'SmoochSans',
+        ),
       ),
-    ),
+    )
     );
   }
 }

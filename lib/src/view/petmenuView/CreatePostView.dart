@@ -3,6 +3,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
+import 'package:pet_welfrare_ph/src/widgets/CustomDropdown.dart';
+import 'package:pet_welfrare_ph/src/widgets/CustomText.dart';
 import 'package:pet_welfrare_ph/src/widgets/MapSearchTextField.dart';
 import 'package:provider/provider.dart';
 import 'dart:io';
@@ -26,46 +28,40 @@ class CreatePostView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text(
-          createPostViewModel.selectedChip == "Missing Pets"
+        title: CustomText(
+          text: createPostViewModel.selectedChip == "Missing Pets"
               ? 'Post a missing pets'
               : createPostViewModel.selectedChip == "Found Pets"
               ? 'Post a found pets'
               : createPostViewModel.selectedChip == "Pet Adoption"
               ? 'Post for adoption'
               : 'Create a post',
-          style: const TextStyle(
-            color: AppColors.white,
-            fontSize: 20,
-            fontFamily: 'SmoochSans',
-            fontWeight: FontWeight.w600,
-          ),
+          size: 18,
+          color: Colors.black,
+          weight: FontWeight.w700,
+          align: TextAlign.left,
+          screenHeight: screenHeight,
+          alignment: Alignment.centerLeft,
         ),
         backgroundColor: AppColors.orange,
       ),
       body: SingleChildScrollView(
         child: Column(
           children: [
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  createPostViewModel.selectedChip == "Missing Pets"
-                      ? 'Enter the details of the missing pet'
-                      : createPostViewModel.selectedChip == "Found Pets"
-                      ? 'Enter the details of the found pet'
-                      : createPostViewModel.selectedChip == "Pet Adoption"
-                      ? 'Enter the details of the pet for adoption'
-                      : 'Create a post',
-                  style: const TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                    fontFamily: 'SmoochSans',
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
+            CustomText(
+              text:  createPostViewModel.selectedChip == "Missing Pets"
+                  ? 'Enter the details of the missing pet'
+                  : createPostViewModel.selectedChip == "Found Pets"
+                  ? 'Enter the details of the found pet'
+                  : createPostViewModel.selectedChip == "Pet Adoption"
+                  ? 'Enter the details of the pet for adoption'
+                  : 'Create a post',
+              size: 18,
+              color: Colors.black,
+              weight: FontWeight.w700,
+              align: TextAlign.left,
+              screenHeight: screenHeight,
+              alignment: Alignment.centerLeft,
             ),
             Padding(padding: const EdgeInsets.all(10.0),
               child: Container(
@@ -96,20 +92,14 @@ class CreatePostView extends StatelessWidget {
                 height: screenHeight * 0.2,
                 child: Column(
                   children: [
-                    const Padding(
-                      padding: EdgeInsets.all(10.0),
-                      child: Align(
-                        alignment: Alignment.centerLeft,
-                        child: Text(
-                          'Upload a picture',
-                          style: TextStyle(
-                            color: Colors.black,
-                            fontSize: 18,
-                            fontFamily: 'SmoochSans',
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
+                    CustomText(
+                      text:  'Upload a picture',
+                      size: 18,
+                      color: Colors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
                     ),
                     SizedBox(height: screenHeight * 0.01),
                     SingleChildScrollView(
@@ -156,141 +146,49 @@ class CreatePostView extends StatelessWidget {
                 ),
               ),
             ),
-            const Padding(
-              padding: EdgeInsets.all(10.0),
-              child: Align(
-                alignment: Alignment.centerLeft,
-                child: Text(
-                  'Select a category',
-                  style: TextStyle(
-                    color: Colors.black,
-                    fontSize: 18,
-                    fontFamily: 'SmoochSans',
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
+            CustomText(
+              text: 'Select a category',
+              size: 18,
+              color: Colors.black,
+              weight: FontWeight.w700,
+              align: TextAlign.left,
+              screenHeight: screenHeight,
+              alignment: Alignment.centerLeft,
             ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Container(
-                width: screenWidth * 0.9,
-                height: screenHeight * 0.085,
-                decoration: BoxDecoration(
-                  color: AppColors.gray,
-                  border: Border.all(color: AppColors.gray, width: 2),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                child: DropdownButtonHideUnderline(
-                  child: DropdownButton<String>(
-                    value: createPostViewModel.selectedChip,
-                    items: createPostViewModel.chipLabels1.map<DropdownMenuItem<String>>((String value) {
-                      return DropdownMenuItem<String>(
-                        value: value,
-                        child: Text(
-                          value,
-                          style: const TextStyle(
-                            color: Colors.black,
-                            fontFamily: 'SmoochSans',
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      );
-                    }).toList(),
-                    onChanged: (String? newValue) {
-                      createPostViewModel.setSelectRole(newValue!);
-                    },
-                    dropdownColor: AppColors.gray,
-                    iconEnabledColor: Colors.grey,
-                    style: const TextStyle(color: Colors.white),
-                    selectedItemBuilder: (BuildContext context) {
-                      return createPostViewModel.chipLabels1.map<Widget>((String item) {
-                        return Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            item,
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'SmoochSans',
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        );
-                      }).toList();
-                    },
-                    isExpanded: true,
-                    alignment: Alignment.bottomLeft,
-                  ),
-                ),
-              ),
+            CustomDropDown(value: createPostViewModel.selectedChip,
+                items: createPostViewModel.chipLabels1,
+                onChanged: (String? newValue) {
+                  createPostViewModel.setSelectRole(newValue!);
+                },
+                itemLabel: (String value) => value,
+                hint: 'Select a category',
             ),
             if (createPostViewModel.selectedChip == "Missing Pets" || createPostViewModel.selectedChip == "Found Pets") ...[
-              const Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Select Pet Type',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontFamily: 'SmoochSans',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
+              CustomText(
+                text: 'Select Pet Type',
+                size: 18,
+                color: Colors.black,
+                weight: FontWeight.w700,
+                align: TextAlign.left,
+                screenHeight: screenHeight,
+                alignment: Alignment.centerLeft,
               ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child:  Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: AppColors.gray,
-                    border: Border.all(color: AppColors.gray, width: 2),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: createPostViewModel.selectedPetType,
-                      hint: const Text('Select Pet Type'),
-                      items: createPostViewModel.petTypes.map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'SmoochSans',
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        createPostViewModel.setPetType(newValue);
-                      },
-                      dropdownColor: AppColors.gray,
-                      iconEnabledColor: Colors.grey,
-                      isExpanded: true,
-                    ),
-                  ),
-                ),
+              CustomDropDown(value: createPostViewModel.selectedPetType,
+                items: createPostViewModel.petTypes,
+                onChanged: (String? newValue) {
+                  createPostViewModel.setPetType(newValue);
+                },
+                itemLabel: (String value) => value,
+                hint: 'Select Pet Type',
               ),
-              const Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text('Pet Name',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontFamily: 'SmoochSans',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
+              CustomText(
+                text: 'Pet Name',
+                size: 18,
+                color: Colors.black,
+                weight: FontWeight.w700,
+                align: TextAlign.left,
+                screenHeight: screenHeight,
+                alignment: Alignment.centerLeft,
               ),
               Padding(
                 padding: const EdgeInsets.all(10.0),
@@ -303,267 +201,92 @@ class CreatePostView extends StatelessWidget {
                 ),
               ),
               if(createPostViewModel.selectedPetType =='Cat' || createPostViewModel.selectedPetType =='Dog') ...[
-                const Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Pet Collar',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontFamily: 'SmoochSans',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
+                CustomText(
+                  text: 'Pet Collar',
+                  size: 18,
+                  color: Colors.black,
+                  weight: FontWeight.w700,
+                  align: TextAlign.left,
+                  screenHeight: screenHeight,
+                  alignment: Alignment.centerLeft,
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child:  Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: AppColors.gray,
-                      border: Border.all(color: AppColors.gray, width: 2),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: createPostViewModel.selectedCollar,
-                        hint: const Text('Select a Collar'),
-                        items: createPostViewModel.collarList.map((String value) {
-                          return DropdownMenuItem<String>(
-                            value: value,
-                            child: Text(
-                              value,
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'SmoochSans',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          createPostViewModel.setCollarType(newValue);
-                        },
-                        dropdownColor: AppColors.gray,
-                        iconEnabledColor: Colors.grey,
-                        isExpanded: true,
-                      ),
-                    ),
-                  ),
+                CustomDropDown(value: createPostViewModel.selectedCollar,
+                  items: createPostViewModel.collarList,
+                  onChanged: (String? newValue) {
+                    createPostViewModel.setCollarType(newValue);
+                  },
+                  itemLabel: (String value) => value,
+                  hint: 'Select Pet Collar',
                 ),
               ],
-              const Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Pet Age',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontFamily: 'SmoochSans',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
+              CustomText(
+                text: 'Pet Age',
+                size: 18,
+                color: Colors.black,
+                weight: FontWeight.w700,
+                align: TextAlign.left,
+                screenHeight: screenHeight,
+                alignment: Alignment.centerLeft,
               ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child:  Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: AppColors.gray,
-                    border: Border.all(color: AppColors.gray, width: 2),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: createPostViewModel.selectedPetAge,
-                      hint: const Text('Select Pet Age'),
-                      items: createPostViewModel.petAgeList.map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'SmoochSans',
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        createPostViewModel.setPetAge(newValue);
-                      },
-                      dropdownColor: AppColors.gray,
-                      iconEnabledColor: Colors.grey,
-                      isExpanded: true,
-                    ),
-                  ),
-                ),
+              CustomDropDown(value: createPostViewModel.selectedPetAge,
+                items: createPostViewModel.petAgeList,
+                onChanged: (String? newValue) {
+                  createPostViewModel.setPetAge(newValue);
+                },
+                itemLabel: (String value) => value,
+                hint: 'Select Pet Age',
               ),
-              const Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Pet Gender',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontFamily: 'SmoochSans',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
+              CustomText(
+                text: 'Pet Gender',
+                size: 18,
+                color: Colors.black,
+                weight: FontWeight.w700,
+                align: TextAlign.left,
+                screenHeight: screenHeight,
+                alignment: Alignment.centerLeft,
               ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child:  Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: AppColors.gray,
-                    border: Border.all(color: AppColors.gray, width: 2),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: createPostViewModel.selectedPetGender,
-                      hint: const Text('Select Pet Gender'),
-                      items: createPostViewModel.petGender.map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'SmoochSans',
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        createPostViewModel.setPetGender(newValue);
-                      },
-                      dropdownColor: AppColors.gray,
-                      iconEnabledColor: Colors.grey,
-                      isExpanded: true,
-                    ),
-                  ),
-                ),
+              CustomDropDown(value: createPostViewModel.selectedPetGender,
+                items: createPostViewModel.petGender,
+                onChanged: (String? newValue) {
+                  createPostViewModel.setPetGender(newValue);
+                },
+                itemLabel: (String value) => value,
+                hint: 'Select Pet Gender',
               ),
-              const Padding(
-                padding: EdgeInsets.all(10.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Pet Size',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontFamily: 'SmoochSans',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
+              CustomText(
+                text:  'Pet Size',
+                size: 18,
+                color: Colors.black,
+                weight: FontWeight.w700,
+                align: TextAlign.left,
+                screenHeight: screenHeight,
+                alignment: Alignment.centerLeft,
               ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child:  Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                  decoration: BoxDecoration(
-                    color: AppColors.gray,
-                    border: Border.all(color: AppColors.gray, width: 2),
-                    borderRadius: BorderRadius.circular(10),
-                  ),
-                  child: DropdownButtonHideUnderline(
-                    child: DropdownButton<String>(
-                      value: createPostViewModel.selectedPetSize,
-                      hint: const Text('Select Pet Size'),
-                      items: createPostViewModel.petSize.map((String value) {
-                        return DropdownMenuItem<String>(
-                          value: value,
-                          child: Text(
-                            value,
-                            style: const TextStyle(
-                              color: Colors.black,
-                              fontFamily: 'SmoochSans',
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        );
-                      }).toList(),
-                      onChanged: (String? newValue) {
-                        createPostViewModel.setPetSize(newValue);
-                      },
-                      dropdownColor: AppColors.gray,
-                      iconEnabledColor: Colors.grey,
-                      isExpanded: true,
-                    ),
-                  ),
-                ),
+              CustomDropDown(value: createPostViewModel.selectedPetSize,
+                items: createPostViewModel.petSize,
+                onChanged: (String? newValue) {
+                  createPostViewModel.setPetGender(newValue);
+                },
+                itemLabel: (String value) => value,
+                hint: 'Select Pet Size',
               ),
-                const Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Colors or patterns',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontFamily: 'SmoochSans',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: AppColors.gray,
-                      border: Border.all(color: AppColors.gray, width: 2),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<String>(
-                        value: createPostViewModel.selectedColorPattern,
-                        hint: const Text('Select Colors or Patterns'),
-                        items: createPostViewModel.colorpatter.map((String color) {
-                          return DropdownMenuItem<String>(
-                            value: color,
-                            child: Text(
-                              color,
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'SmoochSans',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (String? newValue) {
-                          createPostViewModel.setColor(newValue);
-                        },
-                        dropdownColor: AppColors.gray,
-                        iconEnabledColor: Colors.grey,
-                        isExpanded: true,
-                      ),
-                    ),
-                  ),
-                ),
+              CustomText(
+                text:   'Colors or patterns',
+                size: 18,
+                color: Colors.black,
+                weight: FontWeight.w700,
+                align: TextAlign.left,
+                screenHeight: screenHeight,
+                alignment: Alignment.centerLeft,
+              ),
+              CustomDropDown(value: createPostViewModel.selectedColorPattern,
+                items: createPostViewModel.colorpatter,
+                onChanged: (String? newValue) {
+                  createPostViewModel.setPetGender(newValue);
+                },
+                itemLabel: (String value) => value,
+                hint: 'Select Colors or patterns',
+              ),
               if (createPostViewModel.selectedPetType == 'Cat') ...[
                 const Padding(
                   padding: EdgeInsets.all(10.0),
@@ -580,42 +303,14 @@ class CreatePostView extends StatelessWidget {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: AppColors.gray,
-                      border: Border.all(color: AppColors.gray, width: 2),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<Breed>(
-                        value: createPostViewModel.selectPedBreed,
-                        hint: const Text('Select Cat Breed'),
-                        items: createPostViewModel.catBreeds.map((Breed breed) {
-                          return DropdownMenuItem<Breed>(
-                            value: breed,
-                            child: Text(
-                              breed.name,
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'SmoochSans',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (Breed? newValue) {
-                          createPostViewModel.selectedBreed(newValue);
-                        },
-                        dropdownColor: AppColors.gray,
-                        iconEnabledColor: Colors.grey,
-                        isExpanded: true,
-                      ),
-                    ),
-                  ),
+                CustomDropDown<Breed>(
+                  value: createPostViewModel.selectPedBreed,
+                  items: createPostViewModel.catBreeds,
+                  onChanged: (Breed? newValue) {
+                    createPostViewModel.selectedBreed(newValue);
+                  },
+                  itemLabel: (Breed value) => value.name,
+                  hint: 'Select Cat Breed',
                 ),
               ],
               if (createPostViewModel.selectedPetType == 'Dog') ...[
@@ -634,62 +329,28 @@ class CreatePostView extends StatelessWidget {
                     ),
                   ),
                 ),
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Container(
-                    width: double.infinity,
-                    padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                    decoration: BoxDecoration(
-                      color: AppColors.gray,
-                      border: Border.all(color: AppColors.gray, width: 2),
-                      borderRadius: BorderRadius.circular(10),
-                    ),
-                    child: DropdownButtonHideUnderline(
-                      child: DropdownButton<Breed>(
-                        value: createPostViewModel.selectPedBreed,
-                        hint: const Text('Select Dog Breed'),
-                        items: createPostViewModel.dogBreeds.map((Breed breed) {
-                          return DropdownMenuItem<Breed>(
-                            value: breed,
-                            child: Text(
-                              breed.name,
-                              style: const TextStyle(
-                                color: Colors.black,
-                                fontFamily: 'SmoochSans',
-                                fontWeight: FontWeight.w600,
-                              ),
-                            ),
-                          );
-                        }).toList(),
-                        onChanged: (Breed? newValue) {
-                          createPostViewModel.selectedBreed(newValue);
-                        },
-                        dropdownColor: AppColors.gray,
-                        iconEnabledColor: Colors.grey,
-                        isExpanded: true,
-                      ),
-                    ),
-                  ),
+                CustomDropDown<Breed>(
+                  value: createPostViewModel.selectPedBreed,
+                  items: createPostViewModel.dogBreeds,
+                  onChanged: (Breed? newValue) {
+                    createPostViewModel.selectedBreed(newValue);
+                  },
+                  itemLabel: (Breed value) => value.name,
+                  hint: 'Select Dog Breed',
                 ),
               ],
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    createPostViewModel.selectedChip == "Missing Pets"
-                        ? 'Select the date the pet went missing'
-                        : createPostViewModel.selectedChip == "Found Pets"
-                        ? 'Select the date the pet was found'
-                        : 'Select the date the pet was found',
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontFamily: 'SmoochSans',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
+              CustomText(
+                text:   createPostViewModel.selectedChip == "Missing Pets"
+                    ? 'Select the date the pet went missing'
+                    : createPostViewModel.selectedChip == "Found Pets"
+                    ? 'Select the date the pet was found'
+                    : 'Select the date the pet was found',
+                size: 18,
+                color: Colors.black,
+                weight: FontWeight.w700,
+                align: TextAlign.left,
+                screenHeight: screenHeight,
+                alignment: Alignment.centerLeft,
               ),
               Padding(
                 padding: const EdgeInsets.all(10.0),
@@ -734,175 +395,69 @@ class CreatePostView extends StatelessWidget {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    SizedBox(height: screenHeight * 0.01),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      decoration: BoxDecoration(
-                        color: AppColors.gray,
-                        border: Border.all(color: AppColors.gray, width: 2),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<RegionModel>(
-                          value: createPostViewModel.selectedRegion,
-                          hint: const Text('Select Region'),
-                          items: createPostViewModel.regions.map((RegionModel region) {
-                            return DropdownMenuItem<RegionModel>(
-                              value: region,
-                              child: Text(
-                                region.region,
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'SmoochSans',
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (RegionModel? newValue) {
-                            createPostViewModel.setSelectedRegion(newValue);
-                          },
-                          dropdownColor: AppColors.gray,
-                          iconEnabledColor: Colors.grey,
-                          isExpanded: true,
-                        ),
-                      ),
+                    CustomDropDown<RegionModel>(
+                      value: createPostViewModel.selectedRegion,
+                      items: createPostViewModel.regions,
+                      onChanged: (RegionModel? newValue) {
+                        createPostViewModel.setSelectedRegion(newValue);
+                      },
+                      itemLabel: (RegionModel value) => value.region,
+                      hint: 'Select Region',
                     ),
+                    SizedBox(height: screenHeight * 0.01),
                     SizedBox(height: screenHeight * 0.01),
                     if (createPostViewModel.selectedRegion != null)
                       SizedBox(height: screenHeight * 0.01),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      decoration: BoxDecoration(
-                        color: AppColors.gray,
-                        border: Border.all(color: AppColors.gray, width: 2),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<ProvinceModel>(
-                          value: createPostViewModel.selectedProvince,
-                          hint: const Text('Select Province'),
-                          items: createPostViewModel.provinces.map((ProvinceModel province) {
-                            return DropdownMenuItem<ProvinceModel>(
-                              value: province,
-                              child: Text(
-                                province.provinceName,
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'SmoochSans',
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (ProvinceModel? newValue) {
-                            createPostViewModel.setSelectedProvince(newValue);
-                          },
-                          dropdownColor: AppColors.gray,
-                          iconEnabledColor: Colors.grey,
-                          isExpanded: true,
-                        ),
-                      ),
+                    CustomDropDown<ProvinceModel>(
+                      value: createPostViewModel.selectedProvince,
+                      items: createPostViewModel.provinces,
+                      onChanged: (ProvinceModel? newValue) {
+                        createPostViewModel.setSelectedProvince(newValue);
+                      },
+                      itemLabel: (ProvinceModel value) => value.provinceName,
+                      hint: 'Select Province',
                     ),
                     SizedBox(height: screenHeight * 0.01),
                     if (createPostViewModel.selectedProvince != null)
                       SizedBox(height: screenHeight * 0.01),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      decoration: BoxDecoration(
-                        color: AppColors.gray,
-                        border: Border.all(color: AppColors.gray, width: 2),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<CityModel>(
-                          value: createPostViewModel.selectedCity,
-                          hint: const Text('Select City'),
-                          items: createPostViewModel.cities.map((CityModel city) {
-                            return DropdownMenuItem<CityModel>(
-                              value: city,
-                              child: Text(
-                                city.cityName,
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'SmoochSans',
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (CityModel? newValue) {
-                            createPostViewModel.setSelectedCity(newValue);
-                          },
-                          dropdownColor: AppColors.gray,
-                          iconEnabledColor: Colors.grey,
-                          isExpanded: true,
-                        ),
-                      ),
+                    CustomDropDown<CityModel>(
+                      value: createPostViewModel.selectedCity,
+                      items: createPostViewModel.cities,
+                      onChanged: (CityModel? newValue) {
+                        createPostViewModel.setSelectedCity(newValue);
+                      },
+                      itemLabel: (CityModel value) => value.cityName,
+                      hint: 'Select City',
                     ),
                     SizedBox(height: screenHeight * 0.01),
                     if (createPostViewModel.selectedCity != null)
                       SizedBox(height: screenHeight * 0.01),
-                    Container(
-                      width: double.infinity,
-                      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
-                      decoration: BoxDecoration(
-                        color: AppColors.gray,
-                        border: Border.all(color: AppColors.gray, width: 2),
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      child: DropdownButtonHideUnderline(
-                        child: DropdownButton<BarangayModel>(
-                          value: createPostViewModel.selectedBarangay,
-                          hint: const Text('Select Barangay'),
-                          items: createPostViewModel.barangays.map((BarangayModel barangay) {
-                            return DropdownMenuItem<BarangayModel>(
-                              value: barangay,
-                              child: Text(
-                                barangay.barangayName,
-                                style: const TextStyle(
-                                  color: Colors.black,
-                                  fontFamily: 'SmoochSans',
-                                  fontWeight: FontWeight.w600,
-                                ),
-                              ),
-                            );
-                          }).toList(),
-                          onChanged: (BarangayModel? newValue) {
-                            createPostViewModel.setSelectedBarangay(newValue);
-                          },
-                          dropdownColor: AppColors.gray,
-                          iconEnabledColor: Colors.grey,
-                          isExpanded: true,
-                        ),
-                      ),
+                    CustomDropDown<BarangayModel>(
+                      value: createPostViewModel.selectedBarangay,
+                      items: createPostViewModel.barangays,
+                      onChanged: (BarangayModel? newValue) {
+                        createPostViewModel.setSelectedBarangay(newValue);
+                      },
+                      itemLabel: (BarangayModel value) => value.barangayName,
+                      hint: 'Select Barangay',
                     ),
                     SizedBox(height: screenHeight * 0.01),
                   ],
                 ),
               ),
               if (createPostViewModel.selectedChip == "Missing Pets" || createPostViewModel.selectedChip == "Found Pets") ...[
-                Padding(
-                  padding: const EdgeInsets.all(10.0),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      createPostViewModel.selectedChip == "Missing Pets"
-                          ? 'Select a location for missing pet'
-                          : createPostViewModel.selectedChip == "Found Pets"
-                          ? 'Select a location for found pet'
-                          : 'Select a location for found pet',
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontFamily: 'SmoochSans',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
+                CustomText(
+                  text: createPostViewModel.selectedChip == "Missing Pets"
+                      ? 'Select a location for missing pet'
+                      : createPostViewModel.selectedChip == "Found Pets"
+                      ? 'Select a location for found pet'
+                      : 'Select a location for found pet',
+                  size: 18,
+                  color: Colors.black,
+                  weight: FontWeight.w700,
+                  align: TextAlign.left,
+                  screenHeight: screenHeight,
+                  alignment: Alignment.centerLeft,
                 ),
                 Stack(
                   children: [
@@ -1003,36 +558,30 @@ class CreatePostView extends StatelessWidget {
                   ],
                 ),
               ],
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    createPostViewModel.selectedChip == "Missing Pets"
-                        ? 'Enter the Street Address, Building, House No for found pet'
-                        : createPostViewModel.selectedChip == "Found Pets"
-                        ? 'Enter the Street Address, Building, House No for found pet'
-                        : 'Enter the Street Address, Building, House No for found pet',
-                    style: const TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontFamily: 'SmoochSans',
-                      fontWeight: FontWeight.w600,
-                    ),
-                  ),
-                ),
-              ),
-              Padding(
-                padding: const EdgeInsets.all(10.0),
-                child: CustomTextField(
-                  controller: createPostViewModel.address,
+              CustomText(
+                  text: createPostViewModel.selectedChip == "Missing Pets"
+                  ? 'Enter the Street Address, Building, House No for found pet'
+                  : createPostViewModel.selectedChip == "Found Pets"
+                  ? 'Enter the Street Address, Building, House No for found pet'
+                  : 'Enter the Street Address, Building, House No for found pet',
+                  size: 18,
+                  color: Colors.black,
+                  weight: FontWeight.w700,
+                  align: TextAlign.left,
                   screenHeight: screenHeight,
-                  hintText: 'Enter Street Address, Building, House No...',
-                  fontSize: 16,
-                  keyboardType: TextInputType.text,
-                ),
+                alignment: Alignment.centerLeft,
+              ),
+              CustomTextField(
+                controller: createPostViewModel.address,
+                screenHeight: screenHeight,
+                hintText: 'Enter Street Address, Building, House No...',
+                fontSize: 16,
+                keyboardType: TextInputType.text,
               ),
             ],
+               if (createPostViewModel.selectedChip == "Pet Adoption") ...[
+
+                 ],
             Center(
               child: ElevatedButton(
                 onPressed: () async {
