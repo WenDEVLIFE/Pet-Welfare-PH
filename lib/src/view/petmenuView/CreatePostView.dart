@@ -583,6 +583,7 @@ class CreatePostView extends StatelessWidget {
               ),
             ],
                if (createPostViewModel.selectedChip == "Pet Adoption") ...[
+                 // TODO : Add Pet Adoption Fields
 
                  ],
             Center(
