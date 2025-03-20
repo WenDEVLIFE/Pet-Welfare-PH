@@ -362,6 +362,21 @@ class PostRepositoryImpl implements PostRepository {
     });
   }
 
+  @override
+  Stream<List<PostModel>> getProtectPetPost() {
+    return _firestore.collection('PostCollection')
+        .where('Category', isEqualTo: 'Protect Our Pets: Report Abuse')
+        .snapshots()
+        .asyncMap((snapshot) async {
+      List<PostModel> posts = [];
+      for (var doc in snapshot.docs) {
+        var post = await PostModel.fromDocument(doc);
+        posts.add(post);
+      }
+      return posts;
+    });
+  }
+
 
 
 }
