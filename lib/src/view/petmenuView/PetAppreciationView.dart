@@ -39,7 +39,7 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
               CustomSearchTextField(
                 controller: postViewModel.searchPostController,
                 screenHeight: screenHeight,
-                hintText: 'Search for pets',
+                hintText: 'Search for pets for pet appreciation',
                 fontSize: 16,
                 keyboardType: TextInputType.text,
                 onChanged: (searchText) {
