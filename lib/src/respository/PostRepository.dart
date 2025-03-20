@@ -40,6 +40,8 @@ abstract class PostRepository {
 
   Stream<List<PostModel>>getPawExperiencePost();
 
+  Stream<List<PostModel>>getProtectPetPost();
+
 }
 
 class PostRepositoryImpl implements PostRepository {
@@ -362,6 +364,7 @@ class PostRepositoryImpl implements PostRepository {
     });
   }
 
+  // Added get protect pet post
   @override
   Stream<List<PostModel>> getProtectPetPost() {
     return _firestore.collection('PostCollection')
