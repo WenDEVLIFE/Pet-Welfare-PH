@@ -26,6 +26,9 @@ class PostViewModel extends ChangeNotifier {
   List<PostModel> pawExperiencePost = [];
   List<PostModel> filterPawExperiencePost = [];
 
+  List<PostModel> protectedPost = [];
+  List<PostModel> filterProtectedPost = [];
+
   List<CommentModel> comments = [];
 
   final PostRepository postRepository = PostRepositoryImpl();
@@ -34,6 +37,7 @@ class PostViewModel extends ChangeNotifier {
   Stream<List<PostModel>> get missingPostStream => postRepository.getMissingPosts();
   Stream<List<PostModel>> get foundPostStream => postRepository.getFoundPost();
   Stream<List<PostModel>> get pawExperiencePostStream => postRepository.getPawExperiencePost();
+  Stream<List<PostModel>> get protectedPostStream => postRepository.getProtectPetPost();
 
  // Initialize the PostViewModel
   PostViewModel() {
@@ -187,6 +191,16 @@ class PostViewModel extends ChangeNotifier {
       filterPawExperiencePost.addAll(pawExperiencePost);
     } else {
       filterPawExperiencePost.addAll(pawExperiencePost.where((post) => post.postDescription.toLowerCase().contains(search.toLowerCase())));
+    }
+    notifyListeners();
+  }
+
+  void searchProtectedPost(String search) {
+    filterProtectedPost.clear();
+    if (search.isEmpty) {
+      filterProtectedPost.addAll(protectedPost);
+    } else {
+      filterProtectedPost.addAll(protectedPost.where((post) => post.postDescription.toLowerCase().contains(search.toLowerCase())));
     }
     notifyListeners();
   }
