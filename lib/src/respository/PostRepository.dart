@@ -38,6 +38,8 @@ abstract class PostRepository {
 
   Stream<List<PostModel>>getFoundPost();
 
+  Stream<List<PostModel>>getPawExperiencePost();
+
 }
 
 class PostRepositoryImpl implements PostRepository {
@@ -343,6 +345,23 @@ class PostRepositoryImpl implements PostRepository {
       return posts;
     });
   }
-  
+
+  // Added get paw experience post
+  @override
+  Stream<List<PostModel>> getPawExperiencePost() {
+    return _firestore.collection('PostCollection')
+        .where('Category', isEqualTo: 'Paw-some Experience')
+        .snapshots()
+        .asyncMap((snapshot) async {
+      List<PostModel> posts = [];
+      for (var doc in snapshot.docs) {
+        var post = await PostModel.fromDocument(doc);
+        posts.add(post);
+      }
+      return posts;
+    });
+  }
+
+
 
 }
