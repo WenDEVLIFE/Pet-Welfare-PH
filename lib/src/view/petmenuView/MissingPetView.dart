@@ -49,7 +49,7 @@ class MissingPetState extends State<MissingPetView> {
               ),
               Expanded(
                 child: StreamBuilder<List<PostModel>>(
-                  stream: postViewModel.missingPostStream,
+                  stream: postViewModel.missingPostStream, // Stream of missing posts
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());

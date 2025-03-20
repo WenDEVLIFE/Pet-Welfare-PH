@@ -48,7 +48,7 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
               ),
               Expanded(
                 child: StreamBuilder<List<PostModel>>(
-                  stream: postViewModel.posTream,
+                  stream: postViewModel.posTream, // Stream of posts
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());

@@ -20,17 +20,19 @@ class PostViewModel extends ChangeNotifier {
   List<PostModel> missingPost = [];
   List<PostModel> filterMissingPost = [];
 
+  List<PostModel> foundPost = [];
+  List<PostModel> filterFoundPost = [];
+
   List<CommentModel> comments = [];
 
   final PostRepository postRepository = PostRepositoryImpl();
 
   Stream<List<PostModel>> get posTream => postRepository.getPosts();
   Stream<List<PostModel>> get missingPostStream => postRepository.getMissingPosts();
+  Stream<List<PostModel>> get foundPostStream => postRepository.getFoundPost();
 
-
+ // Initialize the PostViewModel
   PostViewModel() {
-
-
     searchPostController.addListener(() {
       searchPost(searchPostController.text);
     });
@@ -49,7 +51,6 @@ class PostViewModel extends ChangeNotifier {
   void setPost(List<PostModel> posts, {bool notify = true}) {
     _posts = posts;
     searchPost(searchPostController.text);
-
   }
 
   String formatTimestamp(Timestamp timestamp) {
@@ -136,6 +137,29 @@ class PostViewModel extends ChangeNotifier {
       filterMissingPost.addAll(missingPost);
     } else {
       filterMissingPost.addAll(missingPost.where((post) => post.postDescription.toLowerCase().contains(
+          searchText.toLowerCase()) ||
+          post.petName.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.petType.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.petBreed.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.petGender.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.petAge.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.petColor.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.petAddress.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.petCollar.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.regProCiBag.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.date.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.petSize.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.PetType.toLowerCase().contains(searchText.toLowerCase())));
+    }
+    notifyListeners();
+  }
+
+  void searchFoundPost(String searchText) {
+    filterFoundPost.clear();
+    if (searchText.isEmpty) {
+      filterFoundPost.addAll(foundPost);
+    } else {
+      filterFoundPost.addAll(foundPost.where((post) => post.postDescription.toLowerCase().contains(
           searchText.toLowerCase()) ||
           post.petName.toLowerCase().contains(searchText.toLowerCase()) ||
           post.petType.toLowerCase().contains(searchText.toLowerCase()) ||

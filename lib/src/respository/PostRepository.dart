@@ -36,6 +36,8 @@ abstract class PostRepository {
 
   Stream<List<PostModel>>getMissingPosts();
 
+  Stream<List<PostModel>>getFoundPost();
+
 }
 
 class PostRepositoryImpl implements PostRepository {
@@ -310,6 +312,7 @@ class PostRepositoryImpl implements PostRepository {
     return await _firestore.collection('PostCollection').doc(postId).collection('CommentCollection').doc(commentId).delete();
   }
 
+  // Added get missing posts function
   @override
   Stream<List<PostModel>> getMissingPosts() {
     return _firestore.collection('PostCollection')
@@ -325,8 +328,21 @@ class PostRepositoryImpl implements PostRepository {
     });
   }
 
-
-
-
+  // Added get found post
+  @override
+  Stream<List<PostModel>> getFoundPost() {
+    return _firestore.collection('PostCollection')
+        .where('Category', isEqualTo: 'Found Pets')
+        .snapshots()
+        .asyncMap((snapshot) async {
+      List<PostModel> posts = [];
+      for (var doc in snapshot.docs) {
+        var post = await PostModel.fromDocument(doc);
+        posts.add(post);
+      }
+      return posts;
+    });
+  }
+  
 
 }
