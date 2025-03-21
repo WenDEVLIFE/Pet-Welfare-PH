@@ -380,6 +380,22 @@ class PostRepositoryImpl implements PostRepository {
     });
   }
 
+  // Added get community post
+  @override
+  Stream<List<PostModel>> getCommunityPost() {
+    return _firestore.collection('PostCollection')
+        .where('Category', isEqualTo: 'Community Announcement')
+        .snapshots()
+        .asyncMap((snapshot) async {
+      List<PostModel> posts = [];
+      for (var doc in snapshot.docs) {
+        var post = await PostModel.fromDocument(doc);
+        posts.add(post);
+      }
+      return posts;
+    });
+  }
+
 
 
 }
