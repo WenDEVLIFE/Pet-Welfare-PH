@@ -44,6 +44,8 @@ abstract class PostRepository {
 
   Stream<List<PostModel>>getCommunityPost();
 
+  Stream<List<PostModel>> getVetAndTravelPost();
+
 }
 
 class PostRepositoryImpl implements PostRepository {
@@ -387,6 +389,22 @@ class PostRepositoryImpl implements PostRepository {
   Stream<List<PostModel>> getCommunityPost() {
     return _firestore.collection('PostCollection')
         .where('Category', isEqualTo: 'Community Announcement')
+        .snapshots()
+        .asyncMap((snapshot) async {
+      List<PostModel> posts = [];
+      for (var doc in snapshot.docs) {
+        var post = await PostModel.fromDocument(doc);
+        posts.add(post);
+      }
+      return posts;
+    });
+  }
+
+  // Added get community post
+  @override
+  Stream<List<PostModel>> getVetAndTravelPost() {
+    return _firestore.collection('PostCollection')
+        .where('Category', isEqualTo: 'Caring for Pets: Vet & Travel Insights')
         .snapshots()
         .asyncMap((snapshot) async {
       List<PostModel> posts = [];
