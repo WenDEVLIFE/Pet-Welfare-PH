@@ -42,6 +42,8 @@ abstract class PostRepository {
 
   Stream<List<PostModel>>getProtectPetPost();
 
+  Stream<List<PostModel>>getCommunityPost();
+
 }
 
 class PostRepositoryImpl implements PostRepository {

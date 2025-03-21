@@ -29,6 +29,9 @@ class PostViewModel extends ChangeNotifier {
   List<PostModel> protectedPost = [];
   List<PostModel> filterProtectedPost = [];
 
+  List<PostModel> communityPost = [];
+  List<PostModel> filterCommunityPost = [];
+
   List<CommentModel> comments = [];
 
   final PostRepository postRepository = PostRepositoryImpl();
@@ -38,6 +41,7 @@ class PostViewModel extends ChangeNotifier {
   Stream<List<PostModel>> get foundPostStream => postRepository.getFoundPost();
   Stream<List<PostModel>> get pawExperiencePostStream => postRepository.getPawExperiencePost();
   Stream<List<PostModel>> get protectedPostStream => postRepository.getProtectPetPost();
+  Stream<List<PostModel>> get communityPostStream => postRepository.getCommunityPost();
 
  // Initialize the PostViewModel
   PostViewModel() {
@@ -46,21 +50,13 @@ class PostViewModel extends ChangeNotifier {
     });
   }
 
-  void searchPost(String search) {
-    filteredPost.clear();
-    if (search.isEmpty) {
-      filteredPost.addAll(_posts);
-    } else {
-      filteredPost.addAll(_posts.where((post) => post.postDescription.toLowerCase().contains(search.toLowerCase())));
-    }
-    notifyListeners();
-  }
-
+  // this is for the set post
   void setPost(List<PostModel> posts, {bool notify = true}) {
     _posts = posts;
     searchPost(searchPostController.text);
   }
 
+  // get format timestap
   String formatTimestamp(Timestamp timestamp) {
     DateTime postDate = timestamp.toDate();
     DateTime now = DateTime.now();
@@ -74,22 +70,27 @@ class PostViewModel extends ChangeNotifier {
   }
 
 
+  // check if user has react
   Future<bool> hasUserReacted(String postId) async {
     return await postRepository.hasUserReacted(postId);
   }
 
+  // get user reactions
   Future<String?> getUserReaction(String postId) async {
     return await postRepository.getUserReaction(postId);
   }
 
+  // get reactions
   Future<int> getReactionCount(String postId) async {
     return await postRepository.getReactionCount(postId);
   }
 
+  // get comment
   Future<int> getCommentCount(String postId) async {
     return await postRepository.getCommentCount(postId);
   }
 
+  // remove reactions
   Future<void> removeReaction(String postId) async {
     try {
       await postRepository.removeReaction(postId);
@@ -98,6 +99,7 @@ class PostViewModel extends ChangeNotifier {
     }
   }
 
+  // Add reaction
   Future <void> addReaction(String postId, String reaction) async{
    try{
      await postRepository.addReaction(postId, reaction);
@@ -107,6 +109,7 @@ class PostViewModel extends ChangeNotifier {
     }
   }
 
+  // add comment
   Future<void> addComment(String postId, String commentText) async {
     try {
       await postRepository.addComment(postId, commentText);
@@ -116,10 +119,12 @@ class PostViewModel extends ChangeNotifier {
     }
   }
 
+  // get comments
   Stream<List<CommentModel>> getComments(String postId) {
     return postRepository.getComments(postId);
   }
 
+  // Show comments
   void showComments(BuildContext context, String postId) {
     showModalBottomSheet(
       context: context,
@@ -130,6 +135,7 @@ class PostViewModel extends ChangeNotifier {
     );
   }
 
+  // Delete the comment
   Future<void> deleteComment(String postId, String commentId) async {
     try {
       await postRepository.deleteComment(postId, commentId);
@@ -139,6 +145,18 @@ class PostViewModel extends ChangeNotifier {
     }
   }
 
+  // search post
+  void searchPost(String search) {
+    filteredPost.clear();
+    if (search.isEmpty) {
+      filteredPost.addAll(_posts);
+    } else {
+      filteredPost.addAll(_posts.where((post) => post.postDescription.toLowerCase().contains(search.toLowerCase())));
+    }
+    notifyListeners();
+  }
+
+  // Missing Post
   void searchMissingPost(String searchText) {
    filterMissingPost.clear();
     if (searchText.isEmpty) {
@@ -162,6 +180,7 @@ class PostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Found Post
   void searchFoundPost(String searchText) {
     filterFoundPost.clear();
     if (searchText.isEmpty) {
@@ -185,6 +204,7 @@ class PostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Paw Experience Post
   void searchPawExperience(String search) {
     filterPawExperiencePost.clear();
     if (search.isEmpty) {
@@ -195,12 +215,25 @@ class PostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Protected Post
   void searchProtectedPost(String search) {
     filterProtectedPost.clear();
     if (search.isEmpty) {
       filterProtectedPost.addAll(protectedPost);
     } else {
       filterProtectedPost.addAll(protectedPost.where((post) => post.postDescription.toLowerCase().contains(search.toLowerCase())));
+    }
+    notifyListeners();
+  }
+
+
+  // Community Post
+  void searchCommunityPost(String search) {
+    filterCommunityPost.clear();
+    if (search.isEmpty) {
+      filterCommunityPost.addAll(communityPost);
+    } else {
+      filterCommunityPost.addAll(communityPost.where((post) => post.postDescription.toLowerCase().contains(search.toLowerCase())));
     }
     notifyListeners();
   }
