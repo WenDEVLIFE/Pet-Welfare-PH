@@ -32,6 +32,9 @@ class PostViewModel extends ChangeNotifier {
   List<PostModel> communityPost = [];
   List<PostModel> filterCommunityPost = [];
 
+  List<PostModel> vetAndtravelPost = [];
+  List<PostModel> filterVetAndTravelPost = [];
+
   List<CommentModel> comments = [];
 
   final PostRepository postRepository = PostRepositoryImpl();
@@ -42,6 +45,7 @@ class PostViewModel extends ChangeNotifier {
   Stream<List<PostModel>> get pawExperiencePostStream => postRepository.getPawExperiencePost();
   Stream<List<PostModel>> get protectedPostStream => postRepository.getProtectPetPost();
   Stream<List<PostModel>> get communityPostStream => postRepository.getCommunityPost();
+  Stream<List<PostModel>> get vetAndTravelPostStream => postRepository.getVetAndTravelPost();
 
  // Initialize the PostViewModel
   PostViewModel() {
@@ -234,6 +238,17 @@ class PostViewModel extends ChangeNotifier {
       filterCommunityPost.addAll(communityPost);
     } else {
       filterCommunityPost.addAll(communityPost.where((post) => post.postDescription.toLowerCase().contains(search.toLowerCase())));
+    }
+    notifyListeners();
+  }
+
+  // Vet and Travel Post
+  void searchVetAndTravelPost(String search) {
+    filterVetAndTravelPost.clear();
+    if (search.isEmpty) {
+      filterVetAndTravelPost.addAll(vetAndtravelPost);
+    } else {
+      filterVetAndTravelPost.addAll(vetAndtravelPost.where((post) => post.postDescription.toLowerCase().contains(search.toLowerCase())));
     }
     notifyListeners();
   }
