@@ -5,6 +5,8 @@ import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
+import 'package:pet_welfrare_ph/src/model/EstablishmentModel.dart';
+import 'package:pet_welfrare_ph/src/respository/LocationRespository.dart';
 import 'package:pet_welfrare_ph/src/respository/PostRepository.dart';
 import 'package:pet_welfrare_ph/src/services/OpenStreetMapService.dart';
 import 'dart:io';
@@ -46,6 +48,7 @@ class CreatePostViewModel extends ChangeNotifier {
 
   var petAgeList = ['1 month', '2 months', '3 months', '4 months', '5 months', '6 months', '7 months', '8 months', '9 months', '10 months', '11 months', '1 year', '2 years', '3 years', '4 years', '5 years', '6 years', '7 years', '8 years', '9 years', '10 years', '11 years', '12 years', '13 years', '14 years', '15 years', '16 years', '17 years', '18 years', '19 years', '20 years', '21 years', '22 years', '23 years', '24 years', '25 years', '26 years', '27 years', '28 years', '29 years', '30 years', '31 years', '32 years', '33 years', '34 years', '35 years' ];
   var selectedPetAge = '1 month';
+
 
   List<String> colorpatter = [
     'Calico',
@@ -121,6 +124,14 @@ class CreatePostViewModel extends ChangeNotifier {
   MaplibreMapController? mapController;
   List<Map<String, dynamic>> searchResults = [];
 
+  // Load the establisment that user created
+  List<EstablishmentModel> establishments = [];
+
+  Locationrespository locationrespository = LocationrespositoryImpl();
+
+  Stream<List<EstablishmentModel>> get establishmentStream => locationrespository.getData1();
+  EstablishmentModel? selectedEstablisment;
+
   // OpenStreetMapService
   final OpenStreetMapService _openStreetMapService = OpenStreetMapService();
 
@@ -144,6 +155,7 @@ class CreatePostViewModel extends ChangeNotifier {
     await setInitialLocation();
     await fetchCatBreeds(); // Fetch cat breeds
     await fetchDogBreeds(); // Fetch dog breeds
+    await loadEstablishment(selectedEstablisment!);
   }
 
   Future<void> pickImage() async {
@@ -557,6 +569,16 @@ class CreatePostViewModel extends ChangeNotifier {
   void clearSearch() {
     searchController.clear();
     showDropdown = false;
+    notifyListeners();
+  }
+
+  Future <void> loadEstablishment(EstablishmentModel establishment) async {
+    selectedEstablisment = establishment;
+    notifyListeners();
+  }
+
+  void setSelectedEstablishment(EstablishmentModel? establishment) {
+    selectedEstablisment = establishment;
     notifyListeners();
   }
 }

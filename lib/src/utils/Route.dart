@@ -19,12 +19,12 @@ import 'package:pet_welfrare_ph/src/view/ViewEstablishment.dart';
 import 'package:pet_welfrare_ph/src/view/ViewImage.dart';
 import 'package:pet_welfrare_ph/src/view/ViewUserData.dart';
 import 'package:pet_welfrare_ph/src/view/ViewUserScreen.dart';
-import 'package:pet_welfrare_ph/src/view_model/ApprovedShelterClinicView.dart';
+import 'package:pet_welfrare_ph/src/view/ApprovedEstablismentView.dart';
 
 import '../widgets/AdminNavigationComponent.dart';
 import '../view/AboutView.dart';
 import '../view/admindirectory/AddAdminView.dart';
-import '../view/AddShelterClinicScreen.dart';
+import '../view/AddEstablismentView.dart';
 import '../view/ChangeIDView.dart';
 import '../view/ChangePasswordView.dart';
 import '../view/chatdirectory/ChatView.dart';

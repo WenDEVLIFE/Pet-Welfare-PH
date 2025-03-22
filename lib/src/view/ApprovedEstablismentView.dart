@@ -8,7 +8,7 @@ import '../model/EstablishmentModel.dart';
 import '../utils/AppColors.dart';
 import '../utils/Route.dart';
 import '../utils/SessionManager.dart';
-import 'EstablishmentViewModel.dart';
+import '../view_model/EstablishmentViewModel.dart';
 import 'package:provider/provider.dart';
 
 class ApprovedShelterClinicView extends StatefulWidget{

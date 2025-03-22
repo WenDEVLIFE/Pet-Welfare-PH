@@ -164,7 +164,7 @@ class CreatePostView extends StatelessWidget {
                 itemLabel: (String value) => value,
                 hint: 'Select a category',
             ),
-            if (createPostViewModel.selectedChip == "Missing Pets" || createPostViewModel.selectedChip == "Found Pets") ...[
+            if (createPostViewModel.selectedChip == "Missing Pets" || createPostViewModel.selectedChip == "Found Pets" ||  createPostViewModel.selectedChip =="Pet Adoption") ...[
               CustomText(
                 text: 'Select Pet Type',
                 size: 18,
@@ -564,6 +564,7 @@ class CreatePostView extends StatelessWidget {
                   ? 'Enter the Street Address, Building, House No for found pet'
                   : createPostViewModel.selectedChip == "Found Pets"
                   ? 'Enter the Street Address, Building, House No for found pet'
+                  : createPostViewModel.selectedChip =="Pet Adoption" ? 'Enter the Street Address, Building, House No for pet adoption'
                   : 'Enter the Street Address, Building, House No for found pet',
                   size: 18,
                   color: Colors.black,
@@ -586,6 +587,7 @@ class CreatePostView extends StatelessWidget {
                  // TODO : Add Pet Adoption Fields
 
                  ],
+
             Center(
               child: CustomButton(
                   hint: 'Post Now',
