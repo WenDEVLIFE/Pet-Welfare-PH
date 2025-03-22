@@ -253,4 +253,12 @@ class PostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> editComment(String postId, String commentId, String newCommentText) async {
+    try {
+      await postRepository.editComment(postId, commentId, newCommentText);
+      notifyListeners();
+    } catch (e) {
+      throw Exception('Failed to edit comment: $e');
+    }
+  }
 }

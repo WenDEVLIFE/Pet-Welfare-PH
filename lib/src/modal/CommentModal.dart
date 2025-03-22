@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pet_welfrare_ph/src/widgets/CustomText.dart';
 import 'package:provider/provider.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 import 'package:pet_welfrare_ph/src/model/CommentModel.dart';
@@ -41,8 +42,15 @@ class _CommentModalState extends State<CommentModal> {
     super.dispose();
   }
 
+  Future<void> editComment(String postId, String commentId, String newCommentText) async {
+    PostViewModel postViewModel = Provider.of<PostViewModel>(context, listen: false);
+    await postViewModel.editComment(postId, commentId, newCommentText);
+  }
+
   @override
   Widget build(BuildContext context) {
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
     PostViewModel postViewModel = Provider.of<PostViewModel>(context, listen: false);
 
     return Container(
@@ -97,7 +105,7 @@ class _CommentModalState extends State<CommentModal> {
                   itemCount: comments.length,
                   itemBuilder: (context, index) {
                     final comment = comments[index];
-                    bool canDelete = currentUser.uid == comment.userid || role == 'Admin' || role == 'Sub-Admin';
+                    bool canEditOrDelete = currentUser.uid == comment.userid || role == 'Admin' || role == 'Sub-Admin';
 
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
@@ -144,12 +152,75 @@ class _CommentModalState extends State<CommentModal> {
                               ],
                             ),
                           ),
-                          if (canDelete)
-                            IconButton(
-                              icon: Icon(Icons.delete, color: Colors.red),
-                              onPressed: () async {
-                                await postViewModel.deleteComment(widget.postId, comment.commendID);
-                              },
+                          if (canEditOrDelete)
+                            Row(
+                              children: [
+                                IconButton(
+                                  icon: const Icon(Icons.edit, color: Colors.blue),
+                                  onPressed: () {
+                                    showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        TextEditingController editController = TextEditingController(text: comment.commentText);
+                                        return AlertDialog(
+                                          title: const Text('Edit Comment'),
+                                          content: TextField(
+                                            controller: editController,
+                                            decoration: const InputDecoration(
+                                              labelText: 'Edit your comment',
+                                            ),
+                                          ),
+                                          actions: [
+                                            Row(
+                                              children: [
+                                                Expanded(child: Container()),
+                                                TextButton(
+                                                  onPressed: () async {
+                                                    if (editController.text.isNotEmpty) {
+                                                      await editComment(widget.postId, comment.commendID, editController.text);
+                                                      Navigator.of(context).pop();
+                                                    }
+                                                  },
+                                                  child: CustomText(
+                                                    text: "Save",
+                                                    size: 16,
+                                                    color: Colors.black,
+                                                    weight: FontWeight.w700 ,
+                                                    align: TextAlign.left,
+                                                    screenHeight: screenHeight,
+                                                    alignment: Alignment.centerRight,
+
+                                                  ),
+                                                ),
+                                                TextButton(
+                                                  onPressed: () {
+                                                    Navigator.of(context).pop();
+                                                  },
+                                                  child: CustomText(
+                                                    text: "Cancel",
+                                                    size: 16,
+                                                    color: Colors.black,
+                                                    weight: FontWeight.w700 ,
+                                                    align: TextAlign.left,
+                                                    screenHeight: screenHeight,
+                                                    alignment: Alignment.centerRight,
+                                                  ),
+                                                ),
+                                              ],
+                                            )
+                                          ],
+                                        );
+                                      },
+                                    );
+                                  },
+                                ),
+                                IconButton(
+                                  icon: Icon(Icons.delete, color: Colors.red),
+                                  onPressed: () async {
+                                    await postViewModel.deleteComment(widget.postId, comment.commendID);
+                                  },
+                                ),
+                              ],
                             ),
                         ],
                       ),

@@ -46,6 +46,8 @@ abstract class PostRepository {
 
   Stream<List<PostModel>> getVetAndTravelPost();
 
+  Future <void> editComment(String postId, String commentId, String newCommentText);
+
 }
 
 class PostRepositoryImpl implements PostRepository {
@@ -318,6 +320,14 @@ class PostRepositoryImpl implements PostRepository {
   @override
   Future<void> deleteComment(String postId, String commentId) async{
     return await _firestore.collection('PostCollection').doc(postId).collection('CommentCollection').doc(commentId).delete();
+  }
+
+
+  // Added edit comment function
+  Future<void> editComment(String postId, String commentId, String newCommentText) async {
+    return await _firestore.collection('PostCollection').doc(postId).collection('CommentCollection').doc(commentId).update({
+      'CommentText': newCommentText,
+    });
   }
 
   // Added get missing posts function
