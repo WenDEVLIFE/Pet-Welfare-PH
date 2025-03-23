@@ -100,12 +100,8 @@ class PostRepositoryImpl implements PostRepository {
         .where('Category', isEqualTo: 'Pet Appreciation')
         .snapshots()
         .asyncMap((snapshot) async {
-      List<PostModel> posts = [];
-      for (var doc in snapshot.docs) {
-        var post = await PostModel.fromDocument(doc);
-        posts.add(post);
-      }
-      return posts;
+      List<Future<PostModel>> postFutures = snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
+      return await Future.wait(postFutures);
     });
   }
 
@@ -297,7 +293,6 @@ class PostRepositoryImpl implements PostRepository {
 
     ToastComponent().showMessage(AppColors.orange, 'Comment added successfully');
   }
-
   // Added get comments function
   @override
   Stream<List<CommentModel>> getComments(String postId) {
@@ -308,11 +303,8 @@ class PostRepositoryImpl implements PostRepository {
         .orderBy('Timestamp', descending: true)
         .snapshots()
         .asyncMap((snapshot) async {
-      List<CommentModel> comments = [];
-      for (var doc in snapshot.docs) {
-        comments.add(await CommentModel.fromDocument(doc));
-      }
-      return comments;
+      List<Future<CommentModel>> commentFutures = snapshot.docs.map((doc) => CommentModel.fromDocument(doc)).toList();
+      return await Future.wait(commentFutures);
     });
   }
 
@@ -337,12 +329,8 @@ class PostRepositoryImpl implements PostRepository {
         .where('Category', isEqualTo: 'Missing Pets')
         .snapshots()
         .asyncMap((snapshot) async {
-      List<PostModel> posts = [];
-      for (var doc in snapshot.docs) {
-        var post = await PostModel.fromDocument(doc);
-        posts.add(post);
-      }
-      return posts;
+      List<Future<PostModel>> postFutures = snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
+      return await Future.wait(postFutures);
     });
   }
 
@@ -353,12 +341,8 @@ class PostRepositoryImpl implements PostRepository {
         .where('Category', isEqualTo: 'Found Pets')
         .snapshots()
         .asyncMap((snapshot) async {
-      List<PostModel> posts = [];
-      for (var doc in snapshot.docs) {
-        var post = await PostModel.fromDocument(doc);
-        posts.add(post);
-      }
-      return posts;
+      List<Future<PostModel>> postFutures = snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
+      return await Future.wait(postFutures);
     });
   }
 
@@ -369,12 +353,8 @@ class PostRepositoryImpl implements PostRepository {
         .where('Category', isEqualTo: 'Paw-some Experience')
         .snapshots()
         .asyncMap((snapshot) async {
-      List<PostModel> posts = [];
-      for (var doc in snapshot.docs) {
-        var post = await PostModel.fromDocument(doc);
-        posts.add(post);
-      }
-      return posts;
+      List<Future<PostModel>> postFutures = snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
+      return await Future.wait(postFutures);
     });
   }
 
@@ -385,12 +365,8 @@ class PostRepositoryImpl implements PostRepository {
         .where('Category', isEqualTo: 'Protect Our Pets: Report Abuse')
         .snapshots()
         .asyncMap((snapshot) async {
-      List<PostModel> posts = [];
-      for (var doc in snapshot.docs) {
-        var post = await PostModel.fromDocument(doc);
-        posts.add(post);
-      }
-      return posts;
+      List<Future<PostModel>> postFutures = snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
+      return await Future.wait(postFutures);
     });
   }
 
@@ -401,12 +377,8 @@ class PostRepositoryImpl implements PostRepository {
         .where('Category', isEqualTo: 'Community Announcement')
         .snapshots()
         .asyncMap((snapshot) async {
-      List<PostModel> posts = [];
-      for (var doc in snapshot.docs) {
-        var post = await PostModel.fromDocument(doc);
-        posts.add(post);
-      }
-      return posts;
+      List<Future<PostModel>> postFutures = snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
+      return await Future.wait(postFutures);
     });
   }
 
@@ -417,12 +389,8 @@ class PostRepositoryImpl implements PostRepository {
         .where('Category', isEqualTo: 'Caring for Pets: Vet & Travel Insights')
         .snapshots()
         .asyncMap((snapshot) async {
-      List<PostModel> posts = [];
-      for (var doc in snapshot.docs) {
-        var post = await PostModel.fromDocument(doc);
-        posts.add(post);
-      }
-      return posts;
+      List<Future<PostModel>> postFutures = snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
+      return await Future.wait(postFutures);
     });
   }
 
