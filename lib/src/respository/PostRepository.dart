@@ -48,6 +48,8 @@ abstract class PostRepository {
 
   Future <void> editComment(String postId, String commentId, String newCommentText);
 
+  Future <void> uploadAdoption(List<File> images, String selectedChip, Map<String, Object> petData);
+
 }
 
 class PostRepositoryImpl implements PostRepository {
@@ -162,6 +164,87 @@ class PostRepositoryImpl implements PostRepository {
         'Date': date,
         'Longitude': long,
         'Status': selectedChip == 'Missing Pets' ? 'Still missing' : 'Still roaming',
+      });
+
+      ToastComponent().showMessage(AppColors.orange, '$selectedChip data added successfully');
+
+      // Upload images concurrently and store their URLs in the images sub-collection
+      List<Future<void>> uploadTasks = images.map((File image) async {
+        String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+        Reference storageRef = _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
+        UploadTask uploadTask = storageRef.putFile(image);
+        TaskSnapshot taskSnapshot = await uploadTask;
+        String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+
+        // Add image URL to the images sub-collection
+        await postRef.collection('ImageCollection').add({
+          'FileUrl': downloadUrl,
+          'FileName': '$fileName.jpg',
+        });
+      }).toList();
+
+      // Wait for all uploads to complete
+      await Future.wait(uploadTasks);
+    } catch (e) {
+      throw Exception('Failed to upload post: $e');
+    }
+  }
+
+  // Added upload pet data
+  @override
+  Future<void> uploadAdoption(List<File> images, String selectedChip, Map<String, dynamic> petData) async {
+    User user = _firebaseAuth.currentUser!;
+    String uuid = user.uid;
+    var postID = Uuid().v4();
+
+    try {
+      // Create a new post document
+      DocumentReference postRef = _firestore.collection('PostCollection').doc(postID);
+
+      String post = petData['post'];
+      String petName = petData['pet_name'];
+      String petType = petData['pet_type'];
+      String petBreed = petData['pet_breed'];
+      String petAge = petData['pet_age'];
+      String region = petData['region'];
+      String province = petData['province'];
+      String city = petData['city'];
+      String gender = petData['gender'];
+      String size = petData['size'];
+      String color = petData['color'];
+      String barangay = petData['barangay'];
+      String address = petData['address'];
+      double lat = petData['lat'];
+      double long = petData['long'];
+      String date = petData['date'];
+
+      await postRef.set({
+        'PostID': postID,
+        'PostOwnerID': uuid,
+        'PostDescription': post,
+        'Category': selectedChip,
+        'Timestamp': FieldValue.serverTimestamp(),
+      });
+
+      // Create a new document in PetDetailsCollection
+      DocumentReference petRef = _firestore.collection('AdoptionDetails').doc(postID);
+      await petRef.set({
+        'PetName': petName,
+        'PetType': petType,
+        'PetGender': gender,
+        'PetSize': size,
+        'PetColor': color,
+        'PetBreed': petBreed,
+        'PetAge': petAge,
+        'Region': region,
+        'Province': province,
+        'City': city,
+        'Barangay': barangay,
+        'Address': address,
+        'Latitude': lat,
+        'Date': date,
+        'Longitude': long,
+        'Status': 'Available',
       });
 
       ToastComponent().showMessage(AppColors.orange, '$selectedChip data added successfully');

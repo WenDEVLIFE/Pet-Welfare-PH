@@ -184,7 +184,7 @@ class CreatePostViewModel extends ChangeNotifier {
   }
 
   void clearPost() {
-    if(selectedChip =='Lost pets' || selectedChip == 'Found Pets'){
+    if(selectedChip =='Lost pets' || selectedChip == 'Found Pets' || selectedChip == 'Pet Adoption'){
     postController.clear();
     _images.clear();
     selectedChip = 'Pet Appreciation';
@@ -301,6 +301,56 @@ class CreatePostViewModel extends ChangeNotifier {
       // Implement functionality for Paw-some Experience
     } else if (selectedChip == 'Pet Adoption') {
       // Implement functionality for Pet Adoption
+      // Implement functionality for Missing Pets or Found Pets
+      if (postController.text.isEmpty) {
+        ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
+      } else if (_images.isEmpty) {
+        ToastComponent().showMessage(Colors.red, 'Please select an image');
+      }
+      else if (petName.text.isEmpty) {
+        ToastComponent().showMessage(Colors.red , 'Please enter the name of the pet');
+      }
+
+      else if (selectedPetType == 'Cat' && selectPedBreed == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select the breed of the cat');
+      }
+      else if (selectedPetType == 'Dog' && selectPedBreed == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select the breed of the dog');
+      }
+      else if (selectedRegion == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a region');
+      } else if (selectedProvince == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a province');
+      } else if (selectedCity == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a city');
+      } else if (selectedBarangay == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a barangay');
+      } else{
+        var petData = {
+          'post': postController.text,
+          'pet_name': petName.text,
+          'pet_type': selectedPetType..toString(),
+          'pet_breed': selectPedBreed!.name,
+          'pet_color': selectedColorPattern,
+          'pet_age': selectedPetAge,
+          'region': selectedRegion!.region,
+          'province': selectedProvince!.provinceName,
+          'city': selectedCity!.cityName,
+          'gender': selectedPetGender,
+          'size': selectedPetSize,
+          'color': selectedColorPattern,
+          'barangay': selectedBarangay!.barangayName,
+          'address': address.text,
+          'date': dateController.text,
+          'lat': selectedLocation!.latitude,
+          'long': selectedLocation!.longitude,
+        };
+
+        await postRepository.uploadAdoption(_images, selectedChip, petData);
+        ToastComponent().showMessage(Colors.green, '$selectedChip successful');
+        clearPost();
+      }
+
     } else if (selectedChip == 'Protect Our Pets: Report Abuse') {
       // Implement functionality for Protect Our Pets: Report Abuse
     } else if (selectedChip == 'Caring for Pets: Vet & Travel Insights') {
