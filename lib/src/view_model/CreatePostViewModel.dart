@@ -101,6 +101,7 @@ class CreatePostViewModel extends ChangeNotifier {
 
   List<File> get images => _images;
 
+
   // Add these fields
   RegionModel? selectedRegion;
   ProvinceModel? selectedProvince;
@@ -165,6 +166,10 @@ class CreatePostViewModel extends ChangeNotifier {
       _images.add(File(image.path));
       notifyListeners();
     }
+  }
+
+  Future <int> countImages() async {
+    return _images.length;
   }
 
   void removeImage(File image) {

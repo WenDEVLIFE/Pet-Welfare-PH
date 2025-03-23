@@ -16,6 +16,7 @@ import '../utils/AppColors.dart';
 import '../utils/ImageUtils.dart';
 import '../services/MapTilerKey.dart';
 import '../widgets/CustomDropdown.dart';
+import '../widgets/CustomMapWidget.dart';
 import '../widgets/MapSearchTextField.dart';
 
 class AddShelterClinic extends StatefulWidget {
@@ -233,45 +234,14 @@ class _AddShelterClinicState extends State<AddShelterClinic> {
                         SizedBox(height: screenHeight * 0.01),
                         Stack(
                           children: [
-                            Container(
+                            CustomMapWidget(
                               height: screenHeight * 0.4,
-                              child: MaplibreMap(
-                                styleString: "${MapTilerKey.styleUrl}?key=${MapTilerKey.apikey}",
-                                myLocationEnabled: true,
-                                initialCameraPosition: CameraPosition(
-                                  target: LatLng(viewModel.lat, viewModel.long),
-                                  zoom: 15.0,
-                                ),
-                                onMapCreated: (MaplibreMapController controller) async {
-                                  viewModel.mapController = controller;
-                                  await viewModel.loadMarkerImage(controller); // Load custom marker
-                                  if (viewModel.selectedLocation != null) {
-                                    viewModel.addPin(viewModel.selectedLocation!);
-                                  }
-                                },
-                                onMapClick: (point, coordinates) async {
-                                  if (viewModel.mapController == null) return;
-
-                                  // Update location
-                                  viewModel.updateLocation(coordinates);
-
-                                  // Remove previous markers
-                                  await viewModel.mapController!.clearSymbols();
-
-                                  // Add new marker
-                                  await viewModel.mapController!.addSymbol(SymbolOptions(
-                                    geometry: coordinates,
-                                    iconImage: "custom_marker", // Use loaded image
-                                    iconSize: 1.5,
-                                  ));
-
-                                  print("Pinned Location: ${coordinates.latitude}, ${coordinates.longitude}");
-                                  ToastComponent().showMessage(AppColors.orange, 'Pinned Location: ${coordinates.latitude}, ${coordinates.longitude}');
-                                },
-                                gestureRecognizers: {
-                                  Factory<OneSequenceGestureRecognizer>(() => EagerGestureRecognizer()),
-                                },
-                              ),
+                              lat: viewModel.lat,
+                              long: viewModel.long,
+                              selectedLocation: viewModel.selectedLocation,
+                              onLocationSelected: (LatLng coordinates) {
+                                viewModel.updateLocation(coordinates);
+                              },
                             ),
                             Padding(
                               padding: const EdgeInsets.all(8.0),

@@ -18,6 +18,7 @@ import '../../services/MapTilerKey.dart';
 import '../../utils/AppColors.dart';
 import '../../utils/ToastComponent.dart';
 import '../../view_model/CreatePostViewModel.dart';
+import '../../widgets/CustomMapWidget.dart';
 import '../../widgets/CustomTextField.dart';
 
 class CreatePostView extends StatelessWidget {
@@ -56,7 +57,11 @@ class CreatePostView extends StatelessWidget {
                   ? 'Enter the details of the found pet'
                   : createPostViewModel.selectedChip == "Pet Adoption"
                   ? 'Enter the details of the pet for adoption'
-                  : 'Create a post',
+                  : createPostViewModel.selectedChip == "Find a Home: Rescue & Shelter"
+                  ? 'Enter the details of the Rescue & Shelter'
+                  : createPostViewModel.selectedChip == "Pet Adoption"
+                  ? 'Enter the details of the pet for adoption'
+                  : 'Create a post' ,
               size: 18,
               color: Colors.black,
               weight: FontWeight.w700,
@@ -466,47 +471,15 @@ class CreatePostView extends StatelessWidget {
                 ),
                 Stack(
                   children: [
-                    Container(
+                    CustomMapWidget(
                       height: screenHeight * 0.4,
-                      child: MaplibreMap(
-                        styleString: "${MapTilerKey.styleUrl}?key=${MapTilerKey.apikey}",
-                        myLocationEnabled: true,
-                        initialCameraPosition: CameraPosition(
-                          target: LatLng(createPostViewModel.lat, createPostViewModel.long),
-                          zoom: 15.0,
-                        ),
-                        onMapCreated: (MaplibreMapController controller) async {
-                          createPostViewModel.mapController = controller;
-                          await createPostViewModel.loadMarkerImage(controller); // Load custom marker
-                          if (createPostViewModel.selectedLocation != null) {
-                            createPostViewModel.addPin(createPostViewModel.selectedLocation!);
-                          }
-                        },
-                        onMapClick: (point, coordinates) async {
-                          if (createPostViewModel.mapController == null) return;
-
-                          // Update location
-                          createPostViewModel.updateLocation(coordinates);
-
-                          // Remove previous markers
-                          await createPostViewModel.mapController!.clearSymbols();
-
-                          // Add new marker
-                          await createPostViewModel.mapController!.addSymbol(SymbolOptions(
-                            geometry: coordinates,
-                            iconImage: "custom_marker", // Use loaded image
-                            iconSize: 1.5,
-                          ));
-
-                          print("Pinned Location: ${coordinates.latitude}, ${coordinates.longitude}");
-                          ToastComponent().showMessage(AppColors.orange, 'Pinned Location: ${coordinates.latitude}, ${coordinates.longitude}');
-                        },
-                        gestureRecognizers: {
-                          Factory<OneSequenceGestureRecognizer>(() => EagerGestureRecognizer()),
-                        },
-                      ),
+                      lat: createPostViewModel.lat,
+                      long: createPostViewModel.long,
+                      selectedLocation: createPostViewModel.selectedLocation,
+                      onLocationSelected: (LatLng coordinates) {
+                        createPostViewModel.updateLocation(coordinates);
+                      },
                     ),
-
                     Padding(
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
@@ -564,7 +537,6 @@ class CreatePostView extends StatelessWidget {
                 ),
               ],
             ],
-
                if (createPostViewModel.selectedChip == "Pet Adoption" || createPostViewModel.selectedChip == "Missing Pets" || createPostViewModel.selectedChip == "Found Pets") ...[
                  CustomText(
                    text: createPostViewModel.selectedChip == "Missing Pets"
@@ -590,12 +562,6 @@ class CreatePostView extends StatelessWidget {
                    ),
                  ),
                  ],
-
-            // This is for pet adoption Ui
-            if(createPostViewModel.selectedChip =="Pet Adoption") ... [
-
-
-              ],
             Center(
               child: CustomButton(
                   hint: 'Post Now',
