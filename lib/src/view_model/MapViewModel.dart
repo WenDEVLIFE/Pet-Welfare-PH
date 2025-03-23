@@ -79,6 +79,10 @@ class MapViewModel extends ChangeNotifier {
     ByteData shelterData = await rootBundle.load('assets/images/shelter.png');
     Uint8List shelterBytes = shelterData.buffer.asUint8List();
     await mapController!.addImage("custom_marker_shelter", shelterBytes);
+
+    ByteData establismentData = await rootBundle.load('assets/images/company.png');
+    Uint8List establistmentBytes = establismentData.buffer.asUint8List();
+    await mapController!.addImage("custom_marker_establishment", establistmentBytes);
   }
 
   Future<void> addPin(LatLng position) async {
@@ -121,9 +125,14 @@ class MapViewModel extends ChangeNotifier {
     _isLoadingMarkers = true;
 
     for (var establishment in establishments) {
-      String markerType = establishment.establishmentType.toLowerCase() == 'clinic'
-          ? "custom_marker_clinic"
-          : "custom_marker_shelter";
+      String markerType;
+      if (establishment.establishmentType.toLowerCase() == 'clinic') {
+        markerType = "custom_marker_clinic";
+      } else if (establishment.establishmentType.toLowerCase() == 'shelter') {
+        markerType = "custom_marker_shelter";
+      } else {
+        markerType = "custom_marker_establishment";
+      }
 
       preloadMarkerImages();
 
