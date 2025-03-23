@@ -163,14 +163,15 @@ class CreatePostViewModel extends ChangeNotifier {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
-      _images.add(File(image.path));
-      notifyListeners();
+      if (_images.length < 5) {
+        _images.add(File(image.path));
+        notifyListeners();
+      } else {
+        ToastComponent().showMessage(Colors.red, 'You can only upload up to 5 images');
+      }
     }
   }
 
-  Future <int> countImages() async {
-    return _images.length;
-  }
 
   void removeImage(File image) {
     _images.remove(image);

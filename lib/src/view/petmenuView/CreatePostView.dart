@@ -20,6 +20,7 @@ import '../../utils/ToastComponent.dart';
 import '../../view_model/CreatePostViewModel.dart';
 import '../../widgets/CustomMapWidget.dart';
 import '../../widgets/CustomTextField.dart';
+import '../../widgets/ImageUploadWidget.dart';
 
 class CreatePostView extends StatelessWidget {
   @override
@@ -91,66 +92,12 @@ class CreatePostView extends StatelessWidget {
                 ),
               ),
             ),
-            Padding(
-              padding: const EdgeInsets.all(10.0),
-              child: Container(
-                width: screenWidth * 0.99,
-                height: screenHeight * 0.2,
-                child: Column(
-                  children: [
-                    CustomText(
-                      text:  'Upload a picture',
-                      size: 18,
-                      color: Colors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    SizedBox(height: screenHeight * 0.01),
-                    SingleChildScrollView(
-                      scrollDirection: Axis.horizontal,
-                      child: Row(
-                        children: [
-                          GestureDetector(
-                            onTap: () => createPostViewModel.pickImage(),
-                            child: Container(
-                              width: screenWidth * 0.2,
-                              height: screenHeight * 0.1,
-                              color: Colors.grey[200],
-                              child: const Icon(Icons.add_a_photo, color: Colors.grey),
-                            ),
-                          ),
-                          ...createPostViewModel.images.map((image) {
-                            return Stack(
-                              children: [
-                                Container(
-                                  margin: const EdgeInsets.symmetric(horizontal: 5),
-                                  width: 100,
-                                  height: 100,
-                                  child: Image.file(image, fit: BoxFit.cover),
-                                ),
-                                Positioned(
-                                  right: 0,
-                                  child: GestureDetector(
-                                    onTap: () {
-                                      createPostViewModel.removeImage(image);
-                                    },
-                                    child: Container(
-                                      color: Colors.black54,
-                                      child: const Icon(Icons.close, color: Colors.white),
-                                    ),
-                                  ),
-                                ),
-                              ],
-                            );
-                          }).toList(),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              ),
+            ImageUploadWidget(
+              screenWidth: screenWidth,
+              screenHeight: screenHeight,
+              images: createPostViewModel.images,
+              onPickImage: createPostViewModel.pickImage,
+              onRemoveImage: createPostViewModel.removeImage,
             ),
             CustomText(
               text: 'Select a category',
