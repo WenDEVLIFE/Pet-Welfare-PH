@@ -134,8 +134,6 @@ class MapViewModel extends ChangeNotifier {
         markerType = "custom_marker_establishment";
       }
 
-      preloadMarkerImages();
-
       symbols.add(SymbolOptions(
         geometry: LatLng(establishment.establishmentLat, establishment.establishmentLong),
         iconImage: markerType,
