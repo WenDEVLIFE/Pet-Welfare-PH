@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pet_welfrare_ph/src/respository/AddUserRespository.dart';
+import 'package:pet_welfrare_ph/src/respository/UserRepository.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 
 class BanDialog extends StatefulWidget {
@@ -98,7 +98,7 @@ class _BanDialogState extends State<BanDialog> {
         TextButton(
           onPressed: () {
              if (reasonController.text.isNotEmpty) {
-                final AddUserRepository _addUserRepository = AddUserImpl();
+                final UserRepository _addUserRepository = UserRepositoryImpl();
                 _addUserRepository.executeBan(userData['id'], reasonController.text);
              }
           },

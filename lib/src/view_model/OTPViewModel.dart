@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pet_welfrare_ph/src/services/YahooServices.dart';
 
-import '../respository/AddUserRespository.dart';
+import '../respository/UserRepository.dart';
 
 class OTPViewModel extends ChangeNotifier {
   int time = 60;
@@ -15,7 +15,7 @@ class OTPViewModel extends ChangeNotifier {
 
   final List<TextEditingController> controllers = List.generate(6, (index) => TextEditingController());
 
-  final AddUserRepository _repository = AddUserImpl();
+  final UserRepository _repository = UserRepositoryImpl();
 
   bool get isLoading => _isLoading;
 

@@ -13,7 +13,7 @@ import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
 import 'package:firebase_admin/firebase_admin.dart' as admin;
 
-abstract class AddUserRepository {
+abstract class UserRepository {
   Future<bool> checkIfUserExists(String name, String email);
   Future<bool> checkValidateEmail(String email);
   Future<bool> checkPassword(String password, String confirmPassword);
@@ -27,7 +27,7 @@ abstract class AddUserRepository {
   unBanUser(String uid);
 }
 
-class AddUserImpl implements AddUserRepository {
+class UserRepositoryImpl implements UserRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final FirebaseStorage storage = FirebaseStorage.instance;

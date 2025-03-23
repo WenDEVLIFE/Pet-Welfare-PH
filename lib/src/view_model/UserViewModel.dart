@@ -1,11 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:pet_welfrare_ph/src/model/UserModel.dart';
-import 'package:pet_welfrare_ph/src/respository/AddUserRespository.dart';
+import 'package:pet_welfrare_ph/src/respository/UserRepository.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
 
 class UserViewModel extends ChangeNotifier {
   final TextEditingController searchController = TextEditingController();
-  final AddUserRepository _addUserRepository = AddUserImpl();
+  final UserRepository _addUserRepository = UserRepositoryImpl();
 
   // Users
   List<UserModel> users = [];

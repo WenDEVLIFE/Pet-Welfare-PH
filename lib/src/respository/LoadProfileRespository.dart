@@ -15,15 +15,15 @@ class LoadProfileImpl implements Loadprofilerespository {
 
   // This is load for the profile
   @override
-  Stream<Map<String, dynamic>?> loadProfile() async* {
-    final user = await sessionManager.getUserInfo();
-    String uid = user!['uid'];
-
-    yield* _firestore.collection('Users').doc(uid).snapshots().map((snapshot) {
-      if (snapshot.exists) {
-        return snapshot.data() as Map<String, dynamic>?;
-      }
-      return null;
+  Stream<Map<String, dynamic>?> loadProfile() {
+    return sessionManager.getUserInfo().asStream().asyncExpand((user) {
+      String uid = user!['uid'];
+      return _firestore.collection('Users').doc(uid).snapshots().map((snapshot) {
+        if (snapshot.exists) {
+          return snapshot.data() as Map<String, dynamic>?;
+        }
+        return null;
+      });
     });
   }
 
@@ -69,8 +69,8 @@ class LoadProfileImpl implements Loadprofilerespository {
           'idfrontpath': data['IDFrontUrl'] ?? '',
           'idbackpath': data['IDBackUrl'] ?? '',
           'role': data['Role'] ?? '',
-          'address': data.containsKey('Address') ? data['Address'] : '',
-          'status': data.containsKey('Status') ? data['Status'] : '',
+          'address': data['Address'] ?? '',
+          'status': data['Status'] ?? '',
         };
       }
       return null;

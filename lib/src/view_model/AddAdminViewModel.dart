@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import '../respository/AddUserRespository.dart';
+import '../respository/UserRepository.dart';
 import '../utils/FirebaseIntialize.dart';
 
 class AddAdminViewModel extends ChangeNotifier {
@@ -15,7 +15,7 @@ class AddAdminViewModel extends ChangeNotifier {
   bool obscureText1 = true;
   bool obscureText2 = true;
 
-  final AddUserRepository _repository = AddUserImpl();
+  final UserRepository _repository = UserRepositoryImpl();
 
   bool get isobscure1 => obscureText1;
   bool get isobscure2 => obscureText2;

@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:fluttertoast/fluttertoast.dart';
-import '../respository/AddUserRespository.dart';
+import '../respository/UserRepository.dart';
 import '../utils/Route.dart';
 
 class RegisterViewModel extends ChangeNotifier {
@@ -21,7 +21,7 @@ class RegisterViewModel extends ChangeNotifier {
   var selectedEstablishmentRole ='Vet Clinic personnel';
   var selectedRole = 'Pet Shelter';
 
-  final AddUserRepository _repository = AddUserImpl();
+  final UserRepository _repository = UserRepositoryImpl();
 
   // Password Visibility
   bool _obscureText1 = true;

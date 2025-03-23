@@ -6,7 +6,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pet_welfrare_ph/src/model/EstablishmentModel.dart';
-import 'package:pet_welfrare_ph/src/respository/AddUserRespository.dart';
+import 'package:pet_welfrare_ph/src/respository/UserRepository.dart';
 import 'package:pet_welfrare_ph/src/respository/LocationRespository.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 
@@ -26,7 +26,7 @@ class EstablishmentViewModel extends ChangeNotifier {
   bool showDropdown = false;
 
   final Locationrespository _addLocationRespository = LocationrespositoryImpl();
-  final AddUserRepository _addUserRepository = AddUserImpl();
+  final UserRepository _addUserRepository = UserRepositoryImpl();
   String shelterImage = '';
   String selectedImage = '';
   bool isNetworkImage = false;
