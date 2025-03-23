@@ -166,23 +166,6 @@ class CreatePostView extends StatelessWidget {
             ),
             if (createPostViewModel.selectedChip == "Missing Pets" || createPostViewModel.selectedChip == "Found Pets" ||  createPostViewModel.selectedChip =="Pet Adoption") ...[
               CustomText(
-                text: 'Select Pet Type',
-                size: 18,
-                color: Colors.black,
-                weight: FontWeight.w700,
-                align: TextAlign.left,
-                screenHeight: screenHeight,
-                alignment: Alignment.centerLeft,
-              ),
-              CustomDropDown(value: createPostViewModel.selectedPetType,
-                items: createPostViewModel.petTypes,
-                onChanged: (String? newValue) {
-                  createPostViewModel.setPetType(newValue);
-                },
-                itemLabel: (String value) => value,
-                hint: 'Select Pet Type',
-              ),
-              CustomText(
                 text: 'Pet Name',
                 size: 18,
                 color: Colors.black,
@@ -201,25 +184,44 @@ class CreatePostView extends StatelessWidget {
                   keyboardType: TextInputType.text,
                 ),
               ),
+              CustomText(
+                text: 'Select Pet Type',
+                size: 18,
+                color: Colors.black,
+                weight: FontWeight.w700,
+                align: TextAlign.left,
+                screenHeight: screenHeight,
+                alignment: Alignment.centerLeft,
+              ),
+              CustomDropDown(value: createPostViewModel.selectedPetType,
+                items: createPostViewModel.petTypes,
+                onChanged: (String? newValue) {
+                  createPostViewModel.setPetType(newValue);
+                },
+                itemLabel: (String value) => value,
+                hint: 'Select Pet Type',
+              ),
               if(createPostViewModel.selectedPetType =='Cat' || createPostViewModel.selectedPetType =='Dog') ...[
-                CustomText(
-                  text: 'Pet Collar',
-                  size: 18,
-                  color: Colors.black,
-                  weight: FontWeight.w700,
-                  align: TextAlign.left,
-                  screenHeight: screenHeight,
-                  alignment: Alignment.centerLeft,
-                ),
-                CustomDropDown(value: createPostViewModel.selectedCollar,
-                  items: createPostViewModel.collarList,
-                  onChanged: (String? newValue) {
-                    createPostViewModel.setCollarType(newValue);
-                  },
-                  itemLabel: (String value) => value,
-                  hint: 'Select Pet Collar',
-                ),
-              ],
+                 if(createPostViewModel.selectedPetType =='Missing Pets' || createPostViewModel.selectedPetType =='Found Pets') ...[
+                   CustomText(
+                     text: 'Pet Collar',
+                     size: 18,
+                     color: Colors.black,
+                     weight: FontWeight.w700,
+                     align: TextAlign.left,
+                     screenHeight: screenHeight,
+                     alignment: Alignment.centerLeft,
+                   ),
+                   CustomDropDown(value: createPostViewModel.selectedCollar,
+                     items: createPostViewModel.collarList,
+                     onChanged: (String? newValue) {
+                       createPostViewModel.setCollarType(newValue);
+                     },
+                     itemLabel: (String value) => value,
+                     hint: 'Select Pet Collar',
+                   ),
+                 ],
+                 ],
               CustomText(
                 text: 'Pet Age',
                 size: 18,
@@ -589,6 +591,7 @@ class CreatePostView extends StatelessWidget {
                  ),
                  ],
 
+            // This is for pet adoption Ui
             if(createPostViewModel.selectedChip =="Pet Adoption") ... [
 
 
