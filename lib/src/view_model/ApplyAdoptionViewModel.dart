@@ -1,10 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:pet_welfrare_ph/src/services/LocationService.dart';
-import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
-
 import '../model/BarangayModel.dart';
-import '../model/BreedModel.dart';
 import '../model/CityModel.dart';
 import '../model/ProvinceModel.dart';
 import '../model/RegionModel.dart';
@@ -149,22 +147,48 @@ class ApplyAdoptionViewModel extends ChangeNotifier {
   }
 
   void submitAdoptionForm(String postId) {
-  // Handle form submission logic
-  final name = nameController.text;
-  final email = emailController.text;
-  final phone = phoneController.text;
-  final address = addressController.text;
-  final adoptionType = selectedAdoptionType;
+    // Handle form submission logic
+    final name = nameController.text;
+    final email = emailController.text;
+    final phone = phoneController.text;
+    final address = addressController.text;
+    final adoptionType = selectedAdoptionType;
 
-  // Perform form validation and submission
-  print('Name: $name');
-  print('Email: $email');
-  print('Phone: $phone');
-  print('Address: $address');
-  print('Adoption Type: $adoptionType');
+    // Perform form validation and submission
+    print('Name: $name');
+    print('Email: $email');
+    print('Phone: $phone');
+    print('Address: $address');
+    print('Adoption Type: $adoptionType');
 
-  ToastComponent().showMessage(Colors.green, 'Adoption form submitted successfully:${postId}');
   }
 
+  Future<String> loadReminders() async {
+    // Load text from the text file
+    String text = await rootBundle.loadString("assets/word/reminders.txt");
+    return text;
+  }
+
+  void showReminders(BuildContext context) async {
+    String termsText = await loadReminders();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: const Text("Reminders"),
+          content: SingleChildScrollView(
+            child: Text(termsText, textAlign: TextAlign.justify),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () => Navigator.of(context).pop(),
+              child: const Text("Ok"),
+            ),
+          ],
+        );
+      },
+    );
+  }
 
 }

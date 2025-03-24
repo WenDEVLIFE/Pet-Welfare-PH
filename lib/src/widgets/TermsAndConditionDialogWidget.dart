@@ -1,7 +1,7 @@
 
 import 'package:flutter/material.dart';
 
-class TermsAndConditionDialog extends StatelessWidget {
+class AlertDialogMenuWidget extends StatelessWidget {
   final String title;
   final String content;
   final String buttonText1;
@@ -10,7 +10,7 @@ class TermsAndConditionDialog extends StatelessWidget {
   final Function onDecline;
   final String imagePath;
 
-  const TermsAndConditionDialog({
+  const AlertDialogMenuWidget({
     required this.title,
     required this.content,
     required this.buttonText1,

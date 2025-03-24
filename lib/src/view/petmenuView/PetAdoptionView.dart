@@ -11,6 +11,7 @@ import 'package:pet_welfrare_ph/src/modal/ReactionModal.dart';
 import '../../modal/FormAdoptionModal.dart';
 import '../../utils/AppColors.dart';
 import '../../utils/ReactionUtils.dart';
+import '../../view_model/ApplyAdoptionViewModel.dart';
 import '../../widgets/SearchTextField.dart';
 
 class PetAdoptionView extends StatefulWidget {
@@ -438,6 +439,8 @@ class MissingPetState extends State<PetAdoptionView> {
                                                         context: context,
                                                         isScrollControlled: true,
                                                         builder: (context) {
+                                                          ApplyAdoptionViewModel applyAdoptionViewModel = Provider.of<ApplyAdoptionViewModel>(context, listen: false);
+                                                          applyAdoptionViewModel.showReminders(context);
                                                           return FormAdoptionModal(post.postId);
                                                         },
                                                       );
