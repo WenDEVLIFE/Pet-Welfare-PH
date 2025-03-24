@@ -2,7 +2,7 @@ import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/FirebaseIntialize.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
-import 'package:pet_welfrare_ph/src/view_model/ChatViewModel.dart';
+import 'package:pet_welfrare_ph/src/view_model/ApplyAdoptionViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/CreatePostViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/DrawerHeadViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/AddAdminViewModel.dart';
@@ -56,7 +56,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => UserDataViewModel()),
         ChangeNotifierProvider(create: (_) => MapViewModel()),
         ChangeNotifierProvider(create: (_) => EstablishmentViewModel()),
-        ChangeNotifierProvider(create: (_) => ChatViewModel()),
+        ChangeNotifierProvider(create: (_) => ApplyAdoptionViewModel()),
         ChangeNotifierProvider(create: (_) => MessageViewModel()),
         ChangeNotifierProvider(create: (_) => CreatePostViewModel()),
         ChangeNotifierProvider(create: (_) => PostViewModel())

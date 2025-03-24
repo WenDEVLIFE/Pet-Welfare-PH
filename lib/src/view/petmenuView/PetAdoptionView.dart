@@ -8,6 +8,7 @@ import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 import 'package:pet_welfrare_ph/src/modal/ReactionModal.dart';
 
+import '../../modal/FormAdoptionModal.dart';
 import '../../utils/AppColors.dart';
 import '../../utils/ReactionUtils.dart';
 import '../../widgets/SearchTextField.dart';
@@ -433,9 +434,16 @@ class MissingPetState extends State<PetAdoptionView> {
                                                   IconButton(
                                                     icon: const Icon(Icons.pets),
                                                     onPressed: () {
+                                                      showModalBottomSheet(
+                                                        context: context,
+                                                        isScrollControlled: true,
+                                                        builder: (context) {
+                                                          return FormAdoptionModal(post.postId);
+                                                        },
+                                                      );
                                                     },
                                                   ),
-                                                  const Text('Adopt', style: TextStyle(
+                                                  const Text('Adopt Me', style: TextStyle(
                                                     fontFamily: 'SmoochSans',
                                                     color: Colors.black,
                                                     fontSize: 16,
