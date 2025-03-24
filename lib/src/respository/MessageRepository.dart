@@ -3,11 +3,9 @@ import 'dart:io';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:pet_welfrare_ph/src/model/ChatModel.dart';
 import 'package:pet_welfrare_ph/src/model/MessageModel.dart';
-import 'package:pet_welfrare_ph/src/utils/SessionManager.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 
 import '../utils/AppColors.dart';
@@ -56,18 +54,16 @@ class MessageRepositoryImpl implements MessageRepository {
       String? fileName;
 
       if (message['image'] != null) {
+        File imageFile = File(message['image']!);
+        if (await imageFile.exists()) {
+          Uint8List messageBytes = await imageFile.readAsBytes();
 
-        Uint8List MessaggeBytes = await File(message['image']!).readAsBytes();
-
-        fileName = DateTime
-            .now()
-            .millisecondsSinceEpoch
-            .toString();
-        Reference storageRef = _storage.ref().child(
-            'ChatMessage/$senderID/$fileName.jpg');
-        UploadTask uploadTask = storageRef.putData(MessaggeBytes);
-        TaskSnapshot taskSnapshot = await uploadTask;
-        downloadUrl = await taskSnapshot.ref.getDownloadURL();
+          fileName = DateTime.now().millisecondsSinceEpoch.toString();
+          Reference storageRef = _storage.ref().child('ChatMessage/$senderID/$fileName.jpg');
+          UploadTask uploadTask = storageRef.putData(messageBytes);
+          TaskSnapshot taskSnapshot = await uploadTask;
+          downloadUrl = await taskSnapshot.ref.getDownloadURL();
+        }
       }
 
       // Check if a chatroom document already exists between the sender and receiver
@@ -97,8 +93,7 @@ class MessageRepositoryImpl implements MessageRepository {
         });
       } else {
         // Create a new chatroom document
-        DocumentReference newChatroomDoc = await _firestore.collection(
-            'Chatrooms').add({
+        DocumentReference newChatroomDoc = await _firestore.collection('Chatrooms').add({
           'participants': [senderID, message['receiverID']],
           'senderID': senderID,
           'receiverID': message['receiverID'],
@@ -118,13 +113,13 @@ class MessageRepositoryImpl implements MessageRepository {
         });
       }
 
-      ToastComponent().showMessage(
-          AppColors.orange, 'Message sent successfully');
+      ToastComponent().showMessage(AppColors.orange, 'Message sent successfully');
     } catch (e) {
       throw Exception('Error sending message: $e');
     }
   }
 
+  // fetch the chatrooms between the sender and receiver
   @override
   Stream<List<ChatModel>> getChat() {
     User user = _auth.currentUser!;
