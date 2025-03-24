@@ -1,7 +1,9 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pet_welfrare_ph/src/respository/UserRepository.dart';
 import 'package:pet_welfrare_ph/src/services/LocationService.dart';
+import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import '../model/BarangayModel.dart';
 import '../model/CityModel.dart';
 import '../model/ProvinceModel.dart';
@@ -14,6 +16,8 @@ class ApplyAdoptionViewModel extends ChangeNotifier {
   final TextEditingController phoneController = TextEditingController();
   final TextEditingController addressController = TextEditingController();
   final TextEditingController facebookUsernameController = TextEditingController();
+
+  UserRepository userRepository = UserRepositoryImpl();
 
   var adoptionType = ['Adoption', 'Foster'];
 
@@ -141,12 +145,12 @@ class ApplyAdoptionViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setSelectedAdoptionType(String adoptionType) {
+  void setSelectedAdoptionType(String adoptionType) async {
     selectedAdoptionType = adoptionType;
     notifyListeners();
   }
 
-  void submitAdoptionForm(String postId) {
+  Future<void> submitAdoptionForm(String postId) async {
     // Handle form submission logic
     final name = nameController.text;
     final email = emailController.text;
@@ -160,6 +164,64 @@ class ApplyAdoptionViewModel extends ChangeNotifier {
     print('Phone: $phone');
     print('Address: $address');
     print('Adoption Type: $adoptionType');
+
+    bool checkEmail = await userRepository.checkValidateEmail(email);
+    bool checkPhone = await userRepository.checkPhoneNumber(phone);
+
+    if(name.isEmpty){
+      ToastComponent().showMessage(Colors.red, "Name is required");
+    }
+
+    if (email.isEmpty) {
+      ToastComponent().showMessage(Colors.red, "Email is required");
+    }
+    if (phone.isEmpty) {
+      ToastComponent().showMessage(Colors.red, "Phone is required");
+    }
+
+    if (!checkEmail) {
+      ToastComponent().showMessage(Colors.red, "Email is invalid");
+    }
+
+    if (!checkPhone) {
+      ToastComponent().showMessage(Colors.red, "Phone is invalid");
+    }
+
+    if (selectedRegion == null) {
+      ToastComponent().showMessage(Colors.red, "Region is required");
+    }
+
+    if (selectedProvince == null) {
+      ToastComponent().showMessage(Colors.red, "Province is required");
+    }
+
+    if (selectedCity == null) {
+      ToastComponent().showMessage(Colors.red, "City is required");
+    }
+
+    if (selectedBarangay == null) {
+      ToastComponent().showMessage(Colors.red, "Barangay is required");
+    }
+
+    if (address.isEmpty) {
+      ToastComponent().showMessage(Colors.red, "Address is required");
+    }
+
+    else{
+
+      var applyForm = {
+        "name": name,
+        "email": email,
+        "phone": phone,
+        "address": address,
+        "adoptionType": adoptionType,
+        "region": selectedRegion!.region,
+        "province": selectedProvince!.provinceName,
+        "city": selectedCity!.cityName,
+        "barangay": selectedBarangay!.barangayName,
+        "postId": postId
+      };
+    }
 
   }
 

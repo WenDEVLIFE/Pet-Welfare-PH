@@ -21,10 +21,12 @@ abstract class UserRepository {
   Future<void> registerUser(Map<String, dynamic> userData, BuildContext context, void Function() clearText);
   Stream<List<UserModel>> loadUserData();
   Future<void> approveUser(String uid);
-  deniedUser(String uid);
-  deleteUser(String uid);
-  executeBan(String uid, String text);
-  unBanUser(String uid);
+  Future<void> deniedUser(String uid);
+  Future<void> deleteUser(String uid);
+  Future<void > executeBan(String uid, String text);
+  Future<void> unBanUser(String uid);
+
+  Future<bool> checkPhoneNumber(String phoneNumber);
 }
 
 class UserRepositoryImpl implements UserRepository {
@@ -64,6 +66,12 @@ class UserRepositoryImpl implements UserRepository {
     String pattern =
         r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
     return RegExp(pattern).hasMatch(password);
+  }
+
+  // Check if the phone number is valid
+  Future<bool> checkPhoneNumber(String phoneNumber) async {
+    String pattern = r'^[0-9]{11}$';
+    return RegExp(pattern).hasMatch(phoneNumber);
   }
 
   // This will register the user
