@@ -23,6 +23,18 @@ class PostModel {
   String petSize = '';
   String PetType = '';
   String Status = '';
+  String petNameAdopt = '';
+  String petTypeAdopt = '';
+  String petBreedAdopt = '';
+  String petGenderAdopt = '';
+  String petAgeAdopt = '';
+  String petColorAdopt = '';
+  String petAddressAdopt = '';
+  String regProCiBagAdopt = '';
+  String dateAdopt = '';
+  String petSizeAdopt = '';
+  String PetTypeAdopt = '';
+  String StatusAdopt = '';
 
   PostModel({
     required this.postId,
@@ -44,6 +56,7 @@ class PostModel {
 
     var userDoc = await FirebaseFirestore.instance.collection('Users').doc(doc['PostOwnerID']).get();
     var petDoc = await FirebaseFirestore.instance.collection('PetDetailsCollection').doc(doc.id).get();
+    var petDocAdopt = await FirebaseFirestore.instance.collection('AdoptPetDetailsCollection').doc(doc.id).get();
 
     return PostModel(
       postId: doc.id,
@@ -66,6 +79,18 @@ class PostModel {
       ..regProCiBag = '${petDoc.data()?['Region'] ?? ''}, ${petDoc.data()?['Province'] ?? ''}, ${petDoc.data()?['City'] ?? ''}, ${petDoc.data()?['Barangay'] ?? ''}'
       ..date = petDoc.data()?['Date'] ?? ''
       ..petSize = petDoc.data()?['PetSize'] ?? ''
-      ..Status = petDoc.data()?['Status'] ?? '';
+      ..Status = petDoc.data()?['Status'] ?? ''
+     ..petNameAdopt = petDocAdopt.data()?['PetName'] ?? ''
+      ..petTypeAdopt = petDocAdopt.data()?['PetType'] ?? ''
+      ..petBreedAdopt = petDocAdopt.data()?['PetBreed'] ?? ''
+      ..petGenderAdopt = petDocAdopt.data()?['PetGender'] ?? ''
+      ..petAgeAdopt = petDocAdopt.data()?['PetAge'] ?? ''
+      ..petColorAdopt = petDocAdopt.data()?['PetColor'] ?? ''
+      ..petAddressAdopt = petDocAdopt.data()?['Address'] ?? ''
+      ..regProCiBagAdopt = '${petDocAdopt.data()?['Region'] ?? ''}, ${petDocAdopt.data()?['Province'] ?? ''}, ${petDocAdopt.data()?['City'] ?? ''}, ${petDocAdopt.data()?['Barangay'] ?? ''}'
+      ..dateAdopt = petDocAdopt.data()?['Date'] ?? ''
+      ..petSizeAdopt = petDocAdopt.data()?['PetSize'] ?? ''
+      ..StatusAdopt = petDocAdopt.data()?['Status'] ?? '';
+
   }
 }
