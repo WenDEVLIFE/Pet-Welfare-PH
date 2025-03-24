@@ -60,7 +60,7 @@ class MissingPetState extends State<PetAdoptionView> {
                     }
 
                     if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text('No Missing post available'));
+                      return const Center(child: Text('No pet adoption post available'));
                     }
 
                     var posts = snapshot.data!;
