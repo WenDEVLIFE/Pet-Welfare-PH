@@ -9,6 +9,7 @@ import 'package:pet_welfrare_ph/src/model/EstablishmentModel.dart';
 import 'package:pet_welfrare_ph/src/respository/LocationRespository.dart';
 import 'package:pet_welfrare_ph/src/respository/PostRepository.dart';
 import 'package:pet_welfrare_ph/src/services/OpenStreetMapService.dart';
+import 'package:pet_welfrare_ph/src/utils/SessionManager.dart';
 import 'dart:io';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
@@ -82,18 +83,7 @@ class CreatePostViewModel extends ChangeNotifier {
 
   String selectedColorPattern = 'Calico';
 
-  var chipLabels1 = [
-    'Pet Appreciation',
-    'Missing Pets',
-    'Found Pets',
-    'Find a Home: Rescue & Shelter',
-    'Call for Aid',
-    'Paw-some Experience',
-    'Pet Adoption',
-    'Protect Our Pets: Report Abuse',
-    'Caring for Pets: Vet & Travel Insights',
-    'Community Announcements'
-  ];
+  List<String> chipLabels1 = [];
 
   final PostRepository postRepository = PostRepositoryImpl();
 
@@ -139,10 +129,13 @@ class CreatePostViewModel extends ChangeNotifier {
   // LocationService
   final LocationService locationService = LocationService();
 
+  SessionManager sessionManager = SessionManager();
+
   bool showDropdown = false;
 
   // Constructor
   CreatePostViewModel() {
+    loadList();
     loadUserLocation();
     fetchRegions();
 
@@ -169,6 +162,38 @@ class CreatePostViewModel extends ChangeNotifier {
       } else {
         ToastComponent().showMessage(Colors.red, 'You can only upload up to 5 images');
       }
+    }
+  }
+
+  Future <void> loadList() async{
+    var userdata = await sessionManager.getUserInfo();
+    var role = userdata!['role'];
+
+    if (role =='Admin'|| role =='Sub-Admin'){
+      chipLabels1 =[
+        'Pet Appreciation',
+        'Missing Pets',
+        'Found Pets',
+        'Find a Home: Rescue & Shelter',
+        'Call for Aid',
+        'Paw-some Experience',
+        'Pet Adoption',
+        'Protect Our Pets: Report Abuse',
+        'Caring for Pets: Vet & Travel Insights',
+        'Community Announcements'
+      ];
+    } else{
+      chipLabels1 =[
+        'Pet Appreciation',
+        'Missing Pets',
+        'Found Pets',
+        'Find a Home: Rescue & Shelter',
+        'Call for Aid',
+        'Paw-some Experience',
+        'Pet Adoption',
+        'Protect Our Pets: Report Abuse',
+        'Caring for Pets: Vet & Travel Insights',
+      ];
     }
   }
 
