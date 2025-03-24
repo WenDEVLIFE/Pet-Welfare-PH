@@ -241,6 +241,9 @@ class CreatePostViewModel extends ChangeNotifier {
   }
 
   Future<void> PostNow(BuildContext context) async {
+
+    ProgressDialog pd = ProgressDialog(context: context);
+    pd.show(max: 100, msg: 'Posting...');
     if (selectedChip == 'Pet Appreciation') {
       if (postController.text.isEmpty) {
         ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
@@ -285,8 +288,6 @@ class CreatePostViewModel extends ChangeNotifier {
       } else if (selectedBarangay == null) {
         ToastComponent().showMessage(Colors.red, 'Please select a barangay');
       } else {
-        ProgressDialog pd = ProgressDialog(context: context);
-        pd.show(max: 100, msg: 'Posting...');
         try {
          var petData = {
            'post': postController.text,
@@ -367,13 +368,17 @@ class CreatePostViewModel extends ChangeNotifier {
           'barangay': selectedBarangay!.barangayName,
           'address': address.text,
           'date': dateController.text,
-          'lat': selectedLocation!.latitude,
-          'long': selectedLocation!.longitude,
         };
 
-        await postRepository.uploadAdoption(_images, selectedChip, petData);
-        ToastComponent().showMessage(Colors.green, '$selectedChip successful');
-        clearPost();
+        try {
+          await postRepository.uploadAdoption(_images, selectedChip, petData);
+          ToastComponent().showMessage(Colors.green, '$selectedChip successful');
+          clearPost();
+        } catch (e) {
+          ToastComponent().showMessage(Colors.red, 'Failed to upload post: $e');
+        } finally {
+          pd.close();
+        }
       }
 
     } else if (selectedChip == 'Protect Our Pets: Report Abuse') {

@@ -214,9 +214,6 @@ class PostRepositoryImpl implements PostRepository {
       String color = petData['color'];
       String barangay = petData['barangay'];
       String address = petData['address'];
-      double lat = petData['lat'];
-      double long = petData['long'];
-      String date = petData['date'];
 
       await postRef.set({
         'PostID': postID,
@@ -241,10 +238,7 @@ class PostRepositoryImpl implements PostRepository {
         'City': city,
         'Barangay': barangay,
         'Address': address,
-        'Latitude': lat,
-        'Date': date,
-        'Longitude': long,
-        'Status': 'Available',
+        'Status': 'Still up for adoption',
       });
 
       ToastComponent().showMessage(AppColors.orange, '$selectedChip data added successfully');
