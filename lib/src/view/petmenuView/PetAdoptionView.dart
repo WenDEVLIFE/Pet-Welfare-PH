@@ -40,16 +40,16 @@ class MissingPetState extends State<PetAdoptionView> {
               CustomSearchTextField(
                 controller: postViewModel.searchPostController,
                 screenHeight: screenHeight,
-                hintText: 'Search for missing pets name, breed, or location, etc.',
+                hintText: 'Search for pet adoption post',
                 fontSize: 16,
                 keyboardType: TextInputType.text,
                 onChanged: (searchText) {
-                  postViewModel.searchMissingPost(searchText);
+                  postViewModel.searchPetAdoptPost(searchText);
                 },
               ),
               Expanded(
                 child: StreamBuilder<List<PostModel>>(
-                  stream: postViewModel.missingPostStream, // Stream of missing posts
+                  stream: postViewModel.petAdoptPostStream, // Stream of missing posts
                   builder: (context, snapshot) {
                     if (snapshot.connectionState == ConnectionState.waiting) {
                       return const Center(child: CircularProgressIndicator());
@@ -428,6 +428,21 @@ class MissingPetState extends State<PetAdoptionView> {
                                                   )),
                                                 ],
                                               ),
+                                              Row(
+                                                children: [
+                                                  IconButton(
+                                                    icon: const Icon(Icons.pets),
+                                                    onPressed: () {
+                                                    },
+                                                  ),
+                                                  const Text('Adopt', style: TextStyle(
+                                                    fontFamily: 'SmoochSans',
+                                                    color: Colors.black,
+                                                    fontSize: 16,
+                                                    fontWeight: FontWeight.w600,
+                                                  )),
+                                                ],
+                                              )
                                             ],
                                           ),
                                         ],

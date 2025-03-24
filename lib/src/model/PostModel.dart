@@ -56,7 +56,7 @@ class PostModel {
 
     var userDoc = await FirebaseFirestore.instance.collection('Users').doc(doc['PostOwnerID']).get();
     var petDoc = await FirebaseFirestore.instance.collection('PetDetailsCollection').doc(doc.id).get();
-    var petDocAdopt = await FirebaseFirestore.instance.collection('AdoptPetDetailsCollection').doc(doc.id).get();
+    var petDocAdopt = await FirebaseFirestore.instance.collection('AdoptionDetails').doc(doc.id).get();
 
     return PostModel(
       postId: doc.id,

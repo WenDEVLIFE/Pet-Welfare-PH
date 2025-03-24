@@ -35,6 +35,9 @@ class PostViewModel extends ChangeNotifier {
   List<PostModel> vetAndtravelPost = [];
   List<PostModel> filterVetAndTravelPost = [];
 
+  List<PostModel> petAdoptPost = [];
+  List<PostModel> filterPetAdoptPost = [];
+
   List<CommentModel> comments = [];
 
   final PostRepository postRepository = PostRepositoryImpl();
@@ -46,6 +49,7 @@ class PostViewModel extends ChangeNotifier {
   Stream<List<PostModel>> get protectedPostStream => postRepository.getProtectPetPost();
   Stream<List<PostModel>> get communityPostStream => postRepository.getCommunityPost();
   Stream<List<PostModel>> get vetAndTravelPostStream => postRepository.getVetAndTravelPost();
+  Stream<List<PostModel>> get petAdoptPostStream => postRepository.getPetAdoption();
 
  // Initialize the PostViewModel
   PostViewModel() {
@@ -146,6 +150,15 @@ class PostViewModel extends ChangeNotifier {
       notifyListeners();
     } catch (e) {
       throw Exception('Failed to delete comment: $e');
+    }
+  }
+
+  Future<void> editComment(String postId, String commentId, String newCommentText) async {
+    try {
+      await postRepository.editComment(postId, commentId, newCommentText);
+      notifyListeners();
+    } catch (e) {
+      throw Exception('Failed to edit comment: $e');
     }
   }
 
@@ -253,12 +266,15 @@ class PostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> editComment(String postId, String commentId, String newCommentText) async {
-    try {
-      await postRepository.editComment(postId, commentId, newCommentText);
-      notifyListeners();
-    } catch (e) {
-      throw Exception('Failed to edit comment: $e');
+  // Pet Adopt Post
+  void searchPetAdoptPost(String search) {
+    filterPetAdoptPost.clear();
+    if (search.isEmpty) {
+      filterPetAdoptPost.addAll(petAdoptPost);
+    } else {
+      filterPetAdoptPost.addAll(petAdoptPost.where((post) => post.postDescription.toLowerCase().contains(search.toLowerCase())));
     }
+    notifyListeners();
   }
+
 }
