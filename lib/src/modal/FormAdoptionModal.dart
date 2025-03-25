@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 import 'package:pet_welfrare_ph/src/widgets/CustomButton.dart';
 import 'package:provider/provider.dart';
+import 'package:sn_progress_dialog/progress_dialog.dart';
 
 import '../model/BarangayModel.dart';
 import '../model/CityModel.dart';
@@ -228,7 +229,8 @@ class FormAdoptionModal extends StatelessWidget {
                       color1: AppColors.orange,
                       textcolor2: AppColors.white,
                       onPressed: () {
-                        createPostViewModel.submitAdoptionForm(postId);
+                         createPostViewModel.submitAdoptionForm(postId, context);
+
                       },
                     ),
                   )

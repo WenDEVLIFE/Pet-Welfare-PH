@@ -1,9 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:pet_welfrare_ph/src/respository/AdoptionRepository.dart';
 import 'package:pet_welfrare_ph/src/respository/UserRepository.dart';
 import 'package:pet_welfrare_ph/src/services/LocationService.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
+import 'package:sn_progress_dialog/progress_dialog.dart';
 import '../model/BarangayModel.dart';
 import '../model/CityModel.dart';
 import '../model/ProvinceModel.dart';
@@ -18,6 +20,7 @@ class ApplyAdoptionViewModel extends ChangeNotifier {
   final TextEditingController facebookUsernameController = TextEditingController();
 
   UserRepository userRepository = UserRepositoryImpl();
+  AdoptionRepository adoptionRepository = AdoptionRepositoryImpl();
 
   var adoptionType = ['Adoption', 'Foster'];
 
@@ -36,15 +39,20 @@ class ApplyAdoptionViewModel extends ChangeNotifier {
   List<BarangayModel> barangays = [];
   bool isLoading = false;
 
-
   LocationService locationService = LocationService();
+
+  ApplyAdoptionViewModel() {
+    fetchRegions();
+  }
 
   // Fetch Regions
   Future<void> fetchRegions() async {
     isLoading = true;
     notifyListeners();
     try {
+      print('Fetching regions...');
       regions = await locationService.fetchRegions();
+      print('Fetched regions: ${regions.length}');
     } catch (e) {
       print('Failed to fetch regions: $e');
     } finally {
@@ -150,7 +158,14 @@ class ApplyAdoptionViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future<void> submitAdoptionForm(String postId) async {
+  Future<void> submitAdoptionForm(String postId, BuildContext context) async {
+
+    ProgressDialog pd = ProgressDialog(context: context);
+    pd.show(
+      max: 100,
+      msg: 'Submitting Adoption Form...',
+    );
+
     // Handle form submission logic
     final name = nameController.text;
     final email = emailController.text;
@@ -168,6 +183,7 @@ class ApplyAdoptionViewModel extends ChangeNotifier {
     bool checkEmail = await userRepository.checkValidateEmail(email);
     bool checkPhone = await userRepository.checkPhoneNumber(phone);
 
+  try{
     if(name.isEmpty){
       ToastComponent().showMessage(Colors.red, "Name is required");
     }
@@ -209,19 +225,33 @@ class ApplyAdoptionViewModel extends ChangeNotifier {
 
     else{
 
-      var applyForm = {
-        "name": name,
-        "email": email,
-        "phone": phone,
-        "address": address,
-        "adoptionType": adoptionType,
-        "region": selectedRegion!.region,
-        "province": selectedProvince!.provinceName,
-        "city": selectedCity!.cityName,
-        "barangay": selectedBarangay!.barangayName,
-        "postId": postId
-      };
+      try{
+        var applyForm = {
+          "name": name,
+          "email": email,
+          "phone": phone,
+          "address": address,
+          "adoptionType": selectedAdoptionType,
+          "facebookUsername": facebookUsernameController.text,
+          "region": selectedRegion!.region.toString(),
+          "province": selectedProvince!.provinceName.toString(),
+          "city": selectedCity!.cityName.toString(),
+          "barangay": selectedBarangay!.barangayName.toString(),
+          "postId": postId
+        };
+        await adoptionRepository.submitAdoptionForm(applyForm,  clearForm);
+      } catch (e) {
+        print('Failed to submit adoption form: $e');
+        ToastComponent().showMessage(Colors.red, "Failed to submit adoption form");
+      }
+
     }
+  } catch (e) {
+    print('Failed to submit adoption form: $e');
+    ToastComponent().showMessage(Colors.red, "Failed to submit adoption form");
+  } finally {
+    pd.close();
+  }
 
   }
 
@@ -251,6 +281,28 @@ class ApplyAdoptionViewModel extends ChangeNotifier {
         );
       },
     );
+  }
+
+  void dispose() {
+    nameController.dispose();
+    emailController.dispose();
+    phoneController.dispose();
+    addressController.dispose();
+    facebookUsernameController.dispose();
+    super.dispose();
+  }
+
+  void clearForm() {
+    nameController.clear();
+    emailController.clear();
+    phoneController.clear();
+    addressController.clear();
+    facebookUsernameController.clear();
+    selectedRegion = null;
+    selectedProvince = null;
+    selectedCity = null;
+    selectedBarangay = null;
+    notifyListeners();
   }
 
 }

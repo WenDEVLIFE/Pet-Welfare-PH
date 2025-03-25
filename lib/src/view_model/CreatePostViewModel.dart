@@ -209,7 +209,6 @@ class CreatePostViewModel extends ChangeNotifier {
   }
 
   void clearPost() {
-    if(selectedChip =='Lost pets' || selectedChip == 'Found Pets' || selectedChip == 'Pet Adoption'){
     postController.clear();
     _images.clear();
     selectedChip = 'Pet Appreciation';
@@ -231,13 +230,6 @@ class CreatePostViewModel extends ChangeNotifier {
     selectedLocation = null;
     mapController!.clearSymbols();
     notifyListeners();
-    }
-    else{
-    postController.clear();
-    _images.clear();
-    selectedChip = 'Pet Appreciation';
-    notifyListeners();
-    }
   }
 
   Future<void> PostNow(BuildContext context) async {
