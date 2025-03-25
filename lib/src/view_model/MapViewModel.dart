@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -7,24 +8,36 @@ import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 import 'package:pet_welfrare_ph/src/respository/GenerateEstablismentRepository.dart';
 import 'package:pet_welfrare_ph/src/services/OpenStreetMapService.dart';
 import 'package:pet_welfrare_ph/src/utils/GeoUtils.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import '../modal/EstablishmentModal.dart';
 import '../model/EstablishmentModel.dart';
+import '../respository/PostRepository.dart';
 
 class MapViewModel extends ChangeNotifier {
   double lat = 14.5995;  // Example: Manila, Philippines
   double long = 120.9842;
   final OpenStreetMapService _openStreetMapService = OpenStreetMapService();
   final GenerateEstablishmentRepository _generateEstablismentRepository = GenerateEstablishmentRepositoryImpl();
+  PostRepository postRepository = PostRepositoryImpl();
   MaplibreMapController? mapController;
   List<Map<String, dynamic>> searchResults = [];
   List<Map<String, dynamic>> mapLocations = [];
   List<EstablishmentModel> establishments = [];
+  List<PostModel> lostpets = [];
+  List<PostModel> foundpets = [];
+  Stream<List<PostModel>>? foundPetsStream;
+  Stream<List<PostModel>>? lostPetsStream;
   List<SymbolOptions> symbols = [];
   bool _isLoadingMarkers = false;
+
+  MapViewModel() {
+    requestPermissions();
+    initializeLoads();
+  }
 
   // get permissions
   Future<void> requestPermissions() async {
@@ -83,6 +96,14 @@ class MapViewModel extends ChangeNotifier {
     ByteData establismentData = await rootBundle.load('assets/images/company.png');
     Uint8List establistmentBytes = establismentData.buffer.asUint8List();
     await mapController!.addImage("custom_marker_establishment", establistmentBytes);
+
+    ByteData lostData = await rootBundle.load('assets/images/lost.png');
+    Uint8List lostBytes = lostData.buffer.asUint8List();
+    await mapController!.addImage("custom_marker_lost", lostBytes);
+
+    ByteData foundData = await rootBundle.load('assets/images/found.png');
+    Uint8List foundBytes = foundData.buffer.asUint8List();
+    await mapController!.addImage("custom_marker_found", foundBytes);
   }
 
   Future<void> addPin(LatLng position) async {
@@ -112,7 +133,9 @@ class MapViewModel extends ChangeNotifier {
   @override
   Future<void> initializeLoads() async {
     await preloadMarkerImages();
-    await addEstablishmentPins();
+    await fetchEstablishments();
+    await fetchLostAndFoundPets();
+    await fetchFoundPets();
   }
 
   static List<EstablishmentModel> parseEstablishments(List<Map<String, dynamic>> data) {
@@ -150,6 +173,50 @@ class MapViewModel extends ChangeNotifier {
     _isLoadingMarkers = false;
   }
 
+  Future<void> addLostAndFoundPetPins() async {
+    if (mapController == null || _isLoadingMarkers || lostpets.isEmpty) return;
+
+    _isLoadingMarkers = true;
+
+    for (var pet in lostpets) {
+      symbols.add(SymbolOptions(
+        geometry: LatLng(pet.lat, pet.long),
+        iconImage: "custom_marker_lost",
+        iconSize: 1.5,
+        textField: 'Lost pet spotted',  // Adding a label for identification
+        textOffset: const Offset(0, 1.5),  // Adjust the offset to place the text below the icon
+      ));
+    }
+
+    if (symbols.isNotEmpty) {
+      await mapController!.addSymbols(symbols);
+    }
+
+    _isLoadingMarkers = false;
+  }
+
+  Future<void> addPetAdoptionPins() async {
+    if (mapController == null || _isLoadingMarkers || foundpets.isEmpty) return;
+
+    _isLoadingMarkers = true;
+
+    for (var post in foundpets) {
+      symbols.add(SymbolOptions(
+        geometry: LatLng(post.lat, post.long),
+        iconImage: "custom_marker_found",
+        iconSize: 1.5,
+        textField: 'Found pet spotted',  // Adding a label for identification
+        textOffset: const Offset(0, 1.5),  // Adjust the offset to place the text below the icon
+      ));
+    }
+
+    if (symbols.isNotEmpty) {
+      await mapController!.addSymbols(symbols);
+    }
+
+    _isLoadingMarkers = false;
+  }
+
   void initializeClickMarkers(BuildContext context) {
     // Set up the click listener
     mapController!.onSymbolTapped.add((Symbol symbol) {
@@ -175,6 +242,48 @@ class MapViewModel extends ChangeNotifier {
           EstablismentModal().ShowEstablismentModal(context, establismentInfo, this);
         }
       }
+
+      for (var pet in lostpets) {
+        if (pet.petName == name) {
+          ToastComponent().showMessage(Colors.green, 'Lost and Found Pet: ${pet.petName}');
+
+          var petInfo = {
+            'petName': pet.petName,
+            'petType': pet.petType,
+            'petBreed': pet.petBreed,
+            'petGender': pet.petGender,
+            'petAge': pet.petAge,
+            'petColor': pet.petColor,
+            'petAddress': pet.petAddress,
+            'regProCiBag': pet.regProCiBag,
+            'date': pet.date,
+            'lat': pet.lat,
+            'long': pet.long,
+          };
+          // Show pet info modal or any other UI component
+        }
+      }
+
+      for (var post in foundpets) {
+        if (post.petName == name) {
+          ToastComponent().showMessage(Colors.green, 'Pet Adoption: ${post.petName}');
+
+          var postInfo = {
+            'petName': post.petName,
+            'petType': post.petType,
+            'petBreed': post.petBreed,
+            'petGender': post.petGender,
+            'petAge': post.petAge,
+            'petColor': post.petColor,
+            'petAddress': post.petAddress,
+            'regProCiBag': post.regProCiBag,
+            'date': post.date,
+            'lat': post.lat,
+            'long': post.long,
+          };
+          // Show post info modal or any other UI component
+        }
+      }
     });
   }
 
@@ -184,5 +293,23 @@ class MapViewModel extends ChangeNotifier {
       initializeLoads();
       notifyListeners();
     }
+  }
+
+  Future<void> fetchLostAndFoundPets() async {
+    lostPetsStream = postRepository.getMissingPosts();
+    lostPetsStream!.listen((data) {
+      lostpets = data;
+      addLostAndFoundPetPins();
+      notifyListeners();
+    });
+  }
+
+  Future<void> fetchFoundPets() async {
+    foundPetsStream = postRepository.getFoundPost();
+    foundPetsStream!.listen((data) {
+      foundpets = data;
+      addPetAdoptionPins();
+      notifyListeners();
+    });
   }
 }

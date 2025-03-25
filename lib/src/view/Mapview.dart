@@ -204,11 +204,12 @@ class MapViewState extends State<MapView> {
                                     double.parse(result['lon']),
                                   ));
                                   _mapViewModel.mapController?.animateCamera(
-                                    CameraUpdate.newLatLng(
+                                    CameraUpdate.newLatLngZoom(
                                       LatLng(
                                         double.parse(result['lat']),
                                         double.parse(result['lon']),
                                       ),
+                                      15.0, // Specify the zoom level here
                                     ),
                                   );
                                 },
