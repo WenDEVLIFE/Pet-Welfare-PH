@@ -20,7 +20,7 @@ class EstablismentModal {
           builder: (BuildContext context, ScrollController scrollController) {
             return Container(
               decoration: const BoxDecoration(
-                color: AppColors.orange,
+                color: AppColors.white,
                 borderRadius: BorderRadius.only(
                   topLeft: Radius.circular(20),
                   topRight: Radius.circular(20),
@@ -43,7 +43,7 @@ class EstablismentModal {
                           ),
                         ),
                         IconButton(
-                          icon: const Icon(Icons.close, color: AppColors.white),
+                          icon: const Icon(Icons.close, color: AppColors.black),
                           onPressed: () {
                             Navigator.pop(context);
                           },
@@ -67,7 +67,7 @@ class EstablismentModal {
                       title: Text(
                         '${maps['establishmentName']!}',
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 16,
                           fontFamily: 'SmoochSans',
                           fontWeight: FontWeight.w600,
@@ -76,11 +76,11 @@ class EstablismentModal {
                     ),
                     SizedBox(height: screenHeight * 0.01),
                     ListTile(
-                      leading: const Icon(Icons.info, color: Colors.white),
+                      leading: const Icon(Icons.info, color: Colors.black),
                       title: Text(
                         '${maps['establishmentDescription']!}',
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 16,
                           fontFamily: 'SmoochSans',
                           fontWeight: FontWeight.w600,
@@ -89,11 +89,11 @@ class EstablismentModal {
                     ),
                     SizedBox(height: screenHeight * 0.01),
                     ListTile(
-                      leading: const Icon(Icons.location_on, color: Colors.white),
+                      leading: const Icon(Icons.location_on, color: Colors.black),
                       title: Text(
                         '${maps['establishmentAddress']!}',
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 16,
                           fontFamily: 'SmoochSans',
                           fontWeight: FontWeight.w600,
@@ -102,11 +102,11 @@ class EstablismentModal {
                     ),
                     SizedBox(height: screenHeight * 0.01),
                     ListTile(
-                      leading: const Icon(Icons.phone, color: Colors.white),
+                      leading: const Icon(Icons.phone, color: Colors.black),
                       title: Text(
                         '${maps['establishmentContact']!}',
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 16,
                           fontFamily: 'SmoochSans',
                           fontWeight: FontWeight.w600,
@@ -115,11 +115,11 @@ class EstablismentModal {
                     ),
                     SizedBox(height: screenHeight * 0.01),
                     ListTile(
-                      leading: const Icon(Icons.email, color: Colors.white),
+                      leading: const Icon(Icons.email, color: Colors.black),
                       title: Text(
                         '${maps['establishmentEmail']!}',
                         style: const TextStyle(
-                          color: Colors.white,
+                          color: Colors.black,
                           fontSize: 16,
                           fontFamily: 'SmoochSans',
                           fontWeight: FontWeight.w600,
@@ -138,12 +138,12 @@ class EstablismentModal {
                               });
                             },
                             style: ButtonStyle(
-                              backgroundColor: MaterialStateProperty.all<Color>(AppColors.black),
+                              backgroundColor: MaterialStateProperty.all<Color>(AppColors.orange),
                             ),
                             child: const Text(
                               'Chat with owner',
                               style: TextStyle(
-                                color: Colors.white,
+                                color: Colors.black,
                                 fontSize: 16,
                                 fontFamily: 'SmoochSans',
                                 fontWeight: FontWeight.w600,

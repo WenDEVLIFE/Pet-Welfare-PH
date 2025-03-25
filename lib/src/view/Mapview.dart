@@ -35,28 +35,16 @@ class MapViewState extends State<MapView> {
     LoadRole();
     _mapViewModel = Provider.of<MapViewModel>(context, listen: false);
     _mapFuture = _loadMap();
-    _searchController.addListener(_onSearchChanged);
-  }
-
-  void _onSearchChanged() {
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-    _debounce = Timer(const Duration(milliseconds: 500), () {
-      if (_searchController.text.isNotEmpty) {
-        setState(() {
-          _showDropdown = true;
-        });
-        _mapViewModel.searchLocation(_searchController.text);
-      } else {
-        setState(() {
-          _showDropdown = false;
-        });
-      }
+    _searchController.addListener(() {
+      setState(() {
+        _showDropdown = _searchController.text.isNotEmpty;
+      });
     });
   }
 
   @override
   void dispose() {
-    _searchController.removeListener(_onSearchChanged);
+    _searchController.removeListener(() {});
     _debounce?.cancel();
     _mapViewModel.removePins();
     super.dispose();
@@ -120,9 +108,9 @@ class MapViewState extends State<MapView> {
               future: _mapFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
-                  return Center(child: Text('Error loading map'));
+                  return const Center(child: Text('Error loading map'));
                 } else {
                   return MaplibreMap(
                     styleString: "${MapTilerKey.styleUrl}?key=${MapTilerKey.apikey}",
@@ -161,6 +149,9 @@ class MapViewState extends State<MapView> {
                           icon: const Icon(Icons.clear, color: Colors.black),
                           onPressed: () {
                             _searchController.clear();
+                            setState(() {
+                              _showDropdown = false;
+                            });
                             _mapViewModel.removePins();
                           },
                         )
@@ -207,28 +198,28 @@ class MapViewState extends State<MapView> {
                               final result = viewModel.searchResults[index];
                               return ListTile(
                                 title: Text(result['display_name']),
-                                onTap: () {
-                                  setState(() {
-                                    _searchController.text = result['display_name'];
-                                    _showDropdown = false;
-                                    _focusNode.unfocus();
-                                    locationModal().ShowLocationModal(context, result, _mapViewModel);
-                                    _mapViewModel.initializeLoads();
-                                  });
-                                  _mapViewModel.addPin(LatLng(
-                                    double.parse(result['lat']),
-                                    double.parse(result['lon']),
-                                  ));
-                                  _mapViewModel.mapController?.animateCamera(
-                                    CameraUpdate.newLatLngZoom(
-                                      LatLng(
-                                        double.parse(result['lat']),
-                                        double.parse(result['lon']),
+                                  onTap: () {
+                                    setState(() {
+                                      _searchController.text = result['display_name'];
+                                      _showDropdown = false;
+                                      _focusNode.unfocus();
+                                      locationModal().ShowLocationModal(context, result, _mapViewModel);
+                                      _mapViewModel.initializeLoads();
+                                    });
+                                    _mapViewModel.addPin(LatLng(
+                                      double.parse(result['lat']),
+                                      double.parse(result['lon']),
+                                    ));
+                                    _mapViewModel.mapController?.animateCamera(
+                                      CameraUpdate.newLatLngZoom(
+                                        LatLng(
+                                          double.parse(result['lat']),
+                                          double.parse(result['lon']),
+                                        ),
+                                        15.0, // Specify the zoom level here
                                       ),
-                                      15.0, // Specify the zoom level here
-                                    ),
-                                  );
-                                },
+                                    );
+                                  }
                               );
                             },
                           ),

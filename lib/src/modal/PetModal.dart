@@ -1,8 +1,12 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
+import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:pet_welfrare_ph/src/widgets/CustomButton.dart';
 import 'package:provider/provider.dart';
+import '../utils/Route.dart';
 import '../view_model/ApplyAdoptionViewModel.dart';
 
 class PetModal extends StatefulWidget {
@@ -44,9 +48,8 @@ class _PetModalState extends State<PetModal> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text(
-                'Pet Details',
-                style: TextStyle(
+              Text( pet['petName']=='Found Pets' ? 'Found Pet Details' : 'Lost Pet Details',
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),
@@ -65,6 +68,27 @@ class _PetModalState extends State<PetModal> {
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
+                  ListTile(
+                    title: Container(
+                      decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      height: screenHeight * 0.3,
+                      child: PageView.builder(
+                        itemCount: pet['imageUrls'].length,
+                        itemBuilder: (context, imageIndex) {
+                          return Container(
+                            width: screenWidth * 0.8,
+                            height: screenHeight * 0.5,
+                            child: CachedNetworkImage(
+                              imageUrl: pet['imageUrls'][imageIndex],
+                              fit: BoxFit.cover,
+                            ),
+                          );
+                        },
+                      ),
+                    ),
+                  ),
                   ListTile(
                     title: const Text(
                       'Pet Name',
@@ -162,9 +186,9 @@ class _PetModalState extends State<PetModal> {
                     subtitle: Text(pet['regProCiBag']),
                   ),
                   ListTile(
-                    title: const Text(
-                      'Date',
-                      style: TextStyle(
+                    title: Text(
+                      pet['petName']=='Found Pets' ? 'Date of the found pet' : 'Date of the lost pet',
+                      style: const TextStyle(
                         color: Colors.black,
                         fontSize: 18,
                         fontFamily: 'SmoochSans',
@@ -172,6 +196,18 @@ class _PetModalState extends State<PetModal> {
                       ),
                     ),
                     subtitle: Text(pet['date']),
+                  ),
+                  ListTile(
+                    title: const Text(
+                      'Status',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontFamily: 'SmoochSans',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    subtitle: Text(pet['status']),
                   ),
                   ListTile(
                     title: const Text(
@@ -204,8 +240,18 @@ class _PetModalState extends State<PetModal> {
                           size: 16.0,
                           color1: AppColors.orange,
                           textcolor2: AppColors.white,
-                          onPressed: (){
+                          onPressed: () {
+                            User user = FirebaseAuth.instance.currentUser!;
+                            String uid = user.uid;
 
+                            if (pet['postOwnerID'] == uid) {
+                            ToastComponent().showMessage(Colors.red, 'You cannot send a message to yourself');
+                              return;
+                            }
+
+                            Navigator.pushNamed(context, AppRoutes.message, arguments:{
+                              'receiverID': pet['postOwnerId'],
+                            });
                           }
                       ),
                     ),

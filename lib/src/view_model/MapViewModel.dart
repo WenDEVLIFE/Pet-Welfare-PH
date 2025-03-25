@@ -77,9 +77,7 @@ class MapViewModel extends ChangeNotifier {
   }
 
   Future<void> loadMarkerImage() async {
-    ByteData data = await rootBundle.load('assets/icon/location.png');
-    Uint8List bytes = data.buffer.asUint8List();
-    await mapController?.addImage("custom_marker", bytes);
+    await _loadAndCacheImage('assets/icon/location.png', 'custom_marker');
     notifyListeners();
   }
 
@@ -245,6 +243,8 @@ class MapViewModel extends ChangeNotifier {
             'lat': pet.lat,
             'long': pet.long,
              'postOwnerId': pet.postOwnerId,
+            'status': pet.Status,
+
           };
           // Show pet info modal or any other UI component
           showModalBottomSheet(
@@ -274,6 +274,9 @@ class MapViewModel extends ChangeNotifier {
             'date': pet.date,
             'lat': pet.lat,
             'long': pet.long,
+            'imageUrls': pet.imageUrls,
+            'postOwnerId': pet.postOwnerId,
+            'status': pet.Status,
           };
           // Show post info modal or any other UI component
           showModalBottomSheet(
