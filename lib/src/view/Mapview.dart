@@ -1,4 +1,3 @@
-import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
@@ -6,10 +5,10 @@ import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
 import 'package:pet_welfrare_ph/src/view_model/MapViewModel.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:provider/provider.dart';
-
 import '../modal/locationModal.dart';
 import '../services/MapTilerKey.dart';
+import 'package:provider/provider.dart';
+
 import '../utils/SessionManager.dart';
 
 class MapView extends StatefulWidget {
@@ -23,31 +22,24 @@ class MapViewState extends State<MapView> {
   late Future<void> _mapFuture;
   late MapViewModel _mapViewModel;
   final sessionManager = SessionManager();
-  String role = '';
+  String role ='';
   bool _showDropdown = false;
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
-  Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
     LoadRole();
     _mapViewModel = Provider.of<MapViewModel>(context, listen: false);
+    _mapViewModel.requestPermissions();
     _mapFuture = _loadMap();
+
     _searchController.addListener(() {
       setState(() {
         _showDropdown = _searchController.text.isNotEmpty;
       });
     });
-  }
-
-  @override
-  void dispose() {
-    _searchController.removeListener(() {});
-    _debounce?.cancel();
-    _mapViewModel.removePins();
-    super.dispose();
   }
 
   Future<void> LoadRole() async {
@@ -65,16 +57,17 @@ class MapViewState extends State<MapView> {
     _mapViewModel.mapController = controller;
     await _mapViewModel.fetchEstablishments().then((_) async {
       _mapViewModel.initializeLoads();
-      if (mounted) {
-        _mapViewModel.initializeClickMarkers(context);
-      }
+       if (mounted){
+         _mapViewModel.initializeClickMarkers(context);
+       }
     });
+  }
 
-    controller.addListener(() {
-      if (controller.onCameraIdle != null) {
-        _mapViewModel.onCameraIdle();
-      }
-    });
+
+  @override
+  void dispose() {
+    _mapViewModel.removePins();
+    super.dispose();
   }
 
   @override
@@ -108,9 +101,9 @@ class MapViewState extends State<MapView> {
               future: _mapFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+                  return Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
-                  return const Center(child: Text('Error loading map'));
+                  return Center(child: Text('Error loading map'));
                 } else {
                   return MaplibreMap(
                     styleString: "${MapTilerKey.styleUrl}?key=${MapTilerKey.apikey}",
@@ -141,6 +134,9 @@ class MapViewState extends State<MapView> {
                     child: TextField(
                       controller: _searchController,
                       focusNode: _focusNode,
+                      onChanged: (query) {
+                        _mapViewModel.searchLocation(query);
+                      },
                       decoration: InputDecoration(
                         filled: true,
                         prefixIcon: const Icon(Icons.search, color: Colors.black),
@@ -149,9 +145,6 @@ class MapViewState extends State<MapView> {
                           icon: const Icon(Icons.clear, color: Colors.black),
                           onPressed: () {
                             _searchController.clear();
-                            setState(() {
-                              _showDropdown = false;
-                            });
                             _mapViewModel.removePins();
                           },
                         )
@@ -198,28 +191,28 @@ class MapViewState extends State<MapView> {
                               final result = viewModel.searchResults[index];
                               return ListTile(
                                 title: Text(result['display_name']),
-                                  onTap: () {
-                                    setState(() {
-                                      _searchController.text = result['display_name'];
-                                      _showDropdown = false;
-                                      _focusNode.unfocus();
-                                      locationModal().ShowLocationModal(context, result, _mapViewModel);
-                                      _mapViewModel.initializeLoads();
-                                    });
-                                    _mapViewModel.addPin(LatLng(
-                                      double.parse(result['lat']),
-                                      double.parse(result['lon']),
-                                    ));
-                                    _mapViewModel.mapController?.animateCamera(
-                                      CameraUpdate.newLatLngZoom(
-                                        LatLng(
-                                          double.parse(result['lat']),
-                                          double.parse(result['lon']),
-                                        ),
-                                        15.0, // Specify the zoom level here
+                                onTap: () {
+                                  setState(() {
+                                    _searchController.text = result['display_name'];
+                                    _showDropdown = false;
+                                    _focusNode.unfocus();
+                                    locationModal().ShowLocationModal(context, result, _mapViewModel);
+                                    _mapViewModel.initializeLoads();
+                                  });
+                                  _mapViewModel.addPin(LatLng(
+                                    double.parse(result['lat']),
+                                    double.parse(result['lon']),
+                                  ));
+                                  _mapViewModel.mapController?.animateCamera(
+                                    CameraUpdate.newLatLngZoom(
+                                      LatLng(
+                                        double.parse(result['lat']),
+                                        double.parse(result['lon']),
                                       ),
-                                    );
-                                  }
+                                      15.0, // Specify the zoom level here
+                                    ),
+                                  );
+                                },
                               );
                             },
                           ),
@@ -232,7 +225,8 @@ class MapViewState extends State<MapView> {
           ],
         ),
       ),
-      floatingActionButton: SpeedDial(
+      floatingActionButton: role.toLowerCase() == 'pet rescuer' || role.toLowerCase() == 'pet shelter'
+          ? SpeedDial(
         icon: Icons.menu,
         backgroundColor: AppColors.orange,
         children: [
@@ -253,23 +247,34 @@ class MapViewState extends State<MapView> {
               }
             },
           ),
-          if (role.toLowerCase() == 'pet rescuer' || role.toLowerCase() == 'pet shelter') ...[
-            SpeedDialChild(
-              child: const Icon(Icons.house, color: AppColors.white),
-              backgroundColor: AppColors.orange,
-              label: 'My Pet Shelter & Clinic',
-              onTap: () {
-                Navigator.pushNamed(context, AppRoutes.shelterClinic);
-              },
-            ),
-          ],
           SpeedDialChild(
-            child: const Icon(Icons.near_me, color: AppColors.white),
+            child: const Icon(Icons.house, color: AppColors.white),
             backgroundColor: AppColors.orange,
-            label: 'Nearby',
+            label: 'My Pet Shelter & Clinic',
             onTap: () {
-              // Add your onTap functionality here
+              Navigator.pushNamed(context, AppRoutes.shelterClinic);
             },
+          ),
+        ],
+      )
+          : Column(
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          FloatingActionButton(
+            backgroundColor: AppColors.orange,
+            onPressed: () {
+              if (_mapViewModel.mapController != null) {
+                _mapViewModel.mapController!.animateCamera(
+                  CameraUpdate.newCameraPosition(
+                    CameraPosition(
+                      target: LatLng(_mapViewModel.lat, _mapViewModel.long),
+                      zoom: 15.0,
+                    ),
+                  ),
+                );
+              }
+            },
+            child: const Icon(Icons.my_location, color: AppColors.white),
           ),
         ],
       ),
