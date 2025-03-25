@@ -4,6 +4,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/view_model/MenuViewModel.dart';
+import 'package:pet_welfrare_ph/src/widgets/CustomButton.dart';
 import '../utils/Route.dart';
 import 'MenuListView.dart';
 import '../utils/AppColors.dart';
@@ -51,21 +52,20 @@ class MenuViewState extends State<MenuView> {
                       Consumer<MenuViewModel>(
                         builder: (context, viewModel, child) {
                           return GestureDetector(
-                            child:CircleAvatar(
-                            radius: screenHeight * 0.07,
-                            backgroundColor: AppColors.black,
                             child: CircleAvatar(
-                              radius: screenHeight * 0.068,
-                              backgroundImage: CachedNetworkImageProvider(viewModel.currentfilepath),
+                              radius: screenHeight * 0.07,
+                              backgroundColor: AppColors.black,
+                              child: CircleAvatar(
+                                radius: screenHeight * 0.068,
+                                backgroundImage: CachedNetworkImageProvider(viewModel.currentfilepath),
+                              ),
                             ),
-                          ),
                             onTap: () {
                               // Implement image upload functionality here
                               Navigator.pushNamed(context, AppRoutes.viewImageData, arguments: {
                                 'imagePath': viewModel.currentfilepath,
                               });
                             },
-
                           );
                         },
                       ),
@@ -99,6 +99,23 @@ class MenuViewState extends State<MenuView> {
                                   fontWeight: FontWeight.w500,
                                 ),
                               );
+                            },
+                          ),
+                          Consumer<MenuViewModel>(
+                            builder: (context, viewModel, child) {
+                              if (viewModel.role.toLowerCase() == 'pet rescuer') {
+                                return CustomButton(
+                                  hint: viewModel.isLocationEnabled ? 'Unpin my location' : 'Pin my location',
+                                  size: 16,
+                                  color1: AppColors.black,
+                                  textcolor2: AppColors.white,
+                                  onPressed: () {
+                                    viewModel.pinRescue();
+                                  },
+                                );
+                              } else {
+                                return Container();
+                              }
                             },
                           ),
                         ],

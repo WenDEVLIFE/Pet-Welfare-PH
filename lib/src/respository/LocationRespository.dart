@@ -27,6 +27,10 @@ abstract class Locationrespository {
   Stream<List<EstablishmentModel>> getData1();
 
   Future<void> updateStatus(Map<String, dynamic> map , BuildContext context);
+
+  Future<bool> checkIfUserPinExists();
+
+  Future <void> pinRescue(double lat, double long);
 }
 
 class LocationrespositoryImpl implements Locationrespository {
@@ -303,5 +307,27 @@ class LocationrespositoryImpl implements Locationrespository {
 
   }
 
+  @override
+  Future<bool> checkIfUserPinExists() async {
+    User user = _auth.currentUser!;
+
+    final DocumentSnapshot pinLocation = await _firestore
+        .collection('RescuePinCollection')
+        .doc(user.uid)
+        .get();
+
+    return pinLocation.exists;
+  }
+
+  @override
+  Future<void> pinRescue(double lat, double long) async {
+    User user = _auth.currentUser!;
+
+    return _firestore.collection('RescuePinCollection').doc(user.uid).set({
+      'Latitude': lat,
+      'Longitude': long,
+      'Uid': user.uid,
+    });
+  }
 
 }
