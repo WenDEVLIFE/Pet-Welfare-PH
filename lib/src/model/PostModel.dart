@@ -35,6 +35,9 @@ class PostModel {
   String petSizeAdopt = '';
   String PetTypeAdopt = '';
   String StatusAdopt = '';
+  String petOwnernName = '';
+  double lat = 0.0;
+  double long = 0.0;
 
   PostModel({
     required this.postId,
@@ -90,7 +93,10 @@ class PostModel {
       ..regProCiBagAdopt = '${petDocAdopt.data()?['Region'] ?? ''}, ${petDocAdopt.data()?['Province'] ?? ''}, ${petDocAdopt.data()?['City'] ?? ''}, ${petDocAdopt.data()?['Barangay'] ?? ''}'
       ..dateAdopt = petDocAdopt.data()?['Date'] ?? ''
       ..petSizeAdopt = petDocAdopt.data()?['PetSize'] ?? ''
-      ..StatusAdopt = petDocAdopt.data()?['Status'] ?? '';
+      ..StatusAdopt = petDocAdopt.data()?['Status'] ?? ''
+      ..petOwnernName = userDoc.data()?['Name'] ?? ''
+      ..lat = petDoc.data()?['Latitude'] ?? 0.0
+      ..long = petDoc.data()?['Longitude'] ?? 0.0;
 
   }
 }
