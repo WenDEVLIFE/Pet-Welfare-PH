@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
@@ -5,10 +6,10 @@ import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
 import 'package:pet_welfrare_ph/src/view_model/MapViewModel.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import '../modal/locationModal.dart';
-import '../services/MapTilerKey.dart';
 import 'package:provider/provider.dart';
 
+import '../modal/locationModal.dart';
+import '../services/MapTilerKey.dart';
 import '../utils/SessionManager.dart';
 
 class MapView extends StatefulWidget {
@@ -22,24 +23,43 @@ class MapViewState extends State<MapView> {
   late Future<void> _mapFuture;
   late MapViewModel _mapViewModel;
   final sessionManager = SessionManager();
-  String role ='';
+  String role = '';
   bool _showDropdown = false;
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
+  Timer? _debounce;
 
   @override
   void initState() {
     super.initState();
     LoadRole();
     _mapViewModel = Provider.of<MapViewModel>(context, listen: false);
-    _mapViewModel.requestPermissions();
     _mapFuture = _loadMap();
+    _searchController.addListener(_onSearchChanged);
+  }
 
-    _searchController.addListener(() {
-      setState(() {
-        _showDropdown = _searchController.text.isNotEmpty;
-      });
+  void _onSearchChanged() {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      if (_searchController.text.isNotEmpty) {
+        setState(() {
+          _showDropdown = true;
+        });
+        _mapViewModel.searchLocation(_searchController.text);
+      } else {
+        setState(() {
+          _showDropdown = false;
+        });
+      }
     });
+  }
+
+  @override
+  void dispose() {
+    _searchController.removeListener(_onSearchChanged);
+    _debounce?.cancel();
+    _mapViewModel.removePins();
+    super.dispose();
   }
 
   Future<void> LoadRole() async {
@@ -57,7 +77,7 @@ class MapViewState extends State<MapView> {
     _mapViewModel.mapController = controller;
     await _mapViewModel.fetchEstablishments().then((_) async {
       _mapViewModel.initializeLoads();
-      if (mounted){
+      if (mounted) {
         _mapViewModel.initializeClickMarkers(context);
       }
     });
@@ -67,12 +87,6 @@ class MapViewState extends State<MapView> {
         _mapViewModel.onCameraIdle();
       }
     });
-  }
-
-  @override
-  void dispose() {
-    _mapViewModel.removePins();
-    super.dispose();
   }
 
   @override
@@ -139,9 +153,6 @@ class MapViewState extends State<MapView> {
                     child: TextField(
                       controller: _searchController,
                       focusNode: _focusNode,
-                      onChanged: (query) {
-                        _mapViewModel.searchLocation(query);
-                      },
                       decoration: InputDecoration(
                         filled: true,
                         prefixIcon: const Icon(Icons.search, color: Colors.black),
@@ -251,7 +262,7 @@ class MapViewState extends State<MapView> {
               }
             },
           ),
-          if (role.toLowerCase() == 'pet rescuer' || role.toLowerCase() == 'pet shelter')...[
+          if (role.toLowerCase() == 'pet rescuer' || role.toLowerCase() == 'pet shelter') ...[
             SpeedDialChild(
               child: const Icon(Icons.house, color: AppColors.white),
               backgroundColor: AppColors.orange,
@@ -261,7 +272,6 @@ class MapViewState extends State<MapView> {
               },
             ),
           ],
-
           SpeedDialChild(
             child: const Icon(Icons.near_me, color: AppColors.white),
             backgroundColor: AppColors.orange,

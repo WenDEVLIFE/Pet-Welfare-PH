@@ -8,6 +8,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pet_welfrare_ph/src/modal/PetModal.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 import 'package:pet_welfrare_ph/src/respository/GenerateEstablismentRepository.dart';
 import 'package:pet_welfrare_ph/src/services/OpenStreetMapService.dart';
@@ -85,26 +86,19 @@ class MapViewModel extends ChangeNotifier {
   Future<void> preloadMarkerImages() async {
     if (mapController == null) return;
 
-    ByteData clinicData = await rootBundle.load('assets/images/hospital.png');
-    Uint8List clinicBytes = clinicData.buffer.asUint8List();
-    await mapController!.addImage("custom_marker_clinic", clinicBytes);
-
-    ByteData shelterData = await rootBundle.load('assets/images/shelter.png');
-    Uint8List shelterBytes = shelterData.buffer.asUint8List();
-    await mapController!.addImage("custom_marker_shelter", shelterBytes);
-
-    ByteData establismentData = await rootBundle.load('assets/images/company.png');
-    Uint8List establistmentBytes = establismentData.buffer.asUint8List();
-    await mapController!.addImage("custom_marker_establishment", establistmentBytes);
-
-    ByteData lostData = await rootBundle.load('assets/images/lost.png');
-    Uint8List lostBytes = lostData.buffer.asUint8List();
-    await mapController!.addImage("custom_marker_lost", lostBytes);
-
-    ByteData foundData = await rootBundle.load('assets/images/found.png');
-    Uint8List foundBytes = foundData.buffer.asUint8List();
-    await mapController!.addImage("custom_marker_found", foundBytes);
+    await _loadAndCacheImage('assets/images/hospital.png', 'custom_marker_clinic');
+    await _loadAndCacheImage('assets/images/shelter.png', 'custom_marker_shelter');
+    await _loadAndCacheImage('assets/images/company.png', 'custom_marker_establishment');
+    await _loadAndCacheImage('assets/images/lost.png', 'custom_marker_lost');
+    await _loadAndCacheImage('assets/images/found.png', 'custom_marker_found');
   }
+
+  Future<void> _loadAndCacheImage(String assetPath, String imageName) async {
+    ByteData data = await rootBundle.load(assetPath);
+    Uint8List bytes = data.buffer.asUint8List();
+    await mapController!.addImage(imageName, bytes);
+  }
+
 
   Future<void> addPin(LatLng position) async {
     if (mapController != null) {
@@ -173,7 +167,7 @@ class MapViewModel extends ChangeNotifier {
         geometry: LatLng(pet.lat, pet.long),
         iconImage: "custom_marker_lost",
         iconSize: 1.5,
-        textField: 'Lost pet spotted',  // Adding a label for identification
+        textField: '${pet.category} spotted',  // Adding a label for identification
         textOffset: const Offset(0, 1.5),  // Adjust the offset to place the text below the icon
       ));
     }
@@ -195,7 +189,7 @@ class MapViewModel extends ChangeNotifier {
         geometry: LatLng(post.lat, post.long),
         iconImage: "custom_marker_found",
         iconSize: 1.5,
-        textField: 'Found pet spotted',  // Adding a label for identification
+        textField: '${post.category} spotted',  // Adding a label for identification
         textOffset: const Offset(0, 1.5),  // Adjust the offset to place the text below the icon
       ));
     }
@@ -230,11 +224,12 @@ class MapViewModel extends ChangeNotifier {
             'establishmentOwnerID': establishment.establishmentOwnerID,
           };
           EstablismentModal().ShowEstablismentModal(context, establismentInfo, this);
+          return; // Stop further checks
         }
       }
 
       for (var pet in lostpets) {
-        if (pet.petName == name) {
+        if (pet.category.toLowerCase()=='lost pets') {
           ToastComponent().showMessage(Colors.green, 'Lost and Found Pet: ${pet.petName}');
 
           var petInfo = {
@@ -249,29 +244,47 @@ class MapViewModel extends ChangeNotifier {
             'date': pet.date,
             'lat': pet.lat,
             'long': pet.long,
+             'postOwnerId': pet.postOwnerId,
           };
           // Show pet info modal or any other UI component
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            builder: (context) {
+              return PetModal(pet: petInfo);
+            },
+          );
+          return; // Stop further checks
         }
       }
 
-      for (var post in foundpets) {
-        if (post.petName == name) {
-          ToastComponent().showMessage(Colors.green, 'Pet Adoption: ${post.petName}');
+      for (var pet in foundpets) {
+        if (pet.category.toLowerCase()=='found pets') {
+          ToastComponent().showMessage(Colors.green, 'Pet Found: ${pet.petName}');
 
           var postInfo = {
-            'petName': post.petName,
-            'petType': post.petType,
-            'petBreed': post.petBreed,
-            'petGender': post.petGender,
-            'petAge': post.petAge,
-            'petColor': post.petColor,
-            'petAddress': post.petAddress,
-            'regProCiBag': post.regProCiBag,
-            'date': post.date,
-            'lat': post.lat,
-            'long': post.long,
+            'petName': pet.petName,
+            'petType': pet.petType,
+            'petBreed': pet.petBreed,
+            'petGender': pet.petGender,
+            'petAge': pet.petAge,
+            'petColor': pet.petColor,
+            'petAddress': pet.petAddress,
+            'regProCiBag': pet.regProCiBag,
+            'date': pet.date,
+            'lat': pet.lat,
+            'long': pet.long,
           };
           // Show post info modal or any other UI component
+          showModalBottomSheet(
+            context: context,
+            isScrollControlled: true,
+            builder: (context) {
+              return PetModal(pet: postInfo);
+            },
+          );
+
+          return; // Stop further checks
         }
       }
     });
