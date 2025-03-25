@@ -225,8 +225,7 @@ class MapViewState extends State<MapView> {
           ],
         ),
       ),
-      floatingActionButton: role.toLowerCase() == 'pet rescuer' || role.toLowerCase() == 'pet shelter'
-          ? SpeedDial(
+      floatingActionButton: SpeedDial(
         icon: Icons.menu,
         backgroundColor: AppColors.orange,
         children: [
@@ -247,34 +246,24 @@ class MapViewState extends State<MapView> {
               }
             },
           ),
+           if (role.toLowerCase() == 'pet rescuer' || role.toLowerCase() == 'pet shelter')...[
+             SpeedDialChild(
+               child: const Icon(Icons.house, color: AppColors.white),
+               backgroundColor: AppColors.orange,
+               label: 'My Pet Shelter & Clinic',
+               onTap: () {
+                 Navigator.pushNamed(context, AppRoutes.shelterClinic);
+               },
+             ),
+           ],
+
           SpeedDialChild(
-            child: const Icon(Icons.house, color: AppColors.white),
-            backgroundColor: AppColors.orange,
-            label: 'My Pet Shelter & Clinic',
-            onTap: () {
-              Navigator.pushNamed(context, AppRoutes.shelterClinic);
-            },
-          ),
-        ],
-      )
-          : Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            backgroundColor: AppColors.orange,
-            onPressed: () {
-              if (_mapViewModel.mapController != null) {
-                _mapViewModel.mapController!.animateCamera(
-                  CameraUpdate.newCameraPosition(
-                    CameraPosition(
-                      target: LatLng(_mapViewModel.lat, _mapViewModel.long),
-                      zoom: 15.0,
-                    ),
-                  ),
-                );
-              }
-            },
-            child: const Icon(Icons.my_location, color: AppColors.white),
+          child: const Icon(Icons.near_me, color: AppColors.white),
+          backgroundColor: AppColors.orange,
+          label: 'Nearby',
+          onTap: () {
+          // Add your onTap functionality here
+          },
           ),
         ],
       ),
