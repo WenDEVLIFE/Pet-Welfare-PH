@@ -118,7 +118,7 @@ class MenuViewState extends State<MenuView> {
                                            title: 'Unpin Location',
                                            content: 'Are you sure you want to unpin your location?',
                                            onAction: () {
-                                             viewModel.pinRescue();
+                                             viewModel.unpinRescue();
                                            },
                                          );
                                        });
