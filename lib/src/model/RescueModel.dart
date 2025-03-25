@@ -20,7 +20,7 @@ class RescueModel {
     return RescueModel(
       id: id,
       latitude: doc['Latitude'],
-      longtitude: doc['Longtitude'],
+      longtitude: doc['Longitude'],
     )
         ..name = userdoc['Name']
         ..role = userdoc['Role']

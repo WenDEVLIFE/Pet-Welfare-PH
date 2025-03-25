@@ -149,7 +149,6 @@ class LocationrespositoryImpl implements Locationrespository {
     ProgressDialog pd = ProgressDialog(context: context);
     pd.show(max: 100, msg: 'Updating Location...');
 
-    // TODO : Fix the File not getting the location
     try {
          // get the id from the list
          var id = data['establishmentId'];
@@ -340,7 +339,6 @@ class LocationrespositoryImpl implements Locationrespository {
   @override
   Future<void> unpinRescue() {
     User user = _auth.currentUser!;
-
     return _firestore.collection('RescuePinCollection').doc(user.uid).delete();
   }
 

@@ -1,6 +1,4 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
@@ -10,19 +8,23 @@ import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pet_welfrare_ph/src/modal/PetModal.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
+import 'package:pet_welfrare_ph/src/model/RescueModel.dart';
 import 'package:pet_welfrare_ph/src/respository/GenerateEstablismentRepository.dart';
+import 'package:pet_welfrare_ph/src/respository/LocationRespository.dart';
 import 'package:pet_welfrare_ph/src/services/OpenStreetMapService.dart';
 import 'package:pet_welfrare_ph/src/utils/GeoUtils.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import '../modal/EstablishmentModal.dart';
 import '../model/EstablishmentModel.dart';
 import '../respository/PostRepository.dart';
+import 'package:async/async.dart';
 
 class MapViewModel extends ChangeNotifier {
   double lat = 14.5995;  // Example: Manila, Philippines
   double long = 120.9842;
   final OpenStreetMapService _openStreetMapService = OpenStreetMapService();
   final GenerateEstablishmentRepository _generateEstablismentRepository = GenerateEstablishmentRepositoryImpl();
+  final Locationrespository locationRepository = LocationrespositoryImpl();
   PostRepository postRepository = PostRepositoryImpl();
   MaplibreMapController? mapController;
   List<Map<String, dynamic>> searchResults = [];
@@ -30,14 +32,17 @@ class MapViewModel extends ChangeNotifier {
   List<EstablishmentModel> establishments = [];
   List<PostModel> lostpets = [];
   List<PostModel> foundpets = [];
+  List<RescueModel> rescue = [];
   Stream<List<EstablishmentModel>>? establishmentsStream;
   Stream<List<PostModel>>? foundPetsStream;
   Stream<List<PostModel>>? lostPetsStream;
+  Stream <List<RescueModel>>? rescueStream;
   List<SymbolOptions> symbols = [];
   bool _isLoadingMarkers = false;
 
   MapViewModel() {
     requestPermissions();
+    initializeLoads();
   }
 
   // get permissions
@@ -89,6 +94,9 @@ class MapViewModel extends ChangeNotifier {
     await _loadAndCacheImage('assets/images/company.png', 'custom_marker_establishment');
     await _loadAndCacheImage('assets/images/lost.png', 'custom_marker_lost');
     await _loadAndCacheImage('assets/images/found.png', 'custom_marker_found');
+    await _loadAndCacheImage('assets/images/rescue.png', 'custom_marker_rescuer');
+
+    notifyListeners();
   }
 
   Future<void> _loadAndCacheImage(String assetPath, String imageName) async {
@@ -96,7 +104,6 @@ class MapViewModel extends ChangeNotifier {
     Uint8List bytes = data.buffer.asUint8List();
     await mapController!.addImage(imageName, bytes);
   }
-
 
   Future<void> addPin(LatLng position) async {
     if (mapController != null) {
@@ -112,12 +119,14 @@ class MapViewModel extends ChangeNotifier {
     }
   }
 
-
   Future<void> initializeLoads() async {
-    await preloadMarkerImages();
-    await fetchEstablishments();
-    await fetchLostAndFoundPets();
-    await fetchFoundPets();
+    Future.wait([
+      preloadMarkerImages(),
+      fetchEstablishments(),
+      fetchLostAndFoundPets(),
+      fetchFoundPets(),
+      fetchRescue(),
+    ]);
   }
 
   static List<EstablishmentModel> parseEstablishments(List<Map<String, dynamic>> data) {
@@ -199,6 +208,28 @@ class MapViewModel extends ChangeNotifier {
     _isLoadingMarkers = false;
   }
 
+  Future <void> addRescuePins()  async {
+    if (mapController == null || _isLoadingMarkers || rescue.isEmpty) return;
+
+    _isLoadingMarkers = true;
+
+    for (var res in rescue) {
+      symbols.add(SymbolOptions(
+        geometry: LatLng(res.latitude, res.longtitude),
+        iconImage: "custom_marker_rescuer",
+        iconSize: 1.5,
+        textField: '${res.role} spotted',  // Adding a label for identification
+        textOffset: const Offset(0, 1.5),  // Adjust the offset to place the text below the icon
+      ));
+    }
+
+    if (symbols.isNotEmpty) {
+      await mapController!.addSymbols(symbols);
+    }
+
+    _isLoadingMarkers = false;
+  }
+
   void initializeClickMarkers(BuildContext context) {
     // Set up the click listener
     mapController!.onSymbolTapped.add((Symbol symbol) {
@@ -242,7 +273,7 @@ class MapViewModel extends ChangeNotifier {
             'date': pet.date,
             'lat': pet.lat,
             'long': pet.long,
-             'postOwnerId': pet.postOwnerId,
+            'postOwnerId': pet.postOwnerId,
             'status': pet.Status,
 
           };
@@ -290,6 +321,24 @@ class MapViewModel extends ChangeNotifier {
           return; // Stop further checks
         }
       }
+
+      for (var res in rescue) {
+         if (res.role.toLowerCase()== 'pet rescuer') {
+           ToastComponent().showMessage(Colors.green, 'Rescuer: ${res.name}');
+           var rescueInfo = {
+             'name': res.name,
+             'latitude': res.latitude,
+             'longtitude': res.longtitude,
+             'rescueId': res.id,
+             'rescueImage': res.profileUrl,
+           };
+           // Show post info modal or any other UI component
+           // TODO: Show rescue info modal
+
+           return; // Stop further checks
+         }
+         }
+
     });
   }
 
@@ -329,11 +378,23 @@ class MapViewModel extends ChangeNotifier {
     });
   }
 
+  Future<void> fetchRescue() async {
+    print("Fetching rescue...");
+    rescueStream = locationRepository.getRescueData();
+    rescueStream!.listen((data) {
+      rescue = data;
+      addRescuePins();
+      notifyListeners();
+    });
+  }
+
   void onCameraIdle() {
     if (mapController != null) {
       addEstablishmentPins();
       addLostAndFoundPetPins();
       addPetAdoptionPins();
+      addRescuePins();
+      notifyListeners();
     }
   }
 }
