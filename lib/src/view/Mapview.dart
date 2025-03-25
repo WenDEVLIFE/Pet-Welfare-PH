@@ -57,12 +57,17 @@ class MapViewState extends State<MapView> {
     _mapViewModel.mapController = controller;
     await _mapViewModel.fetchEstablishments().then((_) async {
       _mapViewModel.initializeLoads();
-       if (mounted){
-         _mapViewModel.initializeClickMarkers(context);
-       }
+      if (mounted){
+        _mapViewModel.initializeClickMarkers(context);
+      }
+    });
+
+    controller.addListener(() {
+      if (controller.onCameraIdle != null) {
+        _mapViewModel.onCameraIdle();
+      }
     });
   }
-
 
   @override
   void dispose() {
@@ -246,24 +251,24 @@ class MapViewState extends State<MapView> {
               }
             },
           ),
-           if (role.toLowerCase() == 'pet rescuer' || role.toLowerCase() == 'pet shelter')...[
-             SpeedDialChild(
-               child: const Icon(Icons.house, color: AppColors.white),
-               backgroundColor: AppColors.orange,
-               label: 'My Pet Shelter & Clinic',
-               onTap: () {
-                 Navigator.pushNamed(context, AppRoutes.shelterClinic);
-               },
-             ),
-           ],
+          if (role.toLowerCase() == 'pet rescuer' || role.toLowerCase() == 'pet shelter')...[
+            SpeedDialChild(
+              child: const Icon(Icons.house, color: AppColors.white),
+              backgroundColor: AppColors.orange,
+              label: 'My Pet Shelter & Clinic',
+              onTap: () {
+                Navigator.pushNamed(context, AppRoutes.shelterClinic);
+              },
+            ),
+          ],
 
           SpeedDialChild(
-          child: const Icon(Icons.near_me, color: AppColors.white),
-          backgroundColor: AppColors.orange,
-          label: 'Nearby',
-          onTap: () {
-          // Add your onTap functionality here
-          },
+            child: const Icon(Icons.near_me, color: AppColors.white),
+            backgroundColor: AppColors.orange,
+            label: 'Nearby',
+            onTap: () {
+              // Add your onTap functionality here
+            },
           ),
         ],
       ),

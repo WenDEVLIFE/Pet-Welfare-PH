@@ -29,6 +29,7 @@ class MapViewModel extends ChangeNotifier {
   List<EstablishmentModel> establishments = [];
   List<PostModel> lostpets = [];
   List<PostModel> foundpets = [];
+  Stream<List<EstablishmentModel>>? establishmentsStream;
   Stream<List<PostModel>>? foundPetsStream;
   Stream<List<PostModel>>? lostPetsStream;
   List<SymbolOptions> symbols = [];
@@ -119,15 +120,6 @@ class MapViewModel extends ChangeNotifier {
     }
   }
 
-  Future<void> fetchEstablishments() async {
-    print("Fetching establishments...");
-    _generateEstablismentRepository.getEstablishment().asyncMap((data) async {
-      final jsonData = data.map((e) => e.toJson()).toList();
-      establishments = await compute(parseEstablishments, jsonData);
-      await addEstablishmentPins();
-      print("Establishment pins added.");
-    }).listen((_) {});
-  }
 
   Future<void> initializeLoads() async {
     await preloadMarkerImages();
@@ -180,7 +172,7 @@ class MapViewModel extends ChangeNotifier {
       symbols.add(SymbolOptions(
         geometry: LatLng(pet.lat, pet.long),
         iconImage: "custom_marker_lost",
-        iconSize: 1.0,
+        iconSize: 1.5,
         textField: 'Lost pet spotted',  // Adding a label for identification
         textOffset: const Offset(0, 1.5),  // Adjust the offset to place the text below the icon
       ));
@@ -202,7 +194,7 @@ class MapViewModel extends ChangeNotifier {
       symbols.add(SymbolOptions(
         geometry: LatLng(post.lat, post.long),
         iconImage: "custom_marker_found",
-        iconSize: 1.0,
+        iconSize: 1.5,
         textField: 'Found pet spotted',  // Adding a label for identification
         textOffset: const Offset(0, 1.5),  // Adjust the offset to place the text below the icon
       ));
@@ -309,5 +301,23 @@ class MapViewModel extends ChangeNotifier {
       addPetAdoptionPins();
       notifyListeners();
     });
+  }
+
+  Future<void> fetchEstablishments() async {
+    print("Fetching establishments...");
+    establishmentsStream = _generateEstablismentRepository.getEstablishment();
+    establishmentsStream!.listen((data) {
+      establishments = data;
+      addEstablishmentPins();
+      notifyListeners();
+    });
+  }
+
+  void onCameraIdle() {
+    if (mapController != null) {
+      addEstablishmentPins();
+      addLostAndFoundPetPins();
+      addPetAdoptionPins();
+    }
   }
 }
