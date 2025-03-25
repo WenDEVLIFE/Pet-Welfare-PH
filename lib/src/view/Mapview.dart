@@ -1,8 +1,13 @@
+import 'dart:async';
+
+import 'package:async/async.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
+import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:pet_welfrare_ph/src/view_model/MapViewModel.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import '../modal/locationModal.dart';
@@ -27,19 +32,26 @@ class MapViewState extends State<MapView> {
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
 
+
   @override
   void initState() {
     super.initState();
-    LoadRole();
     _mapViewModel = Provider.of<MapViewModel>(context, listen: false);
-    _mapViewModel.requestPermissions();
-    _mapFuture = _loadMap();
+    _mapFuture = multipliAsync();
 
     _searchController.addListener(() {
       setState(() {
         _showDropdown = _searchController.text.isNotEmpty;
       });
     });
+  }
+
+  Future<void> multipliAsync() async {
+    await Future.wait([
+      _loadMap(),
+      LoadRole(),
+      _mapViewModel.requestPermissions(),
+    ]);
   }
 
   Future<void> LoadRole() async {
@@ -50,23 +62,21 @@ class MapViewState extends State<MapView> {
   }
 
   Future<void> _loadMap() async {
-    await Future.delayed(Duration(seconds: 1));
+    await Future.delayed(const Duration(seconds: 1));
   }
 
   void onMapCreated(MaplibreMapController controller) async {
     _mapViewModel.mapController = controller;
-    await _mapViewModel.fetchEstablishments().then((_) async {
-      _mapViewModel.initializeLoads();
-       if (mounted){
-         _mapViewModel.initializeClickMarkers(context);
-       }
-    });
+    await _mapViewModel.initializeLoads();
+    if (mounted) {
+      _mapViewModel.initializeClickMarkers(context);
+    }
+
   }
 
 
   @override
   void dispose() {
-    _mapViewModel.removePins();
     super.dispose();
   }
 
@@ -101,9 +111,9 @@ class MapViewState extends State<MapView> {
               future: _mapFuture,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return Center(child: CircularProgressIndicator());
+                  return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
-                  return Center(child: Text('Error loading map'));
+                  return const Center(child: Text('Error loading map'));
                 } else {
                   return MaplibreMap(
                     styleString: "${MapTilerKey.styleUrl}?key=${MapTilerKey.apikey}",

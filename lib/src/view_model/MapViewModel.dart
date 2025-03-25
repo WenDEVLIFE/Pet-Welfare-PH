@@ -41,7 +41,6 @@ class MapViewModel extends ChangeNotifier {
   bool _isLoadingMarkers = false;
 
   MapViewModel() {
-    requestPermissions();
     initializeLoads();
   }
 
@@ -121,6 +120,7 @@ class MapViewModel extends ChangeNotifier {
 
   Future<void> initializeLoads() async {
     Future.wait([
+      requestPermissions(),
       preloadMarkerImages(),
       fetchEstablishments(),
       fetchLostAndFoundPets(),
