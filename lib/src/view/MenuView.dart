@@ -5,7 +5,9 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/view_model/MenuViewModel.dart';
 import 'package:pet_welfrare_ph/src/widgets/CustomButton.dart';
+import 'package:pet_welfrare_ph/src/widgets/TermsAndConditionDialogWidget.dart';
 import '../utils/Route.dart';
+import '../widgets/AlertMenuDialog.dart';
 import 'MenuListView.dart';
 import '../utils/AppColors.dart';
 import '../utils/ImageUtils.dart';
@@ -110,7 +112,28 @@ class MenuViewState extends State<MenuView> {
                                   color1: AppColors.black,
                                   textcolor2: AppColors.white,
                                   onPressed: () {
-                                    viewModel.pinRescue();
+                                     if (viewModel.isLocationEnabled) {
+                                       showDialog(context: context, builder: (context) {
+                                         return Alertmenudialog(
+                                           title: 'Unpin Location',
+                                           content: 'Are you sure you want to unpin your location?',
+                                           onAction: () {
+                                             viewModel.pinRescue();
+                                           },
+                                         );
+                                       });
+
+                                     } else{
+                                        showDialog(context: context, builder: (context) {
+                                          return Alertmenudialog(
+                                            title: 'Pin Location',
+                                            content: 'Are you sure you want to pin your location?',
+                                            onAction: () {
+                                              viewModel.pinRescue();
+                                            },
+                                          );
+                                        });
+                                     }
                                   },
                                 );
                               } else {

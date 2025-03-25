@@ -103,5 +103,18 @@ class MenuViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Unpin location
+  Future<void> unpinRescue() async {
+    isLocationEnabled = await locationRepository.checkIfUserPinExists();
+    if (isLocationEnabled) {
+      locationRepository.unpinRescue();
+      ToastComponent().showMessage(Colors.red, 'User pin removed');
+      isLocationEnabled = false;
+    } else {
+      ToastComponent().showMessage(Colors.red, 'User pin does not exist');
+    }
+    notifyListeners();
+  }
+
 
 }

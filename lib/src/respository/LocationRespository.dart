@@ -31,6 +31,8 @@ abstract class Locationrespository {
   Future<bool> checkIfUserPinExists();
 
   Future <void> pinRescue(double lat, double long);
+
+  Future <void> unpinRescue();
 }
 
 class LocationrespositoryImpl implements Locationrespository {
@@ -319,6 +321,7 @@ class LocationrespositoryImpl implements Locationrespository {
     return pinLocation.exists;
   }
 
+  // This will pin the rescue
   @override
   Future<void> pinRescue(double lat, double long) async {
     User user = _auth.currentUser!;
@@ -328,6 +331,15 @@ class LocationrespositoryImpl implements Locationrespository {
       'Longitude': long,
       'Uid': user.uid,
     });
+  }
+
+
+  // This will unpin the rescue
+  @override
+  Future<void> unpinRescue() {
+    User user = _auth.currentUser!;
+
+    return _firestore.collection('RescuePinCollection').doc(user.uid).delete();
   }
 
 }
