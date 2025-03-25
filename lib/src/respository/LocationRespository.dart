@@ -5,6 +5,7 @@ import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/widgets/framework.dart';
 import 'package:pet_welfrare_ph/src/model/EstablishmentModel.dart';
+import 'package:pet_welfrare_ph/src/model/RescueModel.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
 import 'dart:typed_data';
@@ -33,6 +34,8 @@ abstract class Locationrespository {
   Future <void> pinRescue(double lat, double long);
 
   Future <void> unpinRescue();
+
+  Stream<List<RescueModel>> getRescueData();
 }
 
 class LocationrespositoryImpl implements Locationrespository {
@@ -333,7 +336,6 @@ class LocationrespositoryImpl implements Locationrespository {
     });
   }
 
-
   // This will unpin the rescue
   @override
   Future<void> unpinRescue() {
@@ -341,5 +343,14 @@ class LocationrespositoryImpl implements Locationrespository {
 
     return _firestore.collection('RescuePinCollection').doc(user.uid).delete();
   }
+
+  @override
+  Stream<List<RescueModel>> getRescueData() {
+    return _firestore.collection('RescuePinCollection').snapshots().asyncMap((snapshot) async {
+      List<Future<RescueModel>> futures = snapshot.docs.map((doc) => RescueModel.fromDocument(doc)).toList();
+      return Future.wait(futures);
+    });
+  }
+
 
 }
