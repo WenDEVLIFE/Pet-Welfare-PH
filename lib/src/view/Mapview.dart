@@ -15,6 +15,7 @@ import '../services/MapTilerKey.dart';
 import 'package:provider/provider.dart';
 
 import '../utils/SessionManager.dart';
+import '../widgets/MapSearchTextField.dart';
 
 class MapView extends StatefulWidget {
   const MapView({Key? key}) : super(key: key);
@@ -28,9 +29,6 @@ class MapViewState extends State<MapView> {
   late MapViewModel _mapViewModel;
   final sessionManager = SessionManager();
   String role = '';
-  bool _showDropdown = false;
-  final TextEditingController _searchController = TextEditingController();
-  final FocusNode _focusNode = FocusNode();
 
   @override
   void initState() {
@@ -38,10 +36,8 @@ class MapViewState extends State<MapView> {
     _mapViewModel = Provider.of<MapViewModel>(context, listen: false);
     _mapFuture = multipliAsync();
 
-    _searchController.addListener(() {
-      setState(() {
-        _showDropdown = _searchController.text.isNotEmpty;
-      });
+    _mapViewModel.searchController.addListener(() {
+      _mapViewModel.setSearchText();
     });
   }
 
@@ -69,16 +65,10 @@ class MapViewState extends State<MapView> {
     if (mounted) {
       _mapViewModel.initializeClickMarkers(context);
     }
-
-    Timer.periodic(const Duration(seconds: 5), (timer) {
-      _mapViewModel.initializeLoads();
-    });
   }
 
   @override
   void dispose() {
-    _searchController.dispose();
-    _focusNode.dispose();
     super.dispose();
   }
 
@@ -103,8 +93,8 @@ class MapViewState extends State<MapView> {
       body: GestureDetector(
         onTap: () {
           setState(() {
-            _showDropdown = false;
-            _focusNode.unfocus();
+            _mapViewModel.showDropdown = false;
+            _mapViewModel.focusNode.unfocus();
           });
         },
         child: Stack(
@@ -134,61 +124,14 @@ class MapViewState extends State<MapView> {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 children: [
-                  Container(
-                    width: screenWidth * 0.99,
-                    height: screenHeight * 0.08,
-                    padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                    decoration: BoxDecoration(
-                      color: Colors.transparent,
-                      borderRadius: BorderRadius.circular(30),
-                      border: Border.all(color: Colors.transparent, width: 7),
-                    ),
-                    child: TextField(
-                      controller: _searchController,
-                      focusNode: _focusNode,
-                      onChanged: (query) {
-                        _mapViewModel.searchLocation(query);
-                      },
-                      decoration: InputDecoration(
-                        filled: true,
-                        prefixIcon: const Icon(Icons.search, color: Colors.black),
-                        suffixIcon: _searchController.text.isNotEmpty
-                            ? IconButton(
-                          icon: const Icon(Icons.clear, color: Colors.black),
-                          onPressed: () {
-                            _searchController.clear();
-                            _mapViewModel.removePins();
-                          },
-                        )
-                            : null,
-                        fillColor: Colors.grey[200],
-                        border: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                        ),
-                        enabledBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: AppColors.orange, width: 2),
-                        ),
-                        focusedBorder: OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(10),
-                          borderSide: const BorderSide(color: AppColors.orange, width: 2),
-                        ),
-                        hintText: 'Search an address....',
-                        hintStyle: const TextStyle(
-                          color: Colors.black,
-                        ),
-                        contentPadding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 0),
-                      ),
-                      style: const TextStyle(
-                        fontFamily: 'LeagueSpartan',
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
+                  MapSearchTextField(
+                    controller: _mapViewModel.searchController,
+                    focusNode: _mapViewModel.focusNode,
+                    onSearch: _mapViewModel.searchLocation,
+                    onClear: _mapViewModel.clearSearch,
+                    hintText: 'Search your address...',
                   ),
-                  if (_showDropdown)
+                  if (_mapViewModel.showDropdown)
                     Consumer<MapViewModel>(
                       builder: (context, viewModel, child) {
                         return Container(
@@ -205,9 +148,9 @@ class MapViewState extends State<MapView> {
                                 title: Text(result['display_name']),
                                 onTap: () {
                                   setState(() {
-                                    _searchController.text = result['display_name'];
-                                    _showDropdown = false;
-                                    _focusNode.unfocus();
+                                    _mapViewModel.searchController.text = result['display_name'];
+                                    _mapViewModel.showDropdown = false;
+                                    _mapViewModel.focusNode.unfocus();
                                     locationModal().ShowLocationModal(context, result, _mapViewModel);
                                     _mapViewModel.initializeLoads();
                                   });
@@ -237,11 +180,26 @@ class MapViewState extends State<MapView> {
           ],
         ),
       ),
-      floatingActionButton: role.toLowerCase() == 'pet rescuer' || role.toLowerCase() == 'pet shelter'
-          ? SpeedDial(
+      floatingActionButton: SpeedDial(
         icon: Icons.menu,
         backgroundColor: AppColors.orange,
         children: [
+          SpeedDialChild(
+            child: const Icon(Icons.house, color: AppColors.white),
+            backgroundColor: AppColors.orange,
+            label: 'Refresh the map',
+            onTap: () {
+              _mapViewModel.refreshMarkers();
+            },
+          ),
+          SpeedDialChild(
+            child: const Icon(Icons.house, color: AppColors.white),
+            backgroundColor: AppColors.orange,
+            label: 'Click for nearby rescuer, shelter, clinic',
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.shelterClinic);
+            },
+          ),
           SpeedDialChild(
             child: const Icon(Icons.my_location, color: AppColors.white),
             backgroundColor: AppColors.orange,
@@ -259,35 +217,16 @@ class MapViewState extends State<MapView> {
               }
             },
           ),
-          SpeedDialChild(
-            child: const Icon(Icons.house, color: AppColors.white),
-            backgroundColor: AppColors.orange,
-            label: 'My Pet Shelter & Clinic',
-            onTap: () {
-              Navigator.pushNamed(context, AppRoutes.shelterClinic);
-            },
-          ),
-        ],
-      )
-          : Column(
-        mainAxisAlignment: MainAxisAlignment.end,
-        children: [
-          FloatingActionButton(
-            backgroundColor: AppColors.orange,
-            onPressed: () {
-              if (_mapViewModel.mapController != null) {
-                _mapViewModel.mapController!.animateCamera(
-                  CameraUpdate.newCameraPosition(
-                    CameraPosition(
-                      target: LatLng(_mapViewModel.lat, _mapViewModel.long),
-                      zoom: 15.0,
-                    ),
-                  ),
-                );
-              }
-            },
-            child: const Icon(Icons.my_location, color: AppColors.white),
-          ),
+          if(role.toLowerCase() != 'fur user') ...[
+            SpeedDialChild(
+              child: const Icon(Icons.house, color: AppColors.white),
+              backgroundColor: AppColors.orange,
+              label: 'My Pet Shelter & Clinic',
+              onTap: () {
+                Navigator.pushNamed(context, AppRoutes.shelterClinic);
+              },
+            ),
+          ],
         ],
       ),
     );

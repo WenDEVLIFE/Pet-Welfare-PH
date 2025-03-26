@@ -40,8 +40,14 @@ class MapViewModel extends ChangeNotifier {
   Stream <List<RescueModel>>? rescueStream;
   List<SymbolOptions> symbols = [];
   bool _isLoadingMarkers = false;
+  bool showDropdown = false;
+  final TextEditingController searchController = TextEditingController();
+  final FocusNode focusNode = FocusNode();
 
   MapViewModel() {
+    developer.log('Requesting permissions...');
+    requestPermissions();
+    developer.log('Permissions requested.');
     initializeLoads();
   }
 
@@ -116,33 +122,28 @@ class MapViewModel extends ChangeNotifier {
   Future<void> initializeLoads() async {
     await Future.wait([
           () async {
-        developer.log('Requesting permissions...');
-        await requestPermissions();
-        developer.log('Permissions requested.');
-      }(),
-          () async {
         developer.log('Preloading marker images...');
-        await preloadMarkerImages();
+        preloadMarkerImages();
         developer.log('Marker images preloaded.');
       }(),
           () async {
         developer.log('Fetching establishments...');
-        await fetchEstablishments();
+        fetchEstablishments();
         developer.log('Establishments fetched.');
       }(),
           () async {
         developer.log('Fetching lost and found pets...');
-        await fetchLostAndFoundPets();
+        fetchLostAndFoundPets();
         developer.log('Lost and found pets fetched.');
       }(),
           () async {
         developer.log('Fetching found pets...');
-        await fetchFoundPets();
+        fetchFoundPets();
         developer.log('Found pets fetched.');
       }(),
           () async {
         developer.log('Fetching rescue...');
-        await fetchRescue();
+        fetchRescue();
         developer.log('Rescue fetched.');
       }(),
     ]);
@@ -181,6 +182,12 @@ class MapViewModel extends ChangeNotifier {
     }
 
     _isLoadingMarkers = false;
+  }
+
+  void clearSearch() {
+    searchController.clear();
+    showDropdown = false;
+    notifyListeners();
   }
 
   Future<void> addLostAndFoundPetPins() async {
@@ -416,5 +423,18 @@ class MapViewModel extends ChangeNotifier {
       addRescuePins();
       notifyListeners();
     }
+  }
+
+  Future<void> refreshMarkers() async {
+    if (mapController != null) {
+      mapController!.clearSymbols();
+      await initializeLoads();
+      notifyListeners();
+    }
+  }
+
+  Future <void> setSearchText()async {
+    showDropdown = searchController.text.isNotEmpty;
+    notifyListeners();
   }
 }
