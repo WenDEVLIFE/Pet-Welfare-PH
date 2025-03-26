@@ -29,8 +29,6 @@ class _PetModalState extends State<RescueModal> {
 
   @override
   Widget build(BuildContext context) {
-    ApplyAdoptionViewModel createPostViewModel = Provider.of<ApplyAdoptionViewModel>(context);
-
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
     return Container(
@@ -48,8 +46,8 @@ class _PetModalState extends State<RescueModal> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text( petrescuer['petName']=='Found Pets' ? 'Found Pet Details' : 'Lost Pet Details',
-                style: const TextStyle(
+              const Text( 'Pet Rescuer Details',
+                style: TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
                 ),
@@ -69,29 +67,26 @@ class _PetModalState extends State<RescueModal> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   ListTile(
-                    title: Container(
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(10),
-                      ),
-                      height: screenHeight * 0.3,
-                      child: PageView.builder(
-                        itemCount: petrescuer['imageUrls'].length,
-                        itemBuilder: (context, imageIndex) {
-                          return Container(
-                            width: screenWidth * 0.8,
-                            height: screenHeight * 0.5,
-                            child: CachedNetworkImage(
-                              imageUrl: petrescuer['imageUrls'][imageIndex],
-                              fit: BoxFit.cover,
-                            ),
-                          );
-                        },
-                      ),
-                    ),
+                    title: GestureDetector(
+              child: CircleAvatar(
+                radius: screenHeight * 0.07,
+                backgroundColor: AppColors.black,
+                child: CircleAvatar(
+                  radius: screenHeight * 0.068,
+                  backgroundImage: CachedNetworkImageProvider(petrescuer['rescueImage']),
+                ),
+              ),
+              onTap: () {
+                // Implement image upload functionality here
+                Navigator.pushNamed(context, AppRoutes.viewImageData, arguments: {
+                  'imagePath': petrescuer['rescueImage'],
+                });
+              },
+            ),
                   ),
                   ListTile(
                     title: const Text(
-                      'Pet Name',
+                      'Rescuer Name',
                       style: TextStyle(
                         color: Colors.black,
                         fontSize: 18,
@@ -99,115 +94,7 @@ class _PetModalState extends State<RescueModal> {
                         fontWeight: FontWeight.w600,
                       ),
                     ),
-                    subtitle: Text(petrescuer['petName']),
-                  ),
-                  ListTile(
-                    title: const Text(
-                      'Pet Type',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontFamily: 'SmoochSans',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    subtitle: Text(petrescuer['petType']),
-                  ),
-                  ListTile(
-                    title: const Text(
-                      'Pet Breed',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontFamily: 'SmoochSans',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    subtitle: Text(petrescuer['petBreed']),
-                  ),
-                  ListTile(
-                    title: const Text(
-                      'Pet Gender',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontFamily: 'SmoochSans',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    subtitle: Text(petrescuer['petGender']),
-                  ),
-                  ListTile(
-                    title: const Text(
-                      'Pet Age',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontFamily: 'SmoochSans',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    subtitle: Text(petrescuer['petAge']),
-                  ),
-                  ListTile(
-                    title: const Text(
-                      'Pet Color',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontFamily: 'SmoochSans',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    subtitle: Text(petrescuer['petColor']),
-                  ),
-                  ListTile(
-                    title: const Text(
-                      'Pet Address',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontFamily: 'SmoochSans',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    subtitle: Text(petrescuer['petAddress']),
-                  ),
-                  ListTile(
-                    title: const Text(
-                      'Region, Province, City, Barangay',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontFamily: 'SmoochSans',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    subtitle: Text(petrescuer['regProCiBag']),
-                  ),
-                  ListTile(
-                    title: Text(
-                      petrescuer['petName']=='Found Pets' ? 'Date of the found pet' : 'Date of the lost pet',
-                      style: const TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontFamily: 'SmoochSans',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    subtitle: Text(petrescuer['date']),
-                  ),
-                  ListTile(
-                    title: const Text(
-                      'Status',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontFamily: 'SmoochSans',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                    subtitle: Text(petrescuer['status']),
+                    subtitle: Text(petrescuer['name']),
                   ),
                   ListTile(
                     title: const Text(
@@ -244,13 +131,13 @@ class _PetModalState extends State<RescueModal> {
                             User user = FirebaseAuth.instance.currentUser!;
                             String uid = user.uid;
 
-                            if (petrescuer['postOwnerID'] == uid) {
+                            if (petrescuer['rescueId'] == uid) {
                               ToastComponent().showMessage(Colors.red, 'You cannot send a message to yourself');
                               return;
                             }
 
                             Navigator.pushNamed(context, AppRoutes.message, arguments:{
-                              'receiverID': petrescuer['postOwnerId'],
+                              'receiverID': petrescuer['rescueId'],
                             });
                           }
                       ),

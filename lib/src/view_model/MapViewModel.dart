@@ -8,6 +8,7 @@ import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:path/path.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:pet_welfrare_ph/src/modal/PetModal.dart';
+import 'package:pet_welfrare_ph/src/modal/RescueModal.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 import 'package:pet_welfrare_ph/src/model/RescueModel.dart';
 import 'package:pet_welfrare_ph/src/respository/GenerateEstablismentRepository.dart';
@@ -123,27 +124,27 @@ class MapViewModel extends ChangeNotifier {
     await Future.wait([
           () async {
         developer.log('Preloading marker images...');
-        preloadMarkerImages();
+        await preloadMarkerImages();
         developer.log('Marker images preloaded.');
       }(),
           () async {
         developer.log('Fetching establishments...');
-        fetchEstablishments();
+        await fetchEstablishments();
         developer.log('Establishments fetched.');
       }(),
           () async {
         developer.log('Fetching lost and found pets...');
-        fetchLostAndFoundPets();
+        await fetchLostAndFoundPets();
         developer.log('Lost and found pets fetched.');
       }(),
           () async {
         developer.log('Fetching found pets...');
-        fetchFoundPets();
+        await fetchFoundPets();
         developer.log('Found pets fetched.');
       }(),
           () async {
         developer.log('Fetching rescue...');
-        fetchRescue();
+        await fetchRescue();
         developer.log('Rescue fetched.');
       }(),
     ]);
@@ -285,85 +286,100 @@ class MapViewModel extends ChangeNotifier {
       }
 
       // Check for lost pet markers
-      for (var pet in lostpets) {
-        if (symbol.options.iconImage == "custom_marker_lost" && pet.category.toLowerCase() == 'lost pets') {
-          ToastComponent().showMessage(Colors.green, 'Lost and Found Pet: ${pet.petName}');
+      if (symbol.options.iconImage == "custom_marker_lost") {
+        for (var pet in lostpets) {
+          if (name == '${pet.category} spotted') {
+            ToastComponent().showMessage(Colors.green, 'Lost and Found Pet: ${pet.petName}');
 
-          var petInfo = {
-            'petName': pet.petName,
-            'petType': pet.petType,
-            'petBreed': pet.petBreed,
-            'petGender': pet.petGender,
-            'petAge': pet.petAge,
-            'petColor': pet.petColor,
-            'petAddress': pet.petAddress,
-            'regProCiBag': pet.regProCiBag,
-            'date': pet.date,
-            'lat': pet.lat,
-            'long': pet.long,
-            'postOwnerId': pet.postOwnerId,
-            'status': pet.Status,
-          };
-          // Show pet info modal or any other UI component
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            builder: (context) {
-              return PetModal(pet: petInfo);
-            },
-          );
-          return; // Stop further checks
+            var postInfo = {
+              'petName': pet.petName,
+              'petType': pet.petType,
+              'petBreed': pet.petBreed,
+              'petGender': pet.petGender,
+              'petAge': pet.petAge,
+              'petColor': pet.petColor,
+              'petAddress': pet.petAddress,
+              'regProCiBag': pet.regProCiBag,
+              'date': pet.date,
+              'lat': pet.lat,
+              'long': pet.long,
+              'category': pet.category,
+              'imageUrls': pet.imageUrls,
+              'postOwnerId': pet.postOwnerId,
+              'status': pet.Status,
+            };
+            // Show pet info modal or any other UI component
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (context) {
+                return PetModal(pet: postInfo);
+              },
+            );
+            return; // Stop further checks
+          }
         }
       }
 
       // Check for found pet markers
-      for (var pet in foundpets) {
-        if (symbol.options.iconImage == "custom_marker_found" && pet.category.toLowerCase() == 'found pets') {
-          ToastComponent().showMessage(Colors.green, 'Pet Found: ${pet.petName}');
+      if (symbol.options.iconImage == "custom_marker_found") {
+        for (var pet in foundpets) {
+          if (name == '${pet.category} spotted') {
+            ToastComponent().showMessage(Colors.green, 'Pet Found: ${pet.petName}');
 
-          var postInfo = {
-            'petName': pet.petName,
-            'petType': pet.petType,
-            'petBreed': pet.petBreed,
-            'petGender': pet.petGender,
-            'petAge': pet.petAge,
-            'petColor': pet.petColor,
-            'petAddress': pet.petAddress,
-            'regProCiBag': pet.regProCiBag,
-            'date': pet.date,
-            'lat': pet.lat,
-            'long': pet.long,
-            'imageUrls': pet.imageUrls,
-            'postOwnerId': pet.postOwnerId,
-            'status': pet.Status,
-          };
-          // Show post info modal or any other UI component
-          showModalBottomSheet(
-            context: context,
-            isScrollControlled: true,
-            builder: (context) {
-              return PetModal(pet: postInfo);
-            },
-          );
-          return; // Stop further checks
+            var postInfo = {
+              'petName': pet.petName,
+              'petType': pet.petType,
+              'petBreed': pet.petBreed,
+              'petGender': pet.petGender,
+              'petAge': pet.petAge,
+              'petColor': pet.petColor,
+              'petAddress': pet.petAddress,
+              'regProCiBag': pet.regProCiBag,
+              'date': pet.date,
+              'lat': pet.lat,
+              'long': pet.long,
+              'category': pet.category,
+              'imageUrls': pet.imageUrls,
+              'postOwnerId': pet.postOwnerId,
+              'status': pet.Status,
+            };
+            // Show found pet modal
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (context) {
+                return PetModal(pet: postInfo);
+              },
+            );
+            return; // Stop further checks
+          }
         }
       }
 
       // Check for rescue markers
-      for (var res in rescue) {
-        if (symbol.options.iconImage == "custom_marker_rescuer" && res.role.toLowerCase() == 'pet rescuer') {
-          ToastComponent().showMessage(Colors.green, 'Rescuer: ${res.name}');
-          var rescueInfo = {
-            'name': res.name,
-            'latitude': res.latitude,
-            'longtitude': res.longtitude,
-            'rescueId': res.id,
-            'rescueImage': res.profileUrl,
-          };
-          // Show post info modal or any other UI component
-          // TODO: Show rescue info modal
+      if (symbol.options.iconImage == "custom_marker_rescuer") {
+        for (var res in rescue) {
+          if (name == '${res.role} spotted') {
+            ToastComponent().showMessage(Colors.green, 'Rescuer: ${res.name}');
+            var rescueInfo = {
+              'name': res.name,
+              'lat': res.latitude.toString(),
+              'long': res.longtitude.toString(),
+              'rescueId': res.id,
+              'rescueImage': res.profileUrl,
+            };
+            // Show post info modal or any other UI component
+            showModalBottomSheet(
+              context: context,
+              isScrollControlled: true,
+              builder: (context) {
+                return RescueModal(petrescuer: rescueInfo);
+              },
+            );
 
-          return; // Stop further checks
+            return; // Stop further checks
+          }
         }
       }
     });
