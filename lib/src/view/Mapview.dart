@@ -27,11 +27,10 @@ class MapViewState extends State<MapView> {
   late Future<void> _mapFuture;
   late MapViewModel _mapViewModel;
   final sessionManager = SessionManager();
-  String role ='';
+  String role = '';
   bool _showDropdown = false;
   final TextEditingController _searchController = TextEditingController();
   final FocusNode _focusNode = FocusNode();
-
 
   @override
   void initState() {
@@ -50,7 +49,6 @@ class MapViewState extends State<MapView> {
     await Future.wait([
       _loadMap(),
       LoadRole(),
-      _mapViewModel.requestPermissions(),
     ]);
   }
 
@@ -67,16 +65,20 @@ class MapViewState extends State<MapView> {
 
   void onMapCreated(MaplibreMapController controller) async {
     _mapViewModel.mapController = controller;
-    await _mapViewModel.initializeLoads();
+    _mapViewModel.initializeLoads();
     if (mounted) {
       _mapViewModel.initializeClickMarkers(context);
     }
 
+    Timer.periodic(const Duration(seconds: 5), (timer) {
+      _mapViewModel.initializeLoads();
+    });
   }
-
 
   @override
   void dispose() {
+    _searchController.dispose();
+    _focusNode.dispose();
     super.dispose();
   }
 

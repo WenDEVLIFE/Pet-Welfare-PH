@@ -1,3 +1,4 @@
+import 'dart:developer' as developer;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
@@ -45,22 +46,16 @@ class MapViewModel extends ChangeNotifier {
   }
 
   // get permissions
-  Future<void> requestPermissions() async {
-    var status = await Permission.location.request();
-
-    if (status.isGranted) {
-      SchedulerBinding.instance.addPostFrameCallback((_) async {
-        Position? position = await GeoUtils().getLocation();
-        if (position != null) {
-          lat = position.latitude;
-          long = position.longitude;
-        }
-        notifyListeners();
-      });
-    } else {
-      ToastComponent().showMessage(Colors.red, 'Location permissions are denied.');
-      notifyListeners();
-    }
+ Future <void> requestPermissions() async  {
+   Position? position = await GeoUtils().getLocation();
+   if (position != null) {
+     lat = position.latitude;
+     long = position.longitude;
+     notifyListeners();
+   } else{
+     ToastComponent().showMessage(Colors.red, 'Location permissions are denied.');
+     notifyListeners();
+   }
   }
 
   // search locations
@@ -119,13 +114,37 @@ class MapViewModel extends ChangeNotifier {
   }
 
   Future<void> initializeLoads() async {
-    Future.wait([
-      requestPermissions(),
-      preloadMarkerImages(),
-      fetchEstablishments(),
-      fetchLostAndFoundPets(),
-      fetchFoundPets(),
-      fetchRescue(),
+    await Future.wait([
+          () async {
+        developer.log('Requesting permissions...');
+        await requestPermissions();
+        developer.log('Permissions requested.');
+      }(),
+          () async {
+        developer.log('Preloading marker images...');
+        await preloadMarkerImages();
+        developer.log('Marker images preloaded.');
+      }(),
+          () async {
+        developer.log('Fetching establishments...');
+        await fetchEstablishments();
+        developer.log('Establishments fetched.');
+      }(),
+          () async {
+        developer.log('Fetching lost and found pets...');
+        await fetchLostAndFoundPets();
+        developer.log('Lost and found pets fetched.');
+      }(),
+          () async {
+        developer.log('Fetching found pets...');
+        await fetchFoundPets();
+        developer.log('Found pets fetched.');
+      }(),
+          () async {
+        developer.log('Fetching rescue...');
+        await fetchRescue();
+        developer.log('Rescue fetched.');
+      }(),
     ]);
   }
 
@@ -235,6 +254,7 @@ class MapViewModel extends ChangeNotifier {
     mapController!.onSymbolTapped.add((Symbol symbol) {
       String name = symbol.options.textField ?? 'Unknown';
 
+      // Check for establishment markers
       for (var establishment in establishments) {
         if (establishment.establishmentName == name) {
           ToastComponent().showMessage(Colors.green, 'Establishment: ${establishment.establishmentName}');
@@ -257,8 +277,9 @@ class MapViewModel extends ChangeNotifier {
         }
       }
 
+      // Check for lost pet markers
       for (var pet in lostpets) {
-        if (pet.category.toLowerCase()=='lost pets') {
+        if (symbol.options.iconImage == "custom_marker_lost" && pet.category.toLowerCase() == 'lost pets') {
           ToastComponent().showMessage(Colors.green, 'Lost and Found Pet: ${pet.petName}');
 
           var petInfo = {
@@ -275,7 +296,6 @@ class MapViewModel extends ChangeNotifier {
             'long': pet.long,
             'postOwnerId': pet.postOwnerId,
             'status': pet.Status,
-
           };
           // Show pet info modal or any other UI component
           showModalBottomSheet(
@@ -289,8 +309,9 @@ class MapViewModel extends ChangeNotifier {
         }
       }
 
+      // Check for found pet markers
       for (var pet in foundpets) {
-        if (pet.category.toLowerCase()=='found pets') {
+        if (symbol.options.iconImage == "custom_marker_found" && pet.category.toLowerCase() == 'found pets') {
           ToastComponent().showMessage(Colors.green, 'Pet Found: ${pet.petName}');
 
           var postInfo = {
@@ -317,28 +338,27 @@ class MapViewModel extends ChangeNotifier {
               return PetModal(pet: postInfo);
             },
           );
-
           return; // Stop further checks
         }
       }
 
+      // Check for rescue markers
       for (var res in rescue) {
-         if (res.role.toLowerCase()== 'pet rescuer') {
-           ToastComponent().showMessage(Colors.green, 'Rescuer: ${res.name}');
-           var rescueInfo = {
-             'name': res.name,
-             'latitude': res.latitude,
-             'longtitude': res.longtitude,
-             'rescueId': res.id,
-             'rescueImage': res.profileUrl,
-           };
-           // Show post info modal or any other UI component
-           // TODO: Show rescue info modal
+        if (symbol.options.iconImage == "custom_marker_rescuer" && res.role.toLowerCase() == 'pet rescuer') {
+          ToastComponent().showMessage(Colors.green, 'Rescuer: ${res.name}');
+          var rescueInfo = {
+            'name': res.name,
+            'latitude': res.latitude,
+            'longtitude': res.longtitude,
+            'rescueId': res.id,
+            'rescueImage': res.profileUrl,
+          };
+          // Show post info modal or any other UI component
+          // TODO: Show rescue info modal
 
-           return; // Stop further checks
-         }
-         }
-
+          return; // Stop further checks
+        }
+      }
     });
   }
 

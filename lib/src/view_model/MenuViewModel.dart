@@ -64,26 +64,16 @@ class MenuViewModel extends ChangeNotifier {
 
   // get permissions
   Future<void> requestPermissions() async {
-    var status = await Permission.location.request();
-
-    if (status.isGranted) {
-      SchedulerBinding.instance.addPostFrameCallback((_) async {
-        Position? position = await GeoUtils().getLocation();
-        if (position != null) {
-          lat = position.latitude;
-          long = position.longitude;
-          isRequesting = true;
-        } else {
-          isRequesting = false;
-          ToastComponent().showMessage(Colors.red, 'Failed to get location.');
-        }
-        notifyListeners();
-      });
+    Position? position = await GeoUtils().getLocation();
+    if (position != null) {
+      lat = position.latitude;
+      long = position.longitude;
+      isRequesting = true;
     } else {
       isRequesting = false;
-      ToastComponent().showMessage(Colors.red, 'Location permissions are denied.');
-      notifyListeners();
+      ToastComponent().showMessage(Colors.red, 'Failed to get location.');
     }
+    notifyListeners();
   }
 
   Future<void> pinRescue() async {
