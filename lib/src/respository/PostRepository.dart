@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -9,6 +11,7 @@ import 'package:uuid/uuid.dart';
 
 import '../model/CommentModel.dart';
 import '../utils/AppColors.dart';
+import 'dart:developer' as developer;
 
 abstract class PostRepository {
   Future<void> uploadPost(String postText, List<File> images, String category);
@@ -51,6 +54,8 @@ abstract class PostRepository {
   Future <void> uploadAdoption(List<File> images, String selectedChip, Map<String, Object> petData);
 
   Stream<List<PostModel>> getPetAdoption();
+
+  Future<List<PostModel>> getNearbyFoundPets(double lat, double long);
 
 }
 
@@ -483,6 +488,44 @@ class PostRepositoryImpl implements PostRepository {
       List<Future<PostModel>> postFutures = snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
       return await Future.wait(postFutures);
     });
+  }
+
+  Future<List<PostModel>> getNearbyFoundPets(double lat, double long) async {
+    try {
+      // Define the radius in kilometers
+      double radiusInKm = 10.0;
+
+      // Calculate the bounds for the query
+      double latDelta = radiusInKm / 111.0; // 1 degree of latitude is approximately 111 km
+      double longDelta = radiusInKm / (111.0 * cos(lat * pi / 180.0));
+
+      // Query Firestore for found pets within the bounds in PostCollection
+      QuerySnapshot postCollectionSnapshot = await _firestore.collection('PostCollection')
+          .where('Category', isEqualTo: 'Found Pets').get();
+
+      // For each post, query the PetDetailsCollection to get the corresponding pet details
+      List<PostModel> foundPets = await Future.wait(postCollectionSnapshot.docs.map((doc) async {
+        var post = await PostModel.fromDocument(doc);
+        var petDetailsSnapshot = await _firestore.collection('PetDetailsCollection')
+            .where('Latitude', isGreaterThanOrEqualTo: lat - latDelta)
+            .where('Latitude', isLessThanOrEqualTo: lat + latDelta)
+            .where('Longitude', isGreaterThanOrEqualTo: long - longDelta)
+            .where('Longitude', isLessThanOrEqualTo: long + longDelta)
+            .get();
+
+        if (petDetailsSnapshot.docs.isNotEmpty) {
+          var petDetailsDoc = petDetailsSnapshot.docs.first;
+          post.lat = petDetailsDoc['Latitude'];
+          post.long = petDetailsDoc['Longitude'];
+        }
+        return post;
+      }).toList());
+
+      return foundPets;
+    } catch (e) {
+      developer.log('Error fetching nearby found pets: $e');
+      return [];
+    }
   }
 
 

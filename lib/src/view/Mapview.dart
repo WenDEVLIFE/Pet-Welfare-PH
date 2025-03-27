@@ -185,7 +185,7 @@ class MapViewState extends State<MapView> {
         backgroundColor: AppColors.orange,
         children: [
           SpeedDialChild(
-            child: const Icon(Icons.house, color: AppColors.white),
+            child: const Icon(Icons.sync, color: AppColors.white),
             backgroundColor: AppColors.orange,
             label: 'Refresh the map',
             onTap: () {
@@ -193,11 +193,11 @@ class MapViewState extends State<MapView> {
             },
           ),
           SpeedDialChild(
-            child: const Icon(Icons.house, color: AppColors.white),
+            child: const Icon(Icons.near_me, color: AppColors.white),
             backgroundColor: AppColors.orange,
             label: 'Click for nearby rescuer, shelter, clinic',
             onTap: () {
-              Navigator.pushNamed(context, AppRoutes.shelterClinic);
+              _mapViewModel.initializeNearby();
             },
           ),
           SpeedDialChild(

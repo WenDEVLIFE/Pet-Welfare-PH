@@ -5,8 +5,6 @@ import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
-import 'package:path/path.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:pet_welfrare_ph/src/modal/PetModal.dart';
 import 'package:pet_welfrare_ph/src/modal/RescueModal.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
@@ -19,27 +17,32 @@ import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import '../modal/EstablishmentModal.dart';
 import '../model/EstablishmentModel.dart';
 import '../respository/PostRepository.dart';
-import 'package:async/async.dart';
 
 class MapViewModel extends ChangeNotifier {
-  double lat = 14.5995;  // Example: Manila, Philippines
+  MaplibreMapController? mapController;
+
+  double lat = 14.5995;
   double long = 120.9842;
+
   final OpenStreetMapService _openStreetMapService = OpenStreetMapService();
   final GenerateEstablishmentRepository _generateEstablismentRepository = GenerateEstablishmentRepositoryImpl();
   final Locationrespository locationRepository = LocationrespositoryImpl();
   PostRepository postRepository = PostRepositoryImpl();
-  MaplibreMapController? mapController;
+
   List<Map<String, dynamic>> searchResults = [];
   List<Map<String, dynamic>> mapLocations = [];
+  List<SymbolOptions> symbols = [];
   List<EstablishmentModel> establishments = [];
   List<PostModel> lostpets = [];
   List<PostModel> foundpets = [];
   List<RescueModel> rescue = [];
+
   Stream<List<EstablishmentModel>>? establishmentsStream;
   Stream<List<PostModel>>? foundPetsStream;
   Stream<List<PostModel>>? lostPetsStream;
   Stream <List<RescueModel>>? rescueStream;
-  List<SymbolOptions> symbols = [];
+
+
   bool _isLoadingMarkers = false;
   bool showDropdown = false;
   final TextEditingController searchController = TextEditingController();
@@ -87,6 +90,7 @@ class MapViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // get preloaded marker images
   Future<void> preloadMarkerImages() async {
     if (mapController == null) return;
 
@@ -100,12 +104,14 @@ class MapViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // load and cache image
   Future<void> _loadAndCacheImage(String assetPath, String imageName) async {
     ByteData data = await rootBundle.load(assetPath);
     Uint8List bytes = data.buffer.asUint8List();
     await mapController!.addImage(imageName, bytes);
   }
 
+  // add pin
   Future<void> addPin(LatLng position) async {
     if (mapController != null) {
       await loadMarkerImage();
@@ -120,6 +126,7 @@ class MapViewModel extends ChangeNotifier {
     }
   }
 
+  // get current location
   Future<void> initializeLoads() async {
     await Future.wait([
           () async {
@@ -148,12 +155,16 @@ class MapViewModel extends ChangeNotifier {
         developer.log('Rescue fetched.');
       }(),
     ]);
+
+    notifyListeners();
   }
 
+  // get establishments
   static List<EstablishmentModel> parseEstablishments(List<Map<String, dynamic>> data) {
     return data.map((e) => EstablishmentModel.fromJson(e)).toList();
   }
 
+  // add establishments pins
   Future<void> addEstablishmentPins() async {
     if (mapController == null || _isLoadingMarkers || establishments.isEmpty) return;
 
@@ -185,12 +196,14 @@ class MapViewModel extends ChangeNotifier {
     _isLoadingMarkers = false;
   }
 
+  // clear search
   void clearSearch() {
     searchController.clear();
     showDropdown = false;
     notifyListeners();
   }
 
+  // add lost and found pet pins
   Future<void> addLostAndFoundPetPins() async {
     if (mapController == null || _isLoadingMarkers || lostpets.isEmpty) return;
 
@@ -213,6 +226,7 @@ class MapViewModel extends ChangeNotifier {
     _isLoadingMarkers = false;
   }
 
+  // add pet adoption pins
   Future<void> addPetAdoptionPins() async {
     if (mapController == null || _isLoadingMarkers || foundpets.isEmpty) return;
 
@@ -235,6 +249,7 @@ class MapViewModel extends ChangeNotifier {
     _isLoadingMarkers = false;
   }
 
+  // add rescue pins
   Future <void> addRescuePins()  async {
     if (mapController == null || _isLoadingMarkers || rescue.isEmpty) return;
 
@@ -257,6 +272,7 @@ class MapViewModel extends ChangeNotifier {
     _isLoadingMarkers = false;
   }
 
+  // added click markers
   void initializeClickMarkers(BuildContext context) {
     // Set up the click listener
     mapController!.onSymbolTapped.add((Symbol symbol) {
@@ -385,6 +401,7 @@ class MapViewModel extends ChangeNotifier {
     });
   }
 
+  // remove pins
   void removePins() {
     if (mapController != null) {
       mapController!.clearSymbols();
@@ -393,6 +410,7 @@ class MapViewModel extends ChangeNotifier {
     }
   }
 
+  // fetch lost and found pets
   Future<void> fetchLostAndFoundPets() async {
     lostPetsStream = postRepository.getMissingPosts();
     lostPetsStream!.listen((data) {
@@ -402,6 +420,7 @@ class MapViewModel extends ChangeNotifier {
     });
   }
 
+  // fetch found pets
   Future<void> fetchFoundPets() async {
     foundPetsStream = postRepository.getFoundPost();
     foundPetsStream!.listen((data) {
@@ -411,6 +430,7 @@ class MapViewModel extends ChangeNotifier {
     });
   }
 
+  // fetch establishments
   Future<void> fetchEstablishments() async {
     print("Fetching establishments...");
     establishmentsStream = _generateEstablismentRepository.getEstablishment();
@@ -421,6 +441,7 @@ class MapViewModel extends ChangeNotifier {
     });
   }
 
+  // fetch rescue
   Future<void> fetchRescue() async {
     print("Fetching rescue...");
     rescueStream = locationRepository.getRescueData();
@@ -431,6 +452,7 @@ class MapViewModel extends ChangeNotifier {
     });
   }
 
+  // on camera idle
   void onCameraIdle() {
     if (mapController != null) {
       addEstablishmentPins();
@@ -441,6 +463,7 @@ class MapViewModel extends ChangeNotifier {
     }
   }
 
+  // refresh markers
   Future<void> refreshMarkers() async {
     if (mapController != null) {
       mapController!.clearSymbols();
@@ -449,8 +472,140 @@ class MapViewModel extends ChangeNotifier {
     }
   }
 
+  // set search text
   Future <void> setSearchText()async {
     showDropdown = searchController.text.isNotEmpty;
     notifyListeners();
   }
+
+
+  Future<void> initializeNearby() async {
+    if (mapController == null) return;
+
+    Position? position = await GeoUtils().getLocation();
+    if (position == null) {
+      ToastComponent().showMessage(Colors.red, 'Unable to get current location.');
+      return;
+    }
+
+    lat = position.latitude;
+    long = position.longitude;
+
+    // Fetch nearby establishments, missing pets, found pets, and rescuers
+   // List<EstablishmentModel> nearbyEstablishments = await fetchNearbyEstablishments(lat, long);
+    // List<PostModel> nearbyLostPets = await fetchNearbyLostPets(lat, long);
+    List<PostModel> nearbyFoundPets = await fetchNearbyFoundPets(lat, long);
+    List<RescueModel> nearbyRescuers = await fetchNearbyRescuers(lat, long);
+
+    // Clear existing symbols
+    mapController!.clearSymbols();
+    symbols.clear();
+
+    /*
+    // Add pins for nearby establishments
+    for (var establishment in nearbyEstablishments) {
+      symbols.add(SymbolOptions(
+        geometry: LatLng(establishment.establishmentLat, establishment.establishmentLong),
+        iconImage: "custom_marker_establishment",
+        iconSize: 1.0,
+        textField: establishment.establishmentName,
+        textOffset: const Offset(0, 1.5),
+      ));
+    }
+
+
+
+    // Add pins for nearby lost pets
+    for (var pet in nearbyLostPets) {
+      symbols.add(SymbolOptions(
+        geometry: LatLng(pet.lat, pet.long),
+        iconImage: "custom_marker_lost",
+        iconSize: 1.5,
+        textField: '${pet.category} spotted',
+        textOffset: const Offset(0, 1.5),
+      ));
+    }
+
+     */
+
+    // Add pins for nearby found pets
+    for (var pet in nearbyFoundPets) {
+      symbols.add(SymbolOptions(
+        geometry: LatLng(pet.lat, pet.long),
+        iconImage: "custom_marker_found",
+        iconSize: 1.5,
+        textField: '${pet.category} spotted',
+        textOffset: const Offset(0, 1.5),
+      ));
+    }
+
+    // Add pins for nearby rescuers
+    for (var rescuer in nearbyRescuers) {
+      symbols.add(SymbolOptions(
+        geometry: LatLng(rescuer.latitude, rescuer.longtitude),
+        iconImage: "custom_marker_rescuer",
+        iconSize: 1.5,
+        textField: '${rescuer.role} spotted',
+        textOffset: const Offset(0, 1.5),
+      ));
+    }
+
+    if (symbols.isNotEmpty) {
+      await mapController!.addSymbols(symbols);
+    }
+
+    notifyListeners();
+  }
+
+/*
+  Future<List<EstablishmentModel>> fetchNearbyEstablishments(double lat, double long) async {
+    try {
+      // Replace with actual API call to fetch nearby establishments
+      final response = await _generateEstablismentRepository.getNearbyEstablishments(lat, long);
+      return response;
+    } catch (e) {
+      developer.log('Error fetching nearby establishments: $e');
+      return [];
+    }
+
+
+  }
+
+  Future<List<PostModel>> fetchNearbyLostPets(double lat, double long) async {
+    try {
+      // Replace with actual API call to fetch nearby lost pets
+      final response = await postRepository.getNearbyLostPets(lat, long);
+      return response;
+    } catch (e) {
+      developer.log('Error fetching nearby lost pets: $e');
+      return [];
+    }
+
+
+
+  }
+
+ */
+
+  Future<List<PostModel>> fetchNearbyFoundPets(double lat, double long) async {
+    try {
+      // Replace with actual API call to fetch nearby found pets
+      final List<PostModel> response = await postRepository.getNearbyFoundPets(lat, long);
+      return response;
+    } catch (e) {
+      developer.log('Error fetching nearby found pets: $e');
+      return [];
+    }
+  }
+  Future<List<RescueModel>> fetchNearbyRescuers(double lat, double long) async {
+    try {
+      // Replace with actual API call to fetch nearby rescuers
+      final response = await locationRepository.getNearbyRescuers(lat, long);
+      return response;
+    } catch (e) {
+      developer.log('Error fetching nearby rescuers: $e');
+      return [];
+    }
+  }
+
 }

@@ -36,6 +36,8 @@ abstract class Locationrespository {
   Future <void> unpinRescue();
 
   Stream<List<RescueModel>> getRescueData();
+
+  Future <List<RescueModel>> getNearbyRescuers(double lat, double long);
 }
 
 class LocationrespositoryImpl implements Locationrespository {
@@ -348,6 +350,12 @@ class LocationrespositoryImpl implements Locationrespository {
       List<Future<RescueModel>> futures = snapshot.docs.map((doc) => RescueModel.fromDocument(doc)).toList();
       return Future.wait(futures);
     });
+  }
+
+  @override
+  Future<List<RescueModel>> getNearbyRescuers(double lat, double long) {
+    // TODO: implement getNearbyRescuers
+    throw UnimplementedError();
   }
 
 
