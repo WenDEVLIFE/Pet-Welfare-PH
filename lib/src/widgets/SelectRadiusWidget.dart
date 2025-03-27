@@ -5,12 +5,16 @@ import 'package:provider/provider.dart';
 
 import '../utils/AppColors.dart';
 
-class SelectRadiusWidget extends StatelessWidget{
+class SelectRadiusWidget extends StatefulWidget {
+  @override
+  _SelectRadiusWidgetState createState() => _SelectRadiusWidgetState();
+}
+
+class _SelectRadiusWidgetState extends State<SelectRadiusWidget> {
   @override
   Widget build(BuildContext context) {
-
     final MapViewModel mapViewModel = Provider.of<MapViewModel>(context);
-    // TODO: implement build
+
     return Dialog(
       backgroundColor: AppColors.white,
       shape: RoundedRectangleBorder(
@@ -24,7 +28,7 @@ class SelectRadiusWidget extends StatelessWidget{
             const Text(
               'Select Radius',
               style: TextStyle(
-                color: Colors.white,
+                color: Colors.black,
                 fontSize: 20,
                 fontFamily: 'SmoochSans',
                 fontWeight: FontWeight.w600,
@@ -34,13 +38,39 @@ class SelectRadiusWidget extends StatelessWidget{
             const Text(
               'Select the radius you want to search for',
               style: TextStyle(
-                color: Colors.white,
+                color: Colors.black,
                 fontSize: 20,
                 fontFamily: 'SmoochSans',
                 fontWeight: FontWeight.w400,
               ),
             ),
             const SizedBox(height: 16),
+            RadioListTile<String>(
+              title: const Text('1km to 5km'),
+              value: '1km to 5km',
+              groupValue: mapViewModel.selectedRadius,
+              onChanged: (value) {
+                mapViewModel.setSelectedRadius(value);
+              },
+            ),
+            RadioListTile<String>(
+              title: const Text('5km to 10km'),
+              value: '5km to 10km',
+              groupValue: mapViewModel.selectedRadius,
+              onChanged: (value) {
+                setState(() {
+                  mapViewModel.setSelectedRadius(value);
+                });
+              },
+            ),
+            RadioListTile<String>(
+              title: const Text('10km to 20km'),
+              value: '10km to 20km',
+              groupValue: mapViewModel.selectedRadius,
+              onChanged: (value) {
+                mapViewModel.setSelectedRadius(value);
+              },
+            ),
             Row(
               mainAxisAlignment: MainAxisAlignment.end,
               children: [
@@ -48,7 +78,7 @@ class SelectRadiusWidget extends StatelessWidget{
                   child: const Text(
                     'Cancel',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.black,
                       fontSize: 20,
                       fontFamily: 'SmoochSans',
                       fontWeight: FontWeight.w600,
@@ -62,7 +92,7 @@ class SelectRadiusWidget extends StatelessWidget{
                   child: const Text(
                     'Ok',
                     style: TextStyle(
-                      color: Colors.white,
+                      color: Colors.black,
                       fontSize: 20,
                       fontFamily: 'SmoochSans',
                       fontWeight: FontWeight.w600,
@@ -70,6 +100,7 @@ class SelectRadiusWidget extends StatelessWidget{
                   ),
                   onPressed: () {
                     Navigator.of(context).pop();
+                    mapViewModel.initializeNearby(context);
                   },
                 ),
               ],
@@ -79,5 +110,4 @@ class SelectRadiusWidget extends StatelessWidget{
       ),
     );
   }
-
 }

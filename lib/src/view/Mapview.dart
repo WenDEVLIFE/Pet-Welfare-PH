@@ -10,6 +10,7 @@ import 'package:pet_welfrare_ph/src/utils/Route.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:pet_welfrare_ph/src/view_model/MapViewModel.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:pet_welfrare_ph/src/widgets/SelectRadiusWidget.dart';
 import '../modal/locationModal.dart';
 import '../services/MapTilerKey.dart';
 import 'package:provider/provider.dart';
@@ -197,7 +198,7 @@ class MapViewState extends State<MapView> {
             backgroundColor: AppColors.orange,
             label: 'Click for nearby rescuer, shelter, clinic',
             onTap: () {
-              _mapViewModel.initializeNearby();
+              showDialog(context: context, builder: (context) => SelectRadiusWidget());
             },
           ),
           SpeedDialChild(

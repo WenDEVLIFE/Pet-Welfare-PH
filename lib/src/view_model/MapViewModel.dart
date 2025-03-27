@@ -14,6 +14,7 @@ import 'package:pet_welfrare_ph/src/respository/LocationRespository.dart';
 import 'package:pet_welfrare_ph/src/services/OpenStreetMapService.dart';
 import 'package:pet_welfrare_ph/src/utils/GeoUtils.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
+import 'package:sn_progress_dialog/progress_dialog.dart';
 import '../modal/EstablishmentModal.dart';
 import '../model/EstablishmentModel.dart';
 import '../respository/PostRepository.dart';
@@ -23,6 +24,7 @@ class MapViewModel extends ChangeNotifier {
 
   double lat = 14.5995;
   double long = 120.9842;
+  double radiusInKm = 0.0;
 
   final OpenStreetMapService _openStreetMapService = OpenStreetMapService();
   final GenerateEstablishmentRepository _generateEstablismentRepository = GenerateEstablishmentRepositoryImpl();
@@ -36,6 +38,7 @@ class MapViewModel extends ChangeNotifier {
   List<PostModel> lostpets = [];
   List<PostModel> foundpets = [];
   List<RescueModel> rescue = [];
+  List<String> radius = ['1km to 5km', '5km to 10km', '10km to 20km',];
 
   Stream<List<EstablishmentModel>>? establishmentsStream;
   Stream<List<PostModel>>? foundPetsStream;
@@ -45,6 +48,9 @@ class MapViewModel extends ChangeNotifier {
 
   bool _isLoadingMarkers = false;
   bool showDropdown = false;
+
+  String? selectedRadius;
+
   final TextEditingController searchController = TextEditingController();
   final FocusNode focusNode = FocusNode();
 
@@ -479,29 +485,47 @@ class MapViewModel extends ChangeNotifier {
   }
 
 
-  Future<void> initializeNearby() async {
-    if (mapController == null) return;
+  // TODO : get the nearest location of lost, found and establishment
+  Future<void> initializeNearby(BuildContext context) async {
+    ProgressDialog pd = ProgressDialog(context: context);
+    pd.show(max: 100, msg: 'Searching nearest locations');
 
-    Position? position = await GeoUtils().getLocation();
-    if (position == null) {
-      ToastComponent().showMessage(Colors.red, 'Unable to get current location.');
-      return;
-    }
+    try {
+      if (mapController == null) {
+        pd.close();
+        return;
+      }
 
-    lat = position.latitude;
-    long = position.longitude;
+      Position? position = await GeoUtils().getLocation();
+      if (position == null) {
+        pd.close();
+        ToastComponent().showMessage(Colors.red, 'Unable to get current location.');
+        return;
+      }
 
-    // Fetch nearby establishments, missing pets, found pets, and rescuers
-   // List<EstablishmentModel> nearbyEstablishments = await fetchNearbyEstablishments(lat, long);
-    // List<PostModel> nearbyLostPets = await fetchNearbyLostPets(lat, long);
-    List<PostModel> nearbyFoundPets = await fetchNearbyFoundPets(lat, long);
-    List<RescueModel> nearbyRescuers = await fetchNearbyRescuers(lat, long);
+      if (selectedRadius == '1km to 5km') {
+        radiusInKm = 5.0;
+      } else if (selectedRadius == '5km to 10km') {
+        radiusInKm = 10.0;
+      } else if (selectedRadius == '10km to 20km') {
+        radiusInKm = 20.0;
+      }
 
-    // Clear existing symbols
-    mapController!.clearSymbols();
-    symbols.clear();
+      pd.close();
+      lat = position.latitude;
+      long = position.longitude;
 
-    /*
+      // Fetch nearby establishments, missing pets, found pets, and rescuers
+      // List<EstablishmentModel> nearbyEstablishments = await fetchNearbyEstablishments(lat, long);
+      // List<PostModel> nearbyLostPets = await fetchNearbyLostPets(lat, long);
+      List<PostModel> nearbyFoundPets = await fetchNearbyFoundPets(lat, long);
+      List<RescueModel> nearbyRescuers = await fetchNearbyRescuers(lat, long);
+
+      // Clear existing symbols
+      mapController!.clearSymbols();
+      symbols.clear();
+
+      /*
     // Add pins for nearby establishments
     for (var establishment in nearbyEstablishments) {
       symbols.add(SymbolOptions(
@@ -528,33 +552,36 @@ class MapViewModel extends ChangeNotifier {
 
      */
 
-    // Add pins for nearby found pets
-    for (var pet in nearbyFoundPets) {
-      symbols.add(SymbolOptions(
-        geometry: LatLng(pet.lat, pet.long),
-        iconImage: "custom_marker_found",
-        iconSize: 1.5,
-        textField: '${pet.category} spotted',
-        textOffset: const Offset(0, 1.5),
-      ));
-    }
+      for (var pet in nearbyFoundPets) {
+        symbols.add(SymbolOptions(
+          geometry: LatLng(pet.lat, pet.long),
+          iconImage: "custom_marker_found",
+          iconSize: 1.5,
+          textField: '${pet.category} spotted',
+          textOffset: const Offset(0, 1.5),
+        ));
+      }
 
-    // Add pins for nearby rescuers
-    for (var rescuer in nearbyRescuers) {
-      symbols.add(SymbolOptions(
-        geometry: LatLng(rescuer.latitude, rescuer.longtitude),
-        iconImage: "custom_marker_rescuer",
-        iconSize: 1.5,
-        textField: '${rescuer.role} spotted',
-        textOffset: const Offset(0, 1.5),
-      ));
-    }
+      for (var rescuer in nearbyRescuers) {
+        symbols.add(SymbolOptions(
+          geometry: LatLng(rescuer.latitude, rescuer.longtitude),
+          iconImage: "custom_marker_rescuer",
+          iconSize: 1.5,
+          textField: '${rescuer.role} spotted',
+          textOffset: const Offset(0, 1.5),
+        ));
+      }
 
-    if (symbols.isNotEmpty) {
-      await mapController!.addSymbols(symbols);
-    }
+      if (symbols.isNotEmpty) {
+        await mapController!.addSymbols(symbols);
+      }
 
-    notifyListeners();
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    } finally {
+      pd.close();
+    }
   }
 
 /*
@@ -597,6 +624,8 @@ class MapViewModel extends ChangeNotifier {
       return [];
     }
   }
+
+  // Fetch Rescuer
   Future<List<RescueModel>> fetchNearbyRescuers(double lat, double long) async {
     try {
       // Replace with actual API call to fetch nearby rescuers
@@ -606,6 +635,11 @@ class MapViewModel extends ChangeNotifier {
       developer.log('Error fetching nearby rescuers: $e');
       return [];
     }
+  }
+
+  void setSelectedRadius(String? value) {
+    selectedRadius = value;
+    notifyListeners();
   }
 
 }
