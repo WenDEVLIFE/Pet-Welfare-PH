@@ -514,25 +514,27 @@ class MapViewModel extends ChangeNotifier {
       symbols.clear();
 
       // Fetch nearby establishments, missing pets, found pets, and rescuers
-      // List<EstablishmentModel> nearbyEstablishments = await fetchNearbyEstablishments(lat, long);
+      List<EstablishmentModel> nearbyEstablishments = await fetchNearbyEstablishments(lat, long);
       List<PostModel> nearbyLostPets = await fetchNearbyLostPets(lat, long);
       List<PostModel> nearbyFoundPets = await fetchNearbyFoundPets(lat, long);
       List<RescueModel> nearbyRescuers = await fetchNearbyRescuers(lat, long);
-
-      /*
 
     // Add pins for nearby establishments
     for (var establishment in nearbyEstablishments) {
       symbols.add(SymbolOptions(
         geometry: LatLng(establishment.establishmentLat, establishment.establishmentLong),
-        iconImage: "custom_marker_establishment",
+        iconImage: establishment.establishmentType.toLowerCase() == 'clinic'
+            ? "custom_marker_clinic"
+            : establishment.establishmentType.toLowerCase() == 'shelter'
+            ? "custom_marker_shelter"
+            : "custom_marker_establishment",
         iconSize: 1.0,
         textField: establishment.establishmentName,
         textOffset: const Offset(0, 1.5),
       ));
     }
 
-     */
+
 
       for (var pet in nearbyFoundPets) {
         symbols.add(SymbolOptions(
@@ -582,11 +584,13 @@ class MapViewModel extends ChangeNotifier {
     }
   }
 
-/*
+
+
+  // get the nearby establishments
   Future<List<EstablishmentModel>> fetchNearbyEstablishments(double lat, double long) async {
     try {
       // Replace with actual API call to fetch nearby establishments
-      final response = await _generateEstablismentRepository.getNearbyEstablishments(lat, long);
+      final response = await _generateEstablismentRepository.getNearbyEstablishments(lat, long, radiusInKm);
       return response;
     } catch (e) {
       developer.log('Error fetching nearby establishments: $e');
@@ -595,8 +599,6 @@ class MapViewModel extends ChangeNotifier {
 
 
   }
-
- */
 
   // get the nearby missing pets
   Future<List<PostModel>> fetchNearbyLostPets(double lat, double long) async {
