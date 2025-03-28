@@ -49,7 +49,7 @@ class MapViewModel extends ChangeNotifier {
   bool showDropdown = false;
 
   String? selectedRadius;
-  String? selectedEstablishment;
+  String? selectLocationType;
 
   final TextEditingController searchController = TextEditingController();
   final FocusNode focusNode = FocusNode();
@@ -639,6 +639,11 @@ class MapViewModel extends ChangeNotifier {
   // set selected radius
   void setSelectedRadius(String? value) {
     selectedRadius = value;
+    notifyListeners();
+  }
+
+  void setSelectLocation(String? value) {
+    selectLocationType = value;
     notifyListeners();
   }
 
