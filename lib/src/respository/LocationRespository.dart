@@ -1,4 +1,5 @@
 import 'dart:io';
+import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -37,7 +38,7 @@ abstract class Locationrespository {
 
   Stream<List<RescueModel>> getRescueData();
 
-  Future <List<RescueModel>> getNearbyRescuers(double lat, double long);
+  Future <List<RescueModel>> getNearbyRescuers(double lat, double long, double radiusInKm);
 }
 
 class LocationrespositoryImpl implements Locationrespository {
@@ -355,9 +356,30 @@ class LocationrespositoryImpl implements Locationrespository {
   }
 
   @override
-  Future<List<RescueModel>> getNearbyRescuers(double lat, double long) {
-    // TODO: implement getNearbyRescuers
-    throw UnimplementedError();
+  Future<List<RescueModel>> getNearbyRescuers(double lat, double long, double radiusInK) async{
+    // Define the radius in kilometers
+    double radiusInKm = radiusInK;
+
+    // Calculate the bounds for the query
+    double latDelta = radiusInKm / 111.0; // 1 degree of latitude is approximately 111 km
+    double longDelta = radiusInKm / (111.0 * cos(lat * pi / 180.0));
+
+    // Query Firestore for found pets within the bounds in PostCollection
+    QuerySnapshot rescueCollection = await _firestore.collection('RescuePinCollection')
+        .where('Latitude', isGreaterThanOrEqualTo: lat - latDelta)
+        .where('Latitude', isLessThanOrEqualTo: lat + latDelta)
+        .where('Longitude', isGreaterThanOrEqualTo: long - longDelta)
+        .where('Longitude', isLessThanOrEqualTo: long + longDelta)
+        .get();
+
+    List<RescueModel> rescue = await Future.wait(rescueCollection.docs.map((doc) async {
+      var post = await RescueModel.fromDocument(doc);
+      return post;
+    }).toList());
+
+    return rescue;
+
+
   }
 
 

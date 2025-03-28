@@ -38,7 +38,6 @@ class MapViewModel extends ChangeNotifier {
   List<PostModel> lostpets = [];
   List<PostModel> foundpets = [];
   List<RescueModel> rescue = [];
-  List<String> radius = ['1km to 5km', '5km to 10km', '10km to 20km',];
 
   Stream<List<EstablishmentModel>>? establishmentsStream;
   Stream<List<PostModel>>? foundPetsStream;
@@ -50,6 +49,7 @@ class MapViewModel extends ChangeNotifier {
   bool showDropdown = false;
 
   String? selectedRadius;
+  String? selectedEstablishment;
 
   final TextEditingController searchController = TextEditingController();
   final FocusNode focusNode = FocusNode();
@@ -487,18 +487,13 @@ class MapViewModel extends ChangeNotifier {
 
   // TODO : get the nearest location of lost, found and establishment
   Future<void> initializeNearby(BuildContext context) async {
-    ProgressDialog pd = ProgressDialog(context: context);
-    pd.show(max: 100, msg: 'Searching nearest locations');
-
     try {
       if (mapController == null) {
-        pd.close();
         return;
       }
 
       Position? position = await GeoUtils().getLocation();
       if (position == null) {
-        pd.close();
         ToastComponent().showMessage(Colors.red, 'Unable to get current location.');
         return;
       }
@@ -511,21 +506,21 @@ class MapViewModel extends ChangeNotifier {
         radiusInKm = 20.0;
       }
 
-      pd.close();
       lat = position.latitude;
       long = position.longitude;
-
-      // Fetch nearby establishments, missing pets, found pets, and rescuers
-      // List<EstablishmentModel> nearbyEstablishments = await fetchNearbyEstablishments(lat, long);
-      // List<PostModel> nearbyLostPets = await fetchNearbyLostPets(lat, long);
-      List<PostModel> nearbyFoundPets = await fetchNearbyFoundPets(lat, long);
-      List<RescueModel> nearbyRescuers = await fetchNearbyRescuers(lat, long);
 
       // Clear existing symbols
       mapController!.clearSymbols();
       symbols.clear();
 
+      // Fetch nearby establishments, missing pets, found pets, and rescuers
+      // List<EstablishmentModel> nearbyEstablishments = await fetchNearbyEstablishments(lat, long);
+      List<PostModel> nearbyLostPets = await fetchNearbyLostPets(lat, long);
+      List<PostModel> nearbyFoundPets = await fetchNearbyFoundPets(lat, long);
+      List<RescueModel> nearbyRescuers = await fetchNearbyRescuers(lat, long);
+
       /*
+
     // Add pins for nearby establishments
     for (var establishment in nearbyEstablishments) {
       symbols.add(SymbolOptions(
@@ -533,19 +528,6 @@ class MapViewModel extends ChangeNotifier {
         iconImage: "custom_marker_establishment",
         iconSize: 1.0,
         textField: establishment.establishmentName,
-        textOffset: const Offset(0, 1.5),
-      ));
-    }
-
-
-
-    // Add pins for nearby lost pets
-    for (var pet in nearbyLostPets) {
-      symbols.add(SymbolOptions(
-        geometry: LatLng(pet.lat, pet.long),
-        iconImage: "custom_marker_lost",
-        iconSize: 1.5,
-        textField: '${pet.category} spotted',
         textOffset: const Offset(0, 1.5),
       ));
     }
@@ -572,15 +554,31 @@ class MapViewModel extends ChangeNotifier {
         ));
       }
 
+
+      // Add pins for nearby lost pets
+      for (var pet in nearbyLostPets) {
+        symbols.add(SymbolOptions(
+          geometry: LatLng(pet.lat, pet.long),
+          iconImage: "custom_marker_lost",
+          iconSize: 1.5,
+          textField: '${pet.category} spotted',
+          textOffset: const Offset(0, 1.5),
+        ));
+      }
+
+
       if (symbols.isNotEmpty) {
-        await mapController!.addSymbols(symbols);
+        Future.wait([
+          mapController!.addSymbols(symbols),
+          mapController!.moveCamera(CameraUpdate.newLatLng(LatLng(lat, long)),
+          ),
+        ]);
       }
 
       notifyListeners();
     } catch (e) {
       print(e);
     } finally {
-      pd.close();
     }
   }
 
@@ -598,26 +596,25 @@ class MapViewModel extends ChangeNotifier {
 
   }
 
+ */
+
+  // get the nearby missing pets
   Future<List<PostModel>> fetchNearbyLostPets(double lat, double long) async {
     try {
       // Replace with actual API call to fetch nearby lost pets
-      final response = await postRepository.getNearbyLostPets(lat, long);
+      final response = await postRepository.getNearbyLostPets(lat, long,radiusInKm);
       return response;
     } catch (e) {
       developer.log('Error fetching nearby lost pets: $e');
       return [];
     }
-
-
-
   }
 
- */
-
+  // Fetch Found Pets
   Future<List<PostModel>> fetchNearbyFoundPets(double lat, double long) async {
     try {
       // Replace with actual API call to fetch nearby found pets
-      final List<PostModel> response = await postRepository.getNearbyFoundPets(lat, long);
+      final List<PostModel> response = await postRepository.getNearbyFoundPets(lat, long, radiusInKm);
       return response;
     } catch (e) {
       developer.log('Error fetching nearby found pets: $e');
@@ -629,7 +626,7 @@ class MapViewModel extends ChangeNotifier {
   Future<List<RescueModel>> fetchNearbyRescuers(double lat, double long) async {
     try {
       // Replace with actual API call to fetch nearby rescuers
-      final response = await locationRepository.getNearbyRescuers(lat, long);
+      final response = await locationRepository.getNearbyRescuers(lat, long, radiusInKm);
       return response;
     } catch (e) {
       developer.log('Error fetching nearby rescuers: $e');
@@ -637,6 +634,7 @@ class MapViewModel extends ChangeNotifier {
     }
   }
 
+  // set selected radius
   void setSelectedRadius(String? value) {
     selectedRadius = value;
     notifyListeners();
