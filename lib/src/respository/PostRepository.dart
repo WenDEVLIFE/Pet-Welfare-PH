@@ -239,6 +239,7 @@ class PostRepositoryImpl implements PostRepository {
         'PetType': petType,
         'PetGender': gender,
         'PetSize': size,
+        'Category': selectedChip,
         'PetColor': color,
         'PetBreed': petBreed,
         'PetAge': petAge,
@@ -511,6 +512,7 @@ class PostRepositoryImpl implements PostRepository {
       List<PostModel> foundPets = await Future.wait(postCollectionSnapshot.docs.map((doc) async {
         var post = await PostModel.fromDocument(doc);
         var petDetailsSnapshot = await _firestore.collection('PetDetailsCollection')
+            .where('Category', isEqualTo: 'Found Pets')
             .where('Latitude', isGreaterThanOrEqualTo: lat - latDelta)
             .where('Latitude', isLessThanOrEqualTo: lat + latDelta)
             .where('Longitude', isGreaterThanOrEqualTo: long - longDelta)
@@ -551,6 +553,7 @@ class PostRepositoryImpl implements PostRepository {
       List<PostModel> missingpets = await Future.wait(missingCollectionSnapshot.docs.map((doc) async {
         var post = await PostModel.fromDocument(doc);
         var petDetailsSnapshot = await _firestore.collection('PetDetailsCollection')
+            .where('Category', isEqualTo: 'Missing Pets')
             .where('Latitude', isGreaterThanOrEqualTo: lat - latDelta)
             .where('Latitude', isLessThanOrEqualTo: lat + latDelta)
             .where('Longitude', isGreaterThanOrEqualTo: long - longDelta)
