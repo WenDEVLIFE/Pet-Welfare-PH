@@ -236,6 +236,7 @@ class CreatePostViewModel extends ChangeNotifier {
 
     ProgressDialog pd = ProgressDialog(context: context);
     pd.show(max: 100, msg: 'Posting...');
+  try {
     if (selectedChip == 'Pet Appreciation') {
       if (postController.text.isEmpty) {
         ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
@@ -281,8 +282,8 @@ class CreatePostViewModel extends ChangeNotifier {
         ToastComponent().showMessage(Colors.red, 'Please select a barangay');
       } else {
         try {
-         var petData = {
-           'post': postController.text,
+          var petData = {
+            'post': postController.text,
             'pet_name': petName.text,
             'pet_type': selectedPetType..toString(),
             'pet_breed': selectPedBreed!.name,
@@ -291,7 +292,7 @@ class CreatePostViewModel extends ChangeNotifier {
             'region': selectedRegion!.region,
             'province': selectedProvince!.provinceName,
             'city': selectedCity!.cityName,
-           'gender': selectedPetGender,
+            'gender': selectedPetGender,
             'size': selectedPetSize,
             'color': selectedColorPattern,
             'collar': selectedCollar,
@@ -381,6 +382,11 @@ class CreatePostViewModel extends ChangeNotifier {
       // Implement functionality for Community Announcements
     } else {
       ToastComponent().showMessage(Colors.red, 'This feature is not yet available');
+    }
+  } catch (e) {
+    ToastComponent().showMessage(Colors.red, 'Failed to upload post: $e');
+  } finally {
+    pd.close();
     }
   }
 

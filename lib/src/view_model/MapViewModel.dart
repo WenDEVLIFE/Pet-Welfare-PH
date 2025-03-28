@@ -54,6 +54,8 @@ class MapViewModel extends ChangeNotifier {
   final TextEditingController searchController = TextEditingController();
   final FocusNode focusNode = FocusNode();
 
+  Circle? _circle;
+
   MapViewModel() {
     developer.log('Requesting permissions...');
     requestPermissions();
@@ -67,6 +69,8 @@ class MapViewModel extends ChangeNotifier {
    if (position != null) {
      lat = position.latitude;
      long = position.longitude;
+     CameraPosition initialPosition = CameraPosition(target: LatLng(lat, long), zoom: 14);
+      mapController!.moveCamera(CameraUpdate.newCameraPosition(initialPosition));
      notifyListeners();
    } else{
      ToastComponent().showMessage(Colors.red, 'Location permissions are denied.');
@@ -733,4 +737,50 @@ class MapViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Method to add a circle to the map
+  Future<void> addCircle(LatLng position, double radius) async {
+    if (mapController == null) return;
+
+    _circle = await mapController!.addCircle(
+      CircleOptions(
+        geometry: position,
+        circleRadius: radius,
+        circleColor: "#0000FF", // Blue color
+        circleOpacity: 0.5, // Semi-transparent
+      ),
+    );
+    notifyListeners();
+  }
+
+  // Method to update the circle's radius
+  Future<void> updateCircleRadius(double radius) async {
+    if (_circle == null || mapController == null) return;
+
+    mapController!.updateCircle(
+      _circle!,
+      CircleOptions(
+        circleRadius: radius,
+      ),
+    );
+    notifyListeners();
+  }
+
+  // Example method to initialize the circle with a default radius
+  Future<void> initializeCircle() async {
+    if (mapController == null) return;
+
+    Position? position = await GeoUtils().getLocation();
+    if (position != null) {
+      LatLng currentPosition = LatLng(position.latitude, position.longitude);
+      await addCircle(currentPosition, 1000); // Initial radius of 1000 meters
+    }
+  }
+
+  // Example method to expand the circle radius
+  Future<void> expandCircleRadius() async {
+    if (_circle == null) return;
+
+    double newRadius = _circle!.options.circleRadius! + 500; // Increase radius by 500 meters
+    await updateCircleRadius(newRadius);
+  }
 }
