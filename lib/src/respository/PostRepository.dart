@@ -55,7 +55,9 @@ abstract class PostRepository {
 
   Stream<List<PostModel>> getPetAdoption();
 
-  Future<List<PostModel>> getNearbyFoundPets(double lat, double long);
+  Future<List<PostModel>> getNearbyFoundPets(double lat, double long, double radiusInK);
+
+  Future<List<PostModel>> getNearbyLostPets(double lat, double long, double radiusInK);
 
 }
 
@@ -350,6 +352,7 @@ class PostRepositoryImpl implements PostRepository {
     }
   }
 
+  // Added get comment count function
   Future<int> getCommentCount(String postId) async {
     QuerySnapshot commentSnapshot = await _firestore.collection('PostCollection').doc(postId).collection('CommentCollection').get();
     return commentSnapshot.docs.length;
@@ -490,10 +493,11 @@ class PostRepositoryImpl implements PostRepository {
     });
   }
 
-  Future<List<PostModel>> getNearbyFoundPets(double lat, double long) async {
+  // get the nearby found pets
+  Future<List<PostModel>> getNearbyFoundPets(double lat, double long, double radiusInK) async {
     try {
       // Define the radius in kilometers
-      double radiusInKm = 10.0;
+      double radiusInKm = radiusInK;
 
       // Calculate the bounds for the query
       double latDelta = radiusInKm / 111.0; // 1 degree of latitude is approximately 111 km
@@ -522,6 +526,46 @@ class PostRepositoryImpl implements PostRepository {
       }).toList());
 
       return foundPets;
+    } catch (e) {
+      developer.log('Error fetching nearby found pets: $e');
+      return [];
+    }
+  }
+
+  // get the nearby lost pets
+  @override
+  Future<List<PostModel>> getNearbyLostPets(double lat, double long, double radiusInK) async{
+    try {
+      // Define the radius in kilometers
+      double radiusInKm = radiusInK;
+
+      // Calculate the bounds for the query
+      double latDelta = radiusInKm / 111.0; // 1 degree of latitude is approximately 111 km
+      double longDelta = radiusInKm / (111.0 * cos(lat * pi / 180.0));
+
+      // Query Firestore for found pets within the bounds in PostCollection
+      QuerySnapshot missingCollectionSnapshot = await _firestore.collection('PostCollection')
+          .where('Category', isEqualTo: 'Missing Pets').get();
+
+      // For each post, query the PetDetailsCollection to get the corresponding pet details
+      List<PostModel> missingpets = await Future.wait(missingCollectionSnapshot.docs.map((doc) async {
+        var post = await PostModel.fromDocument(doc);
+        var petDetailsSnapshot = await _firestore.collection('PetDetailsCollection')
+            .where('Latitude', isGreaterThanOrEqualTo: lat - latDelta)
+            .where('Latitude', isLessThanOrEqualTo: lat + latDelta)
+            .where('Longitude', isGreaterThanOrEqualTo: long - longDelta)
+            .where('Longitude', isLessThanOrEqualTo: long + longDelta)
+            .get();
+
+        if (petDetailsSnapshot.docs.isNotEmpty) {
+          var petDetailsDoc = petDetailsSnapshot.docs.first;
+          post.lat = petDetailsDoc['Latitude'];
+          post.long = petDetailsDoc['Longitude'];
+        }
+        return post;
+      }).toList());
+
+      return missingpets;
     } catch (e) {
       developer.log('Error fetching nearby found pets: $e');
       return [];

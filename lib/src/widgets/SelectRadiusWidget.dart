@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/view_model/MapViewModel.dart';
 import 'package:provider/provider.dart';
+import 'package:sn_progress_dialog/progress_dialog.dart';
 
 import '../utils/AppColors.dart';
 
@@ -99,8 +100,13 @@ class _SelectRadiusWidgetState extends State<SelectRadiusWidget> {
                     ),
                   ),
                   onPressed: () {
-                    Navigator.of(context).pop();
+                    ProgressDialog pd = ProgressDialog(context: context);
+                    pd.show(max: 100, msg: 'Searching nearest locations');
                     mapViewModel.initializeNearby(context);
+                    Future.delayed(const Duration(seconds: 2), () {
+                      pd.close();
+                    });
+                    Navigator.of(context).pop();
                   },
                 ),
               ],

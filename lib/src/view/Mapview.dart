@@ -113,7 +113,7 @@ class MapViewState extends State<MapView> {
                     myLocationEnabled: true,
                     initialCameraPosition: CameraPosition(
                       target: LatLng(_mapViewModel.lat, _mapViewModel.long),
-                      zoom: 10.0,
+                      zoom: 15.0,
                     ),
                     trackCameraPosition: true,
                     onMapCreated: onMapCreated,

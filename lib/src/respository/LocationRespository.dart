@@ -313,6 +313,7 @@ class LocationrespositoryImpl implements Locationrespository {
 
   }
 
+  // This will check if the user has already pinned a rescue
   @override
   Future<bool> checkIfUserPinExists() async {
     User user = _auth.currentUser!;
@@ -344,6 +345,7 @@ class LocationrespositoryImpl implements Locationrespository {
     return _firestore.collection('RescuePinCollection').doc(user.uid).delete();
   }
 
+  // This will get the rescue data
   @override
   Stream<List<RescueModel>> getRescueData() {
     return _firestore.collection('RescuePinCollection').snapshots().asyncMap((snapshot) async {

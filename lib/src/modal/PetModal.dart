@@ -48,7 +48,7 @@ class _PetModalState extends State<PetModal> {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text( pet['petName']=='Found Pets' ? 'Found Pet Details' : 'Lost Pet Details',
+              Text( pet['category']=='Found Pets' ? 'Found Pet Details' : 'Lost Pet Details',
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
