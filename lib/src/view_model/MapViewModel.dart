@@ -484,13 +484,48 @@ class MapViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+// set selected radius
+  void setSelectedRadius(String? value) {
+    selectedRadius = value;
+    notifyListeners();
+  }
 
-  // TODO : get the nearest location of lost, found and establishment
-  Future<void> initializeNearby(BuildContext context) async {
+  // set selected location
+  void setSelectLocation(String? value) {
+    selectLocationType = value;
+    notifyListeners();
+  }
+
+  void initializeNearbyData() {
+    if (selectLocationType == null) {
+      ToastComponent().showMessage(Colors.red, 'Please select a location type.');
+      return;
+    }
+
+    switch (selectLocationType!.toLowerCase()) {
+      case 'search all locations':
+        initializeNearby();
+        break;
+      case 'establishment only':
+        initializeEstablishments();
+        break;
+      case 'missing pets only':
+        initializeLostPets();
+        break;
+      case 'found pets only':
+        initializeFoundPets();
+        break;
+      case 'rescuer only':
+        initializeRescuers();
+        break;
+      default:
+        ToastComponent().showMessage(Colors.red, 'Invalid location type selected.');
+    }
+  }
+
+  Future<void> initializeNearby() async {
     try {
-      if (mapController == null) {
-        return;
-      }
+      if (mapController == null) return;
 
       Position? position = await GeoUtils().getLocation();
       if (position == null) {
@@ -498,14 +533,7 @@ class MapViewModel extends ChangeNotifier {
         return;
       }
 
-      if (selectedRadius == '1km to 5km') {
-        radiusInKm = 5.0;
-      } else if (selectedRadius == '5km to 10km') {
-        radiusInKm = 10.0;
-      } else if (selectedRadius == '10km to 20km') {
-        radiusInKm = 20.0;
-      }
-
+      setRadius();
       lat = position.latitude;
       long = position.longitude;
 
@@ -513,13 +541,37 @@ class MapViewModel extends ChangeNotifier {
       mapController!.clearSymbols();
       symbols.clear();
 
-      // Fetch nearby establishments, missing pets, found pets, and rescuers
-      List<EstablishmentModel> nearbyEstablishments = await fetchNearbyEstablishments(lat, long);
-      List<PostModel> nearbyLostPets = await fetchNearbyLostPets(lat, long);
-      List<PostModel> nearbyFoundPets = await fetchNearbyFoundPets(lat, long);
-      List<RescueModel> nearbyRescuers = await fetchNearbyRescuers(lat, long);
+      // Fetch and add symbols for all types
+      await Future.wait([
+        nearbyEstablishments(),
+        nearbyLostPets(),
+        nearbyFoundPets(),
+        nearbyRescuers(),
+      ]);
 
-    // Add pins for nearby establishments
+      if (symbols.isNotEmpty) {
+        await mapController!.addSymbols(symbols);
+        await mapController!.moveCamera(CameraUpdate.newLatLng(LatLng(lat, long)));
+      }
+
+      notifyListeners();
+    } catch (e) {
+      print(e);
+    }
+  }
+
+  void setRadius() {
+    if (selectedRadius == '1km to 5km') {
+      radiusInKm = 5.0;
+    } else if (selectedRadius == '5km to 10km') {
+      radiusInKm = 10.0;
+    } else if (selectedRadius == '10km to 20km') {
+      radiusInKm = 20.0;
+    }
+  }
+
+  Future<void> nearbyEstablishments() async {
+    List<EstablishmentModel> nearbyEstablishments = await fetchNearbyEstablishments(lat, long);
     for (var establishment in nearbyEstablishments) {
       symbols.add(SymbolOptions(
         geometry: LatLng(establishment.establishmentLat, establishment.establishmentLong),
@@ -533,57 +585,46 @@ class MapViewModel extends ChangeNotifier {
         textOffset: const Offset(0, 1.5),
       ));
     }
+  }
 
-
-
-      for (var pet in nearbyFoundPets) {
-        symbols.add(SymbolOptions(
-          geometry: LatLng(pet.lat, pet.long),
-          iconImage: "custom_marker_found",
-          iconSize: 1.5,
-          textField: '${pet.category} spotted',
-          textOffset: const Offset(0, 1.5),
-        ));
-      }
-
-      for (var rescuer in nearbyRescuers) {
-        symbols.add(SymbolOptions(
-          geometry: LatLng(rescuer.latitude, rescuer.longtitude),
-          iconImage: "custom_marker_rescuer",
-          iconSize: 1.5,
-          textField: '${rescuer.role} spotted',
-          textOffset: const Offset(0, 1.5),
-        ));
-      }
-
-
-      // Add pins for nearby lost pets
-      for (var pet in nearbyLostPets) {
-        symbols.add(SymbolOptions(
-          geometry: LatLng(pet.lat, pet.long),
-          iconImage: "custom_marker_lost",
-          iconSize: 1.5,
-          textField: '${pet.category} spotted',
-          textOffset: const Offset(0, 1.5),
-        ));
-      }
-
-
-      if (symbols.isNotEmpty) {
-        Future.wait([
-          mapController!.addSymbols(symbols),
-          mapController!.moveCamera(CameraUpdate.newLatLng(LatLng(lat, long)),
-          ),
-        ]);
-      }
-
-      notifyListeners();
-    } catch (e) {
-      print(e);
-    } finally {
+  Future<void> nearbyLostPets() async {
+    List<PostModel> nearbyLostPets = await fetchNearbyLostPets(lat, long);
+    for (var pet in nearbyLostPets) {
+      symbols.add(SymbolOptions(
+        geometry: LatLng(pet.lat, pet.long),
+        iconImage: "custom_marker_lost",
+        iconSize: 1.5,
+        textField: '${pet.category} spotted',
+        textOffset: const Offset(0, 1.5),
+      ));
     }
   }
 
+  Future<void> nearbyFoundPets() async {
+    List<PostModel> nearbyFoundPets = await fetchNearbyFoundPets(lat, long);
+    for (var pet in nearbyFoundPets) {
+      symbols.add(SymbolOptions(
+        geometry: LatLng(pet.lat, pet.long),
+        iconImage: "custom_marker_found",
+        iconSize: 1.5,
+        textField: '${pet.category} spotted',
+        textOffset: const Offset(0, 1.5),
+      ));
+    }
+  }
+
+  Future<void> nearbyRescuers() async {
+    List<RescueModel> nearbyRescuers = await fetchNearbyRescuers(lat, long);
+    for (var rescuer in nearbyRescuers) {
+      symbols.add(SymbolOptions(
+        geometry: LatLng(rescuer.latitude, rescuer.longtitude),
+        iconImage: "custom_marker_rescuer",
+        iconSize: 1.5,
+        textField: '${rescuer.role} spotted',
+        textOffset: const Offset(0, 1.5),
+      ));
+    }
+  }
 
 
   // get the nearby establishments
@@ -636,14 +677,59 @@ class MapViewModel extends ChangeNotifier {
     }
   }
 
-  // set selected radius
-  void setSelectedRadius(String? value) {
-    selectedRadius = value;
+  // initialize establishments
+  void initializeEstablishments() async {
+    if (mapController == null) return;
+
+    mapController!.clearSymbols();
+    symbols.clear();
+
+    await nearbyEstablishments();
+    if (symbols.isNotEmpty) {
+      await mapController!.addSymbols(symbols);
+    }
     notifyListeners();
   }
 
-  void setSelectLocation(String? value) {
-    selectLocationType = value;
+  // initialize lost pets
+  void initializeLostPets() async {
+    if (mapController == null) return;
+
+    mapController!.clearSymbols();
+    symbols.clear();
+
+    await nearbyLostPets();
+    if (symbols.isNotEmpty) {
+      await mapController!.addSymbols(symbols);
+    }
+    notifyListeners();
+  }
+
+  // initialize found pets
+  void initializeFoundPets() async {
+    if (mapController == null) return;
+
+    mapController!.clearSymbols();
+    symbols.clear();
+
+    await nearbyFoundPets();
+    if (symbols.isNotEmpty) {
+      await mapController!.addSymbols(symbols);
+    }
+    notifyListeners();
+  }
+
+  // initialize rescuers
+  void initializeRescuers() async {
+    if (mapController == null) return;
+
+    mapController!.clearSymbols();
+    symbols.clear();
+
+    await nearbyRescuers();
+    if (symbols.isNotEmpty) {
+      await mapController!.addSymbols(symbols);
+    }
     notifyListeners();
   }
 

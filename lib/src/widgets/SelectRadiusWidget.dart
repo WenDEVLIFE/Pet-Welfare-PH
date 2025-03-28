@@ -67,7 +67,7 @@ class _SelectRadiusWidgetState extends State<SelectRadiusWidget> {
                 title: const Text('Missing Pets Only'),
                 value: 'Missing Pets Only',
                 activeColor: AppColors.orange,
-                groupValue: mapViewModel.selectedRadius,
+                groupValue: mapViewModel.selectLocationType,
                 onChanged: (value) {
                   mapViewModel.setSelectLocation(value);
                 },
@@ -76,7 +76,7 @@ class _SelectRadiusWidgetState extends State<SelectRadiusWidget> {
                 title: const Text('Found Pets Only'),
                 value: 'Found Pets Only',
                 activeColor: AppColors.orange,
-                groupValue: mapViewModel.selectedRadius,
+                groupValue: mapViewModel.selectLocationType,
                 onChanged: (value) {
                   mapViewModel.setSelectLocation(value);
                 },
@@ -160,7 +160,7 @@ class _SelectRadiusWidgetState extends State<SelectRadiusWidget> {
                     onPressed: () {
                       ProgressDialog pd = ProgressDialog(context: context);
                       pd.show(max: 100, msg: 'Searching nearest locations');
-                      mapViewModel.initializeNearby(context);
+                      mapViewModel.initializeNearbyData();
                       Future.delayed(const Duration(seconds: 2), () {
                         pd.close();
                       });
