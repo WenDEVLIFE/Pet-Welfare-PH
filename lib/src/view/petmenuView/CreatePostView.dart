@@ -31,21 +31,34 @@ class CreatePostView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: CustomText(
-          text: createPostViewModel.selectedChip == "Missing Pets"
-              ? 'Post a missing pets'
-              : createPostViewModel.selectedChip == "Found Pets"
-              ? 'Post a found pets'
-              : createPostViewModel.selectedChip == "Pet Adoption"
-              ? 'Post for adoption'
-              : 'Create a post',
-          size: 18,
-          color: Colors.white,
-          weight: FontWeight.w700,
-          align: TextAlign.left,
-          screenHeight: screenHeight,
-          alignment: Alignment.centerLeft,
+        title: Row(
+          children: [
+            CustomText(
+              text: createPostViewModel.selectedChip == "Missing Pets"
+                  ? 'Post a missing pets'
+                  : createPostViewModel.selectedChip == "Found Pets"
+                  ? 'Post a found pets'
+                  : createPostViewModel.selectedChip == "Pet Adoption"
+                  ? 'Post for adoption'
+                  : 'Create a post',
+              size: 18,
+              color: Colors.white,
+              weight: FontWeight.w700,
+              align: TextAlign.left,
+              screenHeight: screenHeight,
+              alignment: Alignment.centerLeft,
+            ),
+          ],
         ),
+        actions: [
+          IconButton(
+            icon: const Icon(Icons.info_outline),
+            onPressed: () {
+
+
+            },
+          ),
+        ],
         backgroundColor: AppColors.orange,
       ),
       body: SingleChildScrollView(
