@@ -255,59 +255,121 @@ class CreatePostViewModel extends ChangeNotifier {
     dateController.clear();
     selectedLocation = null;
     mapController!.clearSymbols();
+    selectedDonationType = 'Pet Foods or treats';
+    selectedBankType = 'Gcash';
+    amountController.clear();
+    bankNameController.clear();
+    accountNameController.clear();
     notifyListeners();
   }
 
   Future<void> PostNow(BuildContext context) async {
-
     ProgressDialog pd = ProgressDialog(context: context);
     pd.show(max: 100, msg: 'Posting...');
-  try {
-    if (selectedChip == 'Pet Appreciation') {
-      if (postController.text.isEmpty) {
-        ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
-      } else if (_images.isEmpty) {
-        ToastComponent().showMessage(Colors.red, 'Please select an image');
-      } else {
-        ProgressDialog pd = ProgressDialog(context: context);
-        pd.show(max: 100, msg: 'Posting...');
-        try {
-          await postRepository.uploadPost(postController.text, _images, selectedChip);
-          ToastComponent().showMessage(Colors.green, 'Post successful');
-          clearPost();
-        } catch (e) {
-          ToastComponent().showMessage(Colors.red, 'Failed to upload post: $e');
-        } finally {
-          pd.close();
+    try {
+      if (selectedChip == 'Missing Pets' || selectedChip == 'Found Pets') {
+        // Implement functionality for Missing Pets or Found Pets
+        if (postController.text.isEmpty) {
+          ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
+        } else if (_images.isEmpty) {
+          ToastComponent().showMessage(Colors.red, 'Please select an image');
+        } else if (petName.text.isEmpty) {
+          ToastComponent().showMessage(Colors.red, 'Please enter the name of the pet');
+        } else if (selectedPetType == 'Cat' && selectedCatBreed == null || selectedPetType == 'Dog' && selectedDogBreed == null) {
+          ToastComponent().showMessage(Colors.red, selectedPetType == 'Cat' ? 'Please select the breed of the cat' : 'Please select the breed of the dog');
+        } else if (selectedRegion == null) {
+          ToastComponent().showMessage(Colors.red, 'Please select a region');
+        } else if (selectedProvince == null) {
+          ToastComponent().showMessage(Colors.red, 'Please select a province');
+        } else if (selectedCity == null) {
+          ToastComponent().showMessage(Colors.red, 'Please select a city');
+        } else if (selectedBarangay == null) {
+          ToastComponent().showMessage(Colors.red, 'Please select a barangay');
+        } else {
+          try {
+            var petData = {
+              'post': postController.text,
+              'pet_name': petName.text,
+              'pet_type': selectedPetType.toString(),
+              'pet_breed': selectedPetType == 'Cat' ? selectedCatBreed!.name : selectedDogBreed!.name,
+              'pet_color': selectedColorPattern,
+              'pet_age': selectedPetAge,
+              'region': selectedRegion!.region,
+              'province': selectedProvince!.provinceName,
+              'city': selectedCity!.cityName,
+              'gender': selectedPetGender,
+              'size': selectedPetSize,
+              'color': selectedColorPattern,
+              'collar': selectedCollar,
+              'barangay': selectedBarangay!.barangayName,
+              'address': address.text,
+              'date': dateController.text,
+              'lat': selectedLocation!.latitude,
+              'long': selectedLocation!.longitude,
+            };
+
+            await postRepository.uploadPetData(_images, selectedChip, petData);
+            ToastComponent().showMessage(Colors.green, '$selectedChip successful');
+            clearPost();
+          } catch (e) {
+            print('Failed to post: $e');
+          }
         }
-      }
-    } else if (selectedChip == 'Missing Pets' || selectedChip == 'Found Pets') {
-      // Implement functionality for Missing Pets or Found Pets
-      if (postController.text.isEmpty) {
-        ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
-      } else if (_images.isEmpty) {
-        ToastComponent().showMessage(Colors.red, 'Please select an image');
-      }
-      else if (petName.text.isEmpty) {
-        ToastComponent().showMessage(Colors.red , 'Please enter the name of the pet');
-      }
-      if (selectedPetType == 'Cat' && selectedCatBreed == null || selectedPetType == 'Dog' && selectedDogBreed == null) {
-        ToastComponent().showMessage(Colors.red, selectedPetType == 'Cat' ? 'Please select the breed of the cat' : 'Please select the breed of the dog');
-      }
-      else if (selectedRegion == null) {
-        ToastComponent().showMessage(Colors.red, 'Please select a region');
-      } else if (selectedProvince == null) {
-        ToastComponent().showMessage(Colors.red, 'Please select a province');
-      } else if (selectedCity == null) {
-        ToastComponent().showMessage(Colors.red, 'Please select a city');
-      } else if (selectedBarangay == null) {
-        ToastComponent().showMessage(Colors.red, 'Please select a barangay');
-      } else {
-        try {
+      } else if (selectedChip == 'Find a Home: Rescue & Shelter') {
+        // Implement functionality for Find a Home: Rescue & Shelter
+      } else if (selectedChip == 'Call for Aid') {
+        // Implement functionality for Call for Aid
+        if (accountNameController.text.isEmpty) {
+          ToastComponent().showMessage(Colors.red, 'Account name cannot be empty');
+        } else if (amountController.text.isEmpty) {
+          ToastComponent().showMessage(Colors.red, 'Amount cannot be empty');
+        } else if (bankNameController.text.isEmpty) {
+          ToastComponent().showMessage(Colors.red, 'Bank name cannot be empty');
+        } else if (postController.text.isEmpty) {
+          ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
+        } else if (_images.isEmpty) {
+          ToastComponent().showMessage(Colors.red, 'Please select an image');
+        } else {
+          try {
+            var petData = {
+              'post': postController.text,
+              'amount': amountController.text,
+              'account_name': bankNameController.text,
+              'account_number': accountNameController.text,
+              'bank_type': selectedBankType,
+              'donation_type': selectedDonationType,
+            };
+            await postRepository.uploadDonation(_images, selectedChip, petData);
+            clearPost();
+          } catch (e) {
+            print('Failed to post: $e');
+          }
+        }
+      } else if (selectedChip == 'Pet Adoption') {
+        // Implement functionality for Pet Adoption
+        if (postController.text.isEmpty) {
+          ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
+        } else if (_images.isEmpty) {
+          ToastComponent().showMessage(Colors.red, 'Please select an image');
+        } else if (petName.text.isEmpty) {
+          ToastComponent().showMessage(Colors.red, 'Please enter the name of the pet');
+        } else if (selectedPetType == 'Cat' && selectedCatBreed == null) {
+          ToastComponent().showMessage(Colors.red, 'Please select the breed of the cat');
+        } else if (selectedPetType == 'Dog' && selectedDogBreed == null) {
+          ToastComponent().showMessage(Colors.red, 'Please select the breed of the dog');
+        } else if (selectedRegion == null) {
+          ToastComponent().showMessage(Colors.red, 'Please select a region');
+        } else if (selectedProvince == null) {
+          ToastComponent().showMessage(Colors.red, 'Please select a province');
+        } else if (selectedCity == null) {
+          ToastComponent().showMessage(Colors.red, 'Please select a city');
+        } else if (selectedBarangay == null) {
+          ToastComponent().showMessage(Colors.red, 'Please select a barangay');
+        } else {
           var petData = {
             'post': postController.text,
             'pet_name': petName.text,
-            'pet_type': selectedPetType..toString(),
+            'pet_type': selectedPetType.toString(),
             'pet_breed': selectedPetType == 'Cat' ? selectedCatBreed!.name : selectedDogBreed!.name,
             'pet_color': selectedColorPattern,
             'pet_age': selectedPetAge,
@@ -317,98 +379,46 @@ class CreatePostViewModel extends ChangeNotifier {
             'gender': selectedPetGender,
             'size': selectedPetSize,
             'color': selectedColorPattern,
-            'collar': selectedCollar,
             'barangay': selectedBarangay!.barangayName,
             'address': address.text,
             'date': dateController.text,
-            'lat': selectedLocation!.latitude,
-            'long': selectedLocation!.longitude,
           };
 
-          await postRepository.uploadPetData(_images, selectedChip, petData);
-          ToastComponent().showMessage(Colors.green, '$selectedChip successful');
-          clearPost();
-        } catch (e) {
-          ToastComponent().showMessage(Colors.red, 'Failed to upload post: $e');
-        } finally {
-          pd.close();
+          try {
+            await postRepository.uploadAdoption(_images, selectedChip, petData);
+            ToastComponent().showMessage(Colors.green, '$selectedChip successful');
+            clearPost();
+          } catch (e) {
+            print('Failed to post: $e');
+          }
+        }
+      } else if (selectedChip == 'Protect Our Pets: Report Abuse') {
+        // Implement functionality for Protect Our Pets: Report Abuse
+      } else if (selectedChip == 'Caring for Pets: Vet & Travel Insights') {
+        // Implement functionality for Caring for Pets: Vet & Travel Insights
+      } else {
+        // For pet appreciation, paw-some experience, and community announcements
+        if (postController.text.isEmpty) {
+          ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
+        } else if (_images.isEmpty) {
+          ToastComponent().showMessage(Colors.red, 'Please select an image');
+        } else {
+          try {
+            await postRepository.uploadPost(postController.text, _images, selectedChip);
+            ToastComponent().showMessage(Colors.green, 'Post successful');
+            clearPost();
+          } catch (e) {
+            print('Failed to post: $e');
+          }
         }
       }
-    } else if (selectedChip == 'Find a Home: Rescue & Shelter') {
-      // Implement functionality for Find a Home: Rescue & Shelter
-    } else if (selectedChip == 'Call for Aid') {
-      // Implement functionality for Call for Aid
-    } else if (selectedChip == 'Paw-some Experience') {
-      // Implement functionality for Paw-some Experience
-    } else if (selectedChip == 'Pet Adoption') {
-      // Implement functionality for Pet Adoption
-      // Implement functionality for Missing Pets or Found Pets
-      if (postController.text.isEmpty) {
-        ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
-      } else if (_images.isEmpty) {
-        ToastComponent().showMessage(Colors.red, 'Please select an image');
+    } catch (e) {
+      print('Failed to post: $e');
+    } finally {
+      pd.close();
+      if (context.mounted) {
+        Navigator.pop(context);
       }
-      else if (petName.text.isEmpty) {
-        ToastComponent().showMessage(Colors.red , 'Please enter the name of the pet');
-      }
-
-      else if (selectedPetType == 'Cat' && selectedCatBreed == null) {
-        ToastComponent().showMessage(Colors.red, 'Please select the breed of the cat');
-      }
-      else if (selectedPetType == 'Dog' && selectedDogBreed == null) {
-        ToastComponent().showMessage(Colors.red, 'Please select the breed of the dog');
-      }
-      else if (selectedRegion == null) {
-        ToastComponent().showMessage(Colors.red, 'Please select a region');
-      } else if (selectedProvince == null) {
-        ToastComponent().showMessage(Colors.red, 'Please select a province');
-      } else if (selectedCity == null) {
-        ToastComponent().showMessage(Colors.red, 'Please select a city');
-      } else if (selectedBarangay == null) {
-        ToastComponent().showMessage(Colors.red, 'Please select a barangay');
-      } else{
-        var petData = {
-          'post': postController.text,
-          'pet_name': petName.text,
-          'pet_type': selectedPetType..toString(),
-          'pet_breed': selectedPetType == 'Cat' ? selectedCatBreed!.name : selectedDogBreed!.name,
-          'pet_color': selectedColorPattern,
-          'pet_age': selectedPetAge,
-          'region': selectedRegion!.region,
-          'province': selectedProvince!.provinceName,
-          'city': selectedCity!.cityName,
-          'gender': selectedPetGender,
-          'size': selectedPetSize,
-          'color': selectedColorPattern,
-          'barangay': selectedBarangay!.barangayName,
-          'address': address.text,
-          'date': dateController.text,
-        };
-
-        try {
-          await postRepository.uploadAdoption(_images, selectedChip, petData);
-          ToastComponent().showMessage(Colors.green, '$selectedChip successful');
-          clearPost();
-        } catch (e) {
-          ToastComponent().showMessage(Colors.red, 'Failed to upload post: $e');
-        } finally {
-          pd.close();
-        }
-      }
-
-    } else if (selectedChip == 'Protect Our Pets: Report Abuse') {
-      // Implement functionality for Protect Our Pets: Report Abuse
-    } else if (selectedChip == 'Caring for Pets: Vet & Travel Insights') {
-      // Implement functionality for Caring for Pets: Vet & Travel Insights
-    } else if (selectedChip == 'Community Announcements') {
-      // Implement functionality for Community Announcements
-    } else {
-      ToastComponent().showMessage(Colors.red, 'This feature is not yet available');
-    }
-  } catch (e) {
-    ToastComponent().showMessage(Colors.red, 'Failed to upload post: $e');
-  } finally {
-    pd.close();
     }
   }
 

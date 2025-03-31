@@ -51,7 +51,7 @@ abstract class PostRepository {
 
   Future <void> editComment(String postId, String commentId, String newCommentText);
 
-  Future <void> uploadAdoption(List<File> images, String selectedChip, Map<String, Object> petData);
+  Future <void> uploadAdoption(List<File> images, String selectedChip, Map<String, dynamic> petData);
 
   Stream<List<PostModel>> getPetAdoption();
 
@@ -59,7 +59,7 @@ abstract class PostRepository {
 
   Future<List<PostModel>> getNearbyLostPets(double lat, double long, double radiusInK);
 
-  Future <void> uploadDonation(List<File> images, String selectedChip, Map<String, Object> petData);
+  Future <void> uploadDonation(List<File> images, String selectedChip, Map<String, dynamic> petData);
 
 }
 
@@ -585,15 +585,16 @@ class PostRepositoryImpl implements PostRepository {
     var postID = Uuid().v4();
 
     try {
+
       // Create a new post document
       DocumentReference postRef = _firestore.collection('PostCollection').doc(postID);
 
       String post = petData['post'];
-      String bankName = petData['bank_name'];
+      String bankName = petData['bank_type'];
       String accountName = petData['account_name'];
       String accountNumber = petData['account_number'];
       String donationType = petData['donation_type'];
-      String estimatedAmount = petData['estimated_amount'];
+      String estimatedAmount = petData['amount'];
 
       await postRef.set({
         'PostID': postID,
@@ -611,7 +612,7 @@ class PostRepositoryImpl implements PostRepository {
         'AccountNumber': accountNumber,
         'DonationType': donationType,
         'EstimatedAmount': estimatedAmount,
-        'Status': 'Still up for adoption',
+        'Status': 'Ongoing', // put paused and fullfilled
       });
 
       ToastComponent().showMessage(AppColors.orange, '$selectedChip data added successfully');
@@ -633,6 +634,8 @@ class PostRepositoryImpl implements PostRepository {
 
       // Wait for all uploads to complete
       await Future.wait(uploadTasks);
+
+      ToastComponent().showMessage(AppColors.orange, '$selectedChip data added successfully');
     } catch (e) {
       throw Exception('Failed to upload post: $e');
     }
