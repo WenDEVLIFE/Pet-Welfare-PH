@@ -144,7 +144,7 @@ class CreatePostViewModel extends ChangeNotifier {
   List<String> bankType = ['Gcash', 'Paymaya', 'Coins.ph', 'BDO', 'BPI', 'Metrobank', 'Unionbank', 'Security Bank', 'Landbank', 'RCBC', 'PNB', 'China Bank', 'Eastwest Bank', 'PSBank', 'DBP', 'Maybank', 'CIMB', 'ING', 'Others'];
   String? selectedBankType = 'Gcash';
 
-  List<String> donationType =['Pet Foods or treats', 'Pet supplies', 'Vitamins and/or medicines', 'Cleaning supplies', 'Little sands' , 'Others'];
+  List<String> donationType =['Pet Foods or treats', 'Pet supplies', 'Vitamins and/or medicines', 'Cleaning supplies', 'Litter sands' , 'Others'];
   String? selectedDonationType = 'Pet Foods or treats';
 
   // Constructor

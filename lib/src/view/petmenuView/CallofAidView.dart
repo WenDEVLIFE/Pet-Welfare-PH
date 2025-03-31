@@ -205,7 +205,7 @@ class AidState extends State<CallOfAidView> {
                                               alignment: Alignment.centerLeft,
                                             ),
                                             CustomText(
-                                              text: 'BankHolder Name:',
+                                              text: 'Bank Holder Name:',
                                               size: 20,
                                               color: AppColors.black,
                                               weight: FontWeight.w700,
@@ -241,7 +241,7 @@ class AidState extends State<CallOfAidView> {
                                               alignment: Alignment.centerLeft,
                                             ),
                                             CustomText(
-                                              text: 'Wht donation is needed for:',
+                                              text: 'Types of Donation:',
                                               size: 20,
                                               color: AppColors.black,
                                               weight: FontWeight.w700,
