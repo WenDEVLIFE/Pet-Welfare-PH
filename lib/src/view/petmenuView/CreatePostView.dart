@@ -521,6 +521,33 @@ class CreatePostView extends StatelessWidget {
                    ),
                  ),
                  ],
+            if(createPostViewModel.selectedChip == 'Call for Aid')...[
+              const Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Bank',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontFamily: 'SmoochSans',
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+              CustomDropDown<String?>(
+                value: createPostViewModel.selectedBankType,
+                items: createPostViewModel.bankType,
+                onChanged: (String? newValue) {
+                  createPostViewModel.setSelectedBank(newValue);
+                },
+                itemLabel: (String? value) => value!,
+                hint: 'Select Bank',
+              ),
+
+            ],
             Center(
               child: CustomButton(
                   hint: 'Post Now',

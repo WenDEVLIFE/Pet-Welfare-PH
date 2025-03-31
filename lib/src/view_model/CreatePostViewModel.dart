@@ -31,11 +31,15 @@ class CreatePostViewModel extends ChangeNotifier {
   final TextEditingController petName = TextEditingController();
   final TextEditingController searchController = TextEditingController();
   final TextEditingController provinceCityMunicipalityBarangayController = TextEditingController();
+  final TextEditingController amountController = TextEditingController();
+  final TextEditingController bankNameController = TextEditingController();
+  final TextEditingController accountNameController = TextEditingController();
   final FocusNode focusNode = FocusNode();
 
   final List<File> _images = [];
   var collarList = ['With Collar', 'Without Collar'];
   String selectedCollar = 'With Collar';
+
   // Add these fields to store the breeds
   List<String> petTypes = ['Cat', 'Dog', 'Others (for birds, reptiles, etc.)'];
   String selectedPetType = 'Dog';
@@ -135,6 +139,12 @@ class CreatePostViewModel extends ChangeNotifier {
 
   bool showDropdown = false;
 
+  List<String> bankType = ['Gcash', 'Paymaya', 'Coins.ph', 'BDO', 'BPI', 'Metrobank', 'Unionbank', 'Security Bank', 'Landbank', 'RCBC', 'PNB', 'China Bank', 'Eastwest Bank', 'PSBank', 'DBP', 'Maybank', 'CIMB', 'ING', 'Others'];
+  String? selectedBankType = 'Gcash';
+
+  List<String> donationType =['Pet Foods or treats', 'Pet supplies', 'Vitamins and/or medicines', 'Cleaning supplies', 'Little sands' , 'Others'];
+  String? selectedDonationType = 'Pet Foods or treats';
+
   // Constructor
   CreatePostViewModel() {
     loadList();
@@ -173,7 +183,7 @@ class CreatePostViewModel extends ChangeNotifier {
     var userdata = await sessionManager.getUserInfo();
     var role = userdata!['role'];
 
-    if (role =='Admin'|| role =='Sub-Admin'){
+    if (role.toLowercase() =='admin'|| role.toLowercase() =='sub-admin'){
       chipLabels1 =[
         'Pet Appreciation',
         'Missing Pets',
@@ -186,13 +196,24 @@ class CreatePostViewModel extends ChangeNotifier {
         'Caring for Pets: Vet & Travel Insights',
         'Community Announcements'
       ];
-    } else{
+    } else if(role.toLowercase()=='pet rescuer' || role.toLowercase() == 'pet shelter'){
       chipLabels1 =[
         'Pet Appreciation',
         'Missing Pets',
         'Found Pets',
         'Find a Home: Rescue & Shelter',
         'Call for Aid',
+        'Paw-some Experience',
+        'Pet Adoption',
+        'Protect Our Pets: Report Abuse',
+        'Caring for Pets: Vet & Travel Insights',
+      ];
+    } else{
+      chipLabels1 =[
+        'Pet Appreciation',
+        'Missing Pets',
+        'Found Pets',
+        'Find a Home: Rescue & Shelter',
         'Paw-some Experience',
         'Pet Adoption',
         'Protect Our Pets: Report Abuse',
@@ -681,11 +702,13 @@ class CreatePostViewModel extends ChangeNotifier {
 
   void notifyNotice(BuildContext context) async {
 
-    NotificationUtils.showNotification(
+    /*NotificationUtils.showNotification(
       id: 1,
       title: "Reminder",
       body: "Don't forget your meeting!",
     );
+
+     */
 
     String filename;
 
@@ -883,9 +906,6 @@ class CreatePostViewModel extends ChangeNotifier {
     if(selectedChip == 'Community Announcements'){
 
     }
-
-
-
     notifyListeners();
   }
 
@@ -893,5 +913,11 @@ class CreatePostViewModel extends ChangeNotifier {
     // Load text from the text file
     String text = await rootBundle.loadString(filename);
     return text;
+  }
+
+  // This is for the donation type set the bank
+  void setSelectedBank(String? newValue) {
+    selectedBankType = newValue!;
+    notifyListeners();
   }
 }
