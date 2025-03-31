@@ -54,8 +54,7 @@ class CreatePostView extends StatelessWidget {
           IconButton(
             icon: const Icon(Icons.info_outline),
             onPressed: () {
-
-
+               createPostViewModel.notifyNotice(context);
             },
           ),
         ],

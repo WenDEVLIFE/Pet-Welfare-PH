@@ -678,36 +678,197 @@ class CreatePostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void notifyNotice(){
+  void notifyNotice(BuildContext context) async {
+    String filename;
 
     if(selectedChip == 'Pet Appreciation'){
+      filename = 'assets/word/petappreciation_notice.txt';
+      String data = await loadNotify(filename);
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("NOTICE BEFORE POSTING"),
+            content: SingleChildScrollView(
+              child: Text(data, textAlign: TextAlign.justify),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text("Ok"),
+              ),
+            ],
+          );
+        },
+      );
+
+
 
     }
     if(selectedChip == 'Missing Pets' || selectedChip == 'Found Pets'){
 
+      filename = 'assets/word/missingAndFoundPet_notice.txt';
+      String data = await loadNotify(filename);
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("NOTICE BEFORE POSTING"),
+            content: SingleChildScrollView(
+              child: Text(data, textAlign: TextAlign.justify),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text("Ok"),
+              ),
+            ],
+          );
+        },
+      );
     }
 
     if(selectedChip == 'Find a Home: Rescue & Shelter'){
+      filename = 'assets/word/petappreciation_notice.txt';
+      String data = await loadNotify(filename);
 
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("NOTICE BEFORE POSTING"),
+            content: SingleChildScrollView(
+              child: Text(data, textAlign: TextAlign.justify),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text("Ok"),
+              ),
+            ],
+          );
+        },
+      );
     }
 
     if(selectedChip == 'Call for Aid'){
+      filename = 'assets/word/callforAid_notice.txt';
+      String data = await loadNotify(filename);
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("NOTICE BEFORE POSTING"),
+            content: SingleChildScrollView(
+              child: Text(data, textAlign: TextAlign.justify),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text("Ok"),
+              ),
+            ],
+          );
+        },
+      );
 
     }
 
     if(selectedChip == 'Paw-some Experience'){
+      filename = 'assets/word/petexperience_notice.txt';
+      String data = await loadNotify(filename);
 
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("NOTICE BEFORE POSTING"),
+            content: SingleChildScrollView(
+              child: Text(data, textAlign: TextAlign.justify),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text("Ok"),
+              ),
+            ],
+          );
+        },
+      );
     }
 
     if(selectedChip == 'Pet Adoption'){
 
+      filename = 'assets/word/petAdoption_notice.txt';
+      String data = await loadNotify(filename);
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("NOTICE BEFORE POSTING"),
+            content: SingleChildScrollView(
+              child: Text(data, textAlign: TextAlign.justify),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text("Ok"),
+              ),
+            ],
+          );
+        },
+      );
     }
 
     if(selectedChip == 'Protect Our Pets: Report Abuse'){
+      filename = 'assets/word/reportAbuse_notice.txt';
+      String data = await loadNotify(filename);
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("NOTICE BEFORE POSTING"),
+            content: SingleChildScrollView(
+              child: Text(data, textAlign: TextAlign.justify),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text("Ok"),
+              ),
+            ],
+          );
+        },
+      );
 
     }
 
     if(selectedChip == 'Caring for Pets: Vet & Travel Insights'){
+      filename = 'assets/word/petexperience_notice.txt';
+      String data = await loadNotify(filename);
+
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: const Text("NOTICE BEFORE POSTING"),
+            content: SingleChildScrollView(
+              child: Text(data, textAlign: TextAlign.justify),
+            ),
+            actions: [
+              TextButton(
+                onPressed: () => Navigator.of(context).pop(),
+                child: const Text("Ok"),
+              ),
+            ],
+          );
+        },
+      );
 
     }
 
@@ -718,5 +879,11 @@ class CreatePostViewModel extends ChangeNotifier {
 
 
     notifyListeners();
+  }
+
+  Future<String> loadNotify(String filename) async {
+    // Load text from the text file
+    String text = await rootBundle.loadString(filename);
+    return text;
   }
 }
