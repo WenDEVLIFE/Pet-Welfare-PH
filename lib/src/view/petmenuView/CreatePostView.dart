@@ -624,7 +624,7 @@ class CreatePostView extends StatelessWidget {
                   screenHeight: screenHeight,
                   hintText: 'Enter estimated amount...',
                   fontSize: 16,
-                  keyboardType: TextInputType.text,
+                  keyboardType: TextInputType.number,
                 ),
               ),
             ],

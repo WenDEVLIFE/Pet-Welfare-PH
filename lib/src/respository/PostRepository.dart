@@ -17,7 +17,7 @@ abstract class PostRepository {
   Future<void> uploadPost(String postText, List<File> images, String category);
   Stream<List<PostModel>> getPosts();
 
-  Future <void> uploadPetData(List<File> images, String selectedChip, Map<String, Object> petData);
+  Future <void> uploadPetData(List<File> images, String selectedChip, Map<String, dynamic> petData);
 
   Future <void> addReaction(String postId, String reaction);
 
@@ -58,6 +58,8 @@ abstract class PostRepository {
   Future<List<PostModel>> getNearbyFoundPets(double lat, double long, double radiusInK);
 
   Future<List<PostModel>> getNearbyLostPets(double lat, double long, double radiusInK);
+
+  Future <void> uploadDonation(List<File> images, String selectedChip, Map<String, Object> petData);
 
 }
 
@@ -572,6 +574,67 @@ class PostRepositoryImpl implements PostRepository {
     } catch (e) {
       developer.log('Error fetching nearby found pets: $e');
       return [];
+    }
+  }
+
+  // Added upload donation function
+  @override
+  Future<void> uploadDonation(List<File> images, String selectedChip, Map<String, dynamic> petData) async {
+    User user = _firebaseAuth.currentUser!;
+    String uuid = user.uid;
+    var postID = Uuid().v4();
+
+    try {
+      // Create a new post document
+      DocumentReference postRef = _firestore.collection('PostCollection').doc(postID);
+
+      String post = petData['post'];
+      String bankName = petData['bank_name'];
+      String accountName = petData['account_name'];
+      String accountNumber = petData['account_number'];
+      String donationType = petData['donation_type'];
+      String estimatedAmount = petData['estimated_amount'];
+
+      await postRef.set({
+        'PostID': postID,
+        'PostOwnerID': uuid,
+        'PostDescription': post,
+        'Category': selectedChip,
+        'Timestamp': FieldValue.serverTimestamp(),
+      });
+
+      // Create a new document in PetDetailsCollection
+      DocumentReference petRef = _firestore.collection('DonationDetails').doc(postID);
+      await petRef.set({
+        'BankHolder': accountName,
+        'BankName': bankName,
+        'AccountNumber': accountNumber,
+        'DonationType': donationType,
+        'EstimatedAmount': estimatedAmount,
+        'Status': 'Still up for adoption',
+      });
+
+      ToastComponent().showMessage(AppColors.orange, '$selectedChip data added successfully');
+
+      // Upload images concurrently and store their URLs in the images sub-collection
+      List<Future<void>> uploadTasks = images.map((File image) async {
+        String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+        Reference storageRef = _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
+        UploadTask uploadTask = storageRef.putFile(image);
+        TaskSnapshot taskSnapshot = await uploadTask;
+        String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+
+        // Add image URL to the images sub-collection
+        await postRef.collection('ImageCollection').add({
+          'FileUrl': downloadUrl,
+          'FileName': '$fileName.jpg',
+        });
+      }).toList();
+
+      // Wait for all uploads to complete
+      await Future.wait(uploadTasks);
+    } catch (e) {
+      throw Exception('Failed to upload post: $e');
     }
   }
 
