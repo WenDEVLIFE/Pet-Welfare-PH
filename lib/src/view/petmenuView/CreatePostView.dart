@@ -250,7 +250,7 @@ class CreatePostView extends StatelessWidget {
               CustomDropDown(value: createPostViewModel.selectedColorPattern,
                 items: createPostViewModel.colorpatter,
                 onChanged: (String? newValue) {
-                  createPostViewModel.setPetGender(newValue);
+                  createPostViewModel.setColor(newValue);
                 },
                 itemLabel: (String value) => value,
                 hint: 'Select Colors or patterns',
@@ -272,10 +272,10 @@ class CreatePostView extends StatelessWidget {
                   ),
                 ),
                 CustomDropDown<Breed>(
-                  value: createPostViewModel.selectPedBreed,
+                  value: createPostViewModel.selectedCatBreed,
                   items: createPostViewModel.catBreeds,
                   onChanged: (Breed? newValue) {
-                    createPostViewModel.selectedBreed(newValue);
+                    createPostViewModel.selectedCatBreed1(newValue);
                   },
                   itemLabel: (Breed value) => value.name,
                   hint: 'Select Cat Breed',
@@ -298,10 +298,10 @@ class CreatePostView extends StatelessWidget {
                   ),
                 ),
                 CustomDropDown<Breed>(
-                  value: createPostViewModel.selectPedBreed,
+                  value: createPostViewModel.selectedDogBreed,
                   items: createPostViewModel.dogBreeds,
                   onChanged: (Breed? newValue) {
-                    createPostViewModel.selectedBreed(newValue);
+                    createPostViewModel.selectedDogBreed2(newValue);
                   },
                   itemLabel: (Breed value) => value.name,
                   hint: 'Select Dog Breed',

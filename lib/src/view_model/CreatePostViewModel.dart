@@ -37,12 +37,13 @@ class CreatePostViewModel extends ChangeNotifier {
   String selectedCollar = 'With Collar';
   // Add these fields to store the breeds
   List<String> petTypes = ['Cat', 'Dog', 'Others (for birds, reptiles, etc.)'];
-  String selectedPetType = 'Cat';
+  String selectedPetType = 'Dog';
   List<Breed> catBreeds = [];
   List<Breed> dogBreeds = [];
   List<String> petSize =['Tiny', 'Small', 'Medium', 'Large'];
   String selectedPetSize = 'Tiny';
-  Breed? selectPedBreed;
+  Breed? selectedCatBreed;
+  Breed? selectedDogBreed;
 
   List <String> petGender = ['Male', 'Female', 'Can’t determine (for found pets)'];
   String selectedPetGender ='Male';
@@ -146,10 +147,12 @@ class CreatePostViewModel extends ChangeNotifier {
 
   // Load user location
   Future<void> loadUserLocation() async {
-    await setInitialLocation();
-    await fetchCatBreeds(); // Fetch cat breeds
-    await fetchDogBreeds(); // Fetch dog breeds
-    await loadEstablishment(selectedEstablisment!);
+  Future.wait([
+   setInitialLocation(),
+   fetchCatBreeds(),
+   fetchDogBreeds(),
+   loadEstablishment(selectedEstablisment!),
+  ]);
   }
 
   Future<void> pickImage() async {
@@ -216,7 +219,8 @@ class CreatePostViewModel extends ChangeNotifier {
     selectedColorPattern = 'Calico';
      selectedPetAge = '1 month';
     selectedPetType = 'Cat';
-    selectPedBreed = null;
+    selectedDogBreed = null;
+    selectedCatBreed = null;
     selectedRegion = null;
     provinces = [];
     selectedProvince = null;
@@ -265,12 +269,8 @@ class CreatePostViewModel extends ChangeNotifier {
       else if (petName.text.isEmpty) {
         ToastComponent().showMessage(Colors.red , 'Please enter the name of the pet');
       }
-
-      else if (selectedPetType == 'Cat' && selectPedBreed == null) {
-        ToastComponent().showMessage(Colors.red, 'Please select the breed of the cat');
-      }
-      else if (selectedPetType == 'Dog' && selectPedBreed == null) {
-        ToastComponent().showMessage(Colors.red, 'Please select the breed of the dog');
+      if (selectedPetType == 'Cat' && selectedCatBreed == null || selectedPetType == 'Dog' && selectedDogBreed == null) {
+        ToastComponent().showMessage(Colors.red, selectedPetType == 'Cat' ? 'Please select the breed of the cat' : 'Please select the breed of the dog');
       }
       else if (selectedRegion == null) {
         ToastComponent().showMessage(Colors.red, 'Please select a region');
@@ -286,7 +286,7 @@ class CreatePostViewModel extends ChangeNotifier {
             'post': postController.text,
             'pet_name': petName.text,
             'pet_type': selectedPetType..toString(),
-            'pet_breed': selectPedBreed!.name,
+            'pet_breed': selectedPetType == 'Cat' ? selectedCatBreed!.name : selectedDogBreed!.name,
             'pet_color': selectedColorPattern,
             'pet_age': selectedPetAge,
             'region': selectedRegion!.region,
@@ -330,10 +330,10 @@ class CreatePostViewModel extends ChangeNotifier {
         ToastComponent().showMessage(Colors.red , 'Please enter the name of the pet');
       }
 
-      else if (selectedPetType == 'Cat' && selectPedBreed == null) {
+      else if (selectedPetType == 'Cat' && selectedCatBreed == null) {
         ToastComponent().showMessage(Colors.red, 'Please select the breed of the cat');
       }
-      else if (selectedPetType == 'Dog' && selectPedBreed == null) {
+      else if (selectedPetType == 'Dog' && selectedDogBreed == null) {
         ToastComponent().showMessage(Colors.red, 'Please select the breed of the dog');
       }
       else if (selectedRegion == null) {
@@ -349,7 +349,7 @@ class CreatePostViewModel extends ChangeNotifier {
           'post': postController.text,
           'pet_name': petName.text,
           'pet_type': selectedPetType..toString(),
-          'pet_breed': selectPedBreed!.name,
+          'pet_breed': selectedPetType == 'Cat' ? selectedCatBreed!.name : selectedDogBreed!.name,
           'pet_color': selectedColorPattern,
           'pet_age': selectedPetAge,
           'region': selectedRegion!.region,
@@ -488,7 +488,7 @@ class CreatePostViewModel extends ChangeNotifier {
     }
   }
 
-  // Method to fetch dog breeds
+// Method to fetch dog breeds
   Future<void> fetchDogBreeds() async {
     isLoading = true;
     notifyListeners();
@@ -500,6 +500,12 @@ class CreatePostViewModel extends ChangeNotifier {
       isLoading = false;
       notifyListeners();
     }
+  }
+
+// Helper method to clear breeds
+  void _clearBreeds() {
+    catBreeds = [];
+    dogBreeds = [];
   }
 
   // Fetch Regions
@@ -608,9 +614,15 @@ class CreatePostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-   // This is for the breed
-  void selectedBreed(Breed? newValue) {
-    selectPedBreed = newValue;
+   // This is for the cat breed
+  void selectedCatBreed1(Breed? newValue) {
+    selectedCatBreed = newValue;
+    notifyListeners();
+  }
+
+  // This is for the dog breed
+  void selectedDogBreed2(Breed? newValue) {
+    selectedDogBreed = newValue;
     notifyListeners();
   }
 
