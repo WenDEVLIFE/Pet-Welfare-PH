@@ -49,6 +49,8 @@ abstract class PostRepository {
 
   Stream<List<PostModel>> getVetAndTravelPost();
 
+  Stream<List<PostModel>> getCallforAid();
+
   Future <void> editComment(String postId, String commentId, String newCommentText);
 
   Future <void> uploadAdoption(List<File> images, String selectedChip, Map<String, dynamic> petData);
@@ -489,6 +491,18 @@ class PostRepositoryImpl implements PostRepository {
   Stream<List<PostModel>> getPetAdoption() {
     return _firestore.collection('PostCollection')
         .where('Category', isEqualTo: 'Pet Adoption')
+        .snapshots()
+        .asyncMap((snapshot) async {
+      List<Future<PostModel>> postFutures = snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
+      return await Future.wait(postFutures);
+    });
+  }
+
+  // get the call for aid
+  @override
+  Stream<List<PostModel>> getCallforAid() {
+    return _firestore.collection('PostCollection')
+        .where('Category', isEqualTo: 'Call for Aid')
         .snapshots()
         .asyncMap((snapshot) async {
       List<Future<PostModel>> postFutures = snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
