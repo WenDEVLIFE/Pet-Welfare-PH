@@ -546,7 +546,87 @@ class CreatePostView extends StatelessWidget {
                 itemLabel: (String? value) => value!,
                 hint: 'Select Bank',
               ),
-
+              CustomText(
+                text: 'Bank Holder Name',
+                size: 18,
+                color: Colors.black,
+                weight: FontWeight.w700,
+                align: TextAlign.left,
+                screenHeight: screenHeight,
+                alignment: Alignment.centerLeft,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: CustomTextField(
+                  controller: createPostViewModel.bankNameController,
+                  screenHeight: screenHeight,
+                  hintText: 'Enter bank holder name...',
+                  fontSize: 16,
+                  keyboardType: TextInputType.text,
+                ),
+              ),
+              CustomText(
+                text: 'Account Number',
+                size: 18,
+                color: Colors.black,
+                weight: FontWeight.w700,
+                align: TextAlign.left,
+                screenHeight: screenHeight,
+                alignment: Alignment.centerLeft,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: CustomTextField(
+                  controller: createPostViewModel.accountNameController,
+                  screenHeight: screenHeight,
+                  hintText: 'Enter bank account number...',
+                  fontSize: 16,
+                  keyboardType: TextInputType.text,
+                ),
+              ),
+              const Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
+                    'Type of Donation',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontFamily: 'SmoochSans',
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+              CustomDropDown<String?>(
+                value: createPostViewModel.selectedDonationType,
+                items: createPostViewModel.donationType,
+                onChanged: (String? newValue) {
+                  createPostViewModel.setSelectDonation(newValue);
+                },
+                itemLabel: (String? value) => value!,
+                hint: 'Select a donation',
+              ),
+              CustomText(
+                text: 'Estimated Amount',
+                size: 18,
+                color: Colors.black,
+                weight: FontWeight.w700,
+                align: TextAlign.left,
+                screenHeight: screenHeight,
+                alignment: Alignment.centerLeft,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: CustomTextField(
+                  controller: createPostViewModel.amountController,
+                  screenHeight: screenHeight,
+                  hintText: 'Enter estimated amount...',
+                  fontSize: 16,
+                  keyboardType: TextInputType.text,
+                ),
+              ),
             ],
             Center(
               child: CustomButton(

@@ -920,4 +920,10 @@ class CreatePostViewModel extends ChangeNotifier {
     selectedBankType = newValue!;
     notifyListeners();
   }
+
+  // This is for te set donation type
+  void setSelectDonation(String? newValue) {
+    selectedDonationType = newValue!;
+    notifyListeners();
+  }
 }
