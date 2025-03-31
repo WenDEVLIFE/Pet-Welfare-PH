@@ -22,6 +22,7 @@ import 'package:pet_welfrare_ph/src/model/BarangayModel.dart';
 import '../model/BreedModel.dart';
 import '../services/LocationService.dart';
 import '../services/PetAPI.dart';
+import '../utils/NotificationUtils.dart';
 
 class CreatePostViewModel extends ChangeNotifier {
   final TextEditingController postController = TextEditingController();
@@ -679,6 +680,13 @@ class CreatePostViewModel extends ChangeNotifier {
   }
 
   void notifyNotice(BuildContext context) async {
+
+    NotificationUtils.showNotification(
+      id: 1,
+      title: "Reminder",
+      body: "Don't forget your meeting!",
+    );
+
     String filename;
 
     if(selectedChip == 'Pet Appreciation'){
