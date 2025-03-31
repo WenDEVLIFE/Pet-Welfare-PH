@@ -86,6 +86,16 @@ class PostRepositoryImpl implements PostRepository {
         'Timestamp': FieldValue.serverTimestamp(),
       });
 
+      DocumentReference notificationRef = _firestore.collection('NotificationCollection').doc();
+      await notificationRef.set({
+        'notificationID': notificationRef.id,
+        'userID': uuid,
+        'content': 'You have successfully created $category post',
+        'timestamp': FieldValue.serverTimestamp(),
+        'category': 'Donation',
+        'isRead': false,
+      });
+
       // Upload images concurrently and store their URLs in the images sub-collection
       List<Future<void>> uploadTasks = images.map((File image) async {
         String fileName = DateTime.now().millisecondsSinceEpoch.toString();
@@ -181,6 +191,26 @@ class PostRepositoryImpl implements PostRepository {
 
       ToastComponent().showMessage(AppColors.orange, '$selectedChip data added successfully');
 
+      DocumentReference notificationRef = _firestore.collection('NotificationCollection').doc();
+      await notificationRef.set({
+        'notificationID': notificationRef.id,
+        'userID': uuid,
+        'content': 'You have successfully created $selectedChip post',
+        'timestamp': FieldValue.serverTimestamp(),
+        'category': 'Donation',
+        'isRead': false,
+      });
+
+      await notificationRef.set({
+        'notificationID': notificationRef.id,
+        'userID': uuid,
+        'content': 'A user has created a $selectedChip post',
+        'notifiedTo': 'Pet Rescuer',
+        'timestamp': FieldValue.serverTimestamp(),
+        'category': 'Donation',
+        'isRead': false,
+      });
+
       // Upload images concurrently and store their URLs in the images sub-collection
       List<Future<void>> uploadTasks = images.map((File image) async {
         String fileName = DateTime.now().millisecondsSinceEpoch.toString();
@@ -253,6 +283,16 @@ class PostRepositoryImpl implements PostRepository {
         'Barangay': barangay,
         'Address': address,
         'Status': 'Still up for adoption',
+      });
+
+      DocumentReference notificationRef = _firestore.collection('NotificationCollection').doc();
+      await notificationRef.set({
+        'notificationID': notificationRef.id,
+        'userID': uuid,
+        'content': 'You have successfully created a Adoption post',
+        'timestamp': FieldValue.serverTimestamp(),
+        'category': 'Donation',
+        'isRead': false,
       });
 
       ToastComponent().showMessage(AppColors.orange, '$selectedChip data added successfully');
@@ -629,6 +669,16 @@ class PostRepositoryImpl implements PostRepository {
         'Status': 'Ongoing', // put paused and fullfilled
       });
 
+      DocumentReference notificationRef = _firestore.collection('NotificationCollection').doc();
+      await notificationRef.set({
+        'notificationID': notificationRef.id,
+        'userID': uuid,
+        'content': 'You have successfully created a donation post',
+        'timestamp': FieldValue.serverTimestamp(),
+        'category': 'Donation',
+        'isRead': false,
+      });
+
       ToastComponent().showMessage(AppColors.orange, '$selectedChip data added successfully');
 
       // Upload images concurrently and store their URLs in the images sub-collection
@@ -645,6 +695,7 @@ class PostRepositoryImpl implements PostRepository {
           'FileName': '$fileName.jpg',
         });
       }).toList();
+
 
       // Wait for all uploads to complete
       await Future.wait(uploadTasks);

@@ -38,6 +38,12 @@ class PostModel {
   String petOwnernName = '';
   double lat = 0.0;
   double long = 0.0;
+  String accountNumber = '';
+  String bankHolder = '';
+  String donationType = '';
+  String estimatedAmount = '';
+  String statusDonation = '';
+  String bankName = '';
 
   PostModel({
     required this.postId,
@@ -60,6 +66,7 @@ class PostModel {
     var userDoc = await FirebaseFirestore.instance.collection('Users').doc(doc['PostOwnerID']).get();
     var petDoc = await FirebaseFirestore.instance.collection('PetDetailsCollection').doc(doc.id).get();
     var petDocAdopt = await FirebaseFirestore.instance.collection('AdoptionDetails').doc(doc.id).get();
+    var donationDoc = await FirebaseFirestore.instance.collection('DonationDetails').doc(doc.id).get();
 
     return PostModel(
       postId: doc.id,
@@ -96,7 +103,13 @@ class PostModel {
       ..StatusAdopt = petDocAdopt.data()?['Status'] ?? ''
       ..petOwnernName = userDoc.data()?['Name'] ?? ''
       ..lat = petDoc.data()?['Latitude'] ?? 0.0
-      ..long = petDoc.data()?['Longitude'] ?? 0.0;
+      ..long = petDoc.data()?['Longitude'] ?? 0.0
+     ..accountNumber = donationDoc.data()?['AccountNumber'] ?? ''
+      ..bankName = donationDoc.data()?['BankName'] ?? ''
+      ..bankHolder = donationDoc.data()?['BankHolder'] ?? ''
+      ..donationType = donationDoc.data()?['DonationType'] ?? ''
+      ..estimatedAmount = donationDoc.data()?['EstimatedAmount'] ?? ''
+      ..statusDonation = donationDoc.data()?['Status'] ?? '';
 
   }
 }

@@ -38,6 +38,9 @@ class PostViewModel extends ChangeNotifier {
   List<PostModel> petAdoptPost = [];
   List<PostModel> filterPetAdoptPost = [];
 
+  List<PostModel> callforAidPost = [];
+  List<PostModel> filterCallforAidPost = [];
+
   List<CommentModel> comments = [];
 
   final PostRepository postRepository = PostRepositoryImpl();
@@ -50,6 +53,7 @@ class PostViewModel extends ChangeNotifier {
   Stream<List<PostModel>> get communityPostStream => postRepository.getCommunityPost();
   Stream<List<PostModel>> get vetAndTravelPostStream => postRepository.getVetAndTravelPost();
   Stream<List<PostModel>> get petAdoptPostStream => postRepository.getPetAdoption();
+  Stream<List<PostModel>> get callforAidPostStream => postRepository.getCallforAid();
 
  // Initialize the PostViewModel
   PostViewModel() {
@@ -273,6 +277,34 @@ class PostViewModel extends ChangeNotifier {
       filterPetAdoptPost.addAll(petAdoptPost);
     } else {
       filterPetAdoptPost.addAll(petAdoptPost.where((post) => post.postDescription.toLowerCase().contains(search.toLowerCase())));
+    }
+    notifyListeners();
+  }
+
+  // Search PawSome Post
+  void searchPawSome(String searchText) {
+    filterPawExperiencePost.clear();
+    if (searchText.isEmpty) {
+      filterPawExperiencePost.addAll(pawExperiencePost);
+    } else {
+      filterPawExperiencePost.addAll(pawExperiencePost.where((post) => post.postDescription.toLowerCase().contains(
+          searchText.toLowerCase())));
+    }
+    notifyListeners();
+  }
+
+  // Search Call for Aid Post
+  void searchCallforAidPost(String searchText) {
+    filterCallforAidPost.clear();
+    if (searchText.isEmpty) {
+      filterCallforAidPost.addAll(callforAidPost);
+    } else {
+      filterCallforAidPost.addAll(callforAidPost.where((post) => post.postDescription.toLowerCase().contains(
+          searchText.toLowerCase()) || post.bankHolder.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.accountNumber.toLowerCase().contains(searchText.toLowerCase()) ||  post.estimatedAmount.toLowerCase().contains(searchText.toLowerCase())
+          ||  post.donationType.toLowerCase().contains(searchText.toLowerCase()) ||  post.donationType.toLowerCase().contains(searchText.toLowerCase())
+          ||  post.statusDonation.toLowerCase().contains(searchText.toLowerCase())
+      ));
     }
     notifyListeners();
   }
