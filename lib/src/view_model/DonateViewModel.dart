@@ -1,6 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pet_welfrare_ph/src/respository/DonationRepository.dart';
+import 'package:sn_progress_dialog/progress_dialog.dart';
 
 class DonateViewModel extends ChangeNotifier {
 
@@ -8,6 +10,8 @@ class DonateViewModel extends ChangeNotifier {
   TextEditingController dateController = TextEditingController();
   TextEditingController timeController = TextEditingController();
   String transactionPath='';
+
+  final DonationRepository _donationRepository = DonationRepositoryImpl();
 
   // Select a transaction date
   void selectDate(BuildContext context) async {
@@ -50,7 +54,24 @@ class DonateViewModel extends ChangeNotifier {
     String dateValue = dateController.text;
     String timeValue = timeController.text;
     if (amountValue.isNotEmpty && dateValue.isNotEmpty && timeValue.isNotEmpty) {
-
+      ProgressDialog pd = ProgressDialog(context: context);
+      pd.show(max: 100, msg: 'Submitting...');
+       try{
+         var donation = {
+           'amount': amountValue,
+           'date': dateValue,
+           'time': timeValue,
+           'postId': postId,
+           'transactionPath': transactionPath,
+         };
+          _donationRepository.submitDonation(donation);
+        Navigator.of(context).pop();
+       } catch(e){
+         print(e);
+       }
+       finally{
+         pd.close();
+       }
     } else {
       ScaffoldMessenger.of(context).showSnackBar(
         const SnackBar(
