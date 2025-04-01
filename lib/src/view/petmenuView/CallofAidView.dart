@@ -285,7 +285,7 @@ class AidState extends State<CallOfAidView> {
                                               alignment: Alignment.centerLeft,
                                             ),
                                             CustomText(
-                                              text: '${post.estimatedAmount}',
+                                              text: '₱ ${post.estimatedAmount}',
                                               size: 16,
                                               color: AppColors.black,
                                               weight: FontWeight.w700,
