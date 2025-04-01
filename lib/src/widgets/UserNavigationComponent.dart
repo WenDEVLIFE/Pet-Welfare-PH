@@ -1,5 +1,6 @@
 
 import 'package:flutter/material.dart';
+import 'package:pet_welfrare_ph/src/view/ProfileView.dart';
 import 'package:pet_welfrare_ph/src/view/chatdirectory/ChatView.dart';
 import 'package:pet_welfrare_ph/src/view/HomeScreen.dart';
 import 'package:pet_welfrare_ph/src/view/Mapview.dart';
@@ -22,7 +23,7 @@ class _UserNavigationComponentState extends BaseNavigationComponentState<UserNav
     return [
       buildNavItem(0, Icons.home, "Home"),
       buildNavItem(1, Icons.map, "Map"),
-      buildNavItem(2, Icons.person_pin, "Profile"),
+      buildNavItem(2, Icons.person_pin, "My Posts"),
       buildNavItem(4, Icons.chat_sharp, "Chats"),
       buildNavItem(3, Icons.menu, "Menu"),
     ];
@@ -34,7 +35,7 @@ class _UserNavigationComponentState extends BaseNavigationComponentState<UserNav
     return [
       const HomeScreen(), // User Home
       const MapView(), // User Search
-      const HomeScreen(), // User Profile
+      const ProfileView(), // User Profile
       ChatView(), // User Menu
       const MenuView(), // User Notifications
     ];
