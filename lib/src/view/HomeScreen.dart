@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
-import 'package:pet_welfrare_ph/src/widgets/BaseScreenWidget.dart';
 import 'package:pet_welfrare_ph/src/view/petmenuView/CallofAidView.dart';
 import 'package:pet_welfrare_ph/src/view/petmenuView/CommunityView.dart';
 import 'package:pet_welfrare_ph/src/view/petmenuView/FoundPetView.dart';
@@ -10,8 +9,7 @@ import 'package:pet_welfrare_ph/src/view/petmenuView/PetAdoptionView.dart';
 import 'package:pet_welfrare_ph/src/view/petmenuView/ProtectView.dart';
 import 'package:pet_welfrare_ph/src/view/petmenuView/RescueShelterView.dart';
 import 'package:pet_welfrare_ph/src/view/petmenuView/VetAndTravelView.dart';
-
-import 'petmenuView/PetAppreciationView.dart';
+import 'package:pet_welfrare_ph/src/view/petmenuView/PetAppreciationView.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -27,11 +25,19 @@ class HomeState extends State<HomeScreen> {
     'Pet Adoption', 'Protect Our Pets: Report Abuse', 'Caring for Pets: Vet & Travel Insights', 'Community Announcements'
   ];
   int _selectedIndex = 0;
+  late PageController _pageController;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: _selectedIndex);
+  }
 
   void _updateContent(int index) {
     setState(() {
       _selectedIndex = index;
     });
+    _pageController.jumpToPage(index);
   }
 
   @override
@@ -78,8 +84,13 @@ class HomeState extends State<HomeScreen> {
             ),
           ),
           Expanded(
-            child: IndexedStack(
-              index: _selectedIndex,
+            child: PageView(
+              controller: _pageController,
+              onPageChanged: (index) {
+                setState(() {
+                  _selectedIndex = index;
+                });
+              },
               children: const [
                 PetAppreciateView(), // Pet Appreciation
                 MissingPetView(), // Missing Pets
@@ -90,7 +101,7 @@ class HomeState extends State<HomeScreen> {
                 PetAdoptionView(), // Pet Adoption
                 ProtectPetView(), // Protect Our Pets: Report Abuse
                 VetAndTravelView(), // Caring for Pets: Vet & Travel Insights
-               CommunityView(), // Community Announcements
+                CommunityView(), // Community Announcements
               ],
             ),
           ),

@@ -1,6 +1,5 @@
 import 'package:curved_navigation_bar/curved_navigation_bar.dart';
 import 'package:flutter/material.dart';
-
 import '../utils/AppColors.dart';
 
 abstract class BaseNavigationWidget extends StatefulWidget {
@@ -8,7 +7,14 @@ abstract class BaseNavigationWidget extends StatefulWidget {
 }
 
 abstract class BaseNavigationComponentState<T extends BaseNavigationWidget> extends State<T> {
+  late PageController _pageController;
   int _currentIndex = 0;
+
+  @override
+  void initState() {
+    super.initState();
+    _pageController = PageController(initialPage: _currentIndex);
+  }
 
   List<Widget> getNavBarItems();
   List<Widget> getPageViewChildren();
@@ -32,11 +38,23 @@ abstract class BaseNavigationComponentState<T extends BaseNavigationWidget> exte
     );
   }
 
+  void _onItemTapped(int index) {
+    setState(() {
+      _currentIndex = index;
+    });
+    _pageController.jumpToPage(index);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: IndexedStack(
-        index: _currentIndex,
+      body: PageView(
+        controller: _pageController,
+        onPageChanged: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
         children: getPageViewChildren(),
       ),
       bottomNavigationBar: CurvedNavigationBar(
@@ -44,11 +62,7 @@ abstract class BaseNavigationComponentState<T extends BaseNavigationWidget> exte
         color: AppColors.orange,
         items: getNavBarItems(),
         index: _currentIndex,
-        onTap: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+        onTap: _onItemTapped,
       ),
     );
   }
