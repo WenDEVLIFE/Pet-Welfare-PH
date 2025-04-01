@@ -46,6 +46,18 @@ class DonateViewModel extends ChangeNotifier {
   }
 
   void submitDonation(String postId, BuildContext context) {
+    String amountValue = amount.text;
+    String dateValue = dateController.text;
+    String timeValue = timeController.text;
+    if (amountValue.isNotEmpty && dateValue.isNotEmpty && timeValue.isNotEmpty) {
+
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(
+          content: Text('Please fill all the fields'),
+        ),
+      );
+    }
 
   }
 
