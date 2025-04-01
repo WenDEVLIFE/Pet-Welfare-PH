@@ -48,14 +48,18 @@ abstract class BaseNavigationComponentState<T extends BaseNavigationWidget> exte
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: PageView(
+      body: PageView.builder(
         controller: _pageController,
+        physics: const NeverScrollableScrollPhysics(), // Disable swipe
         onPageChanged: (index) {
           setState(() {
             _currentIndex = index;
           });
         },
-        children: getPageViewChildren(),
+        itemCount: getPageViewChildren().length,
+        itemBuilder: (context, index) {
+          return getPageViewChildren()[index];
+        },
       ),
       bottomNavigationBar: CurvedNavigationBar(
         backgroundColor: const Color.fromARGB(255, 245, 245, 245),

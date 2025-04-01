@@ -9,6 +9,7 @@ import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 import 'package:pet_welfrare_ph/src/modal/ReactionModal.dart';
 
+import '../../modal/DonateModal.dart';
 import '../../modal/FormAdoptionModal.dart';
 import '../../utils/AppColors.dart';
 import '../../utils/ReactionUtils.dart';
@@ -380,9 +381,7 @@ class AidState extends State<CallOfAidView> {
                                                 context: context,
                                                 isScrollControlled: true,
                                                 builder: (context) {
-                                                  ApplyAdoptionViewModel applyAdoptionViewModel = Provider.of<ApplyAdoptionViewModel>(context, listen: false);
-                                                  applyAdoptionViewModel.showReminders(context);
-                                                  return FormAdoptionModal(post.postId);
+                                                  return DonateModal(post.postId);
                                                 },
                                               );
                                             },

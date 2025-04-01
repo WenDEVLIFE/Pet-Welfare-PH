@@ -1,90 +1,95 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/view_model/DonateViewModel.dart';
+import 'package:pet_welfrare_ph/src/widgets/CustomText.dart';
 import 'package:provider/provider.dart';
 
+import '../utils/AppColors.dart';
+import '../widgets/CustomButton.dart';
 import '../widgets/CustomTextField.dart';
 
 class DonateModal extends StatelessWidget {
-
   final String postId;
   DonateModal(this.postId);
+
   @override
   Widget build(BuildContext context) {
     final DonateViewModel viewModel = Provider.of<DonateViewModel>(context);
-   double screenHeight = MediaQuery.of(context).size.height;
-   double screenWidth = MediaQuery.of(context).size.width;
+    double screenHeight = MediaQuery.of(context).size.height;
+    double screenWidth = MediaQuery.of(context).size.width;
 
-   TextEditingController amount = TextEditingController();
-   TextEditingController dateController = TextEditingController();
     return Container(
-        padding: const EdgeInsets.all(16.0),
-    decoration: const BoxDecoration(
-    color: Colors.white,
-    borderRadius: BorderRadius.only(
-    topLeft: Radius.circular(20),
-    topRight: Radius.circular(20),
-    ),
-    ),
-    child: Column(
-      children: [
-        Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            const Text(
-              'Donation Details',
-              style: TextStyle(
-                fontWeight: FontWeight.bold,
-                fontSize: 18,
-              ),
-            ),
-            IconButton(
-              icon: const Icon(Icons.close),
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-            ),
-          ],
+      padding: const EdgeInsets.all(16.0),
+      decoration: const BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(20),
+          topRight: Radius.circular(20),
         ),
-        Expanded(child:
-            SingleChildScrollView(
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              const Text(
+                'Submit Donation',
+                style: TextStyle(
+                  fontWeight: FontWeight.bold,
+                  fontSize: 18,
+                ),
+              ),
+              IconButton(
+                icon: const Icon(Icons.close),
+                onPressed: () {
+                  Navigator.of(context).pop();
+                },
+              ),
+            ],
+          ),
+          Expanded(
+            child: SingleChildScrollView(
               child: Column(
+                mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  const Text(
-                    'Amount Donated',
-                    style: TextStyle(
-                      color: Colors.black,
-                      fontSize: 18,
-                      fontFamily: 'SmoochSans',
-                      fontWeight: FontWeight.w600,
-                    ),
+                  CustomText(
+                      text: 'Amount Donated',
+                      size: 25,
+                      color: AppColors.black,
+                      weight: FontWeight.w600,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
                   ),
                   SizedBox(height: screenHeight * 0.01),
                   CustomTextField(
-                    controller: nameController,
+                    controller: viewModel.amount,
                     screenHeight: screenHeight,
-                    hintText: 'Enter your full name',
+                    hintText: 'Enter donation amount...',
                     fontSize: 16,
                     keyboardType: TextInputType.number,
+                  ),
+                  CustomText(
+                    text: 'Date of Donation',
+                    size: 25,
+                    color: AppColors.black,
+                    weight: FontWeight.w600,
+                    align: TextAlign.left,
+                    screenHeight: screenHeight,
+                    alignment: Alignment.centerLeft,
                   ),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: TextField(
-                      controller: dateController,
+                      controller: viewModel.dateController,
                       readOnly: true,
                       onTap: () async {
-                        final DateTime? date = await showDatePicker(
-                          context: context,
-                          initialDate: DateTime.now(),
-                          firstDate: DateTime(2000),
-                          lastDate: DateTime(2100),
-                        );
-                        if (date != null) {
-                          dateController.text = date.toLocal().toString().split(' ')[0];
-                        }
+                        viewModel.selectDate(context);
                       },
                       decoration: InputDecoration(
-                        hintText: 'Select a date...',
+                        hintText: 'Select a date of the donation...',
                         hintStyle: const TextStyle(
                           color: Colors.black,
                         ),
@@ -96,14 +101,87 @@ class DonateModal extends StatelessWidget {
                       ),
                     ),
                   ),
+                  CustomText(
+                    text: 'Time of Donation',
+                    size: 25,
+                    color: AppColors.black,
+                    weight: FontWeight.w600,
+                    align: TextAlign.left,
+                    screenHeight: screenHeight,
+                    alignment: Alignment.centerLeft,
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.all(10.0),
+                    child: TextField(
+                      controller: viewModel.timeController,
+                      readOnly: true,
+                      onTap: () async {
+                        viewModel.selectTime(context);
+                      },
+                      decoration: InputDecoration(
+                        hintText: 'Select a time of the donation...',
+                        hintStyle: const TextStyle(
+                          color: Colors.black,
+                        ),
+                        border: OutlineInputBorder(
+                          borderRadius: BorderRadius.circular(10),
+                          borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                        ),
+                        contentPadding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 0),
+                      ),
+                    ),
+                  ),
+                  Padding(
+                    padding: const EdgeInsets.only(top: 16.0),
+                    child: Center(
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(10.0),
+                        child: viewModel.transactionPath.isEmpty
+                            ? Image.asset(
+                          'assets/images/cat.jpg',
+                          width: screenWidth * 0.8,
+                          height: screenHeight * 0.4,
+                          fit: BoxFit.cover,
+                        )
+                            : Image.file(
+                          File(viewModel.transactionPath),
+                          width: screenWidth * 0.8,
+                          height: screenHeight * 0.4,
+                          fit: BoxFit.cover,
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(height: screenHeight * 0.01),
+                  Center(
+                    child: CustomButton(
+                      hint: 'Upload Transaction Image',
+                      size: 16,
+                      color1: AppColors.orange,
+                      textcolor2: AppColors.white,
+                      onPressed: () {
+                        viewModel.pickImage();
+                      },
+                    ),
+                  ),
+                  SizedBox(height: screenHeight * 0.02),
+                  Center(
+                    child: CustomButton(
+                      hint: 'Submit Donation',
+                      size: 16,
+                      color1: AppColors.orange,
+                      textcolor2: AppColors.white,
+                      onPressed: () {
+                        viewModel.submitDonation(postId, context);
+                      },
+                    ),
+                  ),
                 ],
               ),
-            )
-        )
-      ],
-
-    ),
+            ),
+          ),
+        ],
+      ),
     );
   }
-  
 }

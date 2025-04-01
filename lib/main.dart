@@ -60,7 +60,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => MapViewModel()),
         ChangeNotifierProvider(create: (_) => EstablishmentViewModel()),
         ChangeNotifierProvider(create: (_) => ApplyAdoptionViewModel()),
-        ChangeNotifierProvider(create: (_) => DonateViewModel())
+        ChangeNotifierProvider(create: (_) => DonateViewModel()),
         ChangeNotifierProvider(create: (_) => MessageViewModel()),
         ChangeNotifierProvider(create: (_) => CreatePostViewModel()),
         ChangeNotifierProvider(create: (_) => PostViewModel())
