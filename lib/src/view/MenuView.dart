@@ -35,6 +35,7 @@ class MenuViewState extends State<MenuView> {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
+    List <String>imageUrls = [];
     return CupertinoPageScaffold(
       child: Center(
         child: Column(
@@ -63,9 +64,11 @@ class MenuViewState extends State<MenuView> {
                               ),
                             ),
                             onTap: () {
-                              // Implement image upload functionality here
+                              // Implement image upload functionality here\
+                              imageUrls.add(viewModel.currentfilepath);
                               Navigator.pushNamed(context, AppRoutes.viewImageData, arguments: {
-                                'imagePath': viewModel.currentfilepath,
+                                'imageUrls':imageUrls,
+                                'initialIndex': 0,
                               });
                             },
                           );
