@@ -11,6 +11,7 @@ import 'package:pet_welfrare_ph/src/modal/ReactionModal.dart';
 import '../../utils/AppColors.dart';
 import '../../utils/ReactionUtils.dart';
 import '../../widgets/SearchTextField.dart';
+import '../ViewImage.dart';
 
 class MissingPetView extends StatefulWidget {
   const MissingPetView({Key? key}) : super(key: key);
@@ -158,12 +159,28 @@ class MissingPetState extends State<MissingPetView> {
                                     child: PageView.builder(
                                       itemCount: post.imageUrls.length,
                                       itemBuilder: (context, imageIndex) {
-                                        return Container(
-                                          width: screenWidth * 0.8,
-                                          height: screenHeight * 0.5,
-                                          child: CachedNetworkImage(
-                                            imageUrl: post.imageUrls[imageIndex],
-                                            fit: BoxFit.cover,
+                                        return GestureDetector(
+                                          onTap: () {
+                                            Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                builder: (context) => ViewImage(),
+                                                settings: RouteSettings(
+                                                  arguments: {
+                                                    'imageUrls': post.imageUrls,
+                                                    'initialIndex': imageIndex,
+                                                  },
+                                                ),
+                                              ),
+                                            );
+                                          },
+                                          child: Container(
+                                            width: screenWidth * 0.8,
+                                            height: screenHeight * 0.5,
+                                            child: CachedNetworkImage(
+                                              imageUrl: post.imageUrls[imageIndex],
+                                              fit: BoxFit.cover,
+                                            ),
                                           ),
                                         );
                                       },
