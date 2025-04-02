@@ -4,6 +4,7 @@ import 'package:pet_welfrare_ph/src/view_model/NotificationViewModel.dart';
 import 'package:pet_welfrare_ph/src/widgets/SearchTextField.dart';
 import 'package:provider/provider.dart';
 
+import '../model/NotificationModel.dart';
 import '../utils/AppColors.dart';
 
 class NotificationView extends StatefulWidget {
@@ -13,7 +14,7 @@ class NotificationView extends StatefulWidget {
   NotificationViewState createState() => NotificationViewState();
 }
 
-class NotificationViewState  extends State<NotificationView> {
+class NotificationViewState extends State<NotificationView> {
   @override
   Widget build(BuildContext context) {
     final NotificationViewModel viewModel = Provider.of<NotificationViewModel>(context);
@@ -34,27 +35,41 @@ class NotificationViewState  extends State<NotificationView> {
       ),
       body: Column(
         children: [
-          Padding(padding: const EdgeInsets.all(8.0),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
             child: CustomSearchTextField(
-                controller: viewModel.searchController,
-                screenHeight: screenHeight,
-                hintText: 'Search Notifications',
-                fontSize: 16,
-                keyboardType: TextInputType.text,
-                onChanged: (value) {
-                  // Perform search operation
-                  viewModel.setSearchQuery(value);
-                },
-            )
+              controller: viewModel.searchController,
+              screenHeight: screenHeight,
+              hintText: 'Search Notifications',
+              fontSize: 16,
+              keyboardType: TextInputType.text,
+              onChanged: (value) {
+                // Perform search operation
+                viewModel.setSearchQuery(value);
+              },
+            ),
           ),
           Expanded(
-            child: ListView.builder(
-              itemCount: 5,
-              itemBuilder: (context, index) {
-                return ListTile(
-                  title: Text('Notification $index'),
-                  subtitle: Text('Notification Content $index'),
-                );
+            child: StreamBuilder<List<NotificationModel>>(
+              stream: viewModel.getNotification,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                } else if (snapshot.hasError) {
+                  return const Center(child: Text('An error occurred'));
+                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const Center(child: Text('No notifications found'));
+                } else {
+                  return ListView.builder(
+                    itemCount: snapshot.data!.length,
+                    itemBuilder: (context, index) {
+                      return ListTile(
+                        title: Text(snapshot.data![index].content),
+                        subtitle: Text(snapshot.data![index].timestamp.toString()),
+                      );
+                    },
+                  );
+                }
               },
             ),
           ),

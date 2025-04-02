@@ -41,7 +41,6 @@ void main() async {
   runApp(const MyApp());
 }
 
-
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -74,7 +73,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => NotificationViewModel())
       ],
       child: Directionality(
-        textDirection: TextDirection.ltr, // Provide a text direction
+        textDirection: TextDirection.ltr,
         child: Stack(
           children: [
             MaterialApp(
@@ -83,7 +82,7 @@ class MyApp extends StatelessWidget {
               initialRoute: AppRoutes.loadingScreen,
               routes: AppRoutes.routes,
             ),
-            custom.NotificationListener1(), // Use the custom NotificationListener widget
+            custom.NotificationListener1(),
           ],
         ),
       ),

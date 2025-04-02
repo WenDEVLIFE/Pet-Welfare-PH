@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pet_welfrare_ph/src/model/NotificationModel.dart';
 import 'package:pet_welfrare_ph/src/utils/SessionManager.dart';
 import 'package:pet_welfrare_ph/src/utils/NotificationUtils.dart';
 
 abstract class NotificationRepository {
   Stream<List<DocumentSnapshot>> getNotificationsStream();
+
+  Stream<List<NotificationModel>> getnotificationData();
 }
 class NotificationRepositoryImpl extends NotificationRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -62,6 +65,20 @@ class NotificationRepositoryImpl extends NotificationRepository {
         }
       }
       return snapshot.docs;
+    });
+  }
+
+  // Get notification data
+  @override
+  Stream<List<NotificationModel>> getnotificationData() {
+    User user = _auth.currentUser!;
+    String id = user.uid;
+
+    return _firestore.collection('NotificationCollection')
+        .where('userID', isEqualTo: id)
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) => NotificationModel.fromDocument(doc)).toList();
     });
   }
 }
