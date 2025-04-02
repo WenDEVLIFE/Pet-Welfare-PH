@@ -7,5 +7,9 @@ class NotificationViewModel extends ChangeNotifier{
 
   final NotificationRepository _notificationRepository = NotificationRepositoryImpl();
 
+  void setSearchQuery(String value) {
+
+  }
+
 
 }

@@ -16,7 +16,7 @@ class CustomSearchTextField extends StatelessWidget {
     required this.hintText,
     required this.fontSize,
     required this.keyboardType,
-    this.onChanged, // Optional function
+    required this.onChanged, // Optional function
   }) : super(key: key);
 
   @override

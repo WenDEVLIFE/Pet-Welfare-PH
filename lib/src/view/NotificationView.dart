@@ -41,6 +41,10 @@ class NotificationViewState  extends State<NotificationView> {
                 hintText: 'Search Notifications',
                 fontSize: 16,
                 keyboardType: TextInputType.text,
+                onChanged: (value) {
+                  // Perform search operation
+                  viewModel.setSearchQuery(value);
+                },
             )
           ),
           Expanded(
