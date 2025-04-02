@@ -21,6 +21,7 @@ import 'package:pet_welfrare_ph/src/view/ViewUserData.dart';
 import 'package:pet_welfrare_ph/src/view/ViewUserScreen.dart';
 import 'package:pet_welfrare_ph/src/view/ApprovedEstablismentView.dart';
 
+import '../view/NotificationView.dart';
 import '../widgets/AdminNavigationComponent.dart';
 import '../view/AboutView.dart';
 import '../view/admindirectory/AddAdminView.dart';
@@ -73,6 +74,7 @@ class AppRoutes {
   static const String  viewEstablishment = '/viewEstablishment';
   static const String viewImageData = '/viewImageData';
   static const String createpost = '/createpost';
+  static const String notification = '/notification';
 
   // Assign routes to the screens
   static Map<String, WidgetBuilder> routes = {
@@ -111,5 +113,6 @@ class AppRoutes {
     viewEstablishment : (context) => const ViewEstablishmentView(), // This is where the user can view the establishment
     viewImageData : (context) => ViewImage(), // This is where the user can view the image data
     createpost : (context) => CreatePostView(), // This is where the user can create a post
+    notification : (context) => const NotificationView(), // This is where the user can view the notification
   };
 }

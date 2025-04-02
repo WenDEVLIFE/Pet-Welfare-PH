@@ -3,11 +3,15 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pet_welfrare_ph/src/utils/SessionManager.dart';
 import 'package:pet_welfrare_ph/src/utils/NotificationUtils.dart';
 
-class NotificationRepository {
+abstract class NotificationRepository {
+  Stream<List<DocumentSnapshot>> getNotificationsStream();
+}
+class NotificationRepositoryImpl extends NotificationRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
   final FirebaseAuth _auth = FirebaseAuth.instance;
   final SessionManager _sessionManager = SessionManager();
 
+  @override
   Stream<List<DocumentSnapshot>> getNotificationsStream() async* {
     User? user = _auth.currentUser;
     if (user == null) {

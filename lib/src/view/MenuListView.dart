@@ -42,6 +42,7 @@ class MenuListWidget extends StatelessWidget {
                     Navigator.pushNamed(context, AppRoutes.changePassword);
                   } else if (index == 2) {
                     // Notifications
+                    Navigator.pushNamed(context, AppRoutes.notification);
 
                   }
                    else if (index == 3) {

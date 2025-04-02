@@ -4,7 +4,7 @@ import 'package:pet_welfrare_ph/src/utils/NotificationUtils.dart';
 import 'package:pet_welfrare_ph/src/respository/NotificationRepository.dart';
 
 class NotificationListener1 extends StatelessWidget {
-  final NotificationRepository notificationRepository = NotificationRepository();
+  final NotificationRepository notificationRepository = NotificationRepositoryImpl();
 
   @override
   Widget build(BuildContext context) {
