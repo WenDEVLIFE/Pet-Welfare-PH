@@ -24,7 +24,7 @@ class NotificationUtils {
     const DarwinInitializationSettings iosSettings = DarwinInitializationSettings();
 
     // Apply settings
-    final InitializationSettings settings = InitializationSettings(
+    final InitializationSettings settings = const InitializationSettings(
       android: androidSettings,
       iOS: iosSettings,
     );

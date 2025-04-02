@@ -1,5 +1,6 @@
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
+import 'package:pet_welfrare_ph/src/respository/NotificationRepository.dart';
 import 'package:pet_welfrare_ph/src/utils/FirebaseIntialize.dart';
 import 'package:pet_welfrare_ph/src/utils/NotificationUtils.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
@@ -25,6 +26,7 @@ import 'package:pet_welfrare_ph/src/view_model/UploadIDViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/UserDataViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/UserViewModel.dart';
 import 'package:provider/provider.dart';
+import 'package:pet_welfrare_ph/src/widgets/NotificationListener.dart' as custom;
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -35,6 +37,7 @@ void main() async {
 
   runApp(const MyApp());
 }
+
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);
 
@@ -65,11 +68,19 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CreatePostViewModel()),
         ChangeNotifierProvider(create: (_) => PostViewModel())
       ],
-      child: MaterialApp(
-        key: GlobalKey(), //
-        debugShowCheckedModeBanner: false,
-        initialRoute: AppRoutes.loadingScreen,
-        routes: AppRoutes.routes,
+      child: Directionality(
+        textDirection: TextDirection.ltr, // Provide a text direction
+        child: Stack(
+          children: [
+            MaterialApp(
+              key: GlobalKey(),
+              debugShowCheckedModeBanner: false,
+              initialRoute: AppRoutes.loadingScreen,
+              routes: AppRoutes.routes,
+            ),
+            custom.NotificationListener1(), // Use the custom NotificationListener widget
+          ],
+        ),
       ),
     );
   }
