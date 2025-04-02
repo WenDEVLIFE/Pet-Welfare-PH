@@ -35,17 +35,47 @@ class FirebaseRestAPI {
     print('Token: $token');
     FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
   }
+
+
+  Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    await Firebase.initializeApp();
+    print('Title: ${message.notification?.title}');
+    print('Body: ${message.notification?.body}');
+    print('payload: ${message.data}');
+    NotificationUtils.showNotification(
+      id: message.messageId.hashCode,
+      title: message.notification?.title ?? 'No Title',
+      body: message.notification?.body ?? 'No Body',
+      payload: message.data['payload'],
+    );
+  }
+
+
+  Future<void> initFirebaseMessage() async {
+    // Request notification permissions for iOS & Android
+    FirebaseMessaging messaging = FirebaseMessaging.instance;
+    NotificationSettings settings = await messaging.requestPermission(
+      alert: true,
+      badge: true,
+      sound: true,
+    );
+
+    // Handle foreground notifications
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      NotificationUtils.showNotification(
+        id: message.messageId.hashCode,
+        title: message.notification?.title ?? "New Notification",
+        body: message.notification?.body ?? "You have a new message",
+      );
+    });
+
+    if (settings.authorizationStatus == AuthorizationStatus.authorized) {
+      print("User granted permission!");
+    } else {
+      print("User declined or has not accepted permission.");
+    }
+  }
+
 }
 
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await Firebase.initializeApp();
-  print('Title: ${message.notification?.title}');
-  print('Body: ${message.notification?.body}');
-  print('payload: ${message.data}');
-  NotificationUtils.showNotification(
-    id: message.messageId.hashCode,
-    title: message.notification?.title ?? 'No Title',
-    body: message.notification?.body ?? 'No Body',
-    payload: message.data['payload'],
-  );
-}
+

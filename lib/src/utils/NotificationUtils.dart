@@ -41,6 +41,8 @@ class NotificationUtils {
 
     // Configure FCM
     _firebaseMessaging.requestPermission();
+
+    // Foreground message handler
     FirebaseMessaging.onMessage.listen((RemoteMessage message) {
       showNotification(
         id: message.messageId.hashCode,
@@ -49,6 +51,27 @@ class NotificationUtils {
         payload: message.data['payload'],
       );
     });
+
+    // Background and terminated state message handler
+    FirebaseMessaging.onMessageOpenedApp.listen((RemoteMessage message) {
+      print('Notification clicked: ${message.messageId}');
+      // You can navigate to specific screens or handle actions here
+    });
+
+    // Handle notification when app is terminated or in the background
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+  }
+
+  /// Background handler for when app is terminated or in the background
+  static Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+    print("Handling a background message: ${message.messageId}");
+    // You can show a notification here too, or perform other actions
+    showNotification(
+      id: message.messageId.hashCode,
+      title: message.notification?.title ?? 'Background Notification',
+      body: message.notification?.body ?? 'No Body',
+      payload: message.data['payload'],
+    );
   }
 
   /// **Show an immediate notification**

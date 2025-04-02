@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
@@ -30,6 +31,7 @@ import 'package:pet_welfrare_ph/src/view_model/UserDataViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/UserViewModel.dart';
 import 'package:provider/provider.dart';
 import 'package:pet_welfrare_ph/src/widgets/NotificationListener.dart' as custom;
+import 'package:workmanager/workmanager.dart'; // Import the workmanager package
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -37,8 +39,51 @@ void main() async {
   // Initialize Firebase
   await FirebaseRestAPI.run();
   await FirebaseRestAPI().initNotificationPermission();
+  await FirebaseRestAPI().initFirebaseMessage();
   await NotificationUtils.initNotifications();
+
+  // Initialize Workmanager (Fix)
+  Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+
+
+  // Register background task (Fixed frequency)
+  await Workmanager().registerPeriodicTask(
+    "fetchNotificationsTask",
+    "simplePeriodicTask",
+    frequency: const Duration(minutes: 15), // Minimum is 15 minutes
+  );
+
+  // Handle foreground notifications
+  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+    NotificationUtils.showNotification(
+      id: message.messageId.hashCode,
+      title: message.notification?.title ?? "New Notification",
+      body: message.notification?.body ?? "You have a new message",
+    );
+  });
+
   runApp(const MyApp());
+}
+
+void callbackDispatcher() {
+  Workmanager().executeTask((task, inputData) async {
+    // Fetch notifications from Firestore
+    final notificationRepository = NotificationRepositoryImpl();
+    final notifications = await notificationRepository.getNotificationsStream().first;
+
+    for (DocumentSnapshot doc in notifications) {
+      NotificationUtils.showNotification(
+        id: doc['notificationID'].hashCode,
+        title: 'New Notification: ${doc['category']}',
+        body: doc['content'],
+      );
+
+      // Mark notifications as read
+      await doc.reference.update({'isRead': true});
+    }
+
+    return Future.value(true);
+  });
 }
 
 class MyApp extends StatelessWidget {

@@ -88,4 +88,5 @@ class NotificationRepositoryImpl extends NotificationRepository {
   Future<void> deleteNotification(String id) async {
      await _firestore.collection('NotificationCollection').doc(id).delete();
   }
+
 }

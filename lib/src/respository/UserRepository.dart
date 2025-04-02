@@ -37,17 +37,28 @@ class UserRepositoryImpl implements UserRepository {
 
   // This will check if the username exists in the database
   Future<bool> checkIfUserExists(String name, String email) async {
-    final QuerySnapshot nameResult = await _firestore
-        .collection('Users')
-        .where('Name', isEqualTo: name)
-        .get();
 
-    final QuerySnapshot emailResult = await _firestore
-        .collection('Users')
-        .where('Email', isEqualTo: email)
-        .get();
+    UserCredential userCredential = await _auth.signInWithEmailAndPassword(
+      email: 'admin@gmail.com',
+      password: '@WenDEVLIFE123',
+    );
 
-    return nameResult.docs.isNotEmpty || emailResult.docs.isNotEmpty;
+    User? user = userCredential.user;
+     if (user != null) {
+       final QuerySnapshot nameResult = await _firestore
+           .collection('Users')
+           .where('Name', isEqualTo: name)
+           .get();
+
+       final QuerySnapshot emailResult = await _firestore
+           .collection('Users')
+           .where('Email', isEqualTo: email)
+           .get();
+
+       return nameResult.docs.isNotEmpty || emailResult.docs.isNotEmpty;;
+     } else {
+       return false;
+     }
   }
 
   // This will check if the email is valid
