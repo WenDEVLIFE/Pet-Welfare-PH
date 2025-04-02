@@ -527,6 +527,30 @@ class CreatePostView extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
+                    'Type of Donation',
+                    style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 18,
+                      fontFamily: 'SmoochSans',
+                      fontWeight: FontWeight.w600,
+                    ),
+                  ),
+                ),
+              ),
+              CustomDropDown<String?>(
+                value: createPostViewModel.selectedTypeOfDonation,
+                items: createPostViewModel.typeOfDonation,
+                onChanged: (String? newValue) {
+                  createPostViewModel.setselectedDonation(newValue);
+                },
+                itemLabel: (String? value) => value!,
+                hint: 'Select a Donation Type',
+              ),
+              const Padding(
+                padding: EdgeInsets.all(10.0),
+                child: Align(
+                  alignment: Alignment.centerLeft,
+                  child: Text(
                     'Bank',
                     style: TextStyle(
                       color: Colors.black,
@@ -589,7 +613,7 @@ class CreatePostView extends StatelessWidget {
                 child: Align(
                   alignment: Alignment.centerLeft,
                   child: Text(
-                    'Type of Donation',
+                    'Purpose of Raising Funds',
                     style: TextStyle(
                       color: Colors.black,
                       fontSize: 18,
@@ -606,7 +630,7 @@ class CreatePostView extends StatelessWidget {
                   createPostViewModel.setSelectDonation(newValue);
                 },
                 itemLabel: (String? value) => value!,
-                hint: 'Select a donation',
+                hint: 'Select a purpose of raising funds',
               ),
               CustomText(
                 text: 'Estimated Amount',

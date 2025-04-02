@@ -648,6 +648,7 @@ class PostRepositoryImpl implements PostRepository {
       String accountName = petData['account_name'];
       String accountNumber = petData['account_number'];
       String donationType = petData['donation_type'];
+      String purposeOfDonation = petData['purpose_of_donation'];
       String estimatedAmount = petData['amount'];
 
       await postRef.set({
@@ -665,6 +666,7 @@ class PostRepositoryImpl implements PostRepository {
         'BankName': bankName,
         'AccountNumber': accountNumber,
         'DonationType': donationType,
+        'PurposeOfDonation': purposeOfDonation,
         'EstimatedAmount': estimatedAmount,
         'Status': 'Ongoing', // put paused and fullfilled
       });

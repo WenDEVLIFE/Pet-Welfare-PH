@@ -41,6 +41,7 @@ class PostModel {
   String accountNumber = '';
   String bankHolder = '';
   String donationType = '';
+  String purposeOfDonation = '';
   String estimatedAmount = '';
   String statusDonation = '';
   String bankName = '';
@@ -106,6 +107,7 @@ class PostModel {
       ..long = petDoc.data()?['Longitude'] ?? 0.0
      ..accountNumber = donationDoc.data()?['AccountNumber'] ?? ''
       ..bankName = donationDoc.data()?['BankName'] ?? ''
+       ..purposeOfDonation = donationDoc.data()?['PurposeOfDonation'] ?? ''
       ..bankHolder = donationDoc.data()?['BankHolder'] ?? ''
       ..donationType = donationDoc.data()?['DonationType'] ?? ''
       ..estimatedAmount = donationDoc.data()?['EstimatedAmount'] ?? ''

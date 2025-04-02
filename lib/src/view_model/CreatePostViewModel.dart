@@ -147,6 +147,9 @@ class CreatePostViewModel extends ChangeNotifier {
   List<String> donationType =['Pet Foods or treats', 'Pet supplies', 'Vitamins and/or medicines', 'Vet bills', 'Cleaning supplies', 'Litter sands' , 'Others'];
   String? selectedDonationType = 'Pet Foods or treats';
 
+  List<String> typeOfDonation = ['Cash', 'Non-cash/In-kind'];
+  String? selectedTypeOfDonation = 'Cash';
+
   // Constructor
   CreatePostViewModel() {
     loadUserLocation();
@@ -227,6 +230,7 @@ class CreatePostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // This is for clear post
   void clearPost() {
     postController.clear();
     _images.clear();
@@ -250,6 +254,7 @@ class CreatePostViewModel extends ChangeNotifier {
     selectedLocation = null;
     mapController!.clearSymbols();
     selectedDonationType = 'Pet Foods or treats';
+    selectedTypeOfDonation = 'Cash';
     selectedBankType = 'Gcash';
     amountController.clear();
     bankNameController.clear();
@@ -332,7 +337,8 @@ class CreatePostViewModel extends ChangeNotifier {
               'account_name': bankNameController.text,
               'account_number': accountNameController.text,
               'bank_type': selectedBankType,
-              'donation_type': selectedDonationType,
+              'purpose_of_donation': selectedDonationType,
+              'donation_type': selectedTypeOfDonation,
             };
             await postRepository.uploadDonation(_images, selectedChip, petData);
             clearPost();
@@ -533,12 +539,6 @@ class CreatePostViewModel extends ChangeNotifier {
     }
   }
 
-// Helper method to clear breeds
-  void _clearBreeds() {
-    catBreeds = [];
-    dogBreeds = [];
-  }
-
   // Fetch Regions
   Future<void> fetchRegions() async {
     isLoading = true;
@@ -710,15 +710,6 @@ class CreatePostViewModel extends ChangeNotifier {
   }
 
   void notifyNotice(BuildContext context) async {
-
-    /*NotificationUtils.showNotification(
-      id: 1,
-      title: "Reminder",
-      body: "Don't forget your meeting!",
-    );
-
-     */
-
     String filename;
 
     if(selectedChip == 'Pet Appreciation'){
@@ -933,6 +924,11 @@ class CreatePostViewModel extends ChangeNotifier {
   // This is for te set donation type
   void setSelectDonation(String? newValue) {
     selectedDonationType = newValue!;
+    notifyListeners();
+  }
+
+  void setselectedDonation(String? newValue) {
+    selectedTypeOfDonation = newValue!;
     notifyListeners();
   }
 }

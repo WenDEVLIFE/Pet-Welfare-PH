@@ -259,7 +259,7 @@ class AidState extends State<CallOfAidView> {
                                               alignment: Alignment.centerLeft,
                                             ),
                                             CustomText(
-                                              text: 'Types of Donation:',
+                                              text: 'Type of Donation:',
                                               size: 20,
                                               color: AppColors.black,
                                               weight: FontWeight.w700,
@@ -269,6 +269,24 @@ class AidState extends State<CallOfAidView> {
                                             ),
                                             CustomText(
                                               text: '${post.donationType}',
+                                              size: 16,
+                                              color: AppColors.black,
+                                              weight: FontWeight.w700,
+                                              align: TextAlign.left,
+                                              screenHeight: screenHeight,
+                                              alignment: Alignment.centerLeft,
+                                            ),
+                                            CustomText(
+                                              text: 'Purpose of Raising Funds:',
+                                              size: 20,
+                                              color: AppColors.black,
+                                              weight: FontWeight.w700,
+                                              align: TextAlign.left,
+                                              screenHeight: screenHeight,
+                                              alignment: Alignment.centerLeft,
+                                            ),
+                                            CustomText(
+                                              text: '${post.purposeOfDonation}',
                                               size: 16,
                                               color: AppColors.black,
                                               weight: FontWeight.w700,
