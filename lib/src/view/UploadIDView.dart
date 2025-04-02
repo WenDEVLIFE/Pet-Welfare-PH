@@ -217,6 +217,7 @@ class RegisterState extends State<UploadIDView> {
                                    'password': userData?['password'],
                                    'role': userData?['role'],
                                    'address': userData?['address'],
+                                   'clearData': userData?['clearData'],
                                  };
                                  context.read<UploadIDViewModel>().navigateToOTP(context, userData1);
                                }
@@ -226,6 +227,7 @@ class RegisterState extends State<UploadIDView> {
                                     'name': userData?['name'],
                                     'password': userData?['password'],
                                     'role': userData?['role'],
+                                    'clearData': userData?['clearData'],
                                   };
                                  context.read<UploadIDViewModel>().navigateToOTP(context ,userData1);
                                }

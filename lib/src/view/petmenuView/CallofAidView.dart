@@ -259,7 +259,7 @@ class AidState extends State<CallOfAidView> {
                                               alignment: Alignment.centerLeft,
                                             ),
                                             CustomText(
-                                              text: 'Types of Donation:',
+                                              text: 'Purpose of Donation:',
                                               size: 20,
                                               color: AppColors.black,
                                               weight: FontWeight.w700,
