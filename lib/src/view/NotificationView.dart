@@ -63,9 +63,32 @@ class NotificationViewState extends State<NotificationView> {
                   return ListView.builder(
                     itemCount: snapshot.data!.length,
                     itemBuilder: (context, index) {
-                      return ListTile(
-                        title: Text(snapshot.data![index].content),
-                        subtitle: Text(snapshot.data![index].timestamp.toString()),
+
+                      var notifications = viewModel.filteredNotifications.isEmpty ? snapshot.data : viewModel.filteredNotifications;
+                      return Card(
+                        child: ListTile(
+                          title: Text(
+                            snapshot.data![index].content,
+                            style: const TextStyle(
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          subtitle: Text(
+                            snapshot.data![index].timestamp.toString(),
+                            style: const TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.w400,
+                            ),
+                          ),
+                          trailing: IconButton(
+                            icon: const Icon(Icons.delete),
+                            onPressed: () {
+                              // Perform delete operation
+                              viewModel.deleteNotifications(notifications![index].id);
+                            },
+                          ),
+                        ),
                       );
                     },
                   );

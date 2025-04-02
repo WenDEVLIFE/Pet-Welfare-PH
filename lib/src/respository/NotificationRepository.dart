@@ -8,6 +8,8 @@ abstract class NotificationRepository {
   Stream<List<DocumentSnapshot>> getNotificationsStream();
 
   Stream<List<NotificationModel>> getnotificationData();
+
+  Future <void> deleteNotification(String id);
 }
 class NotificationRepositoryImpl extends NotificationRepository {
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -80,5 +82,10 @@ class NotificationRepositoryImpl extends NotificationRepository {
         .map((snapshot) {
       return snapshot.docs.map((doc) => NotificationModel.fromDocument(doc)).toList();
     });
+  }
+
+  @override
+  Future<void> deleteNotification(String id) async {
+     await _firestore.collection('NotificationCollection').doc(id).delete();
   }
 }

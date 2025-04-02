@@ -1,9 +1,9 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class NotificationModel{
+class NotificationModel {
   final String id;
   final String content;
-  final String timestamp;
+  final DateTime timestamp;
 
   NotificationModel({
     required this.id,
@@ -11,11 +11,11 @@ class NotificationModel{
     required this.timestamp,
   });
 
-  factory NotificationModel.fromDocument(DocumentSnapshot doc){
+  factory NotificationModel.fromDocument(DocumentSnapshot doc) {
     return NotificationModel(
       id: doc.id,
       content: doc['content'],
-      timestamp: doc['timestamp'].toString(),
+      timestamp: (doc['timestamp'] as Timestamp).toDate(),
     );
   }
 }
