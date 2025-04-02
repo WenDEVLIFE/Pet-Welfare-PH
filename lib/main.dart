@@ -15,6 +15,7 @@ import 'package:pet_welfrare_ph/src/view_model/ChangePasswordViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/MapViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/MenuViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/MessageViewModel.dart';
+import 'package:pet_welfrare_ph/src/view_model/NotificationViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/OTPViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/RegisterViewModel.dart';
@@ -69,7 +70,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => DonateViewModel()),
         ChangeNotifierProvider(create: (_) => MessageViewModel()),
         ChangeNotifierProvider(create: (_) => CreatePostViewModel()),
-        ChangeNotifierProvider(create: (_) => PostViewModel())
+        ChangeNotifierProvider(create: (_) => PostViewModel()),
+        ChangeNotifierProvider(create: (_) => NotificationViewModel())
       ],
       child: Directionality(
         textDirection: TextDirection.ltr, // Provide a text direction
