@@ -82,7 +82,7 @@ class NotificationViewState extends State<NotificationView> {
                             ),
                           ),
                           trailing: IconButton(
-                            icon: const Icon(Icons.delete),
+                            icon: const Icon(Icons.close, color: Colors.red,),
                             onPressed: () {
                               // Perform delete operation
                               viewModel.deleteNotifications(notifications![index].id);

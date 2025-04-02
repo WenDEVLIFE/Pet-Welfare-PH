@@ -1,5 +1,7 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/respository/NotificationRepository.dart';
+import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 
 import '../model/NotificationModel.dart';
 
@@ -16,11 +18,17 @@ class NotificationViewModel extends ChangeNotifier{
 
 // Added search functions
   void setSearchQuery(String value) {
-    filteredNotifications = notifications.where((element) => element.content.contains(value)).toList();
+    if (value.isEmpty) {
+      filteredNotifications = notifications;
+      ToastComponent().showMessage(Colors.red, '$value not found');
+    } else {
+      filteredNotifications = notifications.where((element) => element.content.toLowerCase().contains(value.toLowerCase())).toList();
+    }
     notifyListeners();
 
   }
 
+  // Delete notification from the database
   void deleteNotifications(String id) async{
    try{
      await notificationRepository.deleteNotification(id);
