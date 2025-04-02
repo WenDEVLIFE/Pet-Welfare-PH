@@ -4,6 +4,7 @@ import 'package:pet_welfrare_ph/src/utils/SessionManager.dart';
 import 'package:sn_progress_dialog/enums/progress_types.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
 import '../utils/Route.dart';
+import '../widgets/NotificationListener.dart';
 
 class LoginViewModel extends ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
@@ -56,6 +57,8 @@ class LoginViewModel extends ChangeNotifier {
         ScaffoldMessenger.of(context).showSnackBar(
           const SnackBar(content: Text('Login successful!')),
         );
+
+        NotificationListener1();
       } else {
         // Show error message if login failed
         ScaffoldMessenger.of(context).showSnackBar(

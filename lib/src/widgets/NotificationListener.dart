@@ -23,7 +23,7 @@ class NotificationListener1 extends StatelessWidget {
             doc.reference.update({'isRead': true});
           }
         }
-        return SizedBox.shrink(); // Return an empty widget
+        return const SizedBox.shrink(); // Return an empty widget
       },
     );
   }

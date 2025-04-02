@@ -1,9 +1,11 @@
 import 'package:firebase_core/firebase_core.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/respository/NotificationRepository.dart';
 import 'package:pet_welfrare_ph/src/utils/FirebaseIntialize.dart';
 import 'package:pet_welfrare_ph/src/utils/NotificationUtils.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
+import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:pet_welfrare_ph/src/view_model/ApplyAdoptionViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/CreatePostViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/DonateViewModel.dart';
@@ -33,10 +35,11 @@ void main() async {
 
   // Initialize Firebase
   await FirebaseRestAPI.run();
+  await FirebaseRestAPI().initNotificationPermission();
   await NotificationUtils.initNotifications();
-
   runApp(const MyApp());
 }
+
 
 class MyApp extends StatelessWidget {
   const MyApp({Key? key}) : super(key: key);

@@ -23,20 +23,37 @@ class NotificationRepository {
       return;
     }
 
-    yield* _firestore.collection('NotificationCollection')
+    Stream<List<DocumentSnapshot>>? notificationStream = _fetchNotificationStream(userid);
+
+    if (notificationStream == null) {
+      await Future.delayed(const Duration(seconds: 2));
+      notificationStream = _fetchNotificationStream(userid);
+    }
+
+    if (notificationStream != null) {
+      yield* notificationStream;
+    } else {
+      yield [];
+    }
+  }
+
+  Stream<List<DocumentSnapshot>>? _fetchNotificationStream(String userid) {
+    return _firestore.collection('NotificationCollection')
         .where('userID', isEqualTo: userid)
         .where('isRead', isEqualTo: false) // Assuming there's an 'isRead' field
         .snapshots()
         .map((snapshot) {
       if (snapshot.docs.isNotEmpty) {
-        NotificationUtils.showNotification(
-          id: 0, // Notification ID
-          title: 'New Notifications',
-          body: 'You have new notifications',
-        );
-
-        // Mark notifications as read
         for (DocumentSnapshot doc in snapshot.docs) {
+          // Schedule a notification for immediate display
+          NotificationUtils.scheduleNotification(
+            id: doc['notificationID'].hashCode, // Unique Notification ID
+            title: 'New Notification: ${doc['category']}',
+            body: doc['content'],
+            scheduledTime: DateTime.now().add(Duration(seconds: 5)), // Schedule for 5 seconds later
+          );
+
+          // Mark notifications as read
           doc.reference.update({'isRead': true});
         }
       }

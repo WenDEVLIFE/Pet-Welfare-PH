@@ -1,10 +1,12 @@
 import 'package:flutter_local_notifications/flutter_local_notifications.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:timezone/data/latest_all.dart' as tz;
 import 'package:timezone/timezone.dart' as tz;
 
 class NotificationUtils {
   static final FlutterLocalNotificationsPlugin _notificationsPlugin =
   FlutterLocalNotificationsPlugin();
+  static final FirebaseMessaging _firebaseMessaging = FirebaseMessaging.instance;
 
   static bool _isInitialized = false; // Prevent multiple initializations
 
@@ -36,6 +38,17 @@ class NotificationUtils {
         print("🔔 Notification Clicked: ${response.payload}");
       },
     );
+
+    // Configure FCM
+    _firebaseMessaging.requestPermission();
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      showNotification(
+        id: message.messageId.hashCode,
+        title: message.notification?.title ?? 'No Title',
+        body: message.notification?.body ?? 'No Body',
+        payload: message.data['payload'],
+      );
+    });
   }
 
   /// **Show an immediate notification**
