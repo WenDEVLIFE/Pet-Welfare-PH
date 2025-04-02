@@ -22,6 +22,7 @@ class MessageView extends StatefulWidget {
 class MessageState extends State<MessageView> {
   late Map<String, dynamic> listdata;
   late String userid;
+  final ScrollController _scrollController = ScrollController(); // Add ScrollController
 
   @override
   void initState() {
@@ -45,6 +46,15 @@ class MessageState extends State<MessageView> {
 
     ToastComponent().showMessage(Colors.green, 'UUID: ${listdata['receiverID']}');
     await messageViewModel.loadReceiver(listdata['receiverID']);
+
+    // Scroll to bottom after loading messages
+    WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+  }
+
+  void _scrollToBottom() {
+    if (_scrollController.hasClients) {
+      _scrollController.jumpTo(_scrollController.position.maxScrollExtent);
+    }
   }
 
   @override
@@ -97,7 +107,9 @@ class MessageState extends State<MessageView> {
                   return const Center(child: Text('No messages'));
                 } else {
                   final messages = snapshot.data!;
+                  WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
                   return ListView.builder(
+                    controller: _scrollController,
                     itemCount: messages.length,
                     itemBuilder: (context, index) {
                       final message = messages[index];
@@ -119,16 +131,16 @@ class MessageState extends State<MessageView> {
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Container(
-                                  width: screenWidth * 0.6,
+                                  width: MediaQuery.of(context).size.width * 0.6,
                                   child: Row(
                                     children: [
                                       CircleAvatar(
-                                        radius: screenHeight * 0.03,
+                                        radius: MediaQuery.of(context).size.height * 0.03,
                                         backgroundImage: message.senderProfileImage.isNotEmpty
                                             ? CachedNetworkImageProvider(message.senderProfileImage)
                                             : null,
                                         child: message.senderProfileImage.isEmpty
-                                            ? Icon(Icons.person, size: screenHeight * 0.03)
+                                            ? Icon(Icons.person, size: MediaQuery.of(context).size.height * 0.03)
                                             : null,
                                       ),
                                       const SizedBox(width: 10),
@@ -144,7 +156,7 @@ class MessageState extends State<MessageView> {
                                     ],
                                   ),
                                 ),
-                                SizedBox(height: screenHeight * 0.01),
+                                SizedBox(height: MediaQuery.of(context).size.height * 0.01),
                                 Padding(
                                   padding: const EdgeInsets.all(8.0),
                                   child: GestureDetector(
@@ -152,21 +164,29 @@ class MessageState extends State<MessageView> {
                                       decoration: BoxDecoration(
                                         borderRadius: BorderRadius.circular(10),
                                       ),
-                                      width: screenWidth * 0.6,
+                                      width: MediaQuery.of(context).size.width * 0.6,
                                       child: message.imageMessagePath.isNotEmpty
                                           ? ClipRRect(
                                         borderRadius: BorderRadius.circular(10),
                                         child: Image.network(
                                           message.imageMessagePath,
-                                          height: screenHeight * 0.2,
-                                          width: screenWidth * 0.2,
+                                          height: MediaQuery.of(context).size.height * 0.2,
+                                          width: MediaQuery.of(context).size.width * 0.2,
                                           fit: BoxFit.cover,
                                         ),
                                       )
                                           : const SizedBox.shrink(),
                                     ),
                                     onTap: () {
-                                      Navigator.pushNamed(context, AppRoutes.viewImageData, arguments: {'imagePath': message.imageMessagePath});
+                                      List<String> imageUrls = [message.imageMessagePath];
+                                      Navigator.pushNamed(
+                                        context,
+                                        AppRoutes.viewImageData,
+                                        arguments: {
+                                          'imageUrls':imageUrls,
+                                          'initialIndex': 0,
+                                        },
+                                      );
                                     },
                                   ),
                                 ),
@@ -254,6 +274,7 @@ class MessageState extends State<MessageView> {
                     try {
                       await Provider.of<MessageViewModel>(context, listen: false).sendMessage(listdata['receiverID']);
                       ToastComponent().showMessage(AppColors.orange, 'Message sent successfully');
+                      WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom()); // Scroll to bottom after sending message
                     } catch (e) {
                       ToastComponent().showMessage(Colors.red, 'Error: $e');
                     } finally {

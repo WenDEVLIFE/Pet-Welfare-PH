@@ -32,7 +32,7 @@ class MessageRepositoryImpl implements MessageRepository {
         .asyncExpand((querySnapshot) {
       return Stream.fromFutures(querySnapshot.docs.map((doc) {
         return doc.reference.collection('Messages')
-            .orderBy('timestamp', descending: true)
+            .orderBy('timestamp', descending: false)
             .snapshots()
             .asyncMap((messageSnapshot) async {
           return Future.wait(messageSnapshot.docs.map((messageDoc) async {

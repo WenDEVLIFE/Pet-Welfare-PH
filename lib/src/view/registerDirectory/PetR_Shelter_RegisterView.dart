@@ -70,7 +70,7 @@ class RegisterState extends State<PetrShelterRegisterview> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           const Center(
-                            child: Text('SIGN UP FOR PET SHELTER & RESCUE',
+                            child: Text('SIGN UP FOR PET SHELTER & RESCUER',
                                 style: TextStyle(
                                     fontSize: 30,
                                     fontWeight: FontWeight.w700,

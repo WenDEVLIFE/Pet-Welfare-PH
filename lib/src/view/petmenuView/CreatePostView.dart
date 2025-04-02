@@ -35,9 +35,9 @@ class CreatePostView extends StatelessWidget {
           children: [
             CustomText(
               text: createPostViewModel.selectedChip == "Missing Pets"
-                  ? 'Post a missing pets'
+                  ? 'Post a missing pet'
                   : createPostViewModel.selectedChip == "Found Pets"
-                  ? 'Post a found pets'
+                  ? 'Post a found pet'
                   : createPostViewModel.selectedChip == "Pet Adoption"
                   ? 'Post for adoption'
                   : 'Create a post',

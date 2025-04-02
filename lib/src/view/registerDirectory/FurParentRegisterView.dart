@@ -70,7 +70,7 @@ class RegisterState extends State<FurParentRegisterView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           const Center(
-                            child: Text('SIGN UP FOR FUR',
+                            child: Text('SIGN UP FOR ADOPTER, FOSTER, & PET LOWER ',
                                 style: TextStyle(fontSize: 30,
                                     fontWeight: FontWeight.w700,
                                     fontFamily: 'SmoochSans',

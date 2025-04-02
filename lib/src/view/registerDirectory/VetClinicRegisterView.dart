@@ -70,7 +70,7 @@ class RegisterState extends State<VetClinicRegisterView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           const Center(
-                            child: Text('SIGN UP FOR VET CLINIC PERSONNEL & OTHER PET-BUSINESS RELATED BUSINESS',
+                            child: Text('SIGN UP FOR VET CLINIC PERSONNEL & OTHER PET-RELATED BUSINESSES',
                                 style: TextStyle(fontSize: 24,
                                     fontWeight: FontWeight.w700,
                                     fontFamily: 'SmoochSans',
