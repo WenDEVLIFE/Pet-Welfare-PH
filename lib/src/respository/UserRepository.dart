@@ -75,7 +75,7 @@ class UserRepositoryImpl implements UserRepository {
   // This will check if the password is complex
   Future<bool> checkPasswordComplexity(String password) async {
     String pattern =
-        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~]).{8,}$';
+        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~%^&*()_+|<>?{}\\[\\]~-;:+=-]).{8,}$';
     return RegExp(pattern).hasMatch(password);
   }
 
