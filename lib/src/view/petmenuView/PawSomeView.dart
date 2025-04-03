@@ -47,29 +47,15 @@ class PawSomeState extends State<PawSomeView> {
                   postViewModel.searchPawSome(searchText);
                 },
               ),
-              Expanded(
-                child: StreamBuilder<List<PostModel>>(
-                  stream: postViewModel.pawExperiencePostStream, // Stream of posts
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-
-                    if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    }
-
-                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text('No posts available'));
-                    }
-
-                    var posts = snapshot.data!;
-
-                    return ListView.builder(
-                      itemCount: posts.length,
-                      itemBuilder: (context, index) {
-                        var post = posts[index];
-                        var formattedDate = postViewModel.formatTimestamp(post.timestamp);
+            Expanded(
+              child: postViewModel.filterPawExperiencePost.isEmpty
+              ? Center(
+              child: Text('No ${postViewModel.searchPostController.text} found'))
+                  : ListView.builder(
+              itemCount: postViewModel.filterPawExperiencePost.length,
+              itemBuilder: (context, index) {
+              var post = postViewModel.filterPawExperiencePost[index];
+              var formattedDate = postViewModel.formatTimestamp(post.timestamp);
 
                         return FutureBuilder<String?>(
                           future: postViewModel.getUserReaction(post.postId),
@@ -254,11 +240,9 @@ class PawSomeState extends State<PawSomeView> {
                             );
                           },
                         );
-                      },
-                    );
-                  },
-                ),
+                   },
               ),
+            ),
             ],
           );
         },

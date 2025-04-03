@@ -13,7 +13,7 @@ class TagModel {
   static TagModel fromDocument(DocumentSnapshot doc) {
     return TagModel(
       id: doc.id,
-      name: doc['name'],
+      name: doc['tags'] ?? '',
     );
   }
 }

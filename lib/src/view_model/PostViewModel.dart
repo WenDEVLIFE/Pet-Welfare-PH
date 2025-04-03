@@ -60,12 +60,59 @@ class PostViewModel extends ChangeNotifier {
     searchPostController.addListener(() {
       searchPost(searchPostController.text);
     });
+    listenToPost();
+    listenToMissingPost();
+    listenToFoundPost();
+    listenToPawExperiencePost();
+    listenToProtectedPost();
+    listenToCommunityPost();
+    listenToVetAndTravelPost();
+    listenToPetAdoptPost();
+    listenToCallforAidPost();
+
   }
+
 
   // this is for the set post
   void setPost(List<PostModel> posts, {bool notify = true}) {
     _posts = posts;
+    filteredPost = posts;
     searchPost(searchPostController.text);
+  }
+
+  // this is for the set missing post
+  void setMissingPost(List<PostModel> posts, {bool notify = true}) {
+    missingPost = posts;
+    filterMissingPost = posts;
+    searchMissingPost(searchPostController.text);
+  }
+
+  // this is for the set found post
+  void setFoundPost(List<PostModel> posts, {bool notify = true}) {
+    foundPost = posts;
+    filterFoundPost = posts;
+    searchFoundPost(searchPostController.text);
+  }
+
+  // this is for the set paw experience post
+  void setPawExperiencePost(List<PostModel> posts, {bool notify = true}) {
+    pawExperiencePost = posts;
+    filterPawExperiencePost = posts;
+    searchPawExperience(searchPostController.text);
+  }
+
+  // this is for the set protected post
+  void setProtectedPost(List<PostModel> posts, {bool notify = true}) {
+    protectedPost = posts;
+    filterProtectedPost = posts;
+    searchProtectedPost(searchPostController.text);
+  }
+
+  // this is for the set community post
+  void setCommunityPost(List<PostModel> posts, {bool notify = true}) {
+    communityPost = posts;
+    filterCommunityPost = posts;
+    searchCommunityPost(searchPostController.text);
   }
 
   // get format timestap
@@ -166,26 +213,102 @@ class PostViewModel extends ChangeNotifier {
     }
   }
 
+  void listenToPost() {
+    posTream.listen((posts) {
+      _posts = posts;
+      filteredPost = posts;
+      notifyListeners();
+    });
+  }
+
+  // Listen to missing post
+  void listenToMissingPost() {
+    missingPostStream.listen((missingPosts) {
+      missingPost = missingPosts;
+      filterMissingPost = missingPosts;
+      notifyListeners();
+    });
+  }
+
+  // Listen to found post
+  void listenToFoundPost() {
+    foundPostStream.listen((foundPosts) {
+      foundPost = foundPosts;
+      filterFoundPost = foundPosts;
+      notifyListeners();
+    });
+  }
+
+  // Listen to paw experience post
+  void listenToPawExperiencePost() {
+    pawExperiencePostStream.listen((pawExperiencePosts) {
+      pawExperiencePost = pawExperiencePosts;
+      filterPawExperiencePost = pawExperiencePosts;
+      notifyListeners();
+    });
+  }
+
+  // Listen to protected post
+  void listenToProtectedPost() {
+    protectedPostStream.listen((protectedPosts) {
+      protectedPost = protectedPosts;
+      filterProtectedPost = protectedPosts;
+      notifyListeners();
+    });
+  }
+
+  // Listen to community post
+  void listenToCommunityPost() {
+    communityPostStream.listen((communityPosts) {
+      communityPost = communityPosts;
+      filterCommunityPost = communityPosts;
+      notifyListeners();
+    });
+  }
+
+  // Listen to vet and travel post
+  void listenToVetAndTravelPost() {
+    vetAndTravelPostStream.listen((travelPosts) {
+      vetAndtravelPost = travelPosts;
+      filterVetAndTravelPost = travelPosts;
+      notifyListeners();
+    });
+  }
+
+  // Listen to pet adopt post
+  void listenToPetAdoptPost() {
+    petAdoptPostStream.listen((adoptpost) {
+      petAdoptPost = adoptpost;
+      filterPetAdoptPost = adoptpost;
+      notifyListeners();
+    });
+  }
+
+  // Listen to call for aid post
+  void listenToCallforAidPost() {
+    callforAidPostStream.listen((aidPost) {
+      callforAidPost = aidPost;
+      filterCallforAidPost = aidPost;
+      notifyListeners();
+    });
+  }
   // search post
   void searchPost(String search) {
-    filteredPost.clear();
     if (search.isEmpty) {
-      filteredPost.addAll(_posts);
+      filteredPost = _posts;
     } else {
-      filteredPost.addAll(_posts.where((post) => post.postDescription.toLowerCase().contains(search.toLowerCase())));
+      filteredPost = _posts.where((post) => post.tags.any((tag) => tag.name.toLowerCase().contains(search.toLowerCase()))).toList();
     }
     notifyListeners();
   }
 
   // Missing Post
   void searchMissingPost(String searchText) {
-   filterMissingPost.clear();
     if (searchText.isEmpty) {
-      filterMissingPost.addAll(missingPost);
+      filterMissingPost = missingPost;
     } else {
-      filterMissingPost.addAll(missingPost.where((post) => post.postDescription.toLowerCase().contains(
-          searchText.toLowerCase()) ||
-          post.petName.toLowerCase().contains(searchText.toLowerCase()) ||
+      filterMissingPost = missingPost.where((post) =>
+      post.petName.toLowerCase().contains(searchText.toLowerCase()) ||
           post.petType.toLowerCase().contains(searchText.toLowerCase()) ||
           post.petBreed.toLowerCase().contains(searchText.toLowerCase()) ||
           post.petGender.toLowerCase().contains(searchText.toLowerCase()) ||
@@ -196,20 +319,18 @@ class PostViewModel extends ChangeNotifier {
           post.regProCiBag.toLowerCase().contains(searchText.toLowerCase()) ||
           post.date.toLowerCase().contains(searchText.toLowerCase()) ||
           post.petSize.toLowerCase().contains(searchText.toLowerCase()) ||
-          post.PetType.toLowerCase().contains(searchText.toLowerCase())));
+          post.PetType.toLowerCase().contains(searchText.toLowerCase())).toList();
     }
     notifyListeners();
   }
 
   // Found Post
   void searchFoundPost(String searchText) {
-    filterFoundPost.clear();
     if (searchText.isEmpty) {
-      filterFoundPost.addAll(foundPost);
+      filterFoundPost = foundPost;
     } else {
-      filterFoundPost.addAll(foundPost.where((post) => post.postDescription.toLowerCase().contains(
-          searchText.toLowerCase()) ||
-          post.petName.toLowerCase().contains(searchText.toLowerCase()) ||
+      filterFoundPost = foundPost.where((post) =>
+      post.petName.toLowerCase().contains(searchText.toLowerCase()) ||
           post.petType.toLowerCase().contains(searchText.toLowerCase()) ||
           post.petBreed.toLowerCase().contains(searchText.toLowerCase()) ||
           post.petGender.toLowerCase().contains(searchText.toLowerCase()) ||
@@ -220,29 +341,27 @@ class PostViewModel extends ChangeNotifier {
           post.regProCiBag.toLowerCase().contains(searchText.toLowerCase()) ||
           post.date.toLowerCase().contains(searchText.toLowerCase()) ||
           post.petSize.toLowerCase().contains(searchText.toLowerCase()) ||
-          post.PetType.toLowerCase().contains(searchText.toLowerCase())));
+          post.PetType.toLowerCase().contains(searchText.toLowerCase())).toList();
     }
     notifyListeners();
   }
 
   // Paw Experience Post
   void searchPawExperience(String search) {
-    filterPawExperiencePost.clear();
     if (search.isEmpty) {
-      filterPawExperiencePost.addAll(pawExperiencePost);
+      filterPawExperiencePost = pawExperiencePost;
     } else {
-      filterPawExperiencePost.addAll(pawExperiencePost.where((post) => post.postDescription.toLowerCase().contains(search.toLowerCase())));
+      filterPawExperiencePost = pawExperiencePost.where((post) => post.tags.any((tag) => tag.name.toLowerCase().contains(search.toLowerCase()))).toList();
     }
     notifyListeners();
   }
 
   // Protected Post
   void searchProtectedPost(String search) {
-    filterProtectedPost.clear();
     if (search.isEmpty) {
-      filterProtectedPost.addAll(protectedPost);
+      filterProtectedPost = protectedPost;
     } else {
-      filterProtectedPost.addAll(protectedPost.where((post) => post.postDescription.toLowerCase().contains(search.toLowerCase())));
+      filterProtectedPost = protectedPost.where((post) => post.tags.any((tag) => tag.name.toLowerCase().contains(search.toLowerCase()))).toList();
     }
     notifyListeners();
   }
@@ -250,7 +369,6 @@ class PostViewModel extends ChangeNotifier {
 
   // Community Post
   void searchCommunityPost(String search) {
-    filterCommunityPost.clear();
     if (search.isEmpty) {
       filterCommunityPost.addAll(communityPost);
     } else {
@@ -261,49 +379,52 @@ class PostViewModel extends ChangeNotifier {
 
   // Vet and Travel Post
   void searchVetAndTravelPost(String search) {
-    filterVetAndTravelPost.clear();
     if (search.isEmpty) {
-      filterVetAndTravelPost.addAll(vetAndtravelPost);
+      filterVetAndTravelPost = vetAndtravelPost;
     } else {
-      filterVetAndTravelPost.addAll(vetAndtravelPost.where((post) => post.postDescription.toLowerCase().contains(search.toLowerCase())));
+      filterVetAndTravelPost = vetAndtravelPost.where((post) => post.tags.any((tag) => tag.name.toLowerCase().contains(search.toLowerCase()))).toList();
     }
     notifyListeners();
   }
 
   // Pet Adopt Post
   void searchPetAdoptPost(String search) {
-    filterPetAdoptPost.clear();
     if (search.isEmpty) {
-      filterPetAdoptPost.addAll(petAdoptPost);
+      filterPetAdoptPost = petAdoptPost;
     } else {
-      filterPetAdoptPost.addAll(petAdoptPost.where((post) => post.postDescription.toLowerCase().contains(search.toLowerCase())));
+     filterPetAdoptPost = petAdoptPost.where((post) => post.tags.any((tag) => tag.name.toLowerCase().contains(search.toLowerCase()))
+         || post.petNameAdopt.toLowerCase().contains(search.toLowerCase()) || post.petBreedAdopt.toLowerCase().contains(search.toLowerCase())
+         || post.petAgeAdopt.toLowerCase().contains(search.toLowerCase()) || post.petGenderAdopt.toLowerCase().contains(search.toLowerCase()) ||
+         post.petColorAdopt.toLowerCase().contains(search.toLowerCase()) || post.petSizeAdopt.toLowerCase().contains(search.toLowerCase())
+         || post.petAddressAdopt.toLowerCase().contains(search.toLowerCase()) || post.regProCiBagAdopt.toLowerCase().contains(search.toLowerCase())
+          || post.dateAdopt.toLowerCase().contains(search.toLowerCase()) || post.PetTypeAdopt.toLowerCase().contains(search.toLowerCase())
+     ).toList();
     }
     notifyListeners();
   }
 
   // Search PawSome Post
   void searchPawSome(String searchText) {
-    filterPawExperiencePost.clear();
     if (searchText.isEmpty) {
-      filterPawExperiencePost.addAll(pawExperiencePost);
+      filterPawExperiencePost = pawExperiencePost;
     } else {
-      filterPawExperiencePost.addAll(pawExperiencePost.where((post) => post.postDescription.toLowerCase().contains(
-          searchText.toLowerCase())));
+      filterPawExperiencePost = pawExperiencePost.where((post) =>
+          post.tags.any((tag) => tag.name.toLowerCase().contains(searchText.toLowerCase()))).toList();
     }
     notifyListeners();
   }
 
   // Search Call for Aid Post
   void searchCallforAidPost(String searchText) {
-    filterCallforAidPost.clear();
     if (searchText.isEmpty) {
-      filterCallforAidPost.addAll(callforAidPost);
+      filterCallforAidPost = callforAidPost;
     } else {
-      filterCallforAidPost.addAll(callforAidPost.where((post) =>post.bankHolder.toLowerCase().contains(searchText.toLowerCase()) ||
+      filterCallforAidPost = callforAidPost.where((post) =>post.bankHolder.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.tags.any((tag) => tag.name.toLowerCase().contains(searchText.toLowerCase())) || post.postDescription.toLowerCase().contains(searchText.toLowerCase()) ||
           post.accountNumber.toLowerCase().contains(searchText.toLowerCase()) ||  post.estimatedAmount.toLowerCase().contains(searchText.toLowerCase())
           ||  post.donationType.toLowerCase().contains(searchText.toLowerCase()) ||  post.donationType.toLowerCase().contains(searchText.toLowerCase())
           ||  post.statusDonation.toLowerCase().contains(searchText.toLowerCase())
-      ));
+      ).toList();
     }
     notifyListeners();
   }

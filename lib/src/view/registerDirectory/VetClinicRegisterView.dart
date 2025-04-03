@@ -220,6 +220,27 @@ class RegisterState extends State<VetClinicRegisterView> {
                             },
                           ),
                           SizedBox(height: screenHeight * 0.02),
+                          Padding(
+                            padding: const EdgeInsets.only(left: 20.0),
+                            child: Align(
+                              alignment: const Alignment(0.0, 0.0),
+                              child: GestureDetector(
+                                onTap: () {
+                                  Provider.of<RegisterViewModel>(context, listen: false).showTermsAndConditionDialog(context);
+                                },
+                                child: const Text(
+                                  'Click here to view terms and conditions',
+                                  style: TextStyle(
+                                    fontSize: 18,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w600,
+                                    fontFamily: 'SmoochSans',
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ),
+                          SizedBox(height: screenHeight * 0.02),
                           Center(
                             child: Container(
                               width: screenWidth * 0.8,
@@ -246,28 +267,6 @@ class RegisterState extends State<VetClinicRegisterView> {
                               ),
                             ),
                           ),
-                          SizedBox(height: screenHeight * 0.02),
-                          Padding(
-                            padding: const EdgeInsets.only(left: 20.0),
-                            child: Align(
-                              alignment: const Alignment(0.0, 0.0),
-                              child: GestureDetector(
-                                onTap: () {
-                                  Provider.of<RegisterViewModel>(context, listen: false).showTermsAndConditionDialog(context);
-                                },
-                                child: const Text(
-                                  'Click here to view terms and conditions',
-                                  style: TextStyle(
-                                    fontSize: 18,
-                                    color: Colors.black,
-                                    fontWeight: FontWeight.w600,
-                                    fontFamily: 'SmoochSans',
-                                  ),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(height: screenHeight * 0.02),
                           Padding(
                             padding: const EdgeInsets.only(left: 20.0),
                             child: Align(

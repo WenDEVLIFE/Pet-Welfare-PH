@@ -70,7 +70,7 @@ class RegisterState extends State<FurParentRegisterView> {
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: <Widget>[
                           const Center(
-                            child: Text('SIGN UP FOR ADOPTER, FOSTER, & PET LOWER ',
+                            child: Text('SIGN UP FOR ADOPTER, FOSTER, & PET LOVER ',
                                 style: TextStyle(fontSize: 30,
                                     fontWeight: FontWeight.w700,
                                     fontFamily: 'SmoochSans',
@@ -201,7 +201,7 @@ class RegisterState extends State<FurParentRegisterView> {
                               child: ElevatedButton(
                                 onPressed: () {
                                   if(viewModel.isChecked) {
-                                    Provider.of<RegisterViewModel>(context, listen: false).checkData(context, "FurUser");
+                                    Provider.of<RegisterViewModel>(context, listen: false).checkData(context, "Pet Lover");
                                   } else {
                                     ScaffoldMessenger.of(context).showSnackBar(
                                       const SnackBar(

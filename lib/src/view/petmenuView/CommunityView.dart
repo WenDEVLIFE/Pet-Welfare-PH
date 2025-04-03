@@ -4,7 +4,6 @@ import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
 import 'package:provider/provider.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
-import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 import 'package:pet_welfrare_ph/src/modal/ReactionModal.dart';
 
 import '../../utils/AppColors.dart';
@@ -47,29 +46,14 @@ class CommunityState extends State<CommunityView> {
                   postViewModel.searchCommunityPost(searchText);
                 },
               ),
-              Expanded(
-                child: StreamBuilder<List<PostModel>>(
-                  stream: postViewModel.communityPostStream, // Stream of posts
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-
-                    if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    }
-
-                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text('No community post found'));
-                    }
-
-                    var posts = snapshot.data!;
-
-                    return ListView.builder(
-                      itemCount: posts.length,
-                      itemBuilder: (context, index) {
-                        var post = posts[index];
-                        var formattedDate = postViewModel.formatTimestamp(post.timestamp);
+          Expanded(
+          child: postViewModel.filterCommunityPost.isEmpty
+          ? Center(child: Text('No ${postViewModel.searchPostController.text} found'))
+              : ListView.builder(
+          itemCount: postViewModel.filterCommunityPost.length,
+          itemBuilder: (context, index) {
+          var post = postViewModel.filterCommunityPost[index];
+          var formattedDate = postViewModel.formatTimestamp(post.timestamp);
 
                         return FutureBuilder<String?>(
                           future: postViewModel.getUserReaction(post.postId),
@@ -254,11 +238,9 @@ class CommunityState extends State<CommunityView> {
                             );
                           },
                         );
-                      },
-                    );
-                  },
+                },
                 ),
-              ),
+                ),
             ],
           );
         },

@@ -1,5 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:pet_welfrare_ph/src/model/TagModel.dart';
 
 class PostModel {
   final String postId;
@@ -8,6 +9,7 @@ class PostModel {
   final String category;
   final Timestamp timestamp;
   final List<String> imageUrls;
+  final List<TagModel> tags;
   final String postOwnerName;
   final String profileUrl;
   String petName = '';
@@ -53,6 +55,7 @@ class PostModel {
     required this.category,
     required this.timestamp,
     required this.imageUrls,
+    required this.tags,
     required this.postOwnerName,
     required this.profileUrl,
   });
@@ -62,6 +65,12 @@ class PostModel {
     var imagesCollection = await doc.reference.collection('ImageCollection').get();
     for (var imageDoc in imagesCollection.docs) {
       imageUrls.add(imageDoc['FileUrl']);
+    }
+
+    var tagList = <TagModel>[];
+    var tagsCollection = await doc.reference.collection('TagsCollection').get();
+    for (var tagDoc in tagsCollection.docs) {
+      tagList.add(TagModel.fromDocument(tagDoc));
     }
 
     var userDoc = await FirebaseFirestore.instance.collection('Users').doc(doc['PostOwnerID']).get();
@@ -76,6 +85,7 @@ class PostModel {
       category: doc['Category'],
       timestamp: doc['Timestamp'],
       imageUrls: imageUrls,
+      tags: tagList,
       postOwnerName: userDoc['Name'],
       profileUrl: userDoc['ProfileUrl'],
     )

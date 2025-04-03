@@ -47,29 +47,14 @@ class ProtectPetState extends State<ProtectPetView> {
                   postViewModel.searchProtectedPost(searchText);
                 },
               ),
-              Expanded(
-                child: StreamBuilder<List<PostModel>>(
-                  stream: postViewModel.protectedPostStream, // Stream of posts
-                  builder: (context, snapshot) {
-                    if (snapshot.connectionState == ConnectionState.waiting) {
-                      return const Center(child: CircularProgressIndicator());
-                    }
-
-                    if (snapshot.hasError) {
-                      return Center(child: Text('Error: ${snapshot.error}'));
-                    }
-
-                    if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                      return const Center(child: Text('No protect pet posts found'));
-                    }
-
-                    var posts = snapshot.data!;
-
-                    return ListView.builder(
-                      itemCount: posts.length,
-                      itemBuilder: (context, index) {
-                        var post = posts[index];
-                        var formattedDate = postViewModel.formatTimestamp(post.timestamp);
+          Expanded(
+          child: postViewModel.filterProtectedPost.isEmpty
+          ? Center(child: Text('No ${postViewModel.searchPostController.text} found'))
+              : ListView.builder(
+          itemCount: postViewModel.filterProtectedPost.length,
+          itemBuilder: (context, index) {
+          var post = postViewModel.filterProtectedPost[index];
+          var formattedDate = postViewModel.formatTimestamp(post.timestamp);
 
                         return FutureBuilder<String?>(
                           future: postViewModel.getUserReaction(post.postId),
@@ -254,11 +239,9 @@ class ProtectPetState extends State<ProtectPetView> {
                             );
                           },
                         );
-                      },
-                    );
-                  },
+                },
                 ),
-              ),
+                ),
             ],
           );
         },
