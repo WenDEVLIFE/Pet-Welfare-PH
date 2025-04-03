@@ -13,6 +13,10 @@ class DonateViewModel extends ChangeNotifier {
 
   final DonationRepository _donationRepository = DonationRepositoryImpl();
 
+  List<String> donationType = ['Bank Transfer','Cash', 'Non-Cash/In-Kind'];
+  String? selectedDonationType = 'Cash';
+
+
   // Select a transaction date
   void selectDate(BuildContext context) async {
     final DateTime? date = await showDatePicker(
@@ -53,33 +57,70 @@ class DonateViewModel extends ChangeNotifier {
     String amountValue = amount.text;
     String dateValue = dateController.text;
     String timeValue = timeController.text;
-    if (amountValue.isNotEmpty && dateValue.isNotEmpty && timeValue.isNotEmpty) {
-      ProgressDialog pd = ProgressDialog(context: context);
-      pd.show(max: 100, msg: 'Submitting...');
-       try{
-         var donation = {
-           'amount': amountValue,
-           'date': dateValue,
-           'time': timeValue,
-           'postId': postId,
-           'transactionPath': transactionPath,
-         };
+    if(selectedDonationType == 'Cash' || selectedDonationType == 'Bank Transfer') {
+      if (amountValue.isNotEmpty && dateValue.isNotEmpty &&
+          timeValue.isNotEmpty) {
+        ProgressDialog pd = ProgressDialog(context: context);
+        pd.show(max: 100, msg: 'Submitting...');
+        try {
+          var donation = {
+            'amount': amountValue,
+            'date': dateValue,
+            'time': timeValue,
+            'donationType': selectedDonationType,
+            'postId': postId,
+            'transactionPath': transactionPath,
+          };
           _donationRepository.submitDonation(donation);
-        Navigator.of(context).pop();
-       } catch(e){
-         print(e);
-       }
-       finally{
-         pd.close();
-       }
-    } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(
-          content: Text('Please fill all the fields'),
-        ),
-      );
+          Navigator.of(context).pop();
+        } catch (e) {
+          print(e);
+        }
+        finally {
+          pd.close();
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please fill all the fields'),
+          ),
+        );
+      }
+    } else{
+      if (dateValue.isNotEmpty && timeValue.isNotEmpty && transactionPath.isNotEmpty) {
+        ProgressDialog pd = ProgressDialog(context: context);
+        pd.show(max: 100, msg: 'Submitting...');
+        try {
+          var donation = {
+            'amount': 'n/a',
+            'date': dateValue,
+            'time': timeValue,
+            'donationType': selectedDonationType,
+            'postId': postId,
+            'transactionPath': transactionPath,
+          };
+          _donationRepository.submitDonation(donation);
+          Navigator.of(context).pop();
+        } catch (e) {
+          print(e);
+        }
+        finally {
+          pd.close();
+        }
+      } else {
+        ScaffoldMessenger.of(context).showSnackBar(
+          const SnackBar(
+            content: Text('Please fill all the fields'),
+          ),
+        );
+      }
     }
 
+  }
+
+  void setselectedDonation(String? newValue) {
+    selectedDonationType = newValue;
+    notifyListeners();
   }
 
 

@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../utils/AppColors.dart';
 import '../widgets/CustomButton.dart';
+import '../widgets/CustomDropdown.dart';
 import '../widgets/CustomTextField.dart';
 
 class DonateModal extends StatelessWidget {
@@ -55,22 +56,42 @@ class DonateModal extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   CustomText(
-                      text: 'Amount Donated',
-                      size: 25,
-                      color: AppColors.black,
-                      weight: FontWeight.w600,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                  ),
-                  SizedBox(height: screenHeight * 0.01),
-                  CustomTextField(
-                    controller: viewModel.amount,
+                    text: 'Type of Donation',
+                    size: 25,
+                    color: AppColors.black,
+                    weight: FontWeight.w600,
+                    align: TextAlign.left,
                     screenHeight: screenHeight,
-                    hintText: 'Enter donation amount...',
-                    fontSize: 16,
-                    keyboardType: TextInputType.number,
+                    alignment: Alignment.centerLeft,
                   ),
+                  CustomDropDown<String?>(
+                    value: viewModel.selectedDonationType,
+                    items: viewModel.donationType,
+                    onChanged: (String? newValue) {
+                      viewModel.setselectedDonation(newValue);
+                    },
+                    itemLabel: (String? value) => value!,
+                    hint: 'Select a Donation Type',
+                  ),
+                 if(viewModel.selectedDonationType?.toLowerCase()=='cash' || viewModel.selectedDonationType?.toLowerCase()=='bank transfer' )...[
+                   CustomText(
+                     text: 'Amount Donated',
+                     size: 25,
+                     color: AppColors.black,
+                     weight: FontWeight.w600,
+                     align: TextAlign.left,
+                     screenHeight: screenHeight,
+                     alignment: Alignment.centerLeft,
+                   ),
+                   SizedBox(height: screenHeight * 0.01),
+                   CustomTextField(
+                     controller: viewModel.amount,
+                     screenHeight: screenHeight,
+                     hintText: 'Enter donation amount...',
+                     fontSize: 16,
+                     keyboardType: TextInputType.number,
+                   ),
+                 ],
                   CustomText(
                     text: 'Date of Donation',
                     size: 25,
@@ -131,6 +152,15 @@ class DonateModal extends StatelessWidget {
                       ),
                     ),
                   ),
+                  CustomText(
+                    text: 'Transaction Image',
+                    size: 25,
+                    color: AppColors.black,
+                    weight: FontWeight.w600,
+                    align: TextAlign.left,
+                    screenHeight: screenHeight,
+                    alignment: Alignment.centerLeft,
+                  ),
                   Padding(
                     padding: const EdgeInsets.only(top: 16.0),
                     child: Center(
@@ -155,7 +185,7 @@ class DonateModal extends StatelessWidget {
                   SizedBox(height: screenHeight * 0.01),
                   Center(
                     child: CustomButton(
-                      hint: 'Upload Transaction Image',
+                      hint: viewModel.donationType.contains('Cash') ? 'Upload Transaction Image' : 'Upload Transaction Image',
                       size: 16,
                       color1: AppColors.orange,
                       textcolor2: AppColors.white,
