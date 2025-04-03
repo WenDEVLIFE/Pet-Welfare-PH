@@ -101,6 +101,7 @@ class UserRepositoryImpl implements UserRepository {
       var idbackPath = userData['idback']!;
       var idfrontPath = userData['idfront']!;
       var address = userData['address']!;
+      var idType = userData['selectIDtype']!;
       final Function clearData = userData['clearData'];
       final Function clearFields = userData['clearFields'];
 
@@ -151,6 +152,7 @@ class UserRepositoryImpl implements UserRepository {
         "IDBackImage": "$uid-back.jpg",
         "IDFrontUrl": idFrontUrl,
         "IDBackUrl": idBackUrl,
+        "IDType": idType,
         "Role": role,
         "CreatedAt": FieldValue.serverTimestamp(),
         if (role != "Admin" && role != "Super-Admin" ) ...{
