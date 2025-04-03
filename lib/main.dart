@@ -34,44 +34,34 @@ import 'package:pet_welfrare_ph/src/view_model/UserViewModel.dart';
 import 'package:provider/provider.dart';
 import 'package:pet_welfrare_ph/src/widgets/NotificationListener.dart' as custom;
 import 'package:workmanager/workmanager.dart'; // Import the workmanager package
-import 'package:flutter_background_service/flutter_background_service.dart';
-import 'package:flutter_background_service_android/flutter_background_service_android.dart';
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
-  // Initialize Firebase
-  await FirebaseRestAPI.run();
-  await NotificationUtils.initNotifications();
-  await FirebaseRestAPI().initNotificationPermission();
-  await FirebaseRestAPI().initFirebaseMessage();
+  try {
+    // Initialize Firebase
+    await FirebaseRestAPI.run();
+    await NotificationUtils.initNotifications();
+    await FirebaseRestAPI().initNotificationPermission();
+    await FirebaseRestAPI().initFirebaseMessage();
+    await FirebaseRestAPI().retrieveAndStoreFCMToken();
 
-  // Register background message handler
-  FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    // Register background message handler
+    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
 
-  // Initialize Workmanager
-  Workmanager().initialize(callbackDispatcher, isInDebugMode: true);
+    // Handle foreground notifications
+    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
+      NotificationUtils.showNotification(
+        id: message.messageId.hashCode,
+        title: message.notification?.title ?? "New Notification",
+        body: message.notification?.body ?? "You have a new message",
+      );
+    });
 
-  // Register background task
-  await Workmanager().registerOneOffTask(
-    "fetchNotificationsTask",
-    "simpleOneTimeTask",
-    initialDelay: Duration(minutes: 1),
-  );
-
-  // Handle foreground notifications
-  FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-    NotificationUtils.showNotification(
-      id: message.messageId.hashCode,
-      title: message.notification?.title ?? "New Notification",
-      body: message.notification?.body ?? "You have a new message",
-    );
-  });
-
-  // Initialize background service
-  initializeService();
-
-  runApp(const MyApp());
+    runApp(const MyApp());
+  } catch (e) {
+    print('Error initializing Firebase: $e');
+  }
 }
 
 Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
@@ -81,91 +71,6 @@ Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     title: message.notification?.title ?? "New Notification",
     body: message.notification?.body ?? "You have a new message",
   );
-}
-
-void callbackDispatcher() {
-  Workmanager().executeTask((task, inputData) async {
-    await FirebaseRestAPI.run();
-    final notificationRepository = NotificationRepositoryImpl();
-    final notifications = await notificationRepository.getNotificationsStream().first;
-
-    for (DocumentSnapshot doc in notifications) {
-      print('Showing notification for doc: ${doc['notificationID']}');  // Debug statement
-      NotificationUtils.showNotification(
-        id: doc.id.hashCode,
-        title: 'New Notification: ${doc['category']}',
-        body: doc['content'],
-      );
-
-      // Mark notifications as read
-      await doc.reference.update({'isRead': true});
-    }
-
-    // Re-register task for every 1 minute
-    Workmanager().registerOneOffTask(
-      "fetchNotificationsTask",
-      "simpleOneTimeTask",
-      initialDelay: const Duration(minutes: 1),
-    );
-
-    return Future.value(true);
-  });
-}
-
-void initializeService() async {
-  final service = FlutterBackgroundService();
-
-  await service.configure(
-    androidConfiguration: AndroidConfiguration(
-      onStart: onStart,
-      autoStart: true,
-      isForegroundMode: true,
-    ),
-    iosConfiguration: IosConfiguration(
-      autoStart: true,
-      onForeground: onStart,
-    ),
-  );
-
-  service.startService();
-}
-
-// 🔹 Background Service Task (Runs Every 1 Minute)
-void onStart(ServiceInstance service) {
-  if (service is AndroidServiceInstance) {
-    service.on('setAsForeground').listen((event) {
-      service.setAsForegroundService();
-    });
-
-    service.on('setAsBackground').listen((event) {
-      service.setAsBackgroundService();
-    });
-  }
-
-  service.on('stopService').listen((event) {
-    service.stopSelf();
-  });
-
-  Timer.periodic(Duration(minutes: 1), (timer) async {
-    print('Background service is running...');
-    await FirebaseRestAPI.run();
-    final notificationRepository = NotificationRepositoryImpl();
-    final notifications = await notificationRepository.getNotificationsStream().first;
-
-    for (DocumentSnapshot doc in notifications) {
-      print('Showing notification for doc in service: ${doc['notificationID']}');  // Debug statement
-      NotificationUtils.showNotification(
-        id: doc.id.hashCode,
-        title: 'New Notification: ${doc['category']}',
-        body: doc['content'],
-      );
-
-      print('Notification shown for doc: ${doc['notificationID']}');  // Additional debug statement
-
-      await doc.reference.update({'isRead': true});
-      print('Notification marked as read for doc: ${doc['notificationID']}');  // Additional debug statement
-    }
-  });
 }
 
 class MyApp extends StatelessWidget {
