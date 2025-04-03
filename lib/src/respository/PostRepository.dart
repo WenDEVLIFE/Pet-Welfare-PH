@@ -428,6 +428,10 @@ class PostRepositoryImpl implements PostRepository {
   // Added get comments function
   @override
   Stream<List<CommentModel>> getComments(String postId) {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return Stream.value([]);
+    }
     return FirebaseFirestore.instance
         .collection('PostCollection')
         .doc(postId)
@@ -457,6 +461,10 @@ class PostRepositoryImpl implements PostRepository {
   // Added get missing posts function
   @override
   Stream<List<PostModel>> getMissingPosts() {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return Stream.value([]);
+    }
     return _firestore.collection('PostCollection')
         .where('Category', isEqualTo: 'Missing Pets')
         .snapshots()
@@ -469,6 +477,10 @@ class PostRepositoryImpl implements PostRepository {
   // Added get found post
   @override
   Stream<List<PostModel>> getFoundPost() {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return Stream.value([]);
+    }
     return _firestore.collection('PostCollection')
         .where('Category', isEqualTo: 'Found Pets')
         .snapshots()
@@ -481,6 +493,10 @@ class PostRepositoryImpl implements PostRepository {
   // Added get paw experience post
   @override
   Stream<List<PostModel>> getPawExperiencePost() {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return Stream.value([]);
+    }
     return _firestore.collection('PostCollection')
         .where('Category', isEqualTo: 'Paw-some Experience')
         .snapshots()
@@ -493,6 +509,10 @@ class PostRepositoryImpl implements PostRepository {
   // Added get protect pet post
   @override
   Stream<List<PostModel>> getProtectPetPost() {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return Stream.value([]);
+    }
     return _firestore.collection('PostCollection')
         .where('Category', isEqualTo: 'Protect Our Pets: Report Abuse')
         .snapshots()
@@ -517,6 +537,10 @@ class PostRepositoryImpl implements PostRepository {
   // Added get community post
   @override
   Stream<List<PostModel>> getVetAndTravelPost() {
+    User? user = FirebaseAuth.instance.currentUser;
+   if (user == null) {
+      return Stream.value([]);
+    }
     return _firestore.collection('PostCollection')
         .where('Category', isEqualTo: 'Caring for Pets: Vet & Travel Insights')
         .snapshots()
@@ -529,6 +553,10 @@ class PostRepositoryImpl implements PostRepository {
   // get the pet adoption
   @override
   Stream<List<PostModel>> getPetAdoption() {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return Stream.value([]);
+    }
     return _firestore.collection('PostCollection')
         .where('Category', isEqualTo: 'Pet Adoption')
         .snapshots()
@@ -541,6 +569,10 @@ class PostRepositoryImpl implements PostRepository {
   // get the call for aid
   @override
   Stream<List<PostModel>> getCallforAid() {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return Stream.value([]);
+    }
     return _firestore.collection('PostCollection')
         .where('Category', isEqualTo: 'Call for Aid')
         .snapshots()
@@ -553,6 +585,10 @@ class PostRepositoryImpl implements PostRepository {
   // get the nearby found pets
   Future<List<PostModel>> getNearbyFoundPets(double lat, double long, double radiusInK) async {
     try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        return [];
+      }
       // Define the radius in kilometers
       double radiusInKm = radiusInK;
 
@@ -594,6 +630,10 @@ class PostRepositoryImpl implements PostRepository {
   @override
   Future<List<PostModel>> getNearbyLostPets(double lat, double long, double radiusInK) async{
     try {
+      User? user = FirebaseAuth.instance.currentUser;
+      if (user == null) {
+        return [];
+      }
       // Define the radius in kilometers
       double radiusInKm = radiusInK;
 

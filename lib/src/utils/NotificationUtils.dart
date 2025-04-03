@@ -83,6 +83,9 @@ class NotificationUtils {
   }) async {
     if (!_isInitialized) await initNotifications();
 
+    print('Showing notification: $title');  // Debug statement
+    print('Notification ID: $id');  // Debug statement
+
     const AndroidNotificationDetails androidDetails = AndroidNotificationDetails(
       'channel_id', // Channel ID
       'General Notifications', // Channel name

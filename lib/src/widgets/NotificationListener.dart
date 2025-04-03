@@ -14,7 +14,7 @@ class NotificationListener1 extends StatelessWidget {
         if (snapshot.hasData && snapshot.data!.isNotEmpty) {
           for (DocumentSnapshot doc in snapshot.data!) {
             NotificationUtils.showNotification(
-              id: doc['notificationID'].hashCode, // Unique Notification ID
+              id: doc.id.hashCode, // Unique Notification ID
               title: 'New Notification: ${doc['category']}',
               body: doc['content'],
             );

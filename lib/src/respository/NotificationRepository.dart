@@ -56,10 +56,10 @@ class NotificationRepositoryImpl extends NotificationRepository {
         for (DocumentSnapshot doc in snapshot.docs) {
           // Schedule a notification for immediate display
           NotificationUtils.scheduleNotification(
-            id: doc['notificationID'].hashCode, // Unique Notification ID
+            id: doc.id.hashCode, // Unique Notification ID
             title: 'New Notification: ${doc['category']}',
             body: doc['content'],
-            scheduledTime: DateTime.now().add(Duration(seconds: 5)), // Schedule for 5 seconds later
+            scheduledTime: DateTime.now().add(const Duration(seconds: 5)), // Schedule for 5 seconds later
           );
 
           // Mark notifications as read
