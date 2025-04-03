@@ -299,8 +299,7 @@ class PostViewModel extends ChangeNotifier {
     if (searchText.isEmpty) {
       filterCallforAidPost.addAll(callforAidPost);
     } else {
-      filterCallforAidPost.addAll(callforAidPost.where((post) => post.postDescription.toLowerCase().contains(
-          searchText.toLowerCase()) || post.bankHolder.toLowerCase().contains(searchText.toLowerCase()) ||
+      filterCallforAidPost.addAll(callforAidPost.where((post) =>post.bankHolder.toLowerCase().contains(searchText.toLowerCase()) ||
           post.accountNumber.toLowerCase().contains(searchText.toLowerCase()) ||  post.estimatedAmount.toLowerCase().contains(searchText.toLowerCase())
           ||  post.donationType.toLowerCase().contains(searchText.toLowerCase()) ||  post.donationType.toLowerCase().contains(searchText.toLowerCase())
           ||  post.statusDonation.toLowerCase().contains(searchText.toLowerCase())
