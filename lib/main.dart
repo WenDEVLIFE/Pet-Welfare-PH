@@ -1,14 +1,10 @@
 import 'dart:async';
 
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
-import 'package:pet_welfrare_ph/src/respository/NotificationRepository.dart';
 import 'package:pet_welfrare_ph/src/utils/FirebaseIntialize.dart';
 import 'package:pet_welfrare_ph/src/utils/NotificationUtils.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
-import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:pet_welfrare_ph/src/view_model/ApplyAdoptionViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/CreatePostViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/DonateViewModel.dart';
@@ -33,44 +29,27 @@ import 'package:pet_welfrare_ph/src/view_model/UserDataViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/UserViewModel.dart';
 import 'package:provider/provider.dart';
 import 'package:pet_welfrare_ph/src/widgets/NotificationListener.dart' as custom;
-import 'package:workmanager/workmanager.dart'; // Import the workmanager package
 
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
-    // Initialize Firebase
-    await FirebaseRestAPI.run();
+
+    // Init notifications
     await NotificationUtils.initNotifications();
+
+    // Register background message handler
+    await FirebaseRestAPI.run();
     await FirebaseRestAPI().initNotificationPermission();
     await FirebaseRestAPI().initFirebaseMessage();
     await FirebaseRestAPI().retrieveAndStoreFCMToken();
+    FirebaseMessaging.onBackgroundMessage(FirebaseRestAPI().firebaseMessagingBackgroundHandler);
 
-    // Register background message handler
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
-
-    // Handle foreground notifications
-    FirebaseMessaging.onMessage.listen((RemoteMessage message) {
-      NotificationUtils.showNotification(
-        id: message.messageId.hashCode,
-        title: message.notification?.title ?? "New Notification",
-        body: message.notification?.body ?? "You have a new message",
-      );
-    });
 
     runApp(const MyApp());
   } catch (e) {
     print('Error initializing Firebase: $e');
   }
-}
-
-Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
-  await FirebaseRestAPI.run();
-  NotificationUtils.showNotification(
-    id: message.messageId.hashCode,
-    title: message.notification?.title ?? "New Notification",
-    body: message.notification?.body ?? "You have a new message",
-  );
 }
 
 class MyApp extends StatelessWidget {

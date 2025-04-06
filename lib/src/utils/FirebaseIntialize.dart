@@ -41,11 +41,11 @@ class FirebaseRestAPI {
     await _firebaseMessaging.requestPermission();
     final token = await _firebaseMessaging.getToken();
     print('Token: $token');
-    FirebaseMessaging.onBackgroundMessage(_firebaseMessagingBackgroundHandler);
+    FirebaseMessaging.onBackgroundMessage(firebaseMessagingBackgroundHandler);
   }
 
 
-  Future<void> _firebaseMessagingBackgroundHandler(RemoteMessage message) async {
+  Future<void> firebaseMessagingBackgroundHandler(RemoteMessage message) async {
     await Firebase.initializeApp();
     print('Title: ${message.notification?.title}');
     print('Body: ${message.notification?.body}');
@@ -57,7 +57,6 @@ class FirebaseRestAPI {
       payload: message.data['payload'],
     );
   }
-
 
   // This method will retrieve the FCM token and store it in Firestore
   Future<void> retrieveAndStoreFCMToken() async {
