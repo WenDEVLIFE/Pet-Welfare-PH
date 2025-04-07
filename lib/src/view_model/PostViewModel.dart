@@ -221,7 +221,7 @@ class PostViewModel extends ChangeNotifier {
     }
   }
 
-  void listenToPost() {
+  void listenToPost() async {
     posTream.listen((posts) {
       _posts = posts;
       filteredPost = posts;
@@ -230,7 +230,7 @@ class PostViewModel extends ChangeNotifier {
   }
 
   // Listen to missing post
-  void listenToMissingPost() {
+  void listenToMissingPost() async {
     missingPostStream.listen((missingPosts) {
       missingPost = missingPosts;
       filterMissingPost = missingPosts;
@@ -240,7 +240,7 @@ class PostViewModel extends ChangeNotifier {
 
   // Listen to found post
   void listenToFoundPost() {
-    foundPostStream.listen((foundPosts) {
+    foundPostStream.listen((foundPosts) async{
       foundPost = foundPosts;
       filterFoundPost = foundPosts;
       notifyListeners();
@@ -248,7 +248,7 @@ class PostViewModel extends ChangeNotifier {
   }
 
   // Listen to paw experience post
-  void listenToPawExperiencePost() {
+  void listenToPawExperiencePost() async {
     pawExperiencePostStream.listen((pawExperiencePosts) {
       pawExperiencePost = pawExperiencePosts;
       filterPawExperiencePost = pawExperiencePosts;
@@ -257,7 +257,7 @@ class PostViewModel extends ChangeNotifier {
   }
 
   // Listen to protected post
-  void listenToProtectedPost() {
+  void listenToProtectedPost() async {
     protectedPostStream.listen((protectedPosts) {
       protectedPost = protectedPosts;
       filterProtectedPost = protectedPosts;
@@ -266,7 +266,7 @@ class PostViewModel extends ChangeNotifier {
   }
 
   // Listen to community post
-  void listenToCommunityPost() {
+  void listenToCommunityPost() async{
     communityPostStream.listen((communityPosts) {
       communityPost = communityPosts;
       filterCommunityPost = communityPosts;
@@ -275,7 +275,7 @@ class PostViewModel extends ChangeNotifier {
   }
 
   // Listen to vet and travel post
-  void listenToVetAndTravelPost() {
+  void listenToVetAndTravelPost() async {
     vetAndTravelPostStream.listen((travelPosts) {
       vetAndtravelPost = travelPosts;
       filterVetAndTravelPost = travelPosts;
@@ -284,7 +284,7 @@ class PostViewModel extends ChangeNotifier {
   }
 
   // Listen to pet adopt post
-  void listenToPetAdoptPost() {
+  void listenToPetAdoptPost() async {
     petAdoptPostStream.listen((adoptpost) {
       petAdoptPost = adoptpost;
       filterPetAdoptPost = adoptpost;
@@ -293,7 +293,7 @@ class PostViewModel extends ChangeNotifier {
   }
 
   // Listen to call for aid post
-  void listenToCallforAidPost() {
+  void listenToCallforAidPost() async {
     callforAidPostStream.listen((aidPost) {
       callforAidPost = aidPost;
       filterCallforAidPost = aidPost;
@@ -454,42 +454,42 @@ class PostViewModel extends ChangeNotifier {
         String fieldValue = '';
         switch (key) {
           case 'petname':
-            fieldValue = post.petNameAdopt;
+            fieldValue = post.petNameAdopt ?? '';
             break;
           case 'petType':
-            fieldValue = post.PetTypeAdopt;
+            fieldValue = post.PetTypeAdopt ?? '';
             break;
           case 'petSize':
-            fieldValue = post.petSizeAdopt;
+            fieldValue = post.petSizeAdopt ?? '';
             break;
           case 'petAge':
-            fieldValue = post.petAgeAdopt;
+            fieldValue = post.petAgeAdopt ?? '';
             break;
           case 'petGender':
-            fieldValue = post.petGenderAdopt;
+            fieldValue = post.petGenderAdopt ?? '';
             break;
           case 'colorPattern':
-            fieldValue = post.petColorAdopt;
+            fieldValue = post.petColorAdopt ?? '';
             break;
           case 'dogBreed':
           case 'catBreed':
             if ((petType == 'dog' && key == 'dogBreed') || (petType == 'cat' && key == 'catBreed')) {
-              fieldValue = post.petBreedAdopt;
+              fieldValue = post.petBreedAdopt ?? '';
             } else {
               return;
             }
             break;
           case 'region':
-            fieldValue = post.petRegionAdopt;
+            fieldValue = post.petRegionAdopt ?? '';
             break;
           case 'province':
-            fieldValue = post.petProvinceAdopt;
+            fieldValue = post.petProvinceAdopt ?? '';
             break;
           case 'city':
-            fieldValue = post.petCityAdopt;
+            fieldValue = post.petCityAdopt ?? '';
             break;
           case 'barangay':
-            fieldValue = post.petBarangayAdopt;
+            fieldValue = post.petBarangayAdopt ?? '';
             break;
           default:
             return;
