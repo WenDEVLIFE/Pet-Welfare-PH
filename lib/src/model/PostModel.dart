@@ -32,6 +32,10 @@ class PostModel {
   String petAgeAdopt = '';
   String petColorAdopt = '';
   String petAddressAdopt = '';
+  String petProvinceAdopt = '';
+  String petCityAdopt = '';
+  String petBarangayAdopt = '';
+  String petRegionAdopt = '';
   String regProCiBagAdopt = '';
   String dateAdopt = '';
   String petSizeAdopt = '';
@@ -113,6 +117,10 @@ class PostModel {
       ..petSizeAdopt = petDocAdopt.data()?['PetSize'] ?? ''
       ..StatusAdopt = petDocAdopt.data()?['Status'] ?? ''
       ..petOwnernName = userDoc.data()?['Name'] ?? ''
+      ..petProvinceAdopt = petDocAdopt.data()?['Province'] ?? ''
+      ..petCityAdopt = petDocAdopt.data()?['City'] ?? ''
+      ..petBarangayAdopt = petDocAdopt.data()?['Barangay'] ?? ''
+      ..petRegionAdopt = petDocAdopt.data()?['Region'] ?? ''
       ..lat = petDoc.data()?['Latitude'] ?? 0.0
       ..long = petDoc.data()?['Longitude'] ?? 0.0
      ..accountNumber = donationDoc.data()?['AccountNumber'] ?? ''

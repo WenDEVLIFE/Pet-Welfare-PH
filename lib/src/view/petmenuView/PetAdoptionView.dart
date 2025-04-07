@@ -7,7 +7,6 @@ import 'package:pet_welfrare_ph/src/utils/Route.dart';
 import 'package:pet_welfrare_ph/src/widgets/CustomText.dart';
 import 'package:provider/provider.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
-import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 import 'package:pet_welfrare_ph/src/modal/ReactionModal.dart';
 
 import '../../modal/FormAdoptionModal.dart';
@@ -493,6 +492,13 @@ class MissingPetState extends State<PetAdoptionView> {
                   return const SearchPetModal();
                 },
               );
+            },
+          ),
+          SpeedDialChild(
+            label: 'Reload the Pet Adoption',
+            child: const Icon(Icons.refresh),
+            onTap: () {
+              postViewModel.listenToPetAdoptPost();
             },
           ),
         ],

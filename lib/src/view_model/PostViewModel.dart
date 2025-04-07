@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 import 'package:pet_welfrare_ph/src/respository/PostRepository.dart';
 import 'package:pet_welfrare_ph/src/utils/SessionManager.dart';
+import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:intl/intl.dart';
 
@@ -436,5 +437,76 @@ class PostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Search Pet Adoption
+  Future<void> startSearchPetAdoption(Map<String, dynamic> searchParams) async {
+    print('Starting search with parameters: $searchParams');
+
+    String petType = (searchParams['petType'] ?? '').toString().toLowerCase();
+
+    filterPetAdoptPost = petAdoptPost.where((post) {
+      bool matches = true;
+
+      searchParams.forEach((key, value) {
+        if (value == null || value.toString().isEmpty) return;
+
+        String lowerValue = value.toString().toLowerCase();
+
+        String fieldValue = '';
+        switch (key) {
+          case 'petname':
+            fieldValue = post.petNameAdopt;
+            break;
+          case 'petType':
+            fieldValue = post.PetTypeAdopt;
+            break;
+          case 'petSize':
+            fieldValue = post.petSizeAdopt;
+            break;
+          case 'petAge':
+            fieldValue = post.petAgeAdopt;
+            break;
+          case 'petGender':
+            fieldValue = post.petGenderAdopt;
+            break;
+          case 'colorPattern':
+            fieldValue = post.petColorAdopt;
+            break;
+          case 'dogBreed':
+          case 'catBreed':
+            if ((petType == 'dog' && key == 'dogBreed') || (petType == 'cat' && key == 'catBreed')) {
+              fieldValue = post.petBreedAdopt;
+            } else {
+              return;
+            }
+            break;
+          case 'region':
+            fieldValue = post.petRegionAdopt;
+            break;
+          case 'province':
+            fieldValue = post.petProvinceAdopt;
+            break;
+          case 'city':
+            fieldValue = post.petCityAdopt;
+            break;
+          case 'barangay':
+            fieldValue = post.petBarangayAdopt;
+            break;
+          default:
+            return;
+        }
+
+        print('Comparing ${fieldValue.toLowerCase()} with $lowerValue for key: $key');
+        if (fieldValue.toLowerCase() != lowerValue) {
+          matches = false;
+        }
+      });
+
+      print('Post matches: $matches');
+      return matches;
+    }).toList();
+
+    print('Filtered posts: ${filterPetAdoptPost.length}');
+    notifyListeners();
+  }
 
 }

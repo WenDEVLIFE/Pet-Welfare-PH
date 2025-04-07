@@ -13,6 +13,7 @@ import '../utils/ToastComponent.dart';
 import '../view_model/PostViewModel.dart';
 import 'package:provider/provider.dart';
 
+import '../widgets/CustomButton.dart';
 import '../widgets/CustomDropdown.dart';
 import '../widgets/CustomTextField.dart';
 
@@ -361,6 +362,19 @@ class SearchPetModal extends StatelessWidget{
                       ),
                     ),
                   ],
+
+                  Center(
+                      child: CustomButton(
+                        hint: 'Search',
+                        size: 18,
+                        color1: AppColors.orange,
+                        textcolor2: Colors.white,
+                        onPressed: () async {
+                          postViewModel.search(context);
+                          Navigator.of(context).pop();
+                        },
+                      )
+                  ),
                 ],
               ),
             ),

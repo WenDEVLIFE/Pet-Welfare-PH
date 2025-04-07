@@ -1,5 +1,8 @@
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/services/LocationService.dart';
+import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
+import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 
 import '../model/BarangayModel.dart';
 import '../model/BreedModel.dart';
@@ -7,6 +10,7 @@ import '../model/CityModel.dart';
 import '../model/ProvinceModel.dart';
 import '../model/RegionModel.dart';
 import '../services/PetAPI.dart';
+import  'package:provider/provider.dart';
 
 class SearchPetViewModel extends ChangeNotifier {
 
@@ -25,7 +29,7 @@ class SearchPetViewModel extends ChangeNotifier {
   List<String> petAgeList = [];
   String? selectedPetAge;
 
-  List <String> petGender = [''];
+  List <String> petGender = [];
   String? selectedPetGender;
 
   List<String> adoptionStatus= [];
@@ -61,10 +65,13 @@ class SearchPetViewModel extends ChangeNotifier {
 
   SearchPetViewModel() {
     loadPetAdoption();
+    fetchRegions();
+    fetchCatBreeds();
+    fetchDogBreeds();
   }
 
   // This will load the color
-  void loadPetAdoption() {
+  Future <void> loadPetAdoption() async {
     if(colorpatter.isEmpty){
       colorpatter = [
         'Calico', 'Tortoiseshell', 'Tabby', 'Short hair', 'Fluffy/Long hair', 'Tilapia/Tiger', 'Cow', 'Tuxedo', 'Pointed',
@@ -100,6 +107,7 @@ class SearchPetViewModel extends ChangeNotifier {
     if (collarList.isEmpty) {
       collarList = ['With Collar', 'Without Collar'];
     }
+    notifyListeners();
 
   }
 
@@ -289,5 +297,39 @@ class SearchPetViewModel extends ChangeNotifier {
     selectedSearchType = newValue!;
     notifyListeners();
   }
+
+  void search(context) async {
+    final postViewModel = Provider.of<PostViewModel>(context, listen: false);
+    if (selectedSearchType == 'Pet Adoption') {
+
+      if (petnameController.text.isNotEmpty) {
+        Map <String, dynamic> searchParams = {
+          'petname': petnameController.text,
+          'petType': selectedPetType,
+          'petSize': selectedPetSize,
+          'petAge': selectedPetAge,
+          'petGender': selectedPetGender,
+          'colorPattern': selectedColor,
+          'catBreed': selectedCatBreed?.name,
+          'dogBreed': selectedDogBreed?.name,
+          'region': selectedRegion?.region,
+          'province': selectedProvince?.provinceName,
+          'city': selectedCity?.cityName,
+          'barangay': selectedBarangay?.barangayName,
+        };
+
+        await postViewModel.startSearchPetAdoption(searchParams);
+      } else {
+        ToastComponent().showMessage(Colors.red, 'Please enter a pet name');
+      }
+    } else if (selectedSearchType == 'Found Pets') {
+
+    } else if (selectedSearchType == 'Missing Pets') {
+
+    }
+
+    notifyListeners();
+  }
+
 
 }
