@@ -2,7 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:pet_welfrare_ph/src/modal/SearchPetAdoptionModel.dart';
+import 'package:pet_welfrare_ph/src/modal/SearchPetModal.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
 import 'package:pet_welfrare_ph/src/widgets/CustomText.dart';
 import 'package:provider/provider.dart';
@@ -490,7 +490,7 @@ class MissingPetState extends State<PetAdoptionView> {
                 context: context,
                 isScrollControlled: true,
                 builder: (context) {
-                  return SearchPetAdoptionModel();
+                  return const SearchPetModal();
                 },
               );
             },
