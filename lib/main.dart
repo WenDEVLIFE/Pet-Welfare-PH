@@ -34,12 +34,11 @@ void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
   try {
-
+    await FirebaseRestAPI.run();
     // Init notifications
     await NotificationUtils.initNotifications();
 
     // Register background message handler
-    await FirebaseRestAPI.run();
     await FirebaseRestAPI().initNotificationPermission();
     await FirebaseRestAPI().initFirebaseMessage();
     await FirebaseRestAPI().retrieveAndStoreFCMToken();

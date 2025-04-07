@@ -82,6 +82,7 @@ class FirebaseRestAPI {
 
   Future<void> initFirebaseMessage() async {
     // Request notification permissions for iOS & Android
+    await FirebaseRestAPI.run();
     FirebaseMessaging messaging = FirebaseMessaging.instance;
     NotificationSettings settings = await messaging.requestPermission(
       alert: true,
@@ -107,6 +108,7 @@ class FirebaseRestAPI {
 
   // Send FCM notification using the token
   Future<void> sendFCMNotification(String fcmToken, String title, String body) async {
+    await FirebaseRestAPI.run();
     String accessToken = await getAccessToken();
 
     var uri = Uri.parse('https://fcm.googleapis.com/v1/projects/pet-welfare-ph/messages:send');

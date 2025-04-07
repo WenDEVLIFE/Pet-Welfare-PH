@@ -8,6 +8,7 @@ import 'package:timeago/timeago.dart' as timeago;
 import 'package:intl/intl.dart';
 
 import '../modal/CommentModal.dart';
+import '../model/BreedModel.dart';
 import '../model/CommentModel.dart';
 
 class PostViewModel extends ChangeNotifier {
@@ -43,6 +44,17 @@ class PostViewModel extends ChangeNotifier {
 
   List<CommentModel> comments = [];
 
+  List<String> colorpatter = [];
+  String? selectedColor;
+
+  List<String> petSize =['Tiny', 'Small', 'Medium', 'Large'];
+  String selectedPetSize = 'Tiny';
+
+  List<Breed> catBreeds = [];
+  Breed? selectedCatBreed;
+  List<Breed> dogBreeds = [];
+  Breed? selectedDogBreed;
+
   final PostRepository postRepository = PostRepositoryImpl();
 
   Stream<List<PostModel>> get posTream => postRepository.getPosts();
@@ -54,6 +66,7 @@ class PostViewModel extends ChangeNotifier {
   Stream<List<PostModel>> get vetAndTravelPostStream => postRepository.getVetAndTravelPost();
   Stream<List<PostModel>> get petAdoptPostStream => postRepository.getPetAdoption();
   Stream<List<PostModel>> get callforAidPostStream => postRepository.getCallforAid();
+
 
  // Initialize the PostViewModel
   PostViewModel() {
@@ -69,9 +82,45 @@ class PostViewModel extends ChangeNotifier {
     listenToVetAndTravelPost();
     listenToPetAdoptPost();
     listenToCallforAidPost();
+    loadColor();
 
   }
 
+  // This will load the color
+  void loadColor() {
+   if(colorpatter.isEmpty){
+     colorpatter = [
+       'Calico',
+       'Tortoiseshell',
+       'Tabby',
+       'Short hair',
+       'Fluffy/Long hair',
+       'Tilapia/Tiger',
+       'Cow',
+       'Tuxedo',
+       'Pointed',
+       'Orange',
+       'Smoke',
+       'Cinnamon',
+       'White/Cream',
+       'Black/Black and Tan',
+       'Brown',
+       'Blue/Blue-gray',
+       'Fawn',
+       'Sable',
+       'Merle/Dapple',
+       'Brindle',
+       'Bicolor',
+       'Tricolor',
+       'Spotted',
+       'Piebald',
+       'Ticked/Flecked',
+       'Mask',
+       'Others'
+     ];
+
+   }
+  }
 
   // this is for the set post
   void setPost(List<PostModel> posts, {bool notify = true}) {
