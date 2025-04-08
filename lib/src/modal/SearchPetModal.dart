@@ -77,25 +77,6 @@ class SearchPetModal extends StatelessWidget{
                   ),
                   if (postViewModel.selectedSearchType == "Missing Pets" || postViewModel.selectedSearchType == "Found Pets" ||  postViewModel.selectedSearchType =="Pet Adoption") ...[
                     CustomText(
-                      text: 'Pet Name',
-                      size: 18,
-                      color: Colors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(10.0),
-                      child: CustomTextField(
-                        controller: postViewModel.petnameController,
-                        screenHeight: screenHeight,
-                        hintText: 'Enter pet name...',
-                        fontSize: 16,
-                        keyboardType: TextInputType.text,
-                      ),
-                    ),
-                    CustomText(
                       text: 'Select Pet Type',
                       size: 18,
                       color: Colors.black,
