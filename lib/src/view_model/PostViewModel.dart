@@ -491,6 +491,8 @@ class PostViewModel extends ChangeNotifier {
 
       return true;
     }).toList();
+    print('📦 Filtered posts: ${filterPetAdoptPost.length}');
+    notifyListeners();
 
   }
 
@@ -520,6 +522,9 @@ class PostViewModel extends ChangeNotifier {
 
       return true;
     }).toList();
+
+    print('📦 Filtered posts: ${filterPetAdoptPost.length}');
+    notifyListeners();
   }
   // for checking matching for debugging
   bool debugEquals(String key, String value1, String value2) {
