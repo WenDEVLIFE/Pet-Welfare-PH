@@ -53,7 +53,7 @@ class MissingPetState extends State<PetAdoptionView> {
               ),
               Expanded(
                 child: postViewModel.filterPetAdoptPost.isEmpty
-                    ? Center(child: Text('No ${postViewModel.searchPostController.text} found'))
+                    ? Center(child: Text('No ${postViewModel.searchPostController.text} pet adoption found'))
                     : ListView.builder(
                   itemCount: postViewModel.filterPetAdoptPost.length,
                   itemBuilder: (context, index) {

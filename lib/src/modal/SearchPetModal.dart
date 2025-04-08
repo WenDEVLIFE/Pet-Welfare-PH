@@ -40,8 +40,8 @@ class SearchPetModal extends StatelessWidget{
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              const Text( 'Search for PetDetails',
-                style: TextStyle(
+              Text(postViewModel.selectedSearchType == "Missing Pets" ? "Search Missing Pets" : postViewModel.selectedSearchType == "Found Pets" ? "Search Found Pet" : postViewModel.selectedSearchType == "Pet Adoption" ? "Search Pet Adoption" : "",
+                style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 25,
                 ),
@@ -73,211 +73,9 @@ class SearchPetModal extends StatelessWidget{
                       postViewModel.setSearchType(newValue);
                     },
                     itemLabel: (String value) => value,
-                    hint: 'Select Pet Type',
+                    hint: 'Select Search Type',
                   ),
                   if (postViewModel.selectedSearchType == "Missing Pets" || postViewModel.selectedSearchType == "Found Pets" ||  postViewModel.selectedSearchType =="Pet Adoption") ...[
-                    CustomText(
-                      text: 'Select Pet Type',
-                      size: 18,
-                      color: Colors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomDropDown(value: postViewModel.selectedPetType,
-                      items: postViewModel.petTypes,
-                      onChanged: (String? newValue) {
-                        postViewModel.setPetType(newValue);
-                      },
-                      itemLabel: (String value) => value,
-                      hint: 'Select Pet Type',
-                    ),
-                    if(postViewModel.selectedPetType =='Cat' || postViewModel.selectedPetType =='Dog') ...[
-                      if(postViewModel.selectedPetType =='Missing Pets' || postViewModel.selectedPetType =='Found Pets') ...[
-                        CustomText(
-                          text: 'Pet Collar',
-                          size: 18,
-                          color: Colors.black,
-                          weight: FontWeight.w700,
-                          align: TextAlign.left,
-                          screenHeight: screenHeight,
-                          alignment: Alignment.centerLeft,
-                        ),
-                        CustomDropDown(value: postViewModel.selectedCollar,
-                          items: postViewModel.collarList,
-                          onChanged: (String? newValue) {
-                            postViewModel.setCollarType(newValue);
-                          },
-                          itemLabel: (String value) => value,
-                          hint: 'Select Pet Collar',
-                        ),
-                      ],
-                    ],
-                    CustomText(
-                      text: 'Pet Age',
-                      size: 18,
-                      color: Colors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomDropDown(value: postViewModel.selectedPetAge,
-                      items: postViewModel.petAgeList,
-                      onChanged: (String? newValue) {
-                        postViewModel.setPetAge(newValue);
-                      },
-                      itemLabel: (String value) => value,
-                      hint: 'Select Pet Age',
-                    ),
-                    CustomText(
-                      text: 'Pet Gender',
-                      size: 18,
-                      color: Colors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomDropDown(value: postViewModel.selectedPetGender,
-                      items: postViewModel.petGender,
-                      onChanged: (String? newValue) {
-                        postViewModel.setPetGender(newValue);
-                      },
-                      itemLabel: (String value) => value,
-                      hint: 'Select Pet Gender',
-                    ),
-                    CustomText(
-                      text:  'Pet Size',
-                      size: 18,
-                      color: Colors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomDropDown(value: postViewModel.selectedPetSize,
-                      items: postViewModel.petSize,
-                      onChanged: (String? newValue) {
-                        postViewModel.setPetSize(newValue);
-                      },
-                      itemLabel: (String value) => value,
-                      hint: 'Select Pet Size',
-                    ),
-                    CustomText(
-                      text:   'Colors or patterns',
-                      size: 18,
-                      color: Colors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomDropDown(value: postViewModel.selectedColor,
-                      items: postViewModel.colorpatter,
-                      onChanged: (String? newValue) {
-                        postViewModel.setColor(newValue);
-                      },
-                      itemLabel: (String value) => value,
-                      hint: 'Select Colors or patterns',
-                    ),
-                    if (postViewModel.selectedPetType == 'Cat') ...[
-                      const Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Cat Breed',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontFamily: 'SmoochSans',
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                      CustomDropDown<Breed>(
-                        value: postViewModel.selectedCatBreed,
-                        items: postViewModel.catBreeds,
-                        onChanged: (Breed? newValue) {
-                          postViewModel.selectedCatBreed1(newValue);
-                        },
-                        itemLabel: (Breed value) => value.name,
-                        hint: 'Select Cat Breed',
-                      ),
-                    ],
-                    if (postViewModel.selectedPetType == 'Dog') ...[
-                      const Padding(
-                        padding: EdgeInsets.all(10.0),
-                        child: Align(
-                          alignment: Alignment.centerLeft,
-                          child: Text(
-                            'Dog Breed',
-                            style: TextStyle(
-                              color: Colors.black,
-                              fontSize: 18,
-                              fontFamily: 'SmoochSans',
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                      ),
-                      CustomDropDown<Breed>(
-                        value: postViewModel.selectedDogBreed,
-                        items: postViewModel.dogBreeds,
-                        onChanged: (Breed? newValue) {
-                          postViewModel.selectedDogBreed2(newValue);
-                        },
-                        itemLabel: (Breed value) => value.name,
-                        hint: 'Select Dog Breed',
-                      ),
-                    ],
-                    if (postViewModel.selectedSearchType == "Missing Pets" || postViewModel.selectedSearchType == "Found Pets") ...[
-                      CustomText(
-                        text:   postViewModel.selectedSearchType == "Missing Pets"
-                            ? 'Select the date the pet went missing'
-                            : postViewModel.selectedSearchType == "Found Pets"
-                            ? 'Select the date the pet was found'
-                            : 'Select the date the pet was found',
-                        size: 18,
-                        color: Colors.black,
-                        weight: FontWeight.w700,
-                        align: TextAlign.left,
-                        screenHeight: screenHeight,
-                        alignment: Alignment.centerLeft,
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(10.0),
-                        child: TextField(
-                          controller: postViewModel.dateController,
-                          readOnly: true,
-                          onTap: () async {
-                            final DateTime? date = await showDatePicker(
-                              context: context,
-                              initialDate: DateTime.now(),
-                              firstDate: DateTime(2000),
-                              lastDate: DateTime(2100),
-                            );
-                            if (date != null) {
-                              postViewModel.dateController.text = date.toLocal().toString().split(' ')[0];
-                            }
-                          },
-                          decoration: InputDecoration(
-                            hintText: 'Select a date...',
-                            hintStyle: const TextStyle(
-                              color: Colors.black,
-                            ),
-                            border: OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(10),
-                              borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                            ),
-                            contentPadding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 0),
-                          ),
-                        ),
-                      ),
-                    ],
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Column(
@@ -325,18 +123,6 @@ class SearchPetModal extends StatelessWidget{
                             },
                             itemLabel: (CityModel value) => value.cityName,
                             hint: 'Select City',
-                          ),
-                          SizedBox(height: screenHeight * 0.01),
-                          if (postViewModel.selectedCity != null)
-                            SizedBox(height: screenHeight * 0.01),
-                          CustomDropDown<BarangayModel>(
-                            value: postViewModel.selectedBarangay,
-                            items: postViewModel.barangays,
-                            onChanged: (BarangayModel? newValue) {
-                              postViewModel.setSelectedBarangay(newValue);
-                            },
-                            itemLabel: (BarangayModel value) => value.barangayName,
-                            hint: 'Select Barangay',
                           ),
                           SizedBox(height: screenHeight * 0.01),
                         ],

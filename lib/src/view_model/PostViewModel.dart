@@ -436,41 +436,19 @@ class PostViewModel extends ChangeNotifier {
 
     filterPetAdoptPost = petAdoptPost.where((post) {
       final postFields = {
-        'petType': post.petTypeAdopt,
-        'petSize': post.petSizeAdopt,
-        'petAge': post.petAgeAdopt,
-        'petGender': post.petGenderAdopt,
-        'colorPattern': post.petColorAdopt,
         'region': post.petRegionAdopt,
         'province': post.petProvinceAdopt,
         'city': post.petCityAdopt,
-        'barangay': post.petBarangayAdopt,
       };
-
       for (var post in petAdoptPost) {
         print('🧪 petType: ${post.petTypeAdopt}');
         print('🧪 post object: $post');
       }
-      // Add breed dynamically based on PetTypeAdopt
-      if (post.petTypeAdopt.toLowerCase() == 'dog') {
-        postFields['dogBreed'] = post.petBreedAdopt;
-      } else if (post.petTypeAdopt.toLowerCase() == 'cat') {
-        postFields['catBreed'] = post.petBreedAdopt;
-      }
-
-      final petType = (searchParams['petType'] ?? '').toString().toLowerCase();
-
       for (final entry in searchParams.entries) {
         final key = entry.key;
         final value = entry.value?.toString() ?? '';
 
         if (value.trim().isEmpty) continue;
-
-        // Skip wrong breed type
-        if ((key == 'dogBreed' && petType != 'dog') || (key == 'catBreed' && petType != 'cat')) {
-          continue;
-        }
-
         final postValue = (postFields[key] ?? '').toString();
 
         if (!debugEquals(key, postValue, value)) {

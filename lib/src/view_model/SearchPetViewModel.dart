@@ -302,26 +302,29 @@ class SearchPetViewModel extends ChangeNotifier {
     final postViewModel = Provider.of<PostViewModel>(context, listen: false);
     if (selectedSearchType == 'Pet Adoption') {
 
-      if (petnameController.text.isNotEmpty) {
+    if(selectedRegion == null) {
+    ToastComponent().showMessage(Colors.red, 'Please select a region');
+    }
 
-        Map <String, dynamic> searchParams = {
-          'petType': selectedPetType.toString().toLowerCase(),
-          'petSize': selectedPetSize.toString().toLowerCase(),
-          'petAge': selectedPetAge.toString().toLowerCase(),
-          'petGender': selectedPetGender.toString().toLowerCase(),
-          'colorPattern': selectedColor.toString().toLowerCase(),
-          'catBreed': selectedCatBreed?.name.toString().toLowerCase(),
-          'dogBreed': selectedDogBreed?.name.toString().toLowerCase(),
-          'region': selectedRegion?.region.toString().toLowerCase(),
-          'province': selectedProvince?.provinceName.toString().toLowerCase(),
-          'city': selectedCity?.cityName.toString().toLowerCase(),
-          'barangay': selectedBarangay?.barangayName.toString().toLowerCase(),
-        };
+    if(selectedProvince == null) {
+      ToastComponent().showMessage(Colors.red, 'Please select a province');
+    }
 
-        await postViewModel.startSearchPetAdoption(searchParams);
-      } else {
-        ToastComponent().showMessage(Colors.red, 'Please enter a pet name');
-      }
+    if(selectedCity == null) {
+      ToastComponent().showMessage(Colors.red, 'Please select a city');
+    }
+
+    else{
+      Map <String, dynamic> searchParams = {
+        'region': selectedRegion?.region.toString().toLowerCase(),
+        'province': selectedProvince?.provinceName.toString().toLowerCase(),
+        'city': selectedCity?.cityName.toString().toLowerCase(),
+      };
+
+      await postViewModel.startSearchPetAdoption(searchParams);
+    }
+
+
     } else if (selectedSearchType == 'Found Pets') {
 
     } else if (selectedSearchType == 'Missing Pets') {
