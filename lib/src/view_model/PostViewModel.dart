@@ -430,7 +430,7 @@ class PostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  // Search Pet Adoption
+  // This is for multiple search for pet adoption
   Future<void> startSearchPetAdoption(Map<String, dynamic> searchParams) async {
     print('🔍 Starting search with parameters: $searchParams');
 
@@ -463,6 +463,65 @@ class PostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+
+  // This is for multiple search for found pets
+  Future <void> startSearchFoundPets(Map<String, dynamic> searchParams) async{
+
+    filterFoundPost = foundPost.where((post) {
+      final postFields = {
+        'region': post.petRegion,
+        'province': post.petProvince,
+        'city': post.petCity,
+      };
+      for (var post in foundPost) {
+        print('🧪 petType: ${post.petTypeAdopt}');
+        print('🧪 post object: $post');
+      }
+      for (final entry in searchParams.entries) {
+        final key = entry.key;
+        final value = entry.value?.toString() ?? '';
+
+        if (value.trim().isEmpty) continue;
+        final postValue = (postFields[key] ?? '').toString();
+
+        if (!debugEquals(key, postValue, value)) {
+          return false;
+        }
+      }
+
+      return true;
+    }).toList();
+
+  }
+
+  // This is for multiple search for missing pets
+  Future <void> startSearchMissingPets(Map<String, dynamic> searchParams) async{
+    filterMissingPost = missingPost.where((post) {
+      final postFields = {
+        'region': post.petRegion,
+        'province': post.petProvince,
+        'city': post.petCity,
+      };
+      for (var post in missingPost) {
+        print('🧪 petType: ${post.petTypeAdopt}');
+        print('🧪 post object: $post');
+      }
+      for (final entry in searchParams.entries) {
+        final key = entry.key;
+        final value = entry.value?.toString() ?? '';
+
+        if (value.trim().isEmpty) continue;
+        final postValue = (postFields[key] ?? '').toString();
+
+        if (!debugEquals(key, postValue, value)) {
+          return false;
+        }
+      }
+
+      return true;
+    }).toList();
+  }
+  // for checking matching for debugging
   bool debugEquals(String key, String value1, String value2) {
     value1 = value1.toLowerCase().trim();
     value2 = value2.toLowerCase().trim();

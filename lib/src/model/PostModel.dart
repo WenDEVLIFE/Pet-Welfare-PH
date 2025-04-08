@@ -21,6 +21,10 @@ class PostModel {
   String petAddress = '';
   String petCollar = '';
   String regProCiBag = '';
+  String petProvince = '';
+  String petCity = '';
+  String petBarangay = '';
+  String petRegion = '';
   String date = '';
   String petSize = '';
   String PetType = '';
@@ -100,6 +104,10 @@ class PostModel {
       ..petColor = petDoc.data()?['PetColor'] ?? ''
       ..petAddress = petDoc.data()?['Address'] ?? ''
       ..petCollar = petDoc.data()?['PetCollar'] ?? ''
+      ..petProvince = petDoc.data()?['Province'] ?? ''
+      ..petCity = petDoc.data()?['City'] ?? ''
+      ..petBarangay = petDoc.data()?['Barangay'] ?? ''
+      ..petRegion = petDoc.data()?['Region'] ?? ''
       ..regProCiBag = '${petDoc.data()?['Region'] ?? ''}, ${petDoc.data()?['Province'] ?? ''}, ${petDoc.data()?['City'] ?? ''}, ${petDoc.data()?['Barangay'] ?? ''}'
       ..date = petDoc.data()?['Date'] ?? ''
       ..petSize = petDoc.data()?['PetSize'] ?? ''

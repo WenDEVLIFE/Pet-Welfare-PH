@@ -301,8 +301,6 @@ class SearchPetViewModel extends ChangeNotifier {
   // for searching
   void search(context) async {
     final postViewModel = Provider.of<PostViewModel>(context, listen: false);
-    if (selectedSearchType == 'Pet Adoption') {
-
     if(selectedRegion == null) {
     ToastComponent().showMessage(Colors.red, 'Please select a region');
     }
@@ -322,14 +320,15 @@ class SearchPetViewModel extends ChangeNotifier {
         'city': selectedCity?.cityName.toString().toLowerCase(),
       };
 
-      await postViewModel.startSearchPetAdoption(searchParams);
-    }
-
-
-    } else if (selectedSearchType == 'Found Pets') {
-
-    } else if (selectedSearchType == 'Missing Pets') {
-
+       if(selectedSearchType =='Pet Adoption'){
+         await postViewModel.startSearchPetAdoption(searchParams);
+       }
+       else if(selectedSearchType == 'Found Pets'){
+         await postViewModel.startSearchFoundPets(searchParams);
+       }
+       else if(selectedSearchType == 'Missing Pets'){
+         await postViewModel.startSearchMissingPets(searchParams);
+       }
     }
 
     notifyListeners();
