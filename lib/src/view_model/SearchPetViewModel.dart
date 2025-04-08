@@ -303,19 +303,20 @@ class SearchPetViewModel extends ChangeNotifier {
     if (selectedSearchType == 'Pet Adoption') {
 
       if (petnameController.text.isNotEmpty) {
+
         Map <String, dynamic> searchParams = {
-          'petname': petnameController.text,
-          'petType': selectedPetType,
-          'petSize': selectedPetSize,
-          'petAge': selectedPetAge,
-          'petGender': selectedPetGender,
-          'colorPattern': selectedColor,
-          'catBreed': selectedCatBreed?.name,
-          'dogBreed': selectedDogBreed?.name,
-          'region': selectedRegion?.region,
-          'province': selectedProvince?.provinceName,
-          'city': selectedCity?.cityName,
-          'barangay': selectedBarangay?.barangayName,
+          'petname': petnameController.text.toString().toLowerCase(),
+          'petType': selectedPetType.toString().toLowerCase(),
+          'petSize': selectedPetSize.toString().toLowerCase(),
+          'petAge': selectedPetAge.toString().toLowerCase(),
+          'petGender': selectedPetGender.toString().toLowerCase(),
+          'colorPattern': selectedColor.toString().toLowerCase(),
+          'catBreed': selectedCatBreed?.name.toString().toLowerCase(),
+          'dogBreed': selectedDogBreed?.name.toString().toLowerCase(),
+          'region': selectedRegion?.region.toString().toLowerCase(),
+          'province': selectedProvince?.provinceName.toString().toLowerCase(),
+          'city': selectedCity?.cityName.toString().toLowerCase(),
+          'barangay': selectedBarangay?.barangayName.toString().toLowerCase(),
         };
 
         await postViewModel.startSearchPetAdoption(searchParams);

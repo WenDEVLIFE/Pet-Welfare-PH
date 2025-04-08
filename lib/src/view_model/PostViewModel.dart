@@ -3,18 +3,11 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 import 'package:pet_welfrare_ph/src/respository/PostRepository.dart';
-import 'package:pet_welfrare_ph/src/utils/SessionManager.dart';
-import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:intl/intl.dart';
 
 import '../modal/CommentModal.dart';
-import '../model/BarangayModel.dart';
-import '../model/BreedModel.dart';
-import '../model/CityModel.dart';
 import '../model/CommentModel.dart';
-import '../model/ProvinceModel.dart';
-import '../model/RegionModel.dart';
 
 class PostViewModel extends ChangeNotifier {
   final TextEditingController searchPostController = TextEditingController();
@@ -405,7 +398,7 @@ class PostViewModel extends ChangeNotifier {
          || post.petAgeAdopt.toLowerCase().contains(search.toLowerCase()) || post.petGenderAdopt.toLowerCase().contains(search.toLowerCase()) ||
          post.petColorAdopt.toLowerCase().contains(search.toLowerCase()) || post.petSizeAdopt.toLowerCase().contains(search.toLowerCase())
          || post.petAddressAdopt.toLowerCase().contains(search.toLowerCase()) || post.regProCiBagAdopt.toLowerCase().contains(search.toLowerCase())
-          || post.dateAdopt.toLowerCase().contains(search.toLowerCase()) || post.PetTypeAdopt.toLowerCase().contains(search.toLowerCase())
+          || post.dateAdopt.toLowerCase().contains(search.toLowerCase()) || post.petTypeAdopt.toLowerCase().contains(search.toLowerCase())
      ).toList();
     }
     notifyListeners();
@@ -439,74 +432,75 @@ class PostViewModel extends ChangeNotifier {
 
   // Search Pet Adoption
   Future<void> startSearchPetAdoption(Map<String, dynamic> searchParams) async {
-    print('Starting search with parameters: $searchParams');
-
-    String petType = (searchParams['petType'] ?? '').toString().toLowerCase();
+    print('🔍 Starting search with parameters: $searchParams');
 
     filterPetAdoptPost = petAdoptPost.where((post) {
-      bool matches = true;
+      final postFields = {
+        'petname': post.petNameAdopt,
+        'petType': post.petTypeAdopt,
+        'petSize': post.petSizeAdopt,
+        'petAge': post.petAgeAdopt,
+        'petGender': post.petGenderAdopt,
+        'colorPattern': post.petColorAdopt,
+        'region': post.petRegionAdopt,
+        'province': post.petProvinceAdopt,
+        'city': post.petCityAdopt,
+        'barangay': post.petBarangayAdopt,
+      };
 
-      searchParams.forEach((key, value) {
-        if (value == null || value.toString().isEmpty) return;
+      for (var post in petAdoptPost) {
+        print('🧪 petName: ${post.petNameAdopt}');
+        print('🧪 petType: ${post.petTypeAdopt}');
+        print('🧪 post object: $post');
+      }
+      // Add breed dynamically based on PetTypeAdopt
+      if (post.petTypeAdopt.toLowerCase() == 'dog') {
+        postFields['dogBreed'] = post.petBreedAdopt;
+      } else if (post.petTypeAdopt.toLowerCase() == 'cat') {
+        postFields['catBreed'] = post.petBreedAdopt;
+      }
 
-        String lowerValue = value.toString().toLowerCase();
+      final petType = (searchParams['petType'] ?? '').toString().toLowerCase();
 
-        String fieldValue = '';
-        switch (key) {
-          case 'petname':
-            fieldValue = post.petNameAdopt ?? '';
-            break;
-          case 'petType':
-            fieldValue = post.PetTypeAdopt ?? '';
-            break;
-          case 'petSize':
-            fieldValue = post.petSizeAdopt ?? '';
-            break;
-          case 'petAge':
-            fieldValue = post.petAgeAdopt ?? '';
-            break;
-          case 'petGender':
-            fieldValue = post.petGenderAdopt ?? '';
-            break;
-          case 'colorPattern':
-            fieldValue = post.petColorAdopt ?? '';
-            break;
-          case 'dogBreed':
-          case 'catBreed':
-            if ((petType == 'dog' && key == 'dogBreed') || (petType == 'cat' && key == 'catBreed')) {
-              fieldValue = post.petBreedAdopt ?? '';
-            } else {
-              return;
-            }
-            break;
-          case 'region':
-            fieldValue = post.petRegionAdopt ?? '';
-            break;
-          case 'province':
-            fieldValue = post.petProvinceAdopt ?? '';
-            break;
-          case 'city':
-            fieldValue = post.petCityAdopt ?? '';
-            break;
-          case 'barangay':
-            fieldValue = post.petBarangayAdopt ?? '';
-            break;
-          default:
-            return;
+      for (final entry in searchParams.entries) {
+        final key = entry.key;
+        final value = entry.value?.toString() ?? '';
+
+        if (value.trim().isEmpty) continue;
+
+        // Skip wrong breed type
+        if ((key == 'dogBreed' && petType != 'dog') || (key == 'catBreed' && petType != 'cat')) {
+          continue;
         }
 
-        print('Comparing ${fieldValue.toLowerCase()} with $lowerValue for key: $key');
-        if (fieldValue.toLowerCase() != lowerValue) {
-          matches = false;
-        }
-      });
+        final postValue = (postFields[key] ?? '').toString();
 
-      print('Post matches: $matches');
-      return matches;
+        if (!debugEquals(key, postValue, value)) {
+          return false;
+        }
+      }
+
+      return true;
     }).toList();
 
-    print('Filtered posts: ${filterPetAdoptPost.length}');
+    print('📦 Filtered posts: ${filterPetAdoptPost.length}');
     notifyListeners();
   }
+
+  bool debugEquals(String key, String value1, String value2) {
+    value1 = value1.toLowerCase().trim();
+    value2 = value2.toLowerCase().trim();
+
+    bool isEqual = value1 == value2;
+
+    if (!isEqual) {
+      print('🔍 MISMATCH on "$key": "$value1" ≠ "$value2"');
+    } else {
+      print('✅ MATCH on "$key": "$value1" == "$value2"');
+    }
+
+    return isEqual;
+  }
+
 
 }

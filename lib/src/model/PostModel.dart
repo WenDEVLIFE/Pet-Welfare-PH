@@ -39,7 +39,6 @@ class PostModel {
   String regProCiBagAdopt = '';
   String dateAdopt = '';
   String petSizeAdopt = '';
-  String PetTypeAdopt = '';
   String StatusAdopt = '';
   String petOwnernName = '';
   double lat = 0.0;
