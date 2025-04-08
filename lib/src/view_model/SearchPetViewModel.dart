@@ -298,6 +298,7 @@ class SearchPetViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // for searching
   void search(context) async {
     final postViewModel = Provider.of<PostViewModel>(context, listen: false);
     if (selectedSearchType == 'Pet Adoption') {

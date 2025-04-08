@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
 import 'package:pet_welfrare_ph/src/widgets/CustomText.dart';
 import 'package:provider/provider.dart';
@@ -8,6 +9,7 @@ import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 import 'package:pet_welfrare_ph/src/modal/ReactionModal.dart';
 
+import '../../modal/SearchPetModal.dart';
 import '../../utils/AppColors.dart';
 import '../../utils/ReactionUtils.dart';
 import '../../widgets/SearchTextField.dart';
@@ -51,7 +53,7 @@ class MissingPetState extends State<MissingPetView> {
           Expanded(
                   child: postViewModel.filterMissingPost.isEmpty
                   ? Center(
-                      child: Text('No ${postViewModel.searchPostController.text} found'))
+                      child: Text('No ${postViewModel.searchPostController.text} missing pet post found'))
                       : ListView.builder(
                   itemCount: postViewModel.filterMissingPost.length,
                   itemBuilder: (context, index) {
@@ -461,14 +463,42 @@ class MissingPetState extends State<MissingPetView> {
           );
         },
       ),
-      floatingActionButton: FloatingActionButton(
-        heroTag: 'uniqueTag',
-        backgroundColor: AppColors.orange,
-        onPressed: () {
-          Navigator.pushNamed(context, AppRoutes.createpost);
-        },
-        child: const Icon(Icons.add_photo_alternate_outlined, color: AppColors.white),
-      ),
+      floatingActionButton:SpeedDial(
+        icon: Icons.add,
+        backgroundColor: AppColors.black,
+        foregroundColor: AppColors.white,
+        activeBackgroundColor: AppColors.black,
+        activeForegroundColor: AppColors.white,
+        children: [
+          SpeedDialChild(
+            label: 'Create Post',
+            child: const Icon(Icons.create),
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.createpost);
+            },
+          ),
+          SpeedDialChild(
+            label: 'Search Pet Adoption',
+            child: const Icon(Icons.search),
+            onTap: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                builder: (context) {
+                  return const SearchPetModal();
+                },
+              );
+            },
+          ),
+          SpeedDialChild(
+            label: 'Reload the Pet Adoption Posts',
+            child: const Icon(Icons.refresh),
+            onTap: () {
+              postViewModel.listenToMissingPost();
+            },
+          ),
+        ],
+      )
     );
   }
 }
