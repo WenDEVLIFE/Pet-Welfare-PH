@@ -305,7 +305,6 @@ class SearchPetViewModel extends ChangeNotifier {
       if (petnameController.text.isNotEmpty) {
 
         Map <String, dynamic> searchParams = {
-          'petname': petnameController.text.toString().toLowerCase(),
           'petType': selectedPetType.toString().toLowerCase(),
           'petSize': selectedPetSize.toString().toLowerCase(),
           'petAge': selectedPetAge.toString().toLowerCase(),

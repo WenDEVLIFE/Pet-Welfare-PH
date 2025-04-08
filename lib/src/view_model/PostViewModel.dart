@@ -436,7 +436,6 @@ class PostViewModel extends ChangeNotifier {
 
     filterPetAdoptPost = petAdoptPost.where((post) {
       final postFields = {
-        'petname': post.petNameAdopt,
         'petType': post.petTypeAdopt,
         'petSize': post.petSizeAdopt,
         'petAge': post.petAgeAdopt,
@@ -449,7 +448,6 @@ class PostViewModel extends ChangeNotifier {
       };
 
       for (var post in petAdoptPost) {
-        print('🧪 petName: ${post.petNameAdopt}');
         print('🧪 petType: ${post.petTypeAdopt}');
         print('🧪 post object: $post');
       }
