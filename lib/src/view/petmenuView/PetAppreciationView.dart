@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -6,13 +5,8 @@ import 'package:pet_welfrare_ph/src/utils/Route.dart';
 import 'package:pet_welfrare_ph/src/widgets/PetAppreciationCard.dart';
 import 'package:provider/provider.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
-import 'package:pet_welfrare_ph/src/model/PostModel.dart';
-import 'package:pet_welfrare_ph/src/modal/ReactionModal.dart';
-
 import '../../utils/AppColors.dart';
-import '../../utils/ReactionUtils.dart';
 import '../../widgets/SearchTextField.dart';
-import '../ViewImage.dart';
 
 class PetAppreciateView extends StatefulWidget {
   const PetAppreciateView({Key? key}) : super(key: key);

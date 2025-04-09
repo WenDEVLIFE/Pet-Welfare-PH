@@ -1,0 +1,210 @@
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:flutter/cupertino.dart';
+import '../modal/ReactionModal.dart';
+import '../model/PostModel.dart';
+import 'package:flutter/material.dart';
+import  'package:provider/provider.dart';
+
+import '../utils/ReactionUtils.dart';
+import '../view/ViewImage.dart';
+import '../view_model/PostViewModel.dart';
+
+class ProtectPetCard extends StatelessWidget {
+  final PostModel post;
+  final double screenHeight;
+  final double screenWidth;
+
+  const ProtectPetCard({
+    Key? key,
+    required this.post,
+    required this.screenHeight,
+    required this.screenWidth,
+  }) : super(key: key);
+  @override
+  Widget build(BuildContext context) {
+    final postViewModel = Provider.of<PostViewModel>(context, listen: false);
+    var formattedDate = postViewModel.formatTimestamp(post.timestamp);
+
+    return FutureBuilder<String?>(
+      future: postViewModel.getUserReaction(post.postId),
+      builder: (context, userReactionSnapshot) {
+        if (userReactionSnapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        }
+
+        String? userReaction = userReactionSnapshot.data;
+        bool hasReacted = userReaction != null;
+
+        return FutureBuilder<int>(
+          future: postViewModel.getReactionCount(post.postId),
+          builder: (context, reactionCountSnapshot) {
+            if (reactionCountSnapshot.connectionState == ConnectionState.waiting) {
+              return const Center(child: CircularProgressIndicator());
+            }
+
+            int reactionCount = reactionCountSnapshot.data ?? 0;
+
+            return FutureBuilder<int>(
+              future: postViewModel.getCommentCount(post.postId),
+              builder: (context, commentCountSnapshot) {
+                if (commentCountSnapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(child: CircularProgressIndicator());
+                }
+
+                int commentCount = commentCountSnapshot.data ?? 0;
+
+                return Card(
+                  margin: const EdgeInsets.all(10),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: CircleAvatar(
+                              radius: screenHeight * 0.03,
+                              backgroundImage: CachedNetworkImageProvider(post.profileUrl),
+                            ),
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Padding(
+                                padding: const EdgeInsets.all(5),
+                                child: Text(
+                                  post.postOwnerName,
+                                  style: const TextStyle(
+                                    fontFamily: 'SmoochSans',
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                              Padding(
+                                padding: const EdgeInsets.all(5),
+                                child: Text(
+                                  formattedDate,
+                                  style: const TextStyle(
+                                    fontFamily: 'SmoochSans',
+                                    color: Colors.black,
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                  ),
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Text(
+                          post.postDescription,
+                          style: const TextStyle(
+                            fontFamily: 'SmoochSans',
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
+                        ),
+                      ),
+                      SizedBox(
+                        height: screenHeight * 0.3,
+                        child: PageView.builder(
+                          itemCount: post.imageUrls.length,
+                          itemBuilder: (context, imageIndex) {
+                            return GestureDetector(
+                              onTap: () {
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) => ViewImage(),
+                                    settings: RouteSettings(
+                                      arguments: {
+                                        'imageUrls': post.imageUrls,
+                                        'initialIndex': imageIndex,
+                                      },
+                                    ),
+                                  ),
+                                );
+                              },
+                              child: Container(
+                                width: screenWidth * 0.8,
+                                height: screenHeight * 0.5,
+                                child: CachedNetworkImage(
+                                  imageUrl: post.imageUrls[imageIndex],
+                                  fit: BoxFit.cover,
+                                ),
+                              ),
+                            );
+                          },
+                        ),
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: Icon(
+                                  hasReacted
+                                      ? ReactionUtils.getReactionIcon(userReaction!)
+                                      : Icons.thumb_up_outlined,
+                                  color: hasReacted ? ReactionUtils.getReactionColor(userReaction!) : null,
+                                ),
+                                onPressed: () async {
+                                  if (hasReacted) {
+                                    await postViewModel.removeReaction(post.postId);
+                                  } else {
+                                    showModalBottomSheet(
+                                      context: context,
+                                      builder: (context) {
+                                        return ReactionModal(
+                                          onReactionSelected: (reaction) async {
+                                            await postViewModel.addReaction(post.postId, reaction);
+                                          },
+                                        );
+                                      },
+                                    );
+                                  }
+                                },
+                              ),
+                              Text('$reactionCount likes', style: const TextStyle(
+                                fontFamily: 'SmoochSans',
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              )),
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              IconButton(
+                                icon: const Icon(Icons.comment),
+                                onPressed: () {
+                                  postViewModel.showComments(context, post.postId);
+                                },
+                              ),
+                              Text('$commentCount comments', style: const TextStyle(
+                                fontFamily: 'SmoochSans',
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              )),
+                            ],
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+}
