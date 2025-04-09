@@ -51,6 +51,8 @@ abstract class PostRepository {
 
   Stream<List<PostModel>> getCallforAid();
 
+  Stream<List<PostModel>> getFindHome();
+
   Future <void> editComment(String postId, String commentId, String newCommentText);
 
   Future <void> uploadAdoption(List<File> images, String selectedChip, Map<String, dynamic> petData);

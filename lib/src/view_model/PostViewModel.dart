@@ -40,6 +40,9 @@ class PostViewModel extends ChangeNotifier {
   List<PostModel> callforAidPost = [];
   List<PostModel> filterCallforAidPost = [];
 
+  List<PostModel> findHomeShelterPost = [];
+  List<PostModel> filterFindHomeShelterPost = [];
+
   List<CommentModel> comments = [];
 
   final TextEditingController petNameController = TextEditingController();
@@ -55,6 +58,7 @@ class PostViewModel extends ChangeNotifier {
   Stream<List<PostModel>> get vetAndTravelPostStream => postRepository.getVetAndTravelPost();
   Stream<List<PostModel>> get petAdoptPostStream => postRepository.getPetAdoption();
   Stream<List<PostModel>> get callforAidPostStream => postRepository.getCallforAid();
+  Stream<List<PostModel>> get findHomeShelterPostStream => postRepository.getFindHome();
 
 
  // Initialize the PostViewModel
@@ -115,6 +119,29 @@ class PostViewModel extends ChangeNotifier {
     filterCommunityPost = posts;
     searchCommunityPost(searchPostController.text);
   }
+
+  // this is for the set vet and travel post
+  void setVetAndTravelPost(List<PostModel> posts, {bool notify = true}) {
+    vetAndtravelPost = posts;
+    filterVetAndTravelPost = posts;
+    searchVetAndTravelPost(searchPostController.text);
+  }
+
+  // this is for the set pet adopt post
+  void setPetAdoptPost(List<PostModel> posts, {bool notify = true}) {
+    petAdoptPost = posts;
+    filterPetAdoptPost = posts;
+    searchPetAdoptPost(searchPostController.text);
+  }
+
+  // This is for the set call for aid post
+  void setCallforAidPost(List<PostModel> posts, {bool notify = true}) {
+    callforAidPost = posts;
+    filterCallforAidPost = posts;
+    searchCallforAidPost(searchPostController.text);
+  }
+
+  
 
   // get format timestap
   String formatTimestamp(Timestamp timestamp) {

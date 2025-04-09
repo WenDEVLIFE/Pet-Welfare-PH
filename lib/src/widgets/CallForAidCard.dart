@@ -97,7 +97,41 @@ class CallForAidCard extends StatelessWidget {
                          ),
                        ),
                      ],
-                   )
+                   ),
+                   const Spacer(),
+                   PopupMenuButton<String>(
+                     onSelected: (value) {
+                       // Handle menu item selection
+                       print('Selected: $value');
+                     },
+                     itemBuilder: (BuildContext context) {
+                       return [
+                         PopupMenuItem<String>(
+                           value: 'Edit',
+                           child: const Text('Edit'),
+                           onTap: () {
+                             // Handle edit action
+                           },
+                         ),
+                         PopupMenuItem<String>(
+                           value: 'Delete',
+                           child: const Text('Delete'),
+                           onTap: () {
+                             // Handle edit action
+                           },
+                         ),
+
+                         PopupMenuItem<String>(
+                           value: 'Report',
+                           child: const Text('Delete'),
+                           onTap: () {
+                             // Handle edit action
+                           },
+                         ),
+                       ];
+                     },
+                     icon: const Icon(Icons.more_vert), // Three dots icon
+                   ),
                  ],
                ),
                Padding(

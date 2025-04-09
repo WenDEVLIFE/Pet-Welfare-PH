@@ -107,9 +107,20 @@ class PostCard extends StatelessWidget {
                                     // Handle edit action
                                   },
                                 ),
-                                const PopupMenuItem<String>(
+                                 PopupMenuItem<String>(
                                   value: 'Delete',
-                                  child: Text('Delete'),
+                                  child: const Text('Delete'),
+                                   onTap: () {
+                                     // Handle edit action
+                                   },
+                                ),
+
+                                 PopupMenuItem<String>(
+                                  value: 'Report',
+                                  child: const Text('Delete'),
+                                  onTap: () {
+                                    // Handle edit action
+                                  },
                                 ),
                               ];
                             },
