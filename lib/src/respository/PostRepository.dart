@@ -582,6 +582,24 @@ class PostRepositoryImpl implements PostRepository {
     });
   }
 
+  // get find home
+  @override
+  Stream<List<PostModel>> getFindHome() {
+    User? user = FirebaseAuth.instance.currentUser;
+    if (user == null) {
+      return Stream.value([]);
+    }
+    return _firestore.collection('PostCollection')
+        .where('Category', isEqualTo: 'Find a Home: Rescue & Shelter')
+        .snapshots()
+        .asyncMap((snapshot) async {
+      List<Future<PostModel>> postFutures = snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
+      return await Future.wait(postFutures);
+    });
+  }
+
+
+
   // get the nearby found pets
   Future<List<PostModel>> getNearbyFoundPets(double lat, double long, double radiusInK) async {
     try {
