@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
+import 'package:pet_welfrare_ph/src/widgets/PostCard.dart';
 import 'package:provider/provider.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
@@ -50,196 +51,17 @@ class VetAndTravelState extends State<VetAndTravelView> {
               ),
           Expanded(
               child: postViewModel.filterVetAndTravelPost.isEmpty
-              ? Center(child: Text('No ${postViewModel.searchPostController.text} found'))
+              ? Center(child: Text('No ${postViewModel.searchPostController.text} vet & travel insights post found'))
                   : ListView.builder(
               itemCount: postViewModel.filterVetAndTravelPost.length,
               itemBuilder: (context, index) {
               var post = postViewModel.filterVetAndTravelPost[index];
-              var formattedDate = postViewModel.formatTimestamp(post.timestamp);
 
-                        return FutureBuilder<String?>(
-                          future: postViewModel.getUserReaction(post.postId),
-                          builder: (context, userReactionSnapshot) {
-                            if (userReactionSnapshot.connectionState == ConnectionState.waiting) {
-                              return const Center(child: CircularProgressIndicator());
-                            }
-
-                            String? userReaction = userReactionSnapshot.data;
-                            bool hasReacted = userReaction != null;
-
-                            return FutureBuilder<int>(
-                              future: postViewModel.getReactionCount(post.postId),
-                              builder: (context, reactionCountSnapshot) {
-                                if (reactionCountSnapshot.connectionState == ConnectionState.waiting) {
-                                  return const Center(child: CircularProgressIndicator());
-                                }
-
-                                int reactionCount = reactionCountSnapshot.data ?? 0;
-
-                                return FutureBuilder<int>(
-                                  future: postViewModel.getCommentCount(post.postId),
-                                  builder: (context, commentCountSnapshot) {
-                                    if (commentCountSnapshot.connectionState == ConnectionState.waiting) {
-                                      return const Center(child: CircularProgressIndicator());
-                                    }
-
-                                    int commentCount = commentCountSnapshot.data ?? 0;
-
-                                    return Card(
-                                      margin: const EdgeInsets.all(10),
-                                      child: Column(
-                                        crossAxisAlignment: CrossAxisAlignment.start,
-                                        children: [
-                                          Row(
-                                            children: [
-                                              Padding(
-                                                padding: const EdgeInsets.all(10),
-                                                child: CircleAvatar(
-                                                  radius: screenHeight * 0.03,
-                                                  backgroundImage: CachedNetworkImageProvider(post.profileUrl),
-                                                ),
-                                              ),
-                                              Column(
-                                                crossAxisAlignment: CrossAxisAlignment.start,
-                                                children: [
-                                                  Padding(
-                                                    padding: const EdgeInsets.all(5),
-                                                    child: Text(
-                                                      post.postOwnerName,
-                                                      style: const TextStyle(
-                                                        fontFamily: 'SmoochSans',
-                                                        color: Colors.black,
-                                                        fontSize: 16,
-                                                        fontWeight: FontWeight.w600,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                  Padding(
-                                                    padding: const EdgeInsets.all(5),
-                                                    child: Text(
-                                                      formattedDate,
-                                                      style: const TextStyle(
-                                                        fontFamily: 'SmoochSans',
-                                                        color: Colors.black,
-                                                        fontSize: 16,
-                                                        fontWeight: FontWeight.w600,
-                                                      ),
-                                                    ),
-                                                  ),
-                                                ],
-                                              )
-                                            ],
-                                          ),
-                                          Padding(
-                                            padding: const EdgeInsets.all(10),
-                                            child: Text(
-                                              post.postDescription,
-                                              style: const TextStyle(
-                                                fontFamily: 'SmoochSans',
-                                                color: Colors.black,
-                                                fontSize: 16,
-                                                fontWeight: FontWeight.w600,
-                                              ),
-                                            ),
-                                          ),
-                                          SizedBox(
-                                            height: screenHeight * 0.3,
-                                            child: PageView.builder(
-                                              itemCount: post.imageUrls.length,
-                                              itemBuilder: (context, imageIndex) {
-                                                return GestureDetector(
-                                                  onTap: () {
-                                                    Navigator.push(
-                                                      context,
-                                                      MaterialPageRoute(
-                                                        builder: (context) => ViewImage(),
-                                                        settings: RouteSettings(
-                                                          arguments: {
-                                                            'imageUrls': post.imageUrls,
-                                                            'initialIndex': imageIndex,
-                                                          },
-                                                        ),
-                                                      ),
-                                                    );
-                                                  },
-                                                  child: Container(
-                                                    width: screenWidth * 0.8,
-                                                    height: screenHeight * 0.5,
-                                                    child: CachedNetworkImage(
-                                                      imageUrl: post.imageUrls[imageIndex],
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                            ),
-                                          ),
-                                          Row(
-                                            mainAxisAlignment: MainAxisAlignment.start,
-                                            children: [
-                                              Row(
-                                                children: [
-                                                  IconButton(
-                                                    icon: Icon(
-                                                      hasReacted
-                                                          ? ReactionUtils.getReactionIcon(userReaction!)
-                                                          : Icons.thumb_up_outlined,
-                                                      color: hasReacted ? ReactionUtils.getReactionColor(userReaction!) : null,
-                                                    ),
-                                                    onPressed: () async {
-                                                      if (hasReacted) {
-                                                        await postViewModel.removeReaction(post.postId);
-                                                      } else {
-                                                        showModalBottomSheet(
-                                                          context: context,
-                                                          builder: (context) {
-                                                            return ReactionModal(
-                                                              onReactionSelected: (reaction) async {
-                                                                await postViewModel.addReaction(post.postId, reaction);
-                                                                setState(() {});
-                                                              },
-                                                            );
-                                                          },
-                                                        );
-                                                      }
-                                                      setState(() {});
-                                                    },
-                                                  ),
-                                                  Text('$reactionCount likes', style: const TextStyle(
-                                                    fontFamily: 'SmoochSans',
-                                                    color: Colors.black,
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w600,
-                                                  )),
-                                                ],
-                                              ),
-                                              Row(
-                                                children: [
-                                                  IconButton(
-                                                    icon: const Icon(Icons.comment),
-                                                    onPressed: () {
-                                                      postViewModel.showComments(context, post.postId);
-                                                    },
-                                                  ),
-                                                  Text('$commentCount comments', style: const TextStyle(
-                                                    fontFamily: 'SmoochSans',
-                                                    color: Colors.black,
-                                                    fontSize: 16,
-                                                    fontWeight: FontWeight.w600,
-                                                  )),
-                                                ],
-                                              ),
-                                            ],
-                                          ),
-                                        ],
-                                      ),
-                                    );
-                                  },
-                                );
-                              },
-                            );
-                          },
-                        );
+              return PostCard(
+                  post: post,
+                  screenHeight: screenHeight,
+                  screenWidth: screenWidth
+              );
                   },
               ),
               ),

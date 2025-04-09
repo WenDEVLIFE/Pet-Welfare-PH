@@ -2,7 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
-import 'package:pet_welfrare_ph/src/widgets/PetAppreciationCard.dart';
+import 'package:pet_welfrare_ph/src/widgets/PostCard.dart';
 import 'package:provider/provider.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 import '../../utils/AppColors.dart';
@@ -50,7 +50,7 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
           itemCount: postViewModel.filteredPost.length,
           itemBuilder: (context, index) {
           var post = postViewModel.filteredPost[index];
-          return PetAppreciationCard(
+          return PostCard(
           post: post,
           screenHeight: screenHeight,
           screenWidth: screenWidth,

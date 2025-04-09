@@ -4,12 +4,12 @@ import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 import 'package:provider/provider.dart';
 
-class PetAppreciationCard extends StatelessWidget {
+class PostCard extends StatelessWidget {
   final PostModel post;
   final double screenHeight;
   final double screenWidth;
 
-  const PetAppreciationCard({
+  const PostCard({
     Key? key,
     required this.post,
     required this.screenHeight,
