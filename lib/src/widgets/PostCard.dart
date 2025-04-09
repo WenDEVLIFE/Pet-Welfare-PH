@@ -91,7 +91,30 @@ class PostCard extends StatelessWidget {
                                 ),
                               ),
                             ],
-                          )
+                          ),
+                          const Spacer(),
+                          PopupMenuButton<String>(
+                            onSelected: (value) {
+                              // Handle menu item selection
+                              print('Selected: $value');
+                            },
+                            itemBuilder: (BuildContext context) {
+                              return [
+                                PopupMenuItem<String>(
+                                  value: 'Edit',
+                                  child: const Text('Edit'),
+                                  onTap: () {
+                                    // Handle edit action
+                                  },
+                                ),
+                                const PopupMenuItem<String>(
+                                  value: 'Delete',
+                                  child: Text('Delete'),
+                                ),
+                              ];
+                            },
+                            icon: const Icon(Icons.more_vert), // Three dots icon
+                          ),
                         ],
                       ),
                       Padding(
