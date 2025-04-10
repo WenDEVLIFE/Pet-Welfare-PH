@@ -34,6 +34,7 @@ class CreatePostViewModel extends ChangeNotifier {
   final TextEditingController amountController = TextEditingController();
   final TextEditingController bankNameController = TextEditingController();
   final TextEditingController accountNameController = TextEditingController();
+  final TextEditingController clinicNameController = TextEditingController();
   final FocusNode focusNode = FocusNode();
 
   final List<File> _images = [];
@@ -203,7 +204,7 @@ class CreatePostViewModel extends ChangeNotifier {
         'Paw-some Experience',
         'Pet Adoption',
         'Protect Our Pets: Report Abuse',
-        'Caring for Pets: Vet & Travel Insights',
+        'Pet Care Insights',
       ];
     } else{
       chipLabels1 =[
@@ -214,7 +215,7 @@ class CreatePostViewModel extends ChangeNotifier {
         'Paw-some Experience',
         'Pet Adoption',
         'Protect Our Pets: Report Abuse',
-        'Caring for Pets: Vet & Travel Insights',
+        'Pet Care Insights',
       ];
     }
   }

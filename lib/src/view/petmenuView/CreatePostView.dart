@@ -40,6 +40,8 @@ class CreatePostView extends StatelessWidget {
                   ? 'Post a found pet'
                   : createPostViewModel.selectedChip == "Pet Adoption"
                   ? 'Post for adoption'
+                  : createPostViewModel.selectedChip == "Pet Insights"
+                  ? 'Post for insights'
                   : 'Create a post',
               size: 18,
               color: Colors.white,
@@ -496,14 +498,103 @@ class CreatePostView extends StatelessWidget {
                 ),
               ],
             ],
+            if(createPostViewModel.selectedChip=='Caring for Pets: Vet & Travel Insights')...[
+              CustomText(
+                text: 'Clinic Name/Establishment Name',
+                size: 18,
+                color: Colors.black,
+                weight: FontWeight.w700,
+                align: TextAlign.left,
+                screenHeight: screenHeight,
+                alignment: Alignment.centerLeft,
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: CustomTextField(
+                  controller: createPostViewModel.clinicNameController,
+                  screenHeight: screenHeight,
+                  hintText: 'Enter clinic or establishment name...',
+                  fontSize: 16,
+                  keyboardType: TextInputType.text,
+                ),
+              ),
+              Padding(
+                padding: const EdgeInsets.all(10.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Text(
+                      'Select Region, Province, City and Barangay',
+                      style: TextStyle(
+                        color: Colors.black,
+                        fontSize: 18,
+                        fontFamily: 'SmoochSans',
+                        fontWeight: FontWeight.w600,
+                      ),
+                    ),
+                    CustomDropDown<RegionModel>(
+                      value: createPostViewModel.selectedRegion,
+                      items: createPostViewModel.regions,
+                      onChanged: (RegionModel? newValue) {
+                        createPostViewModel.setSelectedRegion(newValue);
+                      },
+                      itemLabel: (RegionModel value) => value.region,
+                      hint: 'Select Region',
+                    ),
+                    SizedBox(height: screenHeight * 0.01),
+                    SizedBox(height: screenHeight * 0.01),
+                    if (createPostViewModel.selectedRegion != null)
+                      SizedBox(height: screenHeight * 0.01),
+                    CustomDropDown<ProvinceModel>(
+                      value: createPostViewModel.selectedProvince,
+                      items: createPostViewModel.provinces,
+                      onChanged: (ProvinceModel? newValue) {
+                        createPostViewModel.setSelectedProvince(newValue);
+                      },
+                      itemLabel: (ProvinceModel value) => value.provinceName,
+                      hint: 'Select Province',
+                    ),
+                    SizedBox(height: screenHeight * 0.01),
+                    if (createPostViewModel.selectedProvince != null)
+                      SizedBox(height: screenHeight * 0.01),
+                    CustomDropDown<CityModel>(
+                      value: createPostViewModel.selectedCity,
+                      items: createPostViewModel.cities,
+                      onChanged: (CityModel? newValue) {
+                        createPostViewModel.setSelectedCity(newValue);
+                      },
+                      itemLabel: (CityModel value) => value.cityName,
+                      hint: 'Select City',
+                    ),
+                    SizedBox(height: screenHeight * 0.01),
+                    if (createPostViewModel.selectedCity != null)
+                      SizedBox(height: screenHeight * 0.01),
+                    CustomDropDown<BarangayModel>(
+                      value: createPostViewModel.selectedBarangay,
+                      items: createPostViewModel.barangays,
+                      onChanged: (BarangayModel? newValue) {
+                        createPostViewModel.setSelectedBarangay(newValue);
+                      },
+                      itemLabel: (BarangayModel value) => value.barangayName,
+                      hint: 'Select Barangay',
+                    ),
+                    SizedBox(height: screenHeight * 0.01),
+                  ],
+                ),
+              ),
+            ],
                if (createPostViewModel.selectedChip == "Pet Adoption" || createPostViewModel.selectedChip == "Missing Pets" || createPostViewModel.selectedChip == "Found Pets") ...[
                  CustomText(
                    text: createPostViewModel.selectedChip == "Missing Pets"
-                       ? 'Enter the Street Address, Building, House No for found pet'
+                       ? 'Enter the Street Address, Building, House No for missing pet'
                        : createPostViewModel.selectedChip == "Found Pets"
                        ? 'Enter the Street Address, Building, House No for found pet'
-                       : createPostViewModel.selectedChip =="Pet Adoption" ? 'Enter the Street Address, Building, House No for pet adoption'
-                       : 'Enter the Street Address, Building, House No for found pet',
+                       : createPostViewModel.selectedChip == "Pet Adoption"
+                       ? 'Enter the Street Address, Building, House No for pet adoption'
+                       : createPostViewModel.selectedChip == "Pet Care Insights"
+                       ? 'Enter the Street Address, Building, House No for pet insights'
+                       : 'Enter the Street Address, Building, House No',
+
                    size: 18,
                    color: Colors.black,
                    weight: FontWeight.w700,
