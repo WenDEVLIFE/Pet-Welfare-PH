@@ -8,7 +8,10 @@ import '../view_model/ReportViewModel.dart';
 import 'package:provider/provider.dart';
 
 class ReportDialog extends StatelessWidget {
-  ReportDialog(String postId);
+  final String postId;
+
+  ReportDialog(this.postId);
+
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +53,7 @@ class ReportDialog extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () {
-                reportViewModel.submitReport();
+                reportViewModel.submitReport(postId,context);
                 Navigator.of(context).pop();
               },
               child: const Text('Submit'),
