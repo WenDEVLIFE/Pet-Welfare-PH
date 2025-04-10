@@ -19,6 +19,7 @@ import 'package:pet_welfrare_ph/src/view_model/OTPViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/RegisterViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/LoginViewModel.dart';
+import 'package:pet_welfrare_ph/src/view_model/ReportViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/SearchPetViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/SelectViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/EstablishmentViewModel.dart';
@@ -82,7 +83,8 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => CreatePostViewModel()),
         ChangeNotifierProvider(create: (_) => PostViewModel()),
         ChangeNotifierProvider(create: (_) => NotificationViewModel()),
-        ChangeNotifierProvider(create: (_) => SearchPetViewModel())
+        ChangeNotifierProvider(create: (_) => SearchPetViewModel()),
+        ChangeNotifierProvider(create: (_) => ReportViewModel())
       ],
       child: Directionality(
         textDirection: TextDirection.ltr,
