@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 
+import '../DialogView/ReportDialog.dart';
 import '../modal/ReactionModal.dart';
 import '../utils/AppColors.dart';
 import '../utils/ReactionUtils.dart';
@@ -125,9 +126,12 @@ class FoundPetCard extends StatelessWidget {
 
                                 PopupMenuItem<String>(
                                   value: 'Report',
-                                  child: const Text('Delete'),
+                                  child: const Text('Report'),
                                   onTap: () {
                                     // Handle edit action
+                                    showDialog(context: context, builder: (context) {
+                                      return ReportDialog(post.postId);
+                                    });
                                   },
                                 ),
                               ];

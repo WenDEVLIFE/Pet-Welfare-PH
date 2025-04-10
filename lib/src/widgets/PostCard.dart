@@ -4,6 +4,8 @@ import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 import 'package:provider/provider.dart';
 
+import '../DialogView/ReportDialog.dart';
+
 class PostCard extends StatelessWidget {
   final PostModel post;
   final double screenHeight;
@@ -117,9 +119,12 @@ class PostCard extends StatelessWidget {
 
                                  PopupMenuItem<String>(
                                   value: 'Report',
-                                  child: const Text('Delete'),
+                                  child: const Text('Report'),
                                   onTap: () {
                                     // Handle edit action
+                                    showDialog(context: context, builder: (context) {
+                                      return ReportDialog(post.postId);
+                                    });
                                   },
                                 ),
                               ];

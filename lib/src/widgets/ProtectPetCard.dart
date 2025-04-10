@@ -121,7 +121,7 @@ class ProtectPetCard extends StatelessWidget {
 
                                 PopupMenuItem<String>(
                                   value: 'Report',
-                                  child: const Text('Delete'),
+                                  child: const Text('Report'),
                                   onTap: () {
                                     // Handle edit action
                                   },
