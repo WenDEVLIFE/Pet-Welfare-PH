@@ -3,6 +3,7 @@ import 'dart:math';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
+import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'dart:io';
@@ -64,6 +65,8 @@ abstract class PostRepository {
   Future<List<PostModel>> getNearbyLostPets(double lat, double long, double radiusInK);
 
   Future <void> uploadDonation(List<File> images, String selectedChip, Map<String, dynamic> petData);
+
+  Future <void> uploadVetTravel(List<File> images, String selectedChip, Map<String, String> petData);
 
 }
 
@@ -768,6 +771,84 @@ class PostRepositoryImpl implements PostRepository {
     }
   }
 
+  // Added a function to upload vet travel
+  @override
+  Future<void> uploadVetTravel(List<File> images, String selectedChip, Map<String, String> petData) async {
+    User user = _firebaseAuth.currentUser!;
+    String uuid = user.uid;
+    var postID = Uuid().v4();
+
+    try {
+      // Create a new post document
+      DocumentReference postRef = _firestore.collection('PostCollection').doc(
+          postID);
+
+      String post = petData['post']!;
+      String travelType = petData['travel_type']!;
+      String travelDate = petData['travel_date']!;
+      String travelTime = petData['travel_time']!;
+      String travelLocation = petData['travel_location']!;
+
+      await postRef.set({
+        'PostID': postID,
+        'PostOwnerID': uuid,
+        'PostDescription': post,
+        'Category': selectedChip,
+        'Timestamp': FieldValue.serverTimestamp(),
+      });
+
+      // Create a new document in PetDetailsCollection
+      DocumentReference petRef = _firestore.collection('VetTravelDetails').doc(
+          postID);
+      await petRef.set({
+        'TravelType': travelType,
+        'TravelDate': travelDate,
+        'TravelTime': travelTime,
+        'TravelLocation': travelLocation,
+        'Status': 'Ongoing', // put paused and fullfilled
+      });
+
+      DocumentReference notificationRef = _firestore.collection(
+          'NotificationCollection').doc();
+      await notificationRef.set({
+        'notificationID': notificationRef.id,
+        'userID': uuid,
+        'content': 'You have successfully created a Vet Travel post',
+        'timestamp': FieldValue.serverTimestamp(),
+        'category': 'Donation',
+        'isRead': false,
+      });
+
+      ToastComponent().showMessage(
+          AppColors.orange, '$selectedChip data added successfully');
+
+      // Upload images concurrently and store their URLs in the images sub-collection
+      List<Future<void>> uploadTasks = images.map((File image) async {
+        String fileName = DateTime
+            .now()
+            .millisecondsSinceEpoch
+            .toString();
+        Reference storageRef = _firebaseStorage.ref().child(
+            'PostFolder/$postID/$fileName.jpg');
+        UploadTask uploadTask = storageRef.putFile(image);
+        TaskSnapshot taskSnapshot = await uploadTask;
+        String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+
+        // Add image URL to the images sub-collection
+        await postRef.collection('ImageCollection').add({
+          'FileUrl': downloadUrl,
+          'FileName': '$fileName.jpg',
+        });
+      }).toList();
+
+      // Wait for all uploads to complete
+      await Future.wait(uploadTasks);
+      ToastComponent().showMessage(Colors.green, '$selectedChip data added successfully');
+    } catch(e) {
+      throw Exception('Failed to upload post: $e');
+    }
+
+  }
 
 
 }

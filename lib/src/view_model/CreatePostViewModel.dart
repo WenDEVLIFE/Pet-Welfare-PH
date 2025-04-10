@@ -398,8 +398,51 @@ class CreatePostViewModel extends ChangeNotifier {
         }
       } else if (selectedChip == 'Protect Our Pets: Report Abuse') {
         // Implement functionality for Protect Our Pets: Report Abuse
-      } else if (selectedChip == 'Caring for Pets: Vet & Travel Insights') {
+      } else if (selectedChip == 'Pet Care Insights') {
         // Implement functionality for Caring for Pets: Vet & Travel Insights
+        if(clinicNameController.text.isEmpty){
+          ToastComponent().showMessage(Colors.red, 'Clinic name cannot be empty');
+        }
+         else if(address.text.isEmpty){
+          ToastComponent().showMessage(Colors.red, 'Address cannot be empty');
+        }
+         else if(selectedRegion==null) {
+          ToastComponent().showMessage(Colors.red, 'Please select a region');
+        }
+         else if(selectedProvince==null) {
+          ToastComponent().showMessage(Colors.red, 'Please select a province');
+        }
+
+        else if(selectedCity==null) {
+          ToastComponent().showMessage(Colors.red, 'Please select a city');
+        }
+         else if(selectedBarangay==null) {
+          ToastComponent().showMessage(Colors.red, 'Please select a barangay');
+        }
+         else if(postController.text.isEmpty) {
+          ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
+        }
+         else if(_images.isEmpty) {
+          ToastComponent().showMessage(Colors.red, 'Please select an image');
+        } else {
+          try {
+            var petData = {
+              'post': postController.text,
+              'clinic_name': clinicNameController.text,
+              'region': selectedRegion!.region,
+              'province': selectedProvince!.provinceName,
+              'city': selectedCity!.cityName,
+              'barangay': selectedBarangay!.barangayName,
+              'address': address.text,
+            };
+            await postRepository.uploadVetTravel(_images, selectedChip, petData);
+            clearPost();
+            isDone = true;
+          } catch (e) {
+            print('Failed to post: $e');
+          }
+        }
+
       } else {
         // For pet appreciation, paw-some experience, and community announcements
         if (postController.text.isEmpty) {
@@ -880,7 +923,7 @@ class CreatePostViewModel extends ChangeNotifier {
 
     }
 
-    if(selectedChip == 'Caring for Pets: Vet & Travel Insights'){
+    if(selectedChip == 'Pet Care Insights'){
       filename = 'assets/word/petexperience_notice.txt';
       String data = await loadNotify(filename);
 
