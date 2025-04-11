@@ -59,6 +59,7 @@ class SearchPetViewModel extends ChangeNotifier {
 
   final TextEditingController petnameController = TextEditingController();
   final TextEditingController dateController = TextEditingController();
+  final TextEditingController addressController = TextEditingController();
 
 
   final LocationService locationService = LocationService();
@@ -313,11 +314,36 @@ class SearchPetViewModel extends ChangeNotifier {
       ToastComponent().showMessage(Colors.red, 'Please select a city');
     }
 
+    if (petGender.isEmpty){
+      ToastComponent().showMessage(Colors.red, 'Please select a gender');
+    }
+
+    if (addressController.text.isEmpty){
+      ToastComponent().showMessage(Colors.red, 'Please enter a address');
+    }
+
+    if (selectedPetType == null){
+      ToastComponent().showMessage(Colors.red, 'Please select a pet type');
+    }
+
+    if (selectedPetSize == null){
+      ToastComponent().showMessage(Colors.red, 'Please select a pet size');
+    }
+
     else{
       Map <String, dynamic> searchParams = {
         'region': selectedRegion?.region.toString().toLowerCase(),
         'province': selectedProvince?.provinceName.toString().toLowerCase(),
         'city': selectedCity?.cityName.toString().toLowerCase(),
+        'barangay': selectedBarangay?.barangayName.toString().toLowerCase(),
+        'petName': petnameController.text.toLowerCase(),
+        'petType': selectedPetType?.toLowerCase(),
+        'dogBreed': selectedDogBreed?.name.toLowerCase(),
+        'catBreed': selectedCatBreed?.name.toLowerCase(),
+        'petGender': selectedPetGender?.toLowerCase(),
+        'petSize': selectedPetSize?.toLowerCase(),
+        'colorPattern': selectedColor?.toLowerCase(),
+
       };
 
        if(selectedSearchType =='Pet Adoption'){
@@ -331,6 +357,16 @@ class SearchPetViewModel extends ChangeNotifier {
        }
     }
 
+    notifyListeners();
+  }
+
+  void setDogBreed(Breed? newValue) {
+    selectedDogBreed = newValue;
+    notifyListeners();
+  }
+
+  void setCatBreed(Breed? newValue) {
+    selectedCatBreed = newValue;
     notifyListeners();
   }
 

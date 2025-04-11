@@ -75,14 +75,126 @@ class SearchPetModal extends StatelessWidget{
                     itemLabel: (String value) => value,
                     hint: 'Select Search Type',
                   ),
+                  CustomText(
+                    text: 'Pet Type',
+                    size: 18,
+                    color: Colors.black,
+                    weight: FontWeight.w700,
+                    align: TextAlign.left,
+                    screenHeight: screenHeight,
+                    alignment: Alignment.centerLeft,
+                  ),
+                  CustomDropDown<String>(
+                    value: postViewModel.selectedPetType,
+                    items: postViewModel.petTypes,
+                    onChanged: (String? newValue) {
+                      postViewModel.setPetType(newValue);
+                    },
+                    itemLabel: (String value) => value,
+                    hint: 'Select Pet Type',
+                  ),
+                   if (postViewModel.selectedPetType == "Dog") ...[
+                    CustomText(
+                    text: 'Dog Breed',
+                    size: 18,
+                    color: Colors.black,
+                    weight: FontWeight.w700,
+                    align: TextAlign.left,
+                    screenHeight: screenHeight,
+                    alignment: Alignment.centerLeft,
+                  ),
+                  CustomDropDown<Breed>(
+                    value: postViewModel.selectedDogBreed,
+                    items: postViewModel.dogBreeds,
+                    onChanged: (Breed? newValue) {
+                      postViewModel.setDogBreed(newValue);
+                    },
+                    itemLabel: (Breed value) => value.name,
+                    hint: 'Select Pet Breed',
+                  ),
+                  ],
+                  if (postViewModel.selectedPetType == "Cat") ...[
+                    CustomText(
+                      text: 'Cat Breed',
+                      size: 18,
+                      color: Colors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomDropDown<Breed>(
+                      value: postViewModel.selectedCatBreed,
+                      items: postViewModel.catBreeds,
+                      onChanged: (Breed? newValue) {
+                        postViewModel.setCatBreed(newValue);
+                      },
+                      itemLabel: (Breed value) => value.name,
+                      hint: 'Select Pet Breed',
+                    ),
+                  ],
                   if (postViewModel.selectedSearchType == "Missing Pets" || postViewModel.selectedSearchType == "Found Pets" ||  postViewModel.selectedSearchType =="Pet Adoption") ...[
+                    CustomText(
+                      text: 'Pet Color/ Pattern',
+                      size: 18,
+                      color: Colors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomDropDown<String>(
+                      value: postViewModel.selectedColor,
+                      items: postViewModel.colorpatter,
+                      onChanged: (String? newValue) {
+                        postViewModel.setColor(newValue);
+                      },
+                      itemLabel: (String value) => value,
+                      hint: 'Select Pet Color/ Pattern',
+                    ),
+                    CustomText(
+                      text: 'Pet Size',
+                      size: 18,
+                      color: Colors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomDropDown<String>(
+                      value: postViewModel.selectedPetSize,
+                      items: postViewModel.petSize,
+                      onChanged: (String? newValue) {
+                        postViewModel.setPetSize(newValue);
+                      },
+                      itemLabel: (String value) => value,
+                      hint: 'Select Pet Size',
+                    ),
+                    CustomText(
+                      text: 'Pet Gender',
+                      size: 18,
+                      color: Colors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomDropDown<String>(
+                      value: postViewModel.selectedPetGender,
+                      items: postViewModel.petGender,
+                      onChanged: (String? newValue) {
+                        postViewModel.setPetGender(newValue);
+                      },
+                      itemLabel: (String value) => value,
+                      hint: 'Select Pet Gender',
+                    ),
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           const Text(
-                            'Select Region, Province, City and Barangay',
+                            'Select Region, Province, and City',
                             style: TextStyle(
                               color: Colors.black,
                               fontSize: 18,
@@ -127,6 +239,22 @@ class SearchPetModal extends StatelessWidget{
                           SizedBox(height: screenHeight * 0.01),
                         ],
                       ),
+                    ),
+                    CustomText(
+                      text: 'Address',
+                      size: 18,
+                      color: Colors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomTextField(controller:
+                    postViewModel.addressController,
+                        screenHeight: screenHeight,
+                        hintText: 'Enter Address',
+                        fontSize: 16,
+                        keyboardType: TextInputType.text
                     ),
                   ],
 

@@ -461,28 +461,50 @@ class PostViewModel extends ChangeNotifier {
   Future<void> startSearchPetAdoption(Map<String, dynamic> searchParams) async {
     print('🔍 Starting search with parameters: $searchParams');
 
+    // Filter logic
     filterPetAdoptPost = petAdoptPost.where((post) {
       final postFields = {
+        'petType': post.petTypeAdopt,
+        'petSize': post.petSizeAdopt,
+        'petGender': post.petGenderAdopt,
+        'colorPattern': post.petColorAdopt,
         'region': post.petRegionAdopt,
         'province': post.petProvinceAdopt,
         'city': post.petCityAdopt,
+        'barangay': post.petBarangayAdopt,
       };
-      for (var post in petAdoptPost) {
-        print('🧪 petType: ${post.petTypeAdopt}');
-        print('🧪 post object: $post');
+
+      // Add breed dynamically based on PetTypeAdopt
+      if (post.petTypeAdopt?.toLowerCase() == 'dog') {
+        postFields['dogBreed'] = post.petBreedAdopt;
+      } else if (post.petTypeAdopt?.toLowerCase() == 'cat') {
+        postFields['catBreed'] = post.petBreedAdopt;
       }
+
+      final petType = (searchParams['petType'] ?? '').toString().toLowerCase();
+
       for (final entry in searchParams.entries) {
         final key = entry.key;
-        final value = entry.value?.toString() ?? '';
+        final value = entry.value?.toString().toLowerCase().trim();
 
-        if (value.trim().isEmpty) continue;
-        final postValue = (postFields[key] ?? '').toString();
+        if (value == null || value.isEmpty) continue;
 
-        if (!debugEquals(key, postValue, value)) {
+        // Skip wrong breed type
+        if ((key == 'dogBreed' && petType != 'dog') || (key == 'catBreed' && petType != 'cat')) {
+          continue;
+        }
+
+        final postValue = (postFields[key] ?? '').toString().toLowerCase().trim();
+
+        print('🔎 Comparing "$postValue" with "$value" for key "$key"');
+
+        if (postValue != value) {
+          print('❌ Not matched: $key');
           return false;
         }
       }
 
+      print('✅ Post matched!');
       return true;
     }).toList();
 
@@ -496,22 +518,41 @@ class PostViewModel extends ChangeNotifier {
 
     filterFoundPost = foundPost.where((post) {
       final postFields = {
+        'petType': post.petType,
+        'petSize': post.petSize,
+        'petGender': post.petGender,
+        'colorPattern': post.petColor,
         'region': post.petRegion,
         'province': post.petProvince,
         'city': post.petCity,
       };
-      for (var post in foundPost) {
-        print('🧪 petType: ${post.petTypeAdopt}');
-        print('🧪 post object: $post');
+
+      // Add breed dynamically based on PetTypeAdopt
+      if (post.petType.toLowerCase() == 'dog') {
+        postFields['dogBreed'] = post.petBreed;
+      } else if (post.petType.toLowerCase() == 'cat') {
+        postFields['catBreed'] = post.petBreed;
       }
+
+      final petType = (searchParams['petType'] ?? '').toString().toLowerCase();
+
       for (final entry in searchParams.entries) {
         final key = entry.key;
-        final value = entry.value?.toString() ?? '';
+        final value = entry.value?.toString().toLowerCase().trim();
 
-        if (value.trim().isEmpty) continue;
-        final postValue = (postFields[key] ?? '').toString();
+        if (value == null || value.isEmpty) continue;
 
-        if (!debugEquals(key, postValue, value)) {
+        // Skip wrong breed type
+        if ((key == 'dogBreed' && petType != 'dog') || (key == 'catBreed' && petType != 'cat')) {
+          continue;
+        }
+
+        final postValue = (postFields[key] ?? '').toString().toLowerCase().trim();
+
+        print('🔎 Comparing "$postValue" with "$value" for key "$key"');
+
+        if (postValue != value) {
+          print('❌ Not matched: $key');
           return false;
         }
       }
@@ -527,22 +568,41 @@ class PostViewModel extends ChangeNotifier {
   Future <void> startSearchMissingPets(Map<String, dynamic> searchParams) async{
     filterMissingPost = missingPost.where((post) {
       final postFields = {
+        'petType': post.petType,
+        'petSize': post.petSize,
+        'petGender': post.petGender,
+        'colorPattern': post.petColor,
         'region': post.petRegion,
         'province': post.petProvince,
         'city': post.petCity,
       };
-      for (var post in missingPost) {
-        print('🧪 petType: ${post.petTypeAdopt}');
-        print('🧪 post object: $post');
+
+      // Add breed dynamically based on PetTypeAdopt
+      if (post.petType.toLowerCase() == 'dog') {
+        postFields['dogBreed'] = post.petBreed;
+      } else if (post.petType.toLowerCase() == 'cat') {
+        postFields['catBreed'] = post.petBreed;
       }
+
+      final petType = (searchParams['petType'] ?? '').toString().toLowerCase();
+
       for (final entry in searchParams.entries) {
         final key = entry.key;
-        final value = entry.value?.toString() ?? '';
+        final value = entry.value?.toString().toLowerCase().trim();
 
-        if (value.trim().isEmpty) continue;
-        final postValue = (postFields[key] ?? '').toString();
+        if (value == null || value.isEmpty) continue;
 
-        if (!debugEquals(key, postValue, value)) {
+        // Skip wrong breed type
+        if ((key == 'dogBreed' && petType != 'dog') || (key == 'catBreed' && petType != 'cat')) {
+          continue;
+        }
+
+        final postValue = (postFields[key] ?? '').toString().toLowerCase().trim();
+
+        print('🔎 Comparing "$postValue" with "$value" for key "$key"');
+
+        if (postValue != value) {
+          print('❌ Not matched: $key');
           return false;
         }
       }

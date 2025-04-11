@@ -218,7 +218,7 @@ class MapViewState extends State<MapView> {
               }
             },
           ),
-          if(role.toLowerCase() != 'fur user') ...[
+          if(role.toLowerCase() != 'fur user' || role.toLowerCase() !='pet lover') ...[
             SpeedDialChild(
               child: const Icon(Icons.house, color: AppColors.white),
               backgroundColor: AppColors.orange,
