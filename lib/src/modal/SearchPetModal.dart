@@ -25,7 +25,12 @@ class SearchPetModal extends StatelessWidget{
     SearchPetViewModel postViewModel = Provider.of<SearchPetViewModel>(context);
     final double screenHeight = MediaQuery.of(context).size.height;
     final double screenWidth = MediaQuery.of(context).size.width;
-    return Container(
+
+    return Padding(
+        // This ensures the modal adjusts for the keyboard
+        padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+
+     child:Container(
       padding: const EdgeInsets.all(16.0),
       decoration: const BoxDecoration(
         color: AppColors.white,
@@ -56,6 +61,7 @@ class SearchPetModal extends StatelessWidget{
           ),
           Expanded(child:
             SingleChildScrollView(
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
               child: Column(
                 children: [
                   CustomText(
@@ -275,7 +281,8 @@ class SearchPetModal extends StatelessWidget{
             ),
           ),
         ],
-      )
+      ),
+    ),
     );
   }
 }

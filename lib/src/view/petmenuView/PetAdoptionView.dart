@@ -77,7 +77,7 @@ class MissingPetState extends State<PetAdoptionView> {
             },
           ),
           SpeedDialChild(
-            label: 'Advance Search',
+            label: 'Advanced Search',
             child: const Icon(Icons.search),
             onTap: () {
               showModalBottomSheet(

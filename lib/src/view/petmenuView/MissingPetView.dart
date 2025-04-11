@@ -89,7 +89,7 @@ class MissingPetState extends State<MissingPetView> {
             },
           ),
           SpeedDialChild(
-            label: 'Advance Search',
+            label: 'Advanced Search',
             child: const Icon(Icons.search),
             onTap: () {
               showModalBottomSheet(
@@ -102,7 +102,7 @@ class MissingPetState extends State<MissingPetView> {
             },
           ),
           SpeedDialChild(
-            label: 'Reload the Pet Adoption Posts',
+            label: 'Reload the Missing Pet Posts',
             child: const Icon(Icons.refresh),
             onTap: () {
               postViewModel.listenToMissingPost();

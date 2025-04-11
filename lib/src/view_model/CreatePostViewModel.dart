@@ -199,7 +199,7 @@ class CreatePostViewModel extends ChangeNotifier {
         'Pet Appreciation',
         'Missing Pets',
         'Found Pets',
-        'Find a Home: Rescue & Shelter',
+        'Pets for Adoption',
         'Call for Aid',
         'Paw-some Experience',
         'Pet Adoption',
@@ -211,7 +211,7 @@ class CreatePostViewModel extends ChangeNotifier {
         'Pet Appreciation',
         'Missing Pets',
         'Found Pets',
-        'Find a Home: Rescue & Shelter',
+        'Pets for Adoption',
         'Paw-some Experience',
         'Pet Adoption',
         'Protect Our Pets: Report Abuse',
@@ -267,7 +267,24 @@ class CreatePostViewModel extends ChangeNotifier {
     ProgressDialog pd = ProgressDialog(context: context);
     pd.show(max: 100, msg: 'Posting...');
     try {
-      if (selectedChip == 'Missing Pets' || selectedChip == 'Found Pets') {
+      if (selectedChip=="Pet Appreciation"){
+        // For pet appreciation, paw-some experience, and community announcements
+        if (postController.text.isEmpty) {
+          ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
+        } else if (_images.isEmpty) {
+          ToastComponent().showMessage(Colors.red, 'Please select an image');
+        } else {
+          try {
+            await postRepository.uploadPost(postController.text, _images, selectedChip);
+            ToastComponent().showMessage(Colors.green, 'Post successful');
+            clearPost();
+            isDone = true;
+          } catch (e) {
+            print('Failed to post: $e');
+          }
+        }
+      }
+      else if (selectedChip == 'Missing Pets' || selectedChip == 'Found Pets') {
         // Implement functionality for Missing Pets or Found Pets
         if (postController.text.isEmpty) {
           ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
@@ -450,22 +467,9 @@ class CreatePostViewModel extends ChangeNotifier {
           }
         }
 
-      } else {
-        // For pet appreciation, paw-some experience, and community announcements
-        if (postController.text.isEmpty) {
-          ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
-        } else if (_images.isEmpty) {
-          ToastComponent().showMessage(Colors.red, 'Please select an image');
-        } else {
-          try {
-            await postRepository.uploadPost(postController.text, _images, selectedChip);
-            ToastComponent().showMessage(Colors.green, 'Post successful');
-            clearPost();
-            isDone = true;
-          } catch (e) {
-            print('Failed to post: $e');
-          }
-        }
+      }
+      else {
+        ToastComponent().showMessage(Colors.red, 'Please select a post type');
       }
     } catch (e) {
       print('Failed to post: $e');
