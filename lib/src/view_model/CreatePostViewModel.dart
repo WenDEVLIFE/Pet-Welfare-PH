@@ -271,6 +271,9 @@ class CreatePostViewModel extends ChangeNotifier {
         // Implement functionality for Missing Pets or Found Pets
         if (postController.text.isEmpty) {
           ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
+        }
+        else if (address.text.isEmpty) {
+          ToastComponent().showMessage(Colors.red, 'Address cannot be empty');
         } else if (_images.isEmpty) {
           ToastComponent().showMessage(Colors.red, 'Please select an image');
         } else if (petName.text.isEmpty) {
@@ -322,7 +325,9 @@ class CreatePostViewModel extends ChangeNotifier {
         // Implement functionality for Call for Aid
         if (accountNameController.text.isEmpty) {
           ToastComponent().showMessage(Colors.red, 'Account name cannot be empty');
-        } else if (amountController.text.isEmpty) {
+        } else if (address.text.isEmpty) {
+          ToastComponent().showMessage(Colors.red, 'Address cannot be empty');
+        }else if (amountController.text.isEmpty) {
           ToastComponent().showMessage(Colors.red, 'Amount cannot be empty');
         } else if (bankNameController.text.isEmpty) {
           ToastComponent().showMessage(Colors.red, 'Bank name cannot be empty');
@@ -352,7 +357,9 @@ class CreatePostViewModel extends ChangeNotifier {
         // Implement functionality for Pet Adoption
         if (postController.text.isEmpty) {
           ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
-        } else if (_images.isEmpty) {
+        } else if (address.text.isEmpty) {
+          ToastComponent().showMessage(Colors.red, 'Address cannot be empty');
+        }else if (_images.isEmpty) {
           ToastComponent().showMessage(Colors.red, 'Please select an image');
         } else if (petName.text.isEmpty) {
           ToastComponent().showMessage(Colors.red, 'Please enter the name of the pet');
