@@ -10,11 +10,11 @@ import 'package:pet_welfrare_ph/src/DialogView/ChangeEstablishmentProfile.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 import 'package:provider/provider.dart';
 
-import '../services/MapTilerKey.dart';
-import '../utils/ImageUtils.dart';
-import '../utils/ToastComponent.dart';
-import '../view_model/EstablishmentViewModel.dart';
-import '../widgets/CustomTextField.dart';
+import '../../services/MapTilerKey.dart';
+import '../../utils/ImageUtils.dart';
+import '../../utils/ToastComponent.dart';
+import '../../view_model/EstablishmentViewModel.dart';
+import '../../widgets/CustomTextField.dart';
 
 class EditEstablishmentScreen extends StatefulWidget {
   const EditEstablishmentScreen({Key? key}) : super(key: key);
