@@ -79,6 +79,8 @@ class CreatePostView extends StatelessWidget {
                   ? 'Enter the details of the pet for adoption'
                   : createPostViewModel.selectedChip == "Pet Care Insights"
                   ? 'Enter the details of the pet care insights'
+                  : createPostViewModel.selectedChip == "Pets For Rescue"
+                  ? 'Enter the details of the pet for rescue'
                   : 'Create a post' ,
               size: 18,
               color: Colors.black,
@@ -623,57 +625,6 @@ class CreatePostView extends StatelessWidget {
                 itemLabel: (String value) => value,
                 hint: 'Select Pet Type',
               ),
-              CustomText(
-                text: 'Pet Gender',
-                size: 18,
-                color: Colors.black,
-                weight: FontWeight.w700,
-                align: TextAlign.left,
-                screenHeight: screenHeight,
-                alignment: Alignment.centerLeft,
-              ),
-              CustomDropDown(value: createPostViewModel.selectedPetGender,
-                items: createPostViewModel.petGender,
-                onChanged: (String? newValue) {
-                  createPostViewModel.setPetGender(newValue);
-                },
-                itemLabel: (String value) => value,
-                hint: 'Select Pet Gender',
-              ),
-              CustomText(
-                text:  'Pet Size',
-                size: 18,
-                color: Colors.black,
-                weight: FontWeight.w700,
-                align: TextAlign.left,
-                screenHeight: screenHeight,
-                alignment: Alignment.centerLeft,
-              ),
-              CustomDropDown(value: createPostViewModel.selectedPetSize,
-                items: createPostViewModel.petSize,
-                onChanged: (String? newValue) {
-                  createPostViewModel.setPetSize(newValue);
-                },
-                itemLabel: (String value) => value,
-                hint: 'Select Pet Size',
-              ),
-              CustomText(
-                text:   'Colors or patterns',
-                size: 18,
-                color: Colors.black,
-                weight: FontWeight.w700,
-                align: TextAlign.left,
-                screenHeight: screenHeight,
-                alignment: Alignment.centerLeft,
-              ),
-              CustomDropDown(value: createPostViewModel.selectedColorPattern,
-                items: createPostViewModel.colorpatter,
-                onChanged: (String? newValue) {
-                  createPostViewModel.setColor(newValue);
-                },
-                itemLabel: (String value) => value,
-                hint: 'Select Colors or patterns',
-              ),
               if (createPostViewModel.selectedPetType == 'Cat') ...[
                 const Padding(
                   padding: EdgeInsets.all(10.0),
@@ -726,8 +677,59 @@ class CreatePostView extends StatelessWidget {
                   hint: 'Select Dog Breed',
                 ),
               ],
+              CustomText(
+                text: 'Pet Gender',
+                size: 18,
+                color: Colors.black,
+                weight: FontWeight.w700,
+                align: TextAlign.left,
+                screenHeight: screenHeight,
+                alignment: Alignment.centerLeft,
+              ),
+              CustomDropDown(value: createPostViewModel.selectedPetGender,
+                items: createPostViewModel.petGender,
+                onChanged: (String? newValue) {
+                  createPostViewModel.setPetGender(newValue);
+                },
+                itemLabel: (String value) => value,
+                hint: 'Select Pet Gender',
+              ),
+              CustomText(
+                text:  'Pet Size',
+                size: 18,
+                color: Colors.black,
+                weight: FontWeight.w700,
+                align: TextAlign.left,
+                screenHeight: screenHeight,
+                alignment: Alignment.centerLeft,
+              ),
+              CustomDropDown(value: createPostViewModel.selectedPetSize,
+                items: createPostViewModel.petSize,
+                onChanged: (String? newValue) {
+                  createPostViewModel.setPetSize(newValue);
+                },
+                itemLabel: (String value) => value,
+                hint: 'Select Pet Size',
+              ),
+              CustomText(
+                text:   'Colors or patterns',
+                size: 18,
+                color: Colors.black,
+                weight: FontWeight.w700,
+                align: TextAlign.left,
+                screenHeight: screenHeight,
+                alignment: Alignment.centerLeft,
+              ),
+              CustomDropDown(value: createPostViewModel.selectedColorPattern,
+                items: createPostViewModel.colorpatter,
+                onChanged: (String? newValue) {
+                  createPostViewModel.setColor(newValue);
+                },
+                itemLabel: (String value) => value,
+                hint: 'Select Colors or patterns',
+              ),
             ],
-               if (createPostViewModel.selectedChip == "Pet Adoption" || createPostViewModel.selectedChip == "Missing Pets" || createPostViewModel.selectedChip == "Found Pets") ...[
+               if (createPostViewModel.selectedChip == "Pet Adoption" || createPostViewModel.selectedChip == "Missing Pets" || createPostViewModel.selectedChip == "Found Pets" ||createPostViewModel.selectedChip == "Pets For Rescue" ) ...[
                  CustomText(
                    text: createPostViewModel.selectedChip == "Missing Pets"
                        ? 'Enter the Street Address, Building, House No for missing pet'
@@ -737,7 +739,7 @@ class CreatePostView extends StatelessWidget {
                        ? 'Enter the Street Address, Building, House No for pet adoption'
                        : createPostViewModel.selectedChip == "Pet Care Insights"
                        ? 'Enter the Street Address, Building, House No for pet insights'
-                       : createPostViewModel.selectedChip == "Pet for Rescue"
+                       : createPostViewModel.selectedChip == "Pets For Rescue"
                        ? 'Enter the Street Address, Building, House No for pet rescue'
                        : 'Enter the Street Address, Building, House No',
 
@@ -896,7 +898,7 @@ class CreatePostView extends StatelessWidget {
                   color1: AppColors.orange,
                   textcolor2: Colors.white,
                 onPressed: () async {
-                createPostViewModel.PostNow(context);
+                createPostViewModel.postNow(context);
                 },
               )
             ),

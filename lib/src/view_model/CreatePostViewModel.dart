@@ -267,17 +267,18 @@ class CreatePostViewModel extends ChangeNotifier {
     accountNameController.clear();
     notifyListeners();
     tagController.clear();
-    tags = [];
+    tags.clear();
   }
 
-  Future<void> PostNow(BuildContext context) async {
+  Future<void> postNow(BuildContext context) async {
     ProgressDialog pd = ProgressDialog(context: context);
     pd.show(max: 100, msg: 'Posting...');
     try {
-      if (selectedChip=="Pet Appreciation"){
+      if (selectedChip == "Pet Appreciation") {
         // For pet appreciation, paw-some experience, and community announcements
-        if(tags.isEmpty){
-          ToastComponent().showMessage(Colors.red, 'Please add at least one tag');
+        if (tags.isEmpty) {
+          ToastComponent().showMessage(
+              Colors.red, 'Please add at least one tag');
         }
         if (postController.text.isEmpty) {
           ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
@@ -285,7 +286,8 @@ class CreatePostViewModel extends ChangeNotifier {
           ToastComponent().showMessage(Colors.red, 'Please select an image');
         } else {
           try {
-            await postRepository.uploadPost(postController.text, _images, selectedChip, tags);
+            await postRepository.uploadPost(
+                postController.text, _images, selectedChip, tags);
             ToastComponent().showMessage(Colors.green, 'Post successful');
             clearPost();
             isDone = true;
@@ -304,9 +306,13 @@ class CreatePostViewModel extends ChangeNotifier {
         } else if (_images.isEmpty) {
           ToastComponent().showMessage(Colors.red, 'Please select an image');
         } else if (petName.text.isEmpty) {
-          ToastComponent().showMessage(Colors.red, 'Please enter the name of the pet');
-        } else if (selectedPetType == 'Cat' && selectedCatBreed == null || selectedPetType == 'Dog' && selectedDogBreed == null) {
-          ToastComponent().showMessage(Colors.red, selectedPetType == 'Cat' ? 'Please select the breed of the cat' : 'Please select the breed of the dog');
+          ToastComponent().showMessage(
+              Colors.red, 'Please enter the name of the pet');
+        } else if (selectedPetType == 'Cat' && selectedCatBreed == null ||
+            selectedPetType == 'Dog' && selectedDogBreed == null) {
+          ToastComponent().showMessage(Colors.red, selectedPetType == 'Cat'
+              ? 'Please select the breed of the cat'
+              : 'Please select the breed of the dog');
         } else if (selectedRegion == null) {
           ToastComponent().showMessage(Colors.red, 'Please select a region');
         } else if (selectedProvince == null) {
@@ -321,7 +327,9 @@ class CreatePostViewModel extends ChangeNotifier {
               'post': postController.text,
               'pet_name': petName.text,
               'pet_type': selectedPetType.toString(),
-              'pet_breed': selectedPetType == 'Cat' ? selectedCatBreed!.name : selectedDogBreed!.name,
+              'pet_breed': selectedPetType == 'Cat'
+                  ? selectedCatBreed!.name
+                  : selectedDogBreed!.name,
               'pet_color': selectedColorPattern,
               'pet_age': selectedPetAge,
               'region': selectedRegion!.region,
@@ -338,8 +346,10 @@ class CreatePostViewModel extends ChangeNotifier {
               'long': selectedLocation!.longitude,
             };
 
-            await postRepository.uploadPetData(_images, selectedChip, petData,tags );
-            ToastComponent().showMessage(Colors.green, '$selectedChip successful');
+            await postRepository.uploadPetData(
+                _images, selectedChip, petData, tags);
+            ToastComponent().showMessage(
+                Colors.green, '$selectedChip successful');
             clearPost();
             isDone = true;
           } catch (e) {
@@ -351,10 +361,11 @@ class CreatePostViewModel extends ChangeNotifier {
       } else if (selectedChip == 'Call for Aid') {
         // Implement functionality for Call for Aid
         if (accountNameController.text.isEmpty) {
-          ToastComponent().showMessage(Colors.red, 'Account name cannot be empty');
+          ToastComponent().showMessage(
+              Colors.red, 'Account name cannot be empty');
         } else if (address.text.isEmpty) {
           ToastComponent().showMessage(Colors.red, 'Address cannot be empty');
-        }else if (amountController.text.isEmpty) {
+        } else if (amountController.text.isEmpty) {
           ToastComponent().showMessage(Colors.red, 'Amount cannot be empty');
         } else if (bankNameController.text.isEmpty) {
           ToastComponent().showMessage(Colors.red, 'Bank name cannot be empty');
@@ -373,7 +384,8 @@ class CreatePostViewModel extends ChangeNotifier {
               'purpose_of_donation': selectedDonationType,
               'donation_type': selectedTypeOfDonation,
             };
-            await postRepository.uploadDonation(_images, selectedChip, petData, tags);
+            await postRepository.uploadDonation(
+                _images, selectedChip, petData, tags);
             clearPost();
             isDone = true;
           } catch (e) {
@@ -386,14 +398,17 @@ class CreatePostViewModel extends ChangeNotifier {
           ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
         } else if (address.text.isEmpty) {
           ToastComponent().showMessage(Colors.red, 'Address cannot be empty');
-        }else if (_images.isEmpty) {
+        } else if (_images.isEmpty) {
           ToastComponent().showMessage(Colors.red, 'Please select an image');
         } else if (petName.text.isEmpty) {
-          ToastComponent().showMessage(Colors.red, 'Please enter the name of the pet');
+          ToastComponent().showMessage(
+              Colors.red, 'Please enter the name of the pet');
         } else if (selectedPetType == 'Cat' && selectedCatBreed == null) {
-          ToastComponent().showMessage(Colors.red, 'Please select the breed of the cat');
+          ToastComponent().showMessage(
+              Colors.red, 'Please select the breed of the cat');
         } else if (selectedPetType == 'Dog' && selectedDogBreed == null) {
-          ToastComponent().showMessage(Colors.red, 'Please select the breed of the dog');
+          ToastComponent().showMessage(
+              Colors.red, 'Please select the breed of the dog');
         } else if (selectedRegion == null) {
           ToastComponent().showMessage(Colors.red, 'Please select a region');
         } else if (selectedProvince == null) {
@@ -407,7 +422,9 @@ class CreatePostViewModel extends ChangeNotifier {
             'post': postController.text,
             'pet_name': petName.text,
             'pet_type': selectedPetType.toString(),
-            'pet_breed': selectedPetType == 'Cat' ? selectedCatBreed!.name : selectedDogBreed!.name,
+            'pet_breed': selectedPetType == 'Cat'
+                ? selectedCatBreed!.name
+                : selectedDogBreed!.name,
             'pet_color': selectedColorPattern,
             'pet_age': selectedPetAge,
             'region': selectedRegion!.region,
@@ -422,8 +439,10 @@ class CreatePostViewModel extends ChangeNotifier {
           };
 
           try {
-            await postRepository.uploadAdoption(_images, selectedChip, petData, tags);
-            ToastComponent().showMessage(Colors.green, '$selectedChip successful');
+            await postRepository.uploadAdoption(
+                _images, selectedChip, petData, tags);
+            ToastComponent().showMessage(
+                Colors.green, '$selectedChip successful');
             clearPost();
             isDone = true;
           } catch (e) {
@@ -434,29 +453,30 @@ class CreatePostViewModel extends ChangeNotifier {
         // Implement functionality for Protect Our Pets: Report Abuse
       } else if (selectedChip == 'Pet Care Insights') {
         // Implement functionality for Caring for Pets: Vet & Travel Insights
-        if(clinicNameController.text.isEmpty){
-          ToastComponent().showMessage(Colors.red, 'Clinic name cannot be empty');
+        if (clinicNameController.text.isEmpty) {
+          ToastComponent().showMessage(
+              Colors.red, 'Clinic name cannot be empty');
         }
-         else if(address.text.isEmpty){
+        else if (address.text.isEmpty) {
           ToastComponent().showMessage(Colors.red, 'Address cannot be empty');
         }
-         else if(selectedRegion==null) {
+        else if (selectedRegion == null) {
           ToastComponent().showMessage(Colors.red, 'Please select a region');
         }
-         else if(selectedProvince==null) {
+        else if (selectedProvince == null) {
           ToastComponent().showMessage(Colors.red, 'Please select a province');
         }
 
-        else if(selectedCity==null) {
+        else if (selectedCity == null) {
           ToastComponent().showMessage(Colors.red, 'Please select a city');
         }
-         else if(selectedBarangay==null) {
+        else if (selectedBarangay == null) {
           ToastComponent().showMessage(Colors.red, 'Please select a barangay');
         }
-         else if(postController.text.isEmpty) {
+        else if (postController.text.isEmpty) {
           ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
         }
-         else if(_images.isEmpty) {
+        else if (_images.isEmpty) {
           ToastComponent().showMessage(Colors.red, 'Please select an image');
         } else {
           try {
@@ -469,17 +489,55 @@ class CreatePostViewModel extends ChangeNotifier {
               'barangay': selectedBarangay!.barangayName,
               'address': address.text,
             };
-            await postRepository.uploadVetTravel(_images, selectedChip, petData, tags);
+            await postRepository.uploadVetTravel(
+                _images, selectedChip, petData, tags);
             clearPost();
             isDone = true;
           } catch (e) {
             print('Failed to post: $e');
           }
         }
-
       }
-      else if(selectedChip =='Pets For Rescue'){
+      else if (selectedChip == 'Pets For Rescue') {
+        if (address.text.isEmpty) {
+          ToastComponent().showMessage(Colors.red, 'Address cannot be empty');
+        }
+        else if (postController.text.isEmpty) {
+          ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
+        }
+        else if (_images.isEmpty) {
+          ToastComponent().showMessage(Colors.red, 'Please select an image');
+        }
+        else if (selectedPetType == 'Cat' && selectedCatBreed == null ||
+            selectedPetType == 'Dog' && selectedDogBreed == null) {
+          ToastComponent().showMessage(Colors.red, selectedPetType == 'Cat'
+              ? 'Please select the breed of the cat'
+              : 'Please select the breed of the dog');
+        }
+         else{
+            var petRescueData = {
+              'post': postController.text,
+              'pet_type': selectedPetType.toString(),
+              'pet_breed': selectedPetType == 'Cat'
+                  ? selectedCatBreed!.name
+                  : selectedDogBreed!.name,
+              'pet_color': selectedColorPattern,
+              'pet_gender': selectedPetGender,
+              'pet_size': selectedPetSize,
+              'address': address.text,
+            };
 
+            try {
+              await postRepository.uploadPetRescue(
+                  _images, selectedChip, petRescueData, tags);
+              ToastComponent().showMessage(
+                  Colors.green, '$selectedChip successful');
+              clearPost();
+              isDone = true;
+            } catch (e) {
+              print('Failed to post: $e');
+            }
+        }
       }
       else {
         ToastComponent().showMessage(Colors.red, 'Please select a post type');
@@ -489,8 +547,15 @@ class CreatePostViewModel extends ChangeNotifier {
     } finally {
       pd.close();
       if (isDone) {
-        Navigator.pop(context);
-        isDone = false;
+        if (context.mounted) {
+          debugPrint('Context is mounted, closing the dialog.');
+          ToastComponent().showMessage(Colors.green, 'Post successful');
+          Navigator.pop(context);
+          isDone = false;
+        } else {
+          debugPrint('Context is not mounted, cannot close the dialog.');
+          isDone = false;
+        }
       }
     }
   }
