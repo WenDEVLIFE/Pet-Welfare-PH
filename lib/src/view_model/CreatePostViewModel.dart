@@ -152,7 +152,7 @@ class CreatePostViewModel extends ChangeNotifier {
   List<String> typeOfDonation = ['Cash', 'Non-cash/In-kind'];
   String? selectedTypeOfDonation = 'Cash';
 
-  final List<String> tags = [];
+  List<String> tags = [];
 
 
   // Constructor
@@ -265,6 +265,8 @@ class CreatePostViewModel extends ChangeNotifier {
     bankNameController.clear();
     accountNameController.clear();
     notifyListeners();
+    tagController.clear();
+    tags = [];
   }
 
   Future<void> PostNow(BuildContext context) async {
@@ -273,13 +275,16 @@ class CreatePostViewModel extends ChangeNotifier {
     try {
       if (selectedChip=="Pet Appreciation"){
         // For pet appreciation, paw-some experience, and community announcements
+        if(tags.isEmpty){
+          ToastComponent().showMessage(Colors.red, 'Please add at least one tag');
+        }
         if (postController.text.isEmpty) {
           ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
         } else if (_images.isEmpty) {
           ToastComponent().showMessage(Colors.red, 'Please select an image');
         } else {
           try {
-            await postRepository.uploadPost(postController.text, _images, selectedChip);
+            await postRepository.uploadPost(postController.text, _images, selectedChip, tags);
             ToastComponent().showMessage(Colors.green, 'Post successful');
             clearPost();
             isDone = true;
@@ -332,7 +337,7 @@ class CreatePostViewModel extends ChangeNotifier {
               'long': selectedLocation!.longitude,
             };
 
-            await postRepository.uploadPetData(_images, selectedChip, petData);
+            await postRepository.uploadPetData(_images, selectedChip, petData,tags );
             ToastComponent().showMessage(Colors.green, '$selectedChip successful');
             clearPost();
             isDone = true;
@@ -367,7 +372,7 @@ class CreatePostViewModel extends ChangeNotifier {
               'purpose_of_donation': selectedDonationType,
               'donation_type': selectedTypeOfDonation,
             };
-            await postRepository.uploadDonation(_images, selectedChip, petData);
+            await postRepository.uploadDonation(_images, selectedChip, petData, tags);
             clearPost();
             isDone = true;
           } catch (e) {
@@ -416,7 +421,7 @@ class CreatePostViewModel extends ChangeNotifier {
           };
 
           try {
-            await postRepository.uploadAdoption(_images, selectedChip, petData);
+            await postRepository.uploadAdoption(_images, selectedChip, petData, tags);
             ToastComponent().showMessage(Colors.green, '$selectedChip successful');
             clearPost();
             isDone = true;
@@ -463,7 +468,7 @@ class CreatePostViewModel extends ChangeNotifier {
               'barangay': selectedBarangay!.barangayName,
               'address': address.text,
             };
-            await postRepository.uploadVetTravel(_images, selectedChip, petData);
+            await postRepository.uploadVetTravel(_images, selectedChip, petData, tags);
             clearPost();
             isDone = true;
           } catch (e) {

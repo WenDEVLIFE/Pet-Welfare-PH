@@ -15,10 +15,10 @@ import '../utils/AppColors.dart';
 import 'dart:developer' as developer;
 
 abstract class PostRepository {
-  Future<void> uploadPost(String postText, List<File> images, String category);
+  Future<void> uploadPost(String postText, List<File> images, String category, List<String> tags);
   Stream<List<PostModel>> getPosts();
 
-  Future <void> uploadPetData(List<File> images, String selectedChip, Map<String, dynamic> petData);
+  Future <void> uploadPetData(List<File> images, String selectedChip, Map<String, dynamic> petData, List<String> tags);
 
   Future <void> addReaction(String postId, String reaction);
 
@@ -56,7 +56,7 @@ abstract class PostRepository {
 
   Future <void> editComment(String postId, String commentId, String newCommentText);
 
-  Future <void> uploadAdoption(List<File> images, String selectedChip, Map<String, dynamic> petData);
+  Future <void> uploadAdoption(List<File> images, String selectedChip, Map<String, dynamic> petData, List <String> tags);
 
   Stream<List<PostModel>> getPetAdoption();
 
@@ -64,9 +64,9 @@ abstract class PostRepository {
 
   Future<List<PostModel>> getNearbyLostPets(double lat, double long, double radiusInK);
 
-  Future <void> uploadDonation(List<File> images, String selectedChip, Map<String, dynamic> petData);
+  Future <void> uploadDonation(List<File> images, String selectedChip, Map<String, dynamic> petData, List<String> tags);
 
-  Future <void> uploadVetTravel(List<File> images, String selectedChip, Map<String, String> petData);
+  Future <void> uploadVetTravel(List<File> images, String selectedChip, Map<String, String> petData, List<String> tags);
 
 }
 
@@ -76,7 +76,7 @@ class PostRepositoryImpl implements PostRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   @override
-  Future<void> uploadPost(String postText, List<File> images, String category) async {
+  Future<void> uploadPost(String postText, List<File> images, String category, List<String> tags) async {
     User user = _firebaseAuth.currentUser!;
     String uuid = user.uid;
     var postID = Uuid().v4();
@@ -90,6 +90,18 @@ class PostRepositoryImpl implements PostRepository {
         'Category': category,
         'Timestamp': FieldValue.serverTimestamp(),
       });
+
+      // Create a document for tag collection
+      WriteBatch batch = _firestore.batch();
+      if (tags.isNotEmpty) {
+        for (String tag in tags) {
+          DocumentReference tagRef = postRef.collection('TagsCollection').doc();
+          batch.set(tagRef, {'tags': tag});
+
+        }
+        await  batch.commit();
+      }
+
 
       DocumentReference notificationRef = _firestore.collection('NotificationCollection').doc();
       await notificationRef.set({
@@ -116,6 +128,8 @@ class PostRepositoryImpl implements PostRepository {
         });
       }).toList();
 
+
+
       // Wait for all uploads to complete
       await Future.wait(uploadTasks);
     } catch (e) {
@@ -137,7 +151,7 @@ class PostRepositoryImpl implements PostRepository {
 
   // Added upload pet data
   @override
-  Future<void> uploadPetData(List<File> images, String selectedChip, Map<String, dynamic> petData) async {
+  Future<void> uploadPetData(List<File> images, String selectedChip, Map<String, dynamic> petData, List<String> tags) async {
     User user = _firebaseAuth.currentUser!;
     String uuid = user.uid;
     var postID = Uuid().v4();
@@ -172,6 +186,16 @@ class PostRepositoryImpl implements PostRepository {
         'Timestamp': FieldValue.serverTimestamp(),
       });
 
+      // Create a document for tag collection
+      WriteBatch batch = _firestore.batch();
+      if (tags.isNotEmpty) {
+        for (String tag in tags) {
+          DocumentReference tagRef = postRef.collection('TagsCollection').doc();
+          batch.set(tagRef, {'tags': tag});
+
+        }
+        await  batch.commit();
+      }
       // Create a new document in PetDetailsCollection
       DocumentReference petRef = _firestore.collection('PetDetailsCollection').doc(postID);
       await petRef.set({
@@ -240,7 +264,7 @@ class PostRepositoryImpl implements PostRepository {
 
   // Added upload pet data
   @override
-  Future<void> uploadAdoption(List<File> images, String selectedChip, Map<String, dynamic> petData) async {
+  Future<void> uploadAdoption(List<File> images, String selectedChip, Map<String, dynamic> petData, List<String> tags) async {
     User user = _firebaseAuth.currentUser!;
     String uuid = user.uid;
     var postID = Uuid().v4();
@@ -270,6 +294,17 @@ class PostRepositoryImpl implements PostRepository {
         'Category': selectedChip,
         'Timestamp': FieldValue.serverTimestamp(),
       });
+
+      // Create a document for tag collection
+      WriteBatch batch = _firestore.batch();
+      if (tags.isNotEmpty) {
+        for (String tag in tags) {
+          DocumentReference tagRef = postRef.collection('TagsCollection').doc();
+          batch.set(tagRef, {'tags': tag});
+
+        }
+        await  batch.commit();
+      }
 
       // Create a new document in PetDetailsCollection
       DocumentReference petRef = _firestore.collection('AdoptionDetails').doc(postID);
@@ -696,7 +731,7 @@ class PostRepositoryImpl implements PostRepository {
 
   // Added upload donation function
   @override
-  Future<void> uploadDonation(List<File> images, String selectedChip, Map<String, dynamic> petData) async {
+  Future<void> uploadDonation(List<File> images, String selectedChip, Map<String, dynamic> petData, List<String> tags) async {
     User user = _firebaseAuth.currentUser!;
     String uuid = user.uid;
     var postID = Uuid().v4();
@@ -721,6 +756,17 @@ class PostRepositoryImpl implements PostRepository {
         'Category': selectedChip,
         'Timestamp': FieldValue.serverTimestamp(),
       });
+
+      // Create a document for tag collection
+      WriteBatch batch = _firestore.batch();
+      if (tags.isNotEmpty) {
+        for (String tag in tags) {
+          DocumentReference tagRef = postRef.collection('TagsCollection').doc();
+          batch.set(tagRef, {'tags': tag});
+
+        }
+        await  batch.commit();
+      }
 
       // Create a new document in PetDetailsCollection
       DocumentReference petRef = _firestore.collection('DonationDetails').doc(postID);
@@ -773,7 +819,7 @@ class PostRepositoryImpl implements PostRepository {
 
   // Added a function to upload vet travel
   @override
-  Future<void> uploadVetTravel(List<File> images, String selectedChip, Map<String, String> petData) async {
+  Future<void> uploadVetTravel(List<File> images, String selectedChip, Map<String, String> petData, List<String> tags) async {
     User user = _firebaseAuth.currentUser!;
     String uuid = user.uid;
     var postID = Uuid().v4();
@@ -796,6 +842,17 @@ class PostRepositoryImpl implements PostRepository {
         'Category': selectedChip,
         'Timestamp': FieldValue.serverTimestamp(),
       });
+
+      // Create a document for tag collection
+      WriteBatch batch = _firestore.batch();
+      if (tags.isNotEmpty) {
+        for (String tag in tags) {
+          DocumentReference tagRef = postRef.collection('TagsCollection').doc();
+          batch.set(tagRef, {'tags': tag});
+
+        }
+        await  batch.commit();
+      }
 
       // Create a new document in PetDetailsCollection
       DocumentReference petRef = _firestore.collection('VetTravelDetails').doc(

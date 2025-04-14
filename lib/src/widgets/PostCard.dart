@@ -5,6 +5,7 @@ import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 import 'package:provider/provider.dart';
 
 import '../DialogView/ReportDialog.dart';
+import '../view/ViewImage.dart';
 
 class PostCard extends StatelessWidget {
   final PostModel post;
@@ -178,13 +179,17 @@ class PostCard extends StatelessWidget {
                           itemBuilder: (context, imageIndex) {
                             return GestureDetector(
                               onTap: () {
-                                Navigator.pushNamed(
+                                Navigator.push(
                                   context,
-                                  '/viewImage',
-                                  arguments: {
-                                    'imageUrls': post.imageUrls,
-                                    'initialIndex': imageIndex,
-                                  },
+                                  MaterialPageRoute(
+                                    builder: (context) => ViewImage(),
+                                    settings: RouteSettings(
+                                      arguments: {
+                                        'imageUrls': post.imageUrls,
+                                        'initialIndex': imageIndex,
+                                      },
+                                    ),
+                                  ),
                                 );
                               },
                               child: CachedNetworkImage(
