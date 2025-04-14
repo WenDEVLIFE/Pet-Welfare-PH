@@ -3,14 +3,14 @@ import 'package:flutter/material.dart';
 
 import '../../utils/AppColors.dart';
 
-class RescueShelterView extends StatefulWidget {
-  const RescueShelterView({Key? key}) : super(key: key);
+class PetForRescueView extends StatefulWidget {
+  const PetForRescueView({Key? key}) : super(key: key);
 
   @override
   RescueState createState() => RescueState();
 }
 
-class RescueState extends State<RescueShelterView> {
+class RescueState extends State<PetForRescueView> {
   @override
   Widget build(BuildContext context) {
     // TODO: implement build of RescueShelterView

@@ -7,7 +7,7 @@ import 'package:pet_welfrare_ph/src/view/petmenuView/MissingPetView.dart';
 import 'package:pet_welfrare_ph/src/view/petmenuView/PawSomeView.dart';
 import 'package:pet_welfrare_ph/src/view/petmenuView/PetAdoptionView.dart';
 import 'package:pet_welfrare_ph/src/view/petmenuView/ProtectView.dart';
-import 'package:pet_welfrare_ph/src/view/petmenuView/RescueShelterView.dart';
+import 'package:pet_welfrare_ph/src/view/petmenuView/PetForRescueView.dart';
 import 'package:pet_welfrare_ph/src/view/petmenuView/VetAndTravelView.dart';
 import 'package:pet_welfrare_ph/src/view/petmenuView/PetAppreciationView.dart';
 
@@ -101,7 +101,7 @@ class ProfileState extends State<ProfileView> {
                 PetAppreciateView(), // Pet Appreciation
                 MissingPetView(), // Missing Pets
                 FoundPetView(), // Found Pets
-                RescueShelterView(), // Find a Home: Rescue & Shelter
+                PetForRescueView(), // Find a Home: Rescue & Shelter
                 CallOfAidView(), // Call for Aid
                 PawSomeView(), // Paw-some Experience
                 PetAdoptionView(), // Pet Adoption
