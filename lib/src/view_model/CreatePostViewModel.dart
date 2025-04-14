@@ -189,17 +189,17 @@ class CreatePostViewModel extends ChangeNotifier {
     }
   }
 
-  Future <void> loadList() async{
+  Future<void> loadList() async {
     var userdata = await sessionManager.getUserInfo();
     var role = userdata!['role'];
 
-    if (role=='Admin'|| role=='Sub-admin'){
-      chipLabels1 =[
+    if (role == 'Admin' || role == 'Sub-admin') {
+      chipLabels1 = [
         'Community Announcements'
       ];
       selectedChip = 'Community Announcements';
-    } else if(role =='Pet Rescuer' || role.toLowercase() == 'Pet Shelter'){
-      chipLabels1 =[
+    } else if (role == 'Pet Rescuer' || role.toLowerCase() == 'pet shelter') {
+      chipLabels1 = [
         'Pet Appreciation',
         'Missing Pets',
         'Found Pets',
@@ -210,8 +210,8 @@ class CreatePostViewModel extends ChangeNotifier {
         'Protect Our Pets: Report Abuse',
         'Pet Care Insights',
       ];
-    } else{
-      chipLabels1 =[
+    } else {
+      chipLabels1 = [
         'Pet Appreciation',
         'Missing Pets',
         'Found Pets',
@@ -225,7 +225,6 @@ class CreatePostViewModel extends ChangeNotifier {
 
     notifyListeners();
   }
-
 
   void removeImage(File image) {
     _images.remove(image);
