@@ -35,6 +35,7 @@ class CreatePostViewModel extends ChangeNotifier {
   final TextEditingController bankNameController = TextEditingController();
   final TextEditingController accountNameController = TextEditingController();
   final TextEditingController clinicNameController = TextEditingController();
+  final TextEditingController tagController = TextEditingController();
   final FocusNode focusNode = FocusNode();
 
   final List<File> _images = [];
@@ -151,6 +152,9 @@ class CreatePostViewModel extends ChangeNotifier {
   List<String> typeOfDonation = ['Cash', 'Non-cash/In-kind'];
   String? selectedTypeOfDonation = 'Cash';
 
+  final List<String> tags = [];
+
+
   // Constructor
   CreatePostViewModel() {
     loadUserLocation();
@@ -199,7 +203,7 @@ class CreatePostViewModel extends ChangeNotifier {
         'Pet Appreciation',
         'Missing Pets',
         'Found Pets',
-        'Pets for Adoption',
+        'Pets For Rescue',
         'Call for Aid',
         'Paw-some Experience',
         'Pet Adoption',
@@ -211,7 +215,7 @@ class CreatePostViewModel extends ChangeNotifier {
         'Pet Appreciation',
         'Missing Pets',
         'Found Pets',
-        'Pets for Adoption',
+        'Pets For Rescue',
         'Paw-some Experience',
         'Pet Adoption',
         'Protect Our Pets: Report Abuse',
@@ -466,6 +470,9 @@ class CreatePostViewModel extends ChangeNotifier {
             print('Failed to post: $e');
           }
         }
+
+      }
+      else if(selectedChip =='Pets For Rescue'){
 
       }
       else {
@@ -985,5 +992,18 @@ class CreatePostViewModel extends ChangeNotifier {
   void setselectedDonation(String? newValue) {
     selectedTypeOfDonation = newValue!;
     notifyListeners();
+  }
+
+  void addTag(String tag) {
+    if (tag.isNotEmpty && !tags.contains(tag)) {
+      tags.add(tag);
+      tagController.clear();
+      notifyListeners();
+    }
+  }
+
+  void removeTag(String tag) {
+      tags.remove(tag);
+      notifyListeners();
   }
 }

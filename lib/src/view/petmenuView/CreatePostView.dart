@@ -21,6 +21,7 @@ import '../../view_model/CreatePostViewModel.dart';
 import '../../widgets/CustomMapWidget.dart';
 import '../../widgets/CustomTextField.dart';
 import '../../widgets/ImageUploadWidget.dart';
+import '../../widgets/TagWidget.dart';
 
 class CreatePostView extends StatelessWidget {
   @override
@@ -112,6 +113,25 @@ class CreatePostView extends StatelessWidget {
               images: createPostViewModel.images,
               onPickImage: createPostViewModel.pickImage,
               onRemoveImage: createPostViewModel.removeImage,
+            ),
+            CustomText(
+              text: 'Tags',
+              size: 18,
+              color: Colors.black,
+              weight: FontWeight.w700,
+              align: TextAlign.left,
+              screenHeight: screenHeight,
+              alignment: Alignment.centerLeft,
+            ),
+            Padding(
+              padding: const EdgeInsets.all(10.0),
+              child: TagsInputWidget(
+                tagController: createPostViewModel.tagController,
+                tags: createPostViewModel.tags,
+                onAddTag: createPostViewModel.addTag,
+                onRemoveTag: createPostViewModel.removeTag,
+                screenHeight: screenHeight,
+              ),
             ),
             CustomText(
               text: 'Select a category',

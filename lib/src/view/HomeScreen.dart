@@ -21,7 +21,7 @@ class HomeScreen extends StatefulWidget {
 class HomeState extends State<HomeScreen> {
   final List<String> _chipLabels = [
     'Pet Appreciation', 'Missing Pets', 'Found Pets',
-    'Pets for Adoption', 'Call for Aid', 'Paw-some Experience',
+    'Pets For Rescue', 'Call for Aid', 'Paw-some Experience',
     'Pet Adoption', 'Protect Our Pets: Report Abuse', 'Pet Care Insights', 'Community Announcements'
   ];
   int _selectedIndex = 0;
