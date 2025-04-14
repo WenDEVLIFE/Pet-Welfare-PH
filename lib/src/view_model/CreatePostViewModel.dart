@@ -222,6 +222,8 @@ class CreatePostViewModel extends ChangeNotifier {
         'Pet Care Insights',
       ];
     }
+
+    notifyListeners();
   }
 
 
