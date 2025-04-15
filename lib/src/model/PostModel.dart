@@ -60,6 +60,7 @@ class PostModel {
   String rescuePetType ='';
   String rescuePetSize='';
   String rescueStatus='';
+  String rescuePetGender='';
 
   PostModel({
     required this.postId,
@@ -149,7 +150,8 @@ class PostModel {
       ..rescuePetColor = rescueDoc.data()?['PetColor'] ?? ''
       ..rescuePetType = rescueDoc.data()?['PetType'] ?? ''
       ..rescuePetSize = rescueDoc.data()?['PetSize'] ?? ''
-      ..rescueStatus = rescueDoc.data()?['Status'] ?? '';
+      ..rescueStatus = rescueDoc.data()?['Status'] ?? ''
+      ..rescuePetGender = rescueDoc.data()?['PetGender'] ?? '';
 
   }
 }
