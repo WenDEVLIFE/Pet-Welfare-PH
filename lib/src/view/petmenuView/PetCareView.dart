@@ -42,7 +42,7 @@ class VetAndTravelState extends State<VetAndTravelView> {
               CustomSearchTextField(
                 controller: postViewModel.searchPostController,
                 screenHeight: screenHeight,
-                hintText: 'Search for posts about Caring for Pets: Vet & Travel Insights post',
+                hintText: 'Search for posts about Caring for Pet Care Insights',
                 fontSize: 16,
                 keyboardType: TextInputType.text,
                 onChanged: (searchText) {
@@ -51,7 +51,7 @@ class VetAndTravelState extends State<VetAndTravelView> {
               ),
           Expanded(
               child: postViewModel.filterVetAndTravelPost.isEmpty
-              ? Center(child: Text('No ${postViewModel.searchPostController.text} vet & travel insights post found'))
+              ? Center(child: Text('No ${postViewModel.searchPostController.text} pet care insights post found'))
                   : ListView.builder(
               itemCount: postViewModel.filterVetAndTravelPost.length,
               itemBuilder: (context, index) {

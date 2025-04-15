@@ -8,7 +8,7 @@ import 'package:pet_welfrare_ph/src/view/petmenuView/PawSomeView.dart';
 import 'package:pet_welfrare_ph/src/view/petmenuView/PetAdoptionView.dart';
 import 'package:pet_welfrare_ph/src/view/petmenuView/ProtectView.dart';
 import 'package:pet_welfrare_ph/src/view/petmenuView/PetForRescueView.dart';
-import 'package:pet_welfrare_ph/src/view/petmenuView/VetAndTravelView.dart';
+import 'package:pet_welfrare_ph/src/view/petmenuView/PetCareView.dart';
 import 'package:pet_welfrare_ph/src/view/petmenuView/PetAppreciationView.dart';
 
 class HomeScreen extends StatefulWidget {
