@@ -265,9 +265,10 @@ class CreatePostViewModel extends ChangeNotifier {
     amountController.clear();
     bankNameController.clear();
     accountNameController.clear();
-    notifyListeners();
     tagController.clear();
     tags.clear();
+    clinicNameController.clear();
+    notifyListeners();
   }
 
   Future<void> postNow(BuildContext context) async {
@@ -352,6 +353,7 @@ class CreatePostViewModel extends ChangeNotifier {
                 Colors.green, '$selectedChip successful');
             clearPost();
             isDone = true;
+            notifyListeners();
           } catch (e) {
             print('Failed to post: $e');
           }
@@ -388,6 +390,7 @@ class CreatePostViewModel extends ChangeNotifier {
                 _images, selectedChip, petData, tags);
             clearPost();
             isDone = true;
+            notifyListeners();
           } catch (e) {
             print('Failed to post: $e');
           }
@@ -445,6 +448,7 @@ class CreatePostViewModel extends ChangeNotifier {
                 Colors.green, '$selectedChip successful');
             clearPost();
             isDone = true;
+            notifyListeners();
           } catch (e) {
             print('Failed to post: $e');
           }
@@ -493,6 +497,8 @@ class CreatePostViewModel extends ChangeNotifier {
                 _images, selectedChip, petData, tags);
             clearPost();
             isDone = true;
+
+            notifyListeners();
           } catch (e) {
             print('Failed to post: $e');
           }
@@ -534,6 +540,8 @@ class CreatePostViewModel extends ChangeNotifier {
                   Colors.green, '$selectedChip successful');
               clearPost();
               isDone = true;
+
+              notifyListeners();
             } catch (e) {
               print('Failed to post: $e');
             }
@@ -558,6 +566,8 @@ class CreatePostViewModel extends ChangeNotifier {
         }
       }
     }
+
+    notifyListeners();
   }
 
   // Set initial location

@@ -729,7 +729,9 @@ class CreatePostView extends StatelessWidget {
                 hint: 'Select Colors or patterns',
               ),
             ],
-               if (createPostViewModel.selectedChip == "Pet Adoption" || createPostViewModel.selectedChip == "Missing Pets" || createPostViewModel.selectedChip == "Found Pets" ||createPostViewModel.selectedChip == "Pets For Rescue" ) ...[
+               if (createPostViewModel.selectedChip == "Pet Adoption" || createPostViewModel.selectedChip == "Missing Pets" ||
+                   createPostViewModel.selectedChip == "Found Pets" ||createPostViewModel.selectedChip == "Pets For Rescue" ||
+                   createPostViewModel.selectedChip == "Pet Care Insights" ) ...[
                  CustomText(
                    text: createPostViewModel.selectedChip == "Missing Pets"
                        ? 'Enter the Street Address, Building, House No for missing pet'

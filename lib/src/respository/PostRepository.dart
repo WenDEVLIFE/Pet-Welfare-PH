@@ -832,10 +832,12 @@ class PostRepositoryImpl implements PostRepository {
           postID);
 
       String post = petData['post']!;
-      String travelType = petData['travel_type']!;
-      String travelDate = petData['travel_date']!;
-      String travelTime = petData['travel_time']!;
-      String travelLocation = petData['travel_location']!;
+      String clinicName = petData['clinic_name']!;
+      String region = petData['region']!;
+      String province = petData['province']!;
+      String city = petData['city']!;
+      String barangay = petData['barangay']!;
+      String address = petData['address']!;
 
       await postRef.set({
         'PostID': postID,
@@ -860,11 +862,12 @@ class PostRepositoryImpl implements PostRepository {
       DocumentReference petRef = _firestore.collection('VetTravelDetails').doc(
           postID);
       await petRef.set({
-        'TravelType': travelType,
-        'TravelDate': travelDate,
-        'TravelTime': travelTime,
-        'TravelLocation': travelLocation,
-        'Status': 'Ongoing', // put paused and fullfilled
+        'ClinicName': clinicName,
+        'Region': region,
+        'Province': province,
+        'City': city,
+        'Barangay': barangay,
+        'Address': address,
       });
 
       DocumentReference notificationRef = _firestore.collection(
