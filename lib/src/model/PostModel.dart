@@ -54,6 +54,12 @@ class PostModel {
   String estimatedAmount = '';
   String statusDonation = '';
   String bankName = '';
+  String rescueAddress ='';
+  String rescueBreed ='';
+  String rescuePetColor ='';
+  String rescuePetType ='';
+  String rescuePetSize='';
+  String rescueStatus='';
 
   PostModel({
     required this.postId,
@@ -84,6 +90,7 @@ class PostModel {
     var petDoc = await FirebaseFirestore.instance.collection('PetDetailsCollection').doc(doc.id).get();
     var petDocAdopt = await FirebaseFirestore.instance.collection('AdoptionDetails').doc(doc.id).get();
     var donationDoc = await FirebaseFirestore.instance.collection('DonationDetails').doc(doc.id).get();
+    var rescueDoc = await FirebaseFirestore.instance.collection('PetRescueDetails').doc(doc.id).get();
 
     return PostModel(
       postId: doc.id,
@@ -136,7 +143,13 @@ class PostModel {
       ..bankHolder = donationDoc.data()?['BankHolder'] ?? ''
       ..donationType = donationDoc.data()?['DonationType'] ?? ''
       ..estimatedAmount = donationDoc.data()?['EstimatedAmount'] ?? ''
-      ..statusDonation = donationDoc.data()?['Status'] ?? '';
+      ..statusDonation = donationDoc.data()?['Status'] ?? ''
+      ..rescueAddress = rescueDoc.data()?['Address'] ?? ''
+      ..rescueBreed = rescueDoc.data()?['PetBreed'] ?? ''
+      ..rescuePetColor = rescueDoc.data()?['PetColor'] ?? ''
+      ..rescuePetType = rescueDoc.data()?['PetType'] ?? ''
+      ..rescuePetSize = rescueDoc.data()?['PetSize'] ?? ''
+      ..rescueStatus = rescueDoc.data()?['Status'] ?? '';
 
   }
 }
