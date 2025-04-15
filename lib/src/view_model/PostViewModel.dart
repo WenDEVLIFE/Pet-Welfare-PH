@@ -40,8 +40,8 @@ class PostViewModel extends ChangeNotifier {
   List<PostModel> callforAidPost = [];
   List<PostModel> filterCallforAidPost = [];
 
-  List<PostModel> findHomeShelterPost = [];
-  List<PostModel> filterFindHomeShelterPost = [];
+  List<PostModel> petforRescuePost = [];
+  List<PostModel> filterPetForRescuePost = [];
 
   List<CommentModel> comments = [];
 
@@ -58,7 +58,7 @@ class PostViewModel extends ChangeNotifier {
   Stream<List<PostModel>> get vetAndTravelPostStream => postRepository.getVetAndTravelPost();
   Stream<List<PostModel>> get petAdoptPostStream => postRepository.getPetAdoption();
   Stream<List<PostModel>> get callforAidPostStream => postRepository.getCallforAid();
-  Stream<List<PostModel>> get findHomeShelterPostStream => postRepository.getFindHome();
+  Stream<List<PostModel>> get petForRescue => postRepository.getFindHome();
 
 
  // Initialize the PostViewModel
@@ -75,7 +75,7 @@ class PostViewModel extends ChangeNotifier {
     listenToVetAndTravelPost();
     listenToPetAdoptPost();
     listenToCallforAidPost();
-
+    listenToPetForRescuePost();
   }
 
   // this is for the set post
@@ -141,7 +141,12 @@ class PostViewModel extends ChangeNotifier {
     searchCallforAidPost(searchPostController.text);
   }
 
-  
+  // this is for the set pet for rescue post
+  void setPetForRescuePost(List<PostModel> posts, {bool notify = true}) {
+    petforRescuePost = posts;
+    filterPetForRescuePost = posts;
+    searchPetForRescue(searchPostController.text);
+  }
 
   // get format timestap
   String formatTimestamp(Timestamp timestamp) {
@@ -320,6 +325,17 @@ class PostViewModel extends ChangeNotifier {
       notifyListeners();
     });
   }
+
+  // Listen to pet for rescue post
+  void listenToPetForRescuePost() async {
+    petForRescue.listen((rescuePost) {
+      petforRescuePost = rescuePost;
+      filterPetForRescuePost = rescuePost;
+      notifyListeners();
+    });
+  }
+
+
   // search post
   void searchPost(String search) {
     if (search.isEmpty) {
@@ -456,6 +472,21 @@ class PostViewModel extends ChangeNotifier {
     }
     notifyListeners();
   }
+
+  void searchPetForRescue(String searchText) {
+
+    if (searchText.isEmpty) {
+      filterPetForRescuePost = petforRescuePost;
+    } else {
+      filterPetForRescuePost = petforRescuePost.where((post) => post.tags.any((tag) => tag.name.toLowerCase().contains(searchText.toLowerCase()))
+          || post.rescuePetSize.toLowerCase().contains(searchText.toLowerCase()) || post.rescueStatus.toLowerCase().contains(searchText.toLowerCase())
+      ||post.rescueAddress.toLowerCase().contains(searchText.toLowerCase()) || post.rescuePetColor.toLowerCase().contains(searchText.toLowerCase())
+          || post.rescueBreed.toLowerCase().contains(searchText.toLowerCase()) || post.petType.toLowerCase().contains(searchText.toLowerCase())).toList();
+    }
+    notifyListeners();
+
+  }
+
 
   // This is for multiple search for pet adoption
   Future<void> startSearchPetAdoption(Map<String, dynamic> searchParams) async {
