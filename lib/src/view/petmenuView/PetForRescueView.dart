@@ -97,7 +97,7 @@ class ProtectPetState extends State<PetForRescueView> {
               label: 'Reload the Pets For Rescue Posts',
               child: const Icon(Icons.refresh),
               onTap: () {
-                postViewModel.listenToProtectedPost();
+                postViewModel.listenToPetForRescuePost();
               },
             ),
           ],

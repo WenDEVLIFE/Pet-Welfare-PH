@@ -55,7 +55,7 @@ class PostModel {
   String statusDonation = '';
   String bankName = '';
   String rescueAddress ='';
-  String rescueBreed ='';
+  String rescueBreed = '';
   String rescuePetColor ='';
   String rescuePetType ='';
   String rescuePetSize='';
@@ -92,6 +92,8 @@ class PostModel {
     var petDocAdopt = await FirebaseFirestore.instance.collection('AdoptionDetails').doc(doc.id).get();
     var donationDoc = await FirebaseFirestore.instance.collection('DonationDetails').doc(doc.id).get();
     var rescueDoc = await FirebaseFirestore.instance.collection('PetRescueDetails').doc(doc.id).get();
+
+    print('Rescue Document Data: ${rescueDoc.data()}');
 
     return PostModel(
       postId: doc.id,

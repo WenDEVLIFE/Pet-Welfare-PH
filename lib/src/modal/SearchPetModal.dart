@@ -45,7 +45,12 @@ class SearchPetModal extends StatelessWidget{
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Text(postViewModel.selectedSearchType == "Missing Pets" ? "Search Missing Pets" : postViewModel.selectedSearchType == "Found Pets" ? "Search Found Pet" : postViewModel.selectedSearchType == "Pet Adoption" ? "Search Pet Adoption" : "",
+              Text(postViewModel.selectedSearchType == "Missing Pets" ? "Search Missing Pets" :
+              postViewModel.selectedSearchType == "Found Pets" ?
+              "Search Found Pet" : postViewModel.selectedSearchType == "Pet Adoption"
+                  ? "Search Pet Adoption" :
+              postViewModel.selectedSearchType == "Pets For Rescue" ?
+              "Search Pets For Rescue" : "",
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 25,
@@ -81,47 +86,10 @@ class SearchPetModal extends StatelessWidget{
                     itemLabel: (String value) => value,
                     hint: 'Select Search Type',
                   ),
-                  CustomText(
-                    text: 'Pet Type',
-                    size: 18,
-                    color: Colors.black,
-                    weight: FontWeight.w700,
-                    align: TextAlign.left,
-                    screenHeight: screenHeight,
-                    alignment: Alignment.centerLeft,
-                  ),
-                  CustomDropDown<String>(
-                    value: postViewModel.selectedPetType,
-                    items: postViewModel.petTypes,
-                    onChanged: (String? newValue) {
-                      postViewModel.setPetType(newValue);
-                    },
-                    itemLabel: (String value) => value,
-                    hint: 'Select Pet Type',
-                  ),
-                   if (postViewModel.selectedPetType == "Dog") ...[
+                  if (postViewModel.selectedSearchType == "Missing Pets" || postViewModel.selectedSearchType == "Found Pets" ||
+                      postViewModel.selectedSearchType =="Pet Adoption" || postViewModel.selectedSearchType == "Pets For Rescue") ...[
                     CustomText(
-                    text: 'Dog Breed',
-                    size: 18,
-                    color: Colors.black,
-                    weight: FontWeight.w700,
-                    align: TextAlign.left,
-                    screenHeight: screenHeight,
-                    alignment: Alignment.centerLeft,
-                  ),
-                  CustomDropDown<Breed>(
-                    value: postViewModel.selectedDogBreed,
-                    items: postViewModel.dogBreeds,
-                    onChanged: (Breed? newValue) {
-                      postViewModel.setDogBreed(newValue);
-                    },
-                    itemLabel: (Breed value) => value.name,
-                    hint: 'Select Pet Breed',
-                  ),
-                  ],
-                  if (postViewModel.selectedPetType == "Cat") ...[
-                    CustomText(
-                      text: 'Cat Breed',
+                      text: 'Pet Type',
                       size: 18,
                       color: Colors.black,
                       weight: FontWeight.w700,
@@ -129,17 +97,55 @@ class SearchPetModal extends StatelessWidget{
                       screenHeight: screenHeight,
                       alignment: Alignment.centerLeft,
                     ),
-                    CustomDropDown<Breed>(
-                      value: postViewModel.selectedCatBreed,
-                      items: postViewModel.catBreeds,
-                      onChanged: (Breed? newValue) {
-                        postViewModel.setCatBreed(newValue);
+                    CustomDropDown<String>(
+                      value: postViewModel.selectedPetType,
+                      items: postViewModel.petTypes,
+                      onChanged: (String? newValue) {
+                        postViewModel.setPetType(newValue);
                       },
-                      itemLabel: (Breed value) => value.name,
-                      hint: 'Select Pet Breed',
+                      itemLabel: (String value) => value,
+                      hint: 'Select Pet Type',
                     ),
-                  ],
-                  if (postViewModel.selectedSearchType == "Missing Pets" || postViewModel.selectedSearchType == "Found Pets" ||  postViewModel.selectedSearchType =="Pet Adoption") ...[
+                    if (postViewModel.selectedPetType == "Dog") ...[
+                      CustomText(
+                        text: 'Dog Breed',
+                        size: 18,
+                        color: Colors.black,
+                        weight: FontWeight.w700,
+                        align: TextAlign.left,
+                        screenHeight: screenHeight,
+                        alignment: Alignment.centerLeft,
+                      ),
+                      CustomDropDown<Breed>(
+                        value: postViewModel.selectedDogBreed,
+                        items: postViewModel.dogBreeds,
+                        onChanged: (Breed? newValue) {
+                          postViewModel.setDogBreed(newValue);
+                        },
+                        itemLabel: (Breed value) => value.name,
+                        hint: 'Select Pet Breed',
+                      ),
+                    ],
+                    if (postViewModel.selectedPetType == "Cat") ...[
+                      CustomText(
+                        text: 'Cat Breed',
+                        size: 18,
+                        color: Colors.black,
+                        weight: FontWeight.w700,
+                        align: TextAlign.left,
+                        screenHeight: screenHeight,
+                        alignment: Alignment.centerLeft,
+                      ),
+                      CustomDropDown<Breed>(
+                        value: postViewModel.selectedCatBreed,
+                        items: postViewModel.catBreeds,
+                        onChanged: (Breed? newValue) {
+                          postViewModel.setCatBreed(newValue);
+                        },
+                        itemLabel: (Breed value) => value.name,
+                        hint: 'Select Pet Breed',
+                      ),
+                    ],
                     CustomText(
                       text: 'Pet Color/ Pattern',
                       size: 18,
@@ -194,6 +200,7 @@ class SearchPetModal extends StatelessWidget{
                       itemLabel: (String value) => value,
                       hint: 'Select Pet Gender',
                     ),
+                  if(postViewModel.selectedSearchType!= "Pets For Rescue" ) ...[
                     Padding(
                       padding: const EdgeInsets.all(10.0),
                       child: Column(
@@ -246,6 +253,7 @@ class SearchPetModal extends StatelessWidget{
                         ],
                       ),
                     ),
+                    ],
                     CustomText(
                       text: 'Address',
                       size: 18,

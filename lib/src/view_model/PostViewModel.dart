@@ -503,6 +503,7 @@ class PostViewModel extends ChangeNotifier {
         'province': post.petProvinceAdopt,
         'city': post.petCityAdopt,
         'barangay': post.petBarangayAdopt,
+        'address': post.petAddressAdopt,
       };
 
       // Add breed dynamically based on PetTypeAdopt
@@ -556,6 +557,7 @@ class PostViewModel extends ChangeNotifier {
         'region': post.petRegion,
         'province': post.petProvince,
         'city': post.petCity,
+        'address': post.petAddress,
       };
 
       // Add breed dynamically based on PetTypeAdopt
@@ -606,6 +608,7 @@ class PostViewModel extends ChangeNotifier {
         'region': post.petRegion,
         'province': post.petProvince,
         'city': post.petCity,
+        'address': post.petAddress,
       };
 
       // Add breed dynamically based on PetTypeAdopt
@@ -644,6 +647,55 @@ class PostViewModel extends ChangeNotifier {
     print('📦 Filtered posts: ${filterPetAdoptPost.length}');
     notifyListeners();
   }
+
+  Future<void> startSearchPetsForRescue(Map<String, dynamic> searchParams) async {
+    filterPetForRescuePost = petforRescuePost.where((post) {
+      final postFields = {
+        'petType': post.rescuePetType,
+        'petSize': post.rescuePetSize,
+        'petGender': post.rescuePetGender,
+        'colorPattern': post.rescuePetColor,
+        'address': post.rescueAddress,
+      };
+
+      // Add breed dynamically based on PetTypeAdopt
+      if (post.rescuePetType.toLowerCase() == 'dog') {
+        postFields['dogBreed'] = post.rescueBreed;
+      } else if (post.rescuePetType.toLowerCase() == 'cat') {
+        postFields['catBreed'] = post.rescueBreed;
+      }
+
+      final petType = (searchParams['petType'] ?? '').toString().toLowerCase();
+
+      for (final entry in searchParams.entries) {
+        final key = entry.key;
+        final value = entry.value?.toString().toLowerCase().trim();
+
+        if (value == null || value.isEmpty) continue;
+
+        // Skip wrong breed type
+        if ((key == 'dogBreed' && petType != 'dog') || (key == 'catBreed' && petType != 'cat')) {
+          continue;
+        }
+
+        final postValue = (postFields[key] ?? '').toString().toLowerCase().trim();
+
+        print('🔎 Comparing "$postValue" with "$value" for key "$key"');
+
+        if (postValue != value) {
+          print('❌ Not matched: $key');
+          return false;
+        }
+      }
+
+      return true;
+    }).toList();
+
+    print('📦 Filtered posts: ${filterPetAdoptPost.length}');
+
+    notifyListeners();
+  }
+
   // for checking matching for debugging
   bool debugEquals(String key, String value1, String value2) {
     value1 = value1.toLowerCase().trim();
@@ -659,6 +711,7 @@ class PostViewModel extends ChangeNotifier {
 
     return isEqual;
   }
+
 
 
 }
