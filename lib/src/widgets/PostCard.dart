@@ -172,34 +172,40 @@ class PostCard extends StatelessWidget {
                           ),
                         ),
                       ],
-                      SizedBox(
-                        height: screenHeight * 0.3,
-                        child: PageView.builder(
-                          itemCount: post.imageUrls.length,
-                          itemBuilder: (context, imageIndex) {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ViewImage(),
-                                    settings: RouteSettings(
-                                      arguments: {
-                                        'imageUrls': post.imageUrls,
-                                        'initialIndex': imageIndex,
-                                      },
+                      if(post.imageUrls.isNotEmpty)...[
+                        SizedBox(
+                          height: screenHeight * 0.3,
+                          child: PageView.builder(
+                            itemCount: post.imageUrls.length,
+                            itemBuilder: (context, imageIndex) {
+                              return GestureDetector(
+                                onTap: () {
+                                  Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ViewImage(),
+                                      settings: RouteSettings(
+                                        arguments: {
+                                          'imageUrls': post.imageUrls,
+                                          'initialIndex': imageIndex,
+                                        },
+                                      ),
                                     ),
+                                  );
+                                },
+                                child: Container(
+                                  width: screenWidth * 0.8,
+                                  height: screenHeight * 0.5,
+                                  child: CachedNetworkImage(
+                                    imageUrl: post.imageUrls[imageIndex],
+                                    fit: BoxFit.cover,
                                   ),
-                                );
-                              },
-                              child: CachedNetworkImage(
-                                imageUrl: post.imageUrls[imageIndex],
-                                fit: BoxFit.cover,
-                              ),
-                            );
-                          },
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                      ),
+                      ],
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [

@@ -46,7 +46,7 @@ class ProtectPetState extends State<ProtectPetView> {
               ),
           Expanded(
           child: postViewModel.filterProtectedPost.isEmpty
-          ? Center(child: Text('No ${postViewModel.searchPostController.text} found'))
+          ? Center(child: Text('No ${postViewModel.searchPostController.text} cases found'))
               : ListView.builder(
           itemCount: postViewModel.filterProtectedPost.length,
           itemBuilder: (context, index) {

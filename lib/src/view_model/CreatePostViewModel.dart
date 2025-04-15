@@ -276,7 +276,6 @@ class CreatePostViewModel extends ChangeNotifier {
     pd.show(max: 100, msg: 'Posting...');
     try {
       if (selectedChip == "Pet Appreciation") {
-        // For pet appreciation, paw-some experience, and community announcements
         if (tags.isEmpty) {
           ToastComponent().showMessage(
               Colors.red, 'Please add at least one tag');
@@ -285,6 +284,23 @@ class CreatePostViewModel extends ChangeNotifier {
           ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
         } else if (_images.isEmpty) {
           ToastComponent().showMessage(Colors.red, 'Please select an image');
+        } else {
+          try {
+            await postRepository.uploadPost(
+                postController.text, _images, selectedChip, tags);
+            ToastComponent().showMessage(Colors.green, 'Post successful');
+            clearPost();
+            isDone = true;
+          } catch (e) {
+            print('Failed to post: $e');
+          }
+        }
+      }
+      else if(selectedChip =='Paw-some Experience'){
+        if (postController.text.isEmpty) {
+          ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
+        } else if (tags.isEmpty) {
+          ToastComponent().showMessage(Colors.red, 'Please add at least one tag');
         } else {
           try {
             await postRepository.uploadPost(
@@ -455,8 +471,27 @@ class CreatePostViewModel extends ChangeNotifier {
         }
       } else if (selectedChip == 'Protect Our Pets: Report Abuse') {
         // Implement functionality for Protect Our Pets: Report Abuse
+        if(postController.text.isEmpty){
+          ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
+        }
+        if(tags.isEmpty){
+          ToastComponent().showMessage(Colors.red, 'Please add at least one tag');
+        }
+        else{
+          try {
+            var petData = {
+              'post': postController.text,
+            };
+            await postRepository.uploadReportAbuse(
+                _images, selectedChip, petData, tags);
+            clearPost();
+            isDone = true;
+            notifyListeners();
+          } catch (e) {
+            print('Failed to post: $e');
+          }
+        }
       } else if (selectedChip == 'Pet Care Insights') {
-        // Implement functionality for Caring for Pets: Vet & Travel Insights
         if (clinicNameController.text.isEmpty) {
           ToastComponent().showMessage(
               Colors.red, 'Clinic name cannot be empty');

@@ -111,6 +111,14 @@ class ProtectPetCard extends StatelessWidget {
                                     // Handle edit action
                                   },
                                 ),
+
+                                PopupMenuItem<String>(
+                                  value: 'Update Status',
+                                  child: const Text('Update Status'),
+                                  onTap: () {
+                                    // Handle edit action
+                                  },
+                                ),
                                 PopupMenuItem<String>(
                                   value: 'Delete',
                                   child: const Text('Delete'),
@@ -145,38 +153,78 @@ class ProtectPetCard extends StatelessWidget {
                           ),
                         ),
                       ),
-                      SizedBox(
-                        height: screenHeight * 0.3,
-                        child: PageView.builder(
-                          itemCount: post.imageUrls.length,
-                          itemBuilder: (context, imageIndex) {
-                            return GestureDetector(
-                              onTap: () {
-                                Navigator.push(
-                                  context,
-                                  MaterialPageRoute(
-                                    builder: (context) => ViewImage(),
-                                    settings: RouteSettings(
-                                      arguments: {
-                                        'imageUrls': post.imageUrls,
-                                        'initialIndex': imageIndex,
-                                      },
-                                    ),
-                                  ),
-                                );
-                              },
-                              child: Container(
-                                width: screenWidth * 0.8,
-                                height: screenHeight * 0.5,
-                                child: CachedNetworkImage(
-                                  imageUrl: post.imageUrls[imageIndex],
-                                  fit: BoxFit.cover,
-                                ),
-                              ),
-                            );
-                          },
+                      if (post.tags.isNotEmpty) ...[
+                        const Padding(
+                          padding: EdgeInsets.all(10),
+                          child: Text(
+                            'Tags',
+                            style: TextStyle(
+                              fontFamily: 'SmoochSans',
+                              color: Colors.black,
+                              fontSize: 16,
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                        ),
+                        Padding(
+                          padding: const EdgeInsets.all(10),
+                          child: Wrap(
+                            spacing: 8.0,
+                            runSpacing: 4.0,
+                            children: post.tags.map((tag) {
+                              return Chip(
+                                label: Text(tag.name),
+                              );
+                            }).toList(),
+                          ),
+                        ),
+                      ],
+                      Padding(
+                        padding: const EdgeInsets.all(10),
+                        child: Text(
+                          'Case Status: ${post.caseStatus}',
+                          style: const TextStyle(
+                            fontFamily: 'SmoochSans',
+                            color: Colors.black,
+                            fontSize: 16,
+                            fontWeight: FontWeight.w600,
+                          ),
                         ),
                       ),
+                       if(post.imageUrls.isNotEmpty)...[
+                         SizedBox(
+                           height: screenHeight * 0.3,
+                           child: PageView.builder(
+                             itemCount: post.imageUrls.length,
+                             itemBuilder: (context, imageIndex) {
+                               return GestureDetector(
+                                 onTap: () {
+                                   Navigator.push(
+                                     context,
+                                     MaterialPageRoute(
+                                       builder: (context) => ViewImage(),
+                                       settings: RouteSettings(
+                                         arguments: {
+                                           'imageUrls': post.imageUrls,
+                                           'initialIndex': imageIndex,
+                                         },
+                                       ),
+                                     ),
+                                   );
+                                 },
+                                 child: Container(
+                                   width: screenWidth * 0.8,
+                                   height: screenHeight * 0.5,
+                                   child: CachedNetworkImage(
+                                     imageUrl: post.imageUrls[imageIndex],
+                                     fit: BoxFit.cover,
+                                   ),
+                                 ),
+                               );
+                             },
+                           ),
+                         ),
+                       ],
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: [

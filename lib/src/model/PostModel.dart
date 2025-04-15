@@ -12,6 +12,7 @@ class PostModel {
   final List<TagModel> tags;
   final String postOwnerName;
   final String profileUrl;
+  final String caseStatus;
   String petName = '';
   String petType = '';
   String petBreed = '';
@@ -79,6 +80,7 @@ class PostModel {
     required this.tags,
     required this.postOwnerName,
     required this.profileUrl,
+    required this.caseStatus,
   });
 
   static Future<PostModel> fromDocument(DocumentSnapshot doc) async {
@@ -113,6 +115,7 @@ class PostModel {
       tags: tagList,
       postOwnerName: userDoc['Name'],
       profileUrl: userDoc['ProfileUrl'],
+      caseStatus: doc['Status'],
     )
       ..petName = petDoc.data()?['PetName'] ?? ''
       ..petType = petDoc.data()?['PetType'] ?? ''

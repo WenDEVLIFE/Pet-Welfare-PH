@@ -70,6 +70,8 @@ abstract class PostRepository {
 
   Future <void> uploadPetRescue(List<File> images, String selectedChip, Map<String, String> petRescueData, List<String> tags);
 
+  Future <void> uploadReportAbuse(List<File> images, String selectedChip, Map<String, String> petData, List<String> tags);
+
 }
 
 class PostRepositoryImpl implements PostRepository {
@@ -115,25 +117,25 @@ class PostRepositoryImpl implements PostRepository {
         'isRead': false,
       });
 
-      // Upload images concurrently and store their URLs in the images sub-collection
-      List<Future<void>> uploadTasks = images.map((File image) async {
-        String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-        Reference storageRef = _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
-        UploadTask uploadTask = storageRef.putFile(image);
-        TaskSnapshot taskSnapshot = await uploadTask;
-        String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+      if(images.isNotEmpty){
+        // Upload images concurrently and store their URLs in the images sub-collection
+        List<Future<void>> uploadTasks = images.map((File image) async {
+          String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+          Reference storageRef = _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
+          UploadTask uploadTask = storageRef.putFile(image);
+          TaskSnapshot taskSnapshot = await uploadTask;
+          String downloadUrl = await taskSnapshot.ref.getDownloadURL();
 
-        // Add image URL to the images sub-collection
-        await postRef.collection('ImageCollection').add({
-          'FileUrl': downloadUrl,
-          'FileName': '$fileName.jpg',
-        });
-      }).toList();
+          // Add image URL to the images sub-collection
+          await postRef.collection('ImageCollection').add({
+            'FileUrl': downloadUrl,
+            'FileName': '$fileName.jpg',
+          });
+        }).toList();
 
-
-
-      // Wait for all uploads to complete
-      await Future.wait(uploadTasks);
+        // Wait for all uploads to complete
+        await Future.wait(uploadTasks);
+      }
     } catch (e) {
       throw Exception('Failed to upload post: $e');
     }
@@ -242,23 +244,26 @@ class PostRepositoryImpl implements PostRepository {
         'isRead': false,
       });
 
-      // Upload images concurrently and store their URLs in the images sub-collection
-      List<Future<void>> uploadTasks = images.map((File image) async {
-        String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-        Reference storageRef = _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
-        UploadTask uploadTask = storageRef.putFile(image);
-        TaskSnapshot taskSnapshot = await uploadTask;
-        String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+      if(images.isNotEmpty){
+        // Upload images concurrently and store their URLs in the images sub-collection
+        List<Future<void>> uploadTasks = images.map((File image) async {
+          String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+          Reference storageRef = _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
+          UploadTask uploadTask = storageRef.putFile(image);
+          TaskSnapshot taskSnapshot = await uploadTask;
+          String downloadUrl = await taskSnapshot.ref.getDownloadURL();
 
-        // Add image URL to the images sub-collection
-        await postRef.collection('ImageCollection').add({
-          'FileUrl': downloadUrl,
-          'FileName': '$fileName.jpg',
-        });
-      }).toList();
+          // Add image URL to the images sub-collection
+          await postRef.collection('ImageCollection').add({
+            'FileUrl': downloadUrl,
+            'FileName': '$fileName.jpg',
+          });
+        }).toList();
 
-      // Wait for all uploads to complete
-      await Future.wait(uploadTasks);
+        // Wait for all uploads to complete
+        await Future.wait(uploadTasks);
+      }
+      ToastComponent().showMessage(AppColors.orange, 'Pet data added successfully');
     } catch (e) {
       throw Exception('Failed to upload post: $e');
     }
@@ -340,22 +345,27 @@ class PostRepositoryImpl implements PostRepository {
       ToastComponent().showMessage(AppColors.orange, '$selectedChip data added successfully');
 
       // Upload images concurrently and store their URLs in the images sub-collection
-      List<Future<void>> uploadTasks = images.map((File image) async {
-        String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-        Reference storageRef = _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
-        UploadTask uploadTask = storageRef.putFile(image);
-        TaskSnapshot taskSnapshot = await uploadTask;
-        String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+      if(images.isNotEmpty){
+        // Upload images concurrently and store their URLs in the images sub-collection
+        List<Future<void>> uploadTasks = images.map((File image) async {
+          String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+          Reference storageRef = _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
+          UploadTask uploadTask = storageRef.putFile(image);
+          TaskSnapshot taskSnapshot = await uploadTask;
+          String downloadUrl = await taskSnapshot.ref.getDownloadURL();
 
-        // Add image URL to the images sub-collection
-        await postRef.collection('ImageCollection').add({
-          'FileUrl': downloadUrl,
-          'FileName': '$fileName.jpg',
-        });
-      }).toList();
+          // Add image URL to the images sub-collection
+          await postRef.collection('ImageCollection').add({
+            'FileUrl': downloadUrl,
+            'FileName': '$fileName.jpg',
+          });
+        }).toList();
 
-      // Wait for all uploads to complete
-      await Future.wait(uploadTasks);
+        // Wait for all uploads to complete
+        await Future.wait(uploadTasks);
+      }
+
+      ToastComponent().showMessage(AppColors.orange, 'Adoption data added successfully');
     } catch (e) {
       throw Exception('Failed to upload post: $e');
     }
@@ -794,24 +804,25 @@ class PostRepositoryImpl implements PostRepository {
 
       ToastComponent().showMessage(AppColors.orange, '$selectedChip data added successfully');
 
-      // Upload images concurrently and store their URLs in the images sub-collection
-      List<Future<void>> uploadTasks = images.map((File image) async {
-        String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-        Reference storageRef = _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
-        UploadTask uploadTask = storageRef.putFile(image);
-        TaskSnapshot taskSnapshot = await uploadTask;
-        String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+      if(images.isNotEmpty){
+        // Upload images concurrently and store their URLs in the images sub-collection
+        List<Future<void>> uploadTasks = images.map((File image) async {
+          String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+          Reference storageRef = _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
+          UploadTask uploadTask = storageRef.putFile(image);
+          TaskSnapshot taskSnapshot = await uploadTask;
+          String downloadUrl = await taskSnapshot.ref.getDownloadURL();
 
-        // Add image URL to the images sub-collection
-        await postRef.collection('ImageCollection').add({
-          'FileUrl': downloadUrl,
-          'FileName': '$fileName.jpg',
-        });
-      }).toList();
+          // Add image URL to the images sub-collection
+          await postRef.collection('ImageCollection').add({
+            'FileUrl': downloadUrl,
+            'FileName': '$fileName.jpg',
+          });
+        }).toList();
 
-
-      // Wait for all uploads to complete
-      await Future.wait(uploadTasks);
+        // Wait for all uploads to complete
+        await Future.wait(uploadTasks);
+      }
 
       ToastComponent().showMessage(AppColors.orange, '$selectedChip data added successfully');
     } catch (e) {
@@ -885,26 +896,25 @@ class PostRepositoryImpl implements PostRepository {
           AppColors.orange, '$selectedChip data added successfully');
 
       // Upload images concurrently and store their URLs in the images sub-collection
-      List<Future<void>> uploadTasks = images.map((File image) async {
-        String fileName = DateTime
-            .now()
-            .millisecondsSinceEpoch
-            .toString();
-        Reference storageRef = _firebaseStorage.ref().child(
-            'PostFolder/$postID/$fileName.jpg');
-        UploadTask uploadTask = storageRef.putFile(image);
-        TaskSnapshot taskSnapshot = await uploadTask;
-        String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+      if(images.isNotEmpty){
+        // Upload images concurrently and store their URLs in the images sub-collection
+        List<Future<void>> uploadTasks = images.map((File image) async {
+          String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+          Reference storageRef = _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
+          UploadTask uploadTask = storageRef.putFile(image);
+          TaskSnapshot taskSnapshot = await uploadTask;
+          String downloadUrl = await taskSnapshot.ref.getDownloadURL();
 
-        // Add image URL to the images sub-collection
-        await postRef.collection('ImageCollection').add({
-          'FileUrl': downloadUrl,
-          'FileName': '$fileName.jpg',
-        });
-      }).toList();
+          // Add image URL to the images sub-collection
+          await postRef.collection('ImageCollection').add({
+            'FileUrl': downloadUrl,
+            'FileName': '$fileName.jpg',
+          });
+        }).toList();
 
-      // Wait for all uploads to complete
-      await Future.wait(uploadTasks);
+        // Wait for all uploads to complete
+        await Future.wait(uploadTasks);
+      }
       ToastComponent().showMessage(Colors.green, '$selectedChip data added successfully');
     } catch(e) {
       throw Exception('Failed to upload post: $e');
@@ -999,6 +1009,70 @@ class PostRepositoryImpl implements PostRepository {
       await Future.wait(uploadTasks);
       ToastComponent().showMessage(Colors.green, '$selectedChip data added successfully');
     } catch(e) {
+      throw Exception('Failed to upload post: $e');
+    }
+  }
+
+  @override
+  Future<void> uploadReportAbuse(List<File> images, String selectedChip, Map<String, String> petData, List<String> tags) async {
+    User user = _firebaseAuth.currentUser!;
+    String uuid = user.uid;
+    var postID = Uuid().v4();
+    try {
+      // Create a new post document
+      DocumentReference postRef = _firestore.collection('PostCollection').doc(postID);
+      await postRef.set({
+        'PostID': postID,
+        'PostOwnerID': uuid,
+        'PostDescription': petData['post'],
+        'Category': selectedChip,
+        'Timestamp': FieldValue.serverTimestamp(),
+         'Status': 'Will investigate', // Will investigate, ongoing investigation, case has been filed, case has been resolved, actions to be taken, etc.)
+      });
+
+      // Create a document for tag collection
+      WriteBatch batch = _firestore.batch();
+      if (tags.isNotEmpty) {
+        for (String tag in tags) {
+          DocumentReference tagRef = postRef.collection('TagsCollection').doc();
+          batch.set(tagRef, {'tags': tag});
+
+        }
+        await  batch.commit();
+      }
+
+
+      DocumentReference notificationRef = _firestore.collection('NotificationCollection').doc();
+      await notificationRef.set({
+        'notificationID': notificationRef.id,
+        'userID': uuid,
+        'content': 'You have successfully created $selectedChip post',
+        'timestamp': FieldValue.serverTimestamp(),
+        'category': 'Donation',
+        'isRead': false,
+      });
+
+     if(images.isNotEmpty){
+       // Upload images concurrently and store their URLs in the images sub-collection
+       List<Future<void>> uploadTasks = images.map((File image) async {
+         String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+         Reference storageRef = _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
+         UploadTask uploadTask = storageRef.putFile(image);
+         TaskSnapshot taskSnapshot = await uploadTask;
+         String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+
+         // Add image URL to the images sub-collection
+         await postRef.collection('ImageCollection').add({
+           'FileUrl': downloadUrl,
+           'FileName': '$fileName.jpg',
+         });
+       }).toList();
+
+       // Wait for all uploads to complete
+       await Future.wait(uploadTasks);
+     }
+
+    } catch (e) {
       throw Exception('Failed to upload post: $e');
     }
   }
