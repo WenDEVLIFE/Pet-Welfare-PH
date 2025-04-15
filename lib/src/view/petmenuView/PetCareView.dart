@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
+import 'package:pet_welfrare_ph/src/widgets/PetCareInsightCard.dart';
 import 'package:pet_welfrare_ph/src/widgets/PostCard.dart';
 import 'package:provider/provider.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
@@ -57,7 +58,7 @@ class VetAndTravelState extends State<VetAndTravelView> {
               itemBuilder: (context, index) {
               var post = postViewModel.filterVetAndTravelPost[index];
 
-              return PostCard(
+              return PetCareInsightCard(
                   post: post,
                   screenHeight: screenHeight,
                   screenWidth: screenWidth

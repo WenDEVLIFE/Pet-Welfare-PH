@@ -5,7 +5,9 @@ import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 import 'package:provider/provider.dart';
 
 import '../DialogView/ReportDialog.dart';
+import '../utils/AppColors.dart';
 import '../view/ViewImage.dart';
+import 'CustomText.dart';
 
 class PetCareInsightCard extends StatelessWidget {
   final PostModel post;
@@ -199,6 +201,80 @@ class PetCareInsightCard extends StatelessWidget {
                             );
                           },
                         ),
+                      ),
+                      ExpansionTile(
+                        title: CustomText(
+                          text: 'Pet Care Insight Details',
+                          size: 24,
+                          color: AppColors.black,
+                          weight: FontWeight.w700,
+                          align: TextAlign.left,
+                          screenHeight: screenHeight,
+                          alignment: Alignment.centerLeft,
+                        ),
+                        children: [
+                          Padding(
+                            padding: const EdgeInsets.all(10),
+                            child: Column(
+                              children: [
+                                CustomText(
+                                  text: 'Clinic / Establisment Name:',
+                                  size: 20,
+                                  color: AppColors.black,
+                                  weight: FontWeight.w700,
+                                  align: TextAlign.left,
+                                  screenHeight: screenHeight,
+                                  alignment: Alignment.centerLeft,
+                                ),
+                                CustomText(
+                                  text: '${post.establisHment_Clinic_Name}',
+                                  size: 16,
+                                  color: AppColors.black,
+                                  weight: FontWeight.w700,
+                                  align: TextAlign.left,
+                                  screenHeight: screenHeight,
+                                  alignment: Alignment.centerLeft,
+                                ),
+                                CustomText(
+                                  text: 'Address:',
+                                  size: 20,
+                                  color: AppColors.black,
+                                  weight: FontWeight.w700,
+                                  align: TextAlign.left,
+                                  screenHeight: screenHeight,
+                                  alignment: Alignment.centerLeft,
+                                ),
+                                CustomText(
+                                  text: '${post.establismentAdddress}',
+                                  size: 16,
+                                  color: AppColors.black,
+                                  weight: FontWeight.w700,
+                                  align: TextAlign.left,
+                                  screenHeight: screenHeight,
+                                  alignment: Alignment.centerLeft,
+                                ),
+                                CustomText(
+                                  text: 'Region/Province/City/Barangay:',
+                                  size: 20,
+                                  color: AppColors.black,
+                                  weight: FontWeight.w700,
+                                  align: TextAlign.left,
+                                  screenHeight: screenHeight,
+                                  alignment: Alignment.centerLeft,
+                                ),
+                                CustomText(
+                                  text: '${post.establismentRegion}, ${post.establismentProvinces}, ${post.establismentCity}, ${post.establismentBarangay}',
+                                  size: 16,
+                                  color: AppColors.black,
+                                  weight: FontWeight.w700,
+                                  align: TextAlign.left,
+                                  screenHeight: screenHeight,
+                                  alignment: Alignment.centerLeft,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
                       ),
                       Row(
                         mainAxisAlignment: MainAxisAlignment.start,

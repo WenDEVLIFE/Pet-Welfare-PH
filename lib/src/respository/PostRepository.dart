@@ -584,7 +584,7 @@ class PostRepositoryImpl implements PostRepository {
       return Stream.value([]);
     }
     return _firestore.collection('PostCollection')
-        .where('Category', isEqualTo: 'Caring for Pets: Vet & Travel Insights')
+        .where('Category', isEqualTo: 'Pet Care Insights')
         .snapshots()
         .asyncMap((snapshot) async {
       List<Future<PostModel>> postFutures = snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
