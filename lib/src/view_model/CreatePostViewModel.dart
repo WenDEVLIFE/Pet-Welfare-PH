@@ -154,6 +154,8 @@ class CreatePostViewModel extends ChangeNotifier {
 
   List<String> tags = [];
 
+  String role = '';
+
 
   // Constructor
   CreatePostViewModel() {
@@ -191,7 +193,7 @@ class CreatePostViewModel extends ChangeNotifier {
 
   Future<void> loadList() async {
     var userdata = await sessionManager.getUserInfo();
-    var role = userdata!['role'];
+    role = userdata!['role'];
 
     if (role == 'Admin' || role == 'Sub-admin') {
       chipLabels1 = [
@@ -237,10 +239,10 @@ class CreatePostViewModel extends ChangeNotifier {
   }
 
   // This is for clear post
-  void clearPost() {
+  Future <void> clearPost() async {
     postController.clear();
     _images.clear();
-    selectedChip = 'Pet Appreciation';
+    selectedChip = role == 'Admin' || role == 'Sub-admin' ? 'Community Announcements' : 'Pet Appreciation';
     petName.clear();
     selectedColorPattern = 'Calico';
      selectedPetAge = '1 month';
@@ -286,10 +288,13 @@ class CreatePostViewModel extends ChangeNotifier {
           ToastComponent().showMessage(Colors.red, 'Please select an image');
         } else {
           try {
-            await postRepository.uploadPost(
-                postController.text, _images, selectedChip, tags);
+
+            Future.wait([
+              postRepository.uploadPost(
+                  postController.text, _images, selectedChip, tags),
+              clearPost()
+            ]);
             ToastComponent().showMessage(Colors.green, 'Post successful');
-            clearPost();
             isDone = true;
           } catch (e) {
             print('Failed to post: $e');
@@ -303,10 +308,13 @@ class CreatePostViewModel extends ChangeNotifier {
           ToastComponent().showMessage(Colors.red, 'Please add at least one tag');
         } else {
           try {
-            await postRepository.uploadPost(
-                postController.text, _images, selectedChip, tags);
+
+            Future.wait([
+              postRepository.uploadPost(
+                postController.text, _images, selectedChip, tags),
+              clearPost()
+            ]);
             ToastComponent().showMessage(Colors.green, 'Post successful');
-            clearPost();
             isDone = true;
           } catch (e) {
             print('Failed to post: $e');
@@ -363,11 +371,13 @@ class CreatePostViewModel extends ChangeNotifier {
               'long': selectedLocation!.longitude,
             };
 
-            await postRepository.uploadPetData(
-                _images, selectedChip, petData, tags);
+
+            Future.wait([postRepository.uploadPetData(
+            _images, selectedChip, petData, tags),
+              clearPost()
+            ]);
             ToastComponent().showMessage(
                 Colors.green, '$selectedChip successful');
-            clearPost();
             isDone = true;
             notifyListeners();
           } catch (e) {
@@ -402,9 +412,11 @@ class CreatePostViewModel extends ChangeNotifier {
               'purpose_of_donation': selectedDonationType,
               'donation_type': selectedTypeOfDonation,
             };
-            await postRepository.uploadDonation(
-                _images, selectedChip, petData, tags);
-            clearPost();
+
+            Future.wait([postRepository.uploadDonation(
+            _images, selectedChip, petData, tags),
+              clearPost()
+            ]);
             isDone = true;
             notifyListeners();
           } catch (e) {
@@ -458,11 +470,14 @@ class CreatePostViewModel extends ChangeNotifier {
           };
 
           try {
-            await postRepository.uploadAdoption(
-                _images, selectedChip, petData, tags);
+
+            Future.wait([
+              postRepository.uploadAdoption(
+            _images, selectedChip, petData, tags),
+              clearPost()
+            ]);
             ToastComponent().showMessage(
                 Colors.green, '$selectedChip successful');
-            clearPost();
             isDone = true;
             notifyListeners();
           } catch (e) {
@@ -482,9 +497,11 @@ class CreatePostViewModel extends ChangeNotifier {
             var petData = {
               'post': postController.text,
             };
-            await postRepository.uploadReportAbuse(
-                _images, selectedChip, petData, tags);
-            clearPost();
+            Future.wait([
+            postRepository.uploadReportAbuse(
+            _images, selectedChip, petData, tags),
+              clearPost()
+            ]);
             isDone = true;
             notifyListeners();
           } catch (e) {
@@ -528,9 +545,11 @@ class CreatePostViewModel extends ChangeNotifier {
               'barangay': selectedBarangay!.barangayName,
               'address': address.text,
             };
-            await postRepository.uploadVetTravel(
-                _images, selectedChip, petData, tags);
-            clearPost();
+            Future.wait([
+            postRepository.uploadVetTravel(
+            _images, selectedChip, petData, tags),
+            clearPost()
+            ]);
             isDone = true;
 
             notifyListeners();
@@ -580,6 +599,26 @@ class CreatePostViewModel extends ChangeNotifier {
             } catch (e) {
               print('Failed to post: $e');
             }
+        }
+      }
+
+      else if (selectedChip =="Community Announcements"){
+        if(postController.text.isEmpty ){
+          ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
+        }
+        else if(tags.isEmpty){
+          ToastComponent().showMessage(Colors.red, 'Please add at least one tag');
+        }
+        else{
+          try {
+            await postRepository.uploadPost(
+                postController.text, _images, selectedChip, tags);
+            ToastComponent().showMessage(Colors.green, 'Post successful');
+            clearPost();
+            isDone = true;
+          } catch (e) {
+            print('Failed to post: $e');
+          }
         }
       }
       else {

@@ -42,7 +42,7 @@ class PawSomeState extends State<PawSomeView> {
               CustomSearchTextField(
                 controller: postViewModel.searchPostController,
                 screenHeight: screenHeight,
-                hintText: 'Search for pawsome experience post',
+                hintText: 'Search for paw-some experience post',
                 fontSize: 16,
                 keyboardType: TextInputType.text,
                 onChanged: (searchText) {
@@ -50,12 +50,12 @@ class PawSomeState extends State<PawSomeView> {
                 },
               ),
               Expanded(
-                child: postViewModel.filteredPost.isEmpty
-                    ? Center(child: Text('No ${postViewModel.searchPostController.text} found'))
+                child: postViewModel.filterPawExperiencePost.isEmpty
+                    ? Center(child: Text('No ${postViewModel.searchPostController.text} paw-some experience post found'))
                     : ListView.builder(
-                  itemCount: postViewModel.filteredPost.length,
+                  itemCount: postViewModel.filterPawExperiencePost.length,
                   itemBuilder: (context, index) {
-                    var post = postViewModel.filteredPost[index];
+                    var post = postViewModel.filterPawExperiencePost[index];
                     return PostCard(
                       post: post,
                       screenHeight: screenHeight,
