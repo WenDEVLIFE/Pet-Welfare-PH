@@ -358,12 +358,6 @@ class PetForRescueCard extends StatelessWidget {
                           );
                         },
                       ),
-                      const Text('Adopt Me', style: TextStyle(
-                        fontFamily: 'SmoochSans',
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      )),
                     ],
                   )
                 ],
