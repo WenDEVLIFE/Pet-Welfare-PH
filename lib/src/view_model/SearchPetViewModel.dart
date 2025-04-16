@@ -17,7 +17,7 @@ class SearchPetViewModel extends ChangeNotifier {
   List<String> colorpatter = [];
   String? selectedColor;
 
-  List<String> petSize =[];
+  List<String> petSize = [];
   String? selectedPetSize;
 
   List<Breed> catBreeds = [];
@@ -32,11 +32,17 @@ class SearchPetViewModel extends ChangeNotifier {
   List <String> petGender = [];
   String? selectedPetGender;
 
-  List<String> adoptionStatus= [];
+  List<String> adoptionStatus = [];
   String? selectedAdoptionStatus;
 
-  List<String> SearchType = ['Pet Adoption', 'Found Pets', 'Missing Pets', 'Pets For Rescue', 'Pet Care Insights'];
-  String? selectedSearchType= 'Pet Adoption';
+  List<String> SearchType = [
+    'Pet Adoption',
+    'Found Pets',
+    'Missing Pets',
+    'Pets For Rescue',
+    'Pet Care Insights'
+  ];
+  String? selectedSearchType = 'Pet Adoption';
 
   // Add these fields
   RegionModel? selectedRegion;
@@ -73,31 +79,98 @@ class SearchPetViewModel extends ChangeNotifier {
 
   // This will load the color
   Future <void> loadPetAdoption() async {
-    if(colorpatter.isEmpty){
+    if (colorpatter.isEmpty) {
       colorpatter = [
-        'Calico', 'Tortoiseshell', 'Tabby', 'Short hair', 'Fluffy/Long hair', 'Tilapia/Tiger', 'Cow', 'Tuxedo', 'Pointed',
-        'Orange', 'Smoke', 'Cinnamon', 'White/Cream', 'Black/Black and Tan', 'Brown', 'Blue/Blue-gray', 'Fawn', 'Sable', 'Merle/Dapple',
-        'Brindle', 'Bicolor', 'Tricolor', 'Spotted', 'Piebald', 'Ticked/Flecked', 'Mask', 'Others'
+        'Calico',
+        'Tortoiseshell',
+        'Tabby',
+        'Short hair',
+        'Fluffy/Long hair',
+        'Tilapia/Tiger',
+        'Cow',
+        'Tuxedo',
+        'Pointed',
+        'Orange',
+        'Smoke',
+        'Cinnamon',
+        'White/Cream',
+        'Black/Black and Tan',
+        'Brown',
+        'Blue/Blue-gray',
+        'Fawn',
+        'Sable',
+        'Merle/Dapple',
+        'Brindle',
+        'Bicolor',
+        'Tricolor',
+        'Spotted',
+        'Piebald',
+        'Ticked/Flecked',
+        'Mask',
+        'Others'
       ];
     }
 
     if (petAgeList.isEmpty) {
-      petAgeList = ['1 month', '2 months', '3 months', '4 months', '5 months', '6 months', '7 months', '8 months', '9 months', '10 months',
-        '11 months', '1 year', '2 years', '3 years', '4 years', '5 years', '6 years', '7 years', '8 years', '9 years', '10 years', '11 years',
-        '12 years', '13 years', '14 years', '15 years', '16 years', '17 years', '18 years', '19 years', '20 years', '21 years', '22 years',
-        '23 years', '24 years', '25 years', '26 years', '27 years', '28 years', '29 years', '30 years', '31 years', '32 years', '33 years', '34 years', '35 years' ];
-
+      petAgeList = [
+        '1 month',
+        '2 months',
+        '3 months',
+        '4 months',
+        '5 months',
+        '6 months',
+        '7 months',
+        '8 months',
+        '9 months',
+        '10 months',
+        '11 months',
+        '1 year',
+        '2 years',
+        '3 years',
+        '4 years',
+        '5 years',
+        '6 years',
+        '7 years',
+        '8 years',
+        '9 years',
+        '10 years',
+        '11 years',
+        '12 years',
+        '13 years',
+        '14 years',
+        '15 years',
+        '16 years',
+        '17 years',
+        '18 years',
+        '19 years',
+        '20 years',
+        '21 years',
+        '22 years',
+        '23 years',
+        '24 years',
+        '25 years',
+        '26 years',
+        '27 years',
+        '28 years',
+        '29 years',
+        '30 years',
+        '31 years',
+        '32 years',
+        '33 years',
+        '34 years',
+        '35 years'
+      ];
     }
 
     if (petSize.isEmpty) {
       petSize = ['Tiny', 'Small', 'Medium', 'Large'];
     }
 
-    if (petGender.isEmpty){
+    if (petGender.isEmpty) {
       petGender = ['Male', 'Female', 'Can’t determine (for found pets)'];
     }
 
-    if (adoptionStatus.isEmpty){
+    if (adoptionStatus.isEmpty) {
       adoptionStatus = ['Ongoing', 'Paused', 'FullFilled'];
     }
 
@@ -109,7 +182,6 @@ class SearchPetViewModel extends ChangeNotifier {
       collarList = ['With Collar', 'Without Collar'];
     }
     notifyListeners();
-
   }
 
   void setPetType(String? newValue) {
@@ -300,112 +372,220 @@ class SearchPetViewModel extends ChangeNotifier {
   }
 
   // for searching
-   void search(context) async {
+  void search(context) async {
     final postViewModel = Provider.of<PostViewModel>(context, listen: false);
 
-    if (addressController.text.isEmpty){
-      ToastComponent().showMessage(Colors.red, 'Please enter a address');
-      return;
+    Map <String, dynamic> searchParams = {
+      'region': selectedRegion?.region.toString().toLowerCase(),
+      'province': selectedProvince?.provinceName.toString().toLowerCase(),
+      'city': selectedCity?.cityName.toString().toLowerCase(),
+      'barangay': selectedBarangay?.barangayName.toString().toLowerCase(),
+      'petName': petnameController.text.toLowerCase(),
+      'petType': selectedPetType?.toLowerCase(),
+      'dogBreed': selectedDogBreed?.name.toLowerCase(),
+      'catBreed': selectedCatBreed?.name.toLowerCase(),
+      'petGender': selectedPetGender?.toLowerCase(),
+      'petSize': selectedPetSize?.toLowerCase(),
+      'address': addressController.text.toLowerCase(),
+      'colorPattern': selectedColor?.toLowerCase(),
+    };
+
+    if (selectedSearchType == 'Pet Adoption') {
+      if (selectedRegion == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a region');
+        return;
+      }
+
+      if (selectedPetType == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a pet type');
+        return;
+      }
+      if (selectedProvince == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a province');
+        return;
+      }
+
+      if (selectedCity == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a city');
+        return;
+      }
+
+      if (selectedPetSize == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a pet size');
+        return;
+      }
+
+      if (selectedPetGender == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a pet gender');
+        return;
+      }
+
+      if (selectedColor == null) {
+        ToastComponent().showMessage(
+            Colors.red, 'Please select a color or pattern');
+        return;
+      }
+
+      if (addressController.text.isEmpty) {
+        ToastComponent().showMessage(Colors.red, 'Please enter a address');
+        return;
+      }
+
+      await postViewModel.startSearchPetAdoption(searchParams);
+    }
+    else if (selectedSearchType == 'Found Pets') {
+      if (selectedRegion == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a region');
+        return;
+      }
+
+      if (selectedPetType == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a pet type');
+        return;
+      }
+      if (selectedProvince == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a province');
+        return;
+      }
+
+      if (selectedCity == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a city');
+        return;
+      }
+
+      if (selectedPetSize == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a pet size');
+        return;
+      }
+
+      if (selectedPetGender == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a pet gender');
+        return;
+      }
+
+      if (selectedColor == null) {
+        ToastComponent().showMessage(
+            Colors.red, 'Please select a color or pattern');
+        return;
+      }
+
+      if (addressController.text.isEmpty) {
+        ToastComponent().showMessage(Colors.red, 'Please enter a address');
+        return;
+      }
+      await postViewModel.startSearchFoundPets(searchParams);
+    }
+    else if (selectedSearchType == 'Missing Pets') {
+      if (selectedRegion == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a region');
+        return;
+      }
+
+      if (selectedPetType == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a pet type');
+        return;
+      }
+      if (selectedProvince == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a province');
+        return;
+      }
+
+      if (selectedCity == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a city');
+        return;
+      }
+
+      if (selectedPetSize == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a pet size');
+        return;
+      }
+
+      if (selectedPetGender == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a pet gender');
+        return;
+      }
+
+      if (selectedColor == null) {
+        ToastComponent().showMessage(
+            Colors.red, 'Please select a color or pattern');
+        return;
+      }
+
+      if (addressController.text.isEmpty) {
+        ToastComponent().showMessage(Colors.red, 'Please enter a address');
+        return;
+      }
+      await postViewModel.startSearchMissingPets(searchParams);
+    }
+    else if (selectedSearchType == 'Pets For Rescue') {
+      if (selectedRegion == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a region');
+        return;
+      }
+
+      if (selectedPetType == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a pet type');
+        return;
+      }
+      if (selectedProvince == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a province');
+        return;
+      }
+
+      if (selectedCity == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a city');
+        return;
+      }
+
+      if (selectedPetSize == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a pet size');
+        return;
+      }
+
+      if (selectedPetGender == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a pet gender');
+        return;
+      }
+
+      if (selectedColor == null) {
+        ToastComponent().showMessage(
+            Colors.red, 'Please select a color or pattern');
+        return;
+      }
+
+      if (addressController.text.isEmpty) {
+        ToastComponent().showMessage(Colors.red, 'Please enter a address');
+        return;
+      }
+      await postViewModel.startSearchPetsForRescue(searchParams);
     }
 
-    if (selectedPetType == null){
-      ToastComponent().showMessage(Colors.red, 'Please select a pet type');
-      return;
-    }
+    else if (selectedSearchType == 'Pet Care Insights') {
+      if (selectedRegion == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a region');
+        return;
+      }
 
-    if (selectedPetSize == null){
-      ToastComponent().showMessage(Colors.red, 'Please select a pet size');
-      return;
-    }
+      if (selectedProvince == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a province');
+        return;
+      }
 
-    if(selectedPetGender == null) {
-      ToastComponent().showMessage(Colors.red, 'Please select a pet gender');
-      return;
-    }
+      if (selectedCity == null) {
+        ToastComponent().showMessage(Colors.red, 'Please select a city');
+        return;
+      }
 
-    if(selectedColor == null) {
-      ToastComponent().showMessage(Colors.red, 'Please select a color or pattern');
-      return;
+      if (addressController.text.isEmpty) {
+        ToastComponent().showMessage(Colors.red, 'Please enter a address');
+        return;
+      }
+      await postViewModel.startSearchPetCareInsights(searchParams);
     }
-
     else {
-      Map <String, dynamic> searchParams = {
-        'region': selectedRegion?.region.toString().toLowerCase(),
-        'province': selectedProvince?.provinceName.toString().toLowerCase(),
-        'city': selectedCity?.cityName.toString().toLowerCase(),
-        'barangay': selectedBarangay?.barangayName.toString().toLowerCase(),
-        'petName': petnameController.text.toLowerCase(),
-        'petType': selectedPetType?.toLowerCase(),
-        'dogBreed': selectedDogBreed?.name.toLowerCase(),
-        'catBreed': selectedCatBreed?.name.toLowerCase(),
-        'petGender': selectedPetGender?.toLowerCase(),
-        'petSize': selectedPetSize?.toLowerCase(),
-        'address': addressController.text.toLowerCase(),
-        'colorPattern': selectedColor?.toLowerCase(),
-      };
-
-      if (selectedSearchType == 'Pet Adoption') {
-        if (selectedRegion == null) {
-          ToastComponent().showMessage(Colors.red, 'Please select a region');
-          return;
-        }
-
-        if (selectedProvince == null) {
-          ToastComponent().showMessage(Colors.red, 'Please select a province');
-          return;
-        }
-
-        if (selectedCity == null) {
-          ToastComponent().showMessage(Colors.red, 'Please select a city');
-          return;
-        }
-        await postViewModel.startSearchPetAdoption(searchParams);
-      }
-      else if (selectedSearchType == 'Found Pets') {
-        if (selectedRegion == null) {
-          ToastComponent().showMessage(Colors.red, 'Please select a region');
-          return;
-        }
-
-        if (selectedProvince == null) {
-          ToastComponent().showMessage(Colors.red, 'Please select a province');
-          return;
-        }
-
-        if (selectedCity == null) {
-          ToastComponent().showMessage(Colors.red, 'Please select a city');
-          return;
-        }
-        await postViewModel.startSearchFoundPets(searchParams);
-      }
-      else if (selectedSearchType == 'Missing Pets') {
-        if (selectedRegion == null) {
-          ToastComponent().showMessage(Colors.red, 'Please select a region');
-          return;
-        }
-
-        if (selectedProvince == null) {
-          ToastComponent().showMessage(Colors.red, 'Please select a province');
-          return;
-        }
-
-        if (selectedCity == null) {
-          ToastComponent().showMessage(Colors.red, 'Please select a city');
-          return;
-        }
-        await postViewModel.startSearchMissingPets(searchParams);
-      }
-      else if (selectedSearchType == 'Pets For Rescue') {
-        await postViewModel.startSearchPetsForRescue(searchParams);
-      }
-
-      else if(selectedSearchType =='Pet Care Insights'){
-        await postViewModel.startSearchPetCareInsights(searchParams);
-      }
-      else {
-        ToastComponent().showMessage(Colors.red, 'Please select a search type');
-      }
+      ToastComponent().showMessage(Colors.red, 'Please select a search type');
     }
+
     notifyListeners();
   }
 

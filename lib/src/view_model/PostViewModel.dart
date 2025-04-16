@@ -713,6 +713,35 @@ class PostViewModel extends ChangeNotifier {
   }
 
   startSearchPetCareInsights(Map<String, dynamic> searchParams) {
+    filterVetAndTravelPost = vetAndtravelPost.where((post) {
+      final postFields = {
+        'region': post.establismentRegion,
+        'province': post.establismentProvinces,
+        'city': post.establismentCity,
+        'address': post.establismentAdddress,
+      };
+
+
+      for (final entry in searchParams.entries) {
+        final key = entry.key;
+        final value = entry.value?.toString().toLowerCase().trim();
+
+        if (value == null || value.isEmpty) continue;
+
+        final postValue = (postFields[key] ?? '').toString().toLowerCase().trim();
+
+        print('🔎 Comparing "$postValue" with "$value" for key "$key"');
+
+        if (postValue != value) {
+          print('❌ Not matched: $key');
+          return false;
+        }
+      }
+
+      return true;
+    }).toList();
+
+    notifyListeners();
 
   }
 
