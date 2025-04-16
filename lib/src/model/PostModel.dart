@@ -12,7 +12,7 @@ class PostModel {
   final List<TagModel> tags;
   final String postOwnerName;
   final String profileUrl;
-  final String caseStatus;
+  String caseStatus='';
   String petName = '';
   String petType = '';
   String petBreed = '';
@@ -80,7 +80,6 @@ class PostModel {
     required this.tags,
     required this.postOwnerName,
     required this.profileUrl,
-    required this.caseStatus,
   });
 
   static Future<PostModel> fromDocument(DocumentSnapshot doc) async {
@@ -102,6 +101,7 @@ class PostModel {
     var donationDoc = await FirebaseFirestore.instance.collection('DonationDetails').doc(doc.id).get();
     var rescueDoc = await FirebaseFirestore.instance.collection('PetRescueDetails').doc(doc.id).get();
     var establishmentDoc = await FirebaseFirestore.instance.collection('VetTravelDetails').doc(doc.id).get();
+    var postCollection = await doc.reference.collection('PostCollection').doc(doc.id).get();
 
     print('Rescue Document Data: ${rescueDoc.data()}');
 
@@ -114,8 +114,7 @@ class PostModel {
       imageUrls: imageUrls,
       tags: tagList,
       postOwnerName: userDoc['Name'],
-      profileUrl: userDoc['ProfileUrl'],
-      caseStatus: doc['Status'],
+      profileUrl: userDoc['ProfileUrl']
     )
       ..petName = petDoc.data()?['PetName'] ?? ''
       ..petType = petDoc.data()?['PetType'] ?? ''
@@ -170,7 +169,8 @@ class PostModel {
       ..establismentProvinces = establishmentDoc.data()?['Province'] ?? ''
       ..establismentCity = establishmentDoc.data()?['City'] ?? ''
       ..establismentBarangay = establishmentDoc.data()?['Barangay'] ?? ''
-      ..establismentRegion = establishmentDoc.data()?['Region'] ?? '';
+      ..establismentRegion = establishmentDoc.data()?['Region'] ?? ''
+     ..caseStatus = postCollection.data()?['CaseStatus'] ?? '';
 
   }
 }
