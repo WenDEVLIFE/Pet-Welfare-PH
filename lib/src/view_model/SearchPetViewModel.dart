@@ -35,7 +35,7 @@ class SearchPetViewModel extends ChangeNotifier {
   List<String> adoptionStatus= [];
   String? selectedAdoptionStatus;
 
-  List<String> SearchType = ['Pet Adoption', 'Found Pets', 'Missing Pets', 'Pets For Rescue'];
+  List<String> SearchType = ['Pet Adoption', 'Found Pets', 'Missing Pets', 'Pets For Rescue', 'Pet Care Insights'];
   String? selectedSearchType= 'Pet Adoption';
 
   // Add these fields
@@ -397,6 +397,10 @@ class SearchPetViewModel extends ChangeNotifier {
       }
       else if (selectedSearchType == 'Pets For Rescue') {
         await postViewModel.startSearchPetsForRescue(searchParams);
+      }
+
+      else if(selectedSearchType =='Pet Care Insights'){
+        await postViewModel.startSearchPetCareInsights(searchParams);
       }
       else {
         ToastComponent().showMessage(Colors.red, 'Please select a search type');

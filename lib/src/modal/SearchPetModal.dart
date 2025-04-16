@@ -50,7 +50,9 @@ class SearchPetModal extends StatelessWidget{
               "Search Found Pet" : postViewModel.selectedSearchType == "Pet Adoption"
                   ? "Search Pet Adoption" :
               postViewModel.selectedSearchType == "Pets For Rescue" ?
-              "Search Pets For Rescue" : "",
+              "Search Pets For Rescue" :
+              postViewModel.selectedSearchType == "Pet Care Insights" ?
+              "Search Pet Care Insights" : "",
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 25,
@@ -271,7 +273,76 @@ class SearchPetModal extends StatelessWidget{
                         keyboardType: TextInputType.text
                     ),
                   ],
-
+                  if(postViewModel.selectedSearchType=='Pet Care Insights')...[
+                    Padding(
+                      padding: const EdgeInsets.all(10.0),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          const Text(
+                            'Select Region, Province, and City',
+                            style: TextStyle(
+                              color: Colors.black,
+                              fontSize: 18,
+                              fontFamily: 'SmoochSans',
+                              fontWeight: FontWeight.w600,
+                            ),
+                          ),
+                          CustomDropDown<RegionModel>(
+                            value: postViewModel.selectedRegion,
+                            items: postViewModel.regions,
+                            onChanged: (RegionModel? newValue) {
+                              postViewModel.setSelectedRegion(newValue);
+                            },
+                            itemLabel: (RegionModel value) => value.region,
+                            hint: 'Select Region',
+                          ),
+                          SizedBox(height: screenHeight * 0.01),
+                          SizedBox(height: screenHeight * 0.01),
+                          if (postViewModel.selectedRegion != null)
+                            SizedBox(height: screenHeight * 0.01),
+                          CustomDropDown<ProvinceModel>(
+                            value: postViewModel.selectedProvince,
+                            items: postViewModel.provinces,
+                            onChanged: (ProvinceModel? newValue) {
+                              postViewModel.setSelectedProvince(newValue);
+                            },
+                            itemLabel: (ProvinceModel value) => value.provinceName,
+                            hint: 'Select Province',
+                          ),
+                          SizedBox(height: screenHeight * 0.01),
+                          if (postViewModel.selectedProvince != null)
+                            SizedBox(height: screenHeight * 0.01),
+                          CustomDropDown<CityModel>(
+                            value: postViewModel.selectedCity,
+                            items: postViewModel.cities,
+                            onChanged: (CityModel? newValue) {
+                              postViewModel.setSelectedCity(newValue);
+                            },
+                            itemLabel: (CityModel value) => value.cityName,
+                            hint: 'Select City',
+                          ),
+                          SizedBox(height: screenHeight * 0.01),
+                        ],
+                      ),
+                    ),
+                    CustomText(
+                      text: 'Address',
+                      size: 18,
+                      color: Colors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomTextField(controller:
+                    postViewModel.addressController,
+                        screenHeight: screenHeight,
+                        hintText: 'Enter Address',
+                        fontSize: 16,
+                        keyboardType: TextInputType.text
+                    ),
+                  ],
                   Center(
                       child: CustomButton(
                         hint: 'Search',

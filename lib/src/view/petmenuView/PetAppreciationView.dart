@@ -45,7 +45,7 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
               ),
           Expanded(
           child: postViewModel.filteredPost.isEmpty
-          ? Center(child: Text('No ${postViewModel.searchPostController.text} found'))
+          ? Center(child: Text('No ${postViewModel.searchPostController.text} pet appreciation post found'))
               : ListView.builder(
           itemCount: postViewModel.filteredPost.length,
           itemBuilder: (context, index) {

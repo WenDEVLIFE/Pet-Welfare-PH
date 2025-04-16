@@ -712,6 +712,10 @@ class PostViewModel extends ChangeNotifier {
     return isEqual;
   }
 
+  startSearchPetCareInsights(Map<String, dynamic> searchParams) {
+
+  }
+
 
 
 }

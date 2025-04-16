@@ -10,6 +10,7 @@ import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 import 'package:pet_welfrare_ph/src/modal/ReactionModal.dart';
 
+import '../../modal/SearchPetModal.dart';
 import '../../utils/AppColors.dart';
 import '../../utils/ReactionUtils.dart';
 import '../../widgets/SearchTextField.dart';
@@ -78,17 +79,30 @@ class VetAndTravelState extends State<VetAndTravelView> {
         activeForegroundColor: AppColors.white,
         children: [
           SpeedDialChild(
-            label: 'Create Post',
-            child: const Icon(Icons.create),
-            onTap: () {
-              Navigator.pushNamed(context, AppRoutes.createpost);
-            },
-          ),
-          SpeedDialChild(
             label: 'Reload the Vet & Travel Insight Posts',
             child: const Icon(Icons.refresh),
             onTap: () {
               postViewModel.listenToVetAndTravelPost();
+            },
+          ),
+          SpeedDialChild(
+            label: 'Advanced Search',
+            child: const Icon(Icons.search),
+            onTap: () {
+              showModalBottomSheet(
+                context: context,
+                isScrollControlled: true,
+                builder: (context) {
+                  return const SearchPetModal();
+                },
+              );
+            },
+          ),
+          SpeedDialChild(
+            label: 'Create Post',
+            child: const Icon(Icons.create),
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.createpost);
             },
           ),
         ],
