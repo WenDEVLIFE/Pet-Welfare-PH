@@ -84,7 +84,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => PostViewModel()),
         ChangeNotifierProvider(create: (_) => NotificationViewModel()),
         ChangeNotifierProvider(create: (_) => SearchPetViewModel()),
-        ChangeNotifierProvider(create: (_) => ReportViewModel())
+        ChangeNotifierProvider(create: (_) => ReportViewModel()),
       ],
       child: Directionality(
         textDirection: TextDirection.ltr,

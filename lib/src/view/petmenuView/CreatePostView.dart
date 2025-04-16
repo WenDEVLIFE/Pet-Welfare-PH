@@ -36,14 +36,23 @@ class CreatePostView extends StatelessWidget {
           children: [
             CustomText(
               text: createPostViewModel.selectedChip == "Missing Pets"
-                  ? 'Post a missing pet'
+                  ? 'Post missing pet'
                   : createPostViewModel.selectedChip == "Found Pets"
-                  ? 'Post a found pet'
+                  ? 'Post found pet'
                   : createPostViewModel.selectedChip == "Pet Adoption"
-                  ? 'Post for adoption'
-                  : createPostViewModel.selectedChip == "Pet Insights"
-                  ? 'Post for insights'
-                  : 'Create a post',
+                  ? 'Post pet adoption'
+                  : createPostViewModel.selectedChip == "Pet Care Insights"
+                  ? 'Post pet care insights'
+                  : createPostViewModel.selectedChip == "Pets For Rescue"
+                  ? 'Post pet for rescue'
+                  : createPostViewModel.selectedChip == "Call for Aid"
+                  ? 'Post call for aid'
+                  : createPostViewModel.selectedChip == "Pet Appreciation"
+                  ? 'Post for pet appreciation'
+                  : createPostViewModel.selectedChip == "Paw-some Experience"
+                  ? 'Post for paw-some experience'
+                  : createPostViewModel.selectedChip == "Protect Our Pets: Report Abuse"
+                  ? 'report abuse' : 'Create a community post',
               size: 18,
               color: Colors.white,
               weight: FontWeight.w700,
