@@ -5,11 +5,14 @@ import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 import 'package:provider/provider.dart';
 
 import '../DialogView/ReportDialog.dart';
+import '../modal/ReactionModal.dart';
 import '../utils/AppColors.dart';
+import '../utils/ReactionUtils.dart';
 import '../view/ViewImage.dart';
+import 'CardShimmerWidget.dart';
 import 'CustomText.dart';
 
-class PetCareInsightCard extends StatelessWidget {
+class PetCareInsightCard extends StatefulWidget {
   final PostModel post;
   final double screenHeight;
   final double screenWidth;
@@ -22,38 +25,86 @@ class PetCareInsightCard extends StatelessWidget {
   }) : super(key: key);
 
   @override
+  State<PetCareInsightCard> createState() => _PetCareInsightCardState();
+
+}
+
+class _PetCareInsightCardState extends State<PetCareInsightCard> {
+  late PostModel post;
+  late double screenHeight;
+  late double screenWidth;
+  String? userReaction;
+  int reactionCount = 0;
+  int commentCount = 0;
+  bool isLoading = true;
+  bool hasReacted = false;
+  late PostViewModel postViewModel;
+
+  @override
+  void initState() {
+    super.initState();
+    post = widget.post;
+    postViewModel = Provider.of<PostViewModel>(context, listen: false);
+    screenHeight = widget.screenHeight;
+    screenWidth = widget.screenWidth;
+    _loadData();
+  }
+  Future<void> _loadData() async {
+    try {
+      final results = await Future.wait([
+        postViewModel.getUserReaction(widget.post.postId),
+        postViewModel.getReactionCount(widget.post.postId),
+        postViewModel.getCommentCount(widget.post.postId),
+      ]);
+
+      setState(() {
+        userReaction = results[0] as String?;
+        reactionCount = (results[1] as int?)!;
+        commentCount = (results[2] as int?)!;
+        isLoading = false;
+      });
+    } catch (e) {
+      print("Error loading post data: $e");
+      setState(() => isLoading = false);
+    }
+  }
+
+  Future<void> _handleReaction() async {
+    if (userReaction != null) {
+      await postViewModel.removeReaction(widget.post.postId);
+      setState(() {
+        userReaction = null;
+        reactionCount -= 1;
+      });
+    } else {
+      showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return ReactionModal(
+            onReactionSelected: (reaction) async {
+              await postViewModel.addReaction(widget.post.postId, reaction);
+              setState(() {
+                userReaction = reaction;
+                reactionCount += 1;
+              });
+              Navigator.pop(context); // Close the modal after selecting
+            },
+          );
+        },
+      );
+    }
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final postViewModel = Provider.of<PostViewModel>(context, listen: false);
-    var formattedDate = postViewModel.formatTimestamp(post.timestamp);
+    final formattedDate = postViewModel.formatTimestamp(widget.post.timestamp);
 
-    return FutureBuilder<String?>(
-      future: postViewModel.getUserReaction(post.postId),
-      builder: (context, userReactionSnapshot) {
-        if (userReactionSnapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        String? userReaction = userReactionSnapshot.data;
-        bool hasReacted = userReaction != null;
-
-        return FutureBuilder<int>(
-          future: postViewModel.getReactionCount(post.postId),
-          builder: (context, reactionCountSnapshot) {
-            if (reactionCountSnapshot.connectionState == ConnectionState.waiting) {
-              return const Center(child: CircularProgressIndicator());
-            }
-
-            int reactionCount = reactionCountSnapshot.data ?? 0;
-
-            return FutureBuilder<int>(
-              future: postViewModel.getCommentCount(post.postId),
-              builder: (context, commentCountSnapshot) {
-                if (commentCountSnapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                }
-
-                int commentCount = commentCountSnapshot.data ?? 0;
-
+          if (isLoading) {
+            return PostCardSkeleton(
+              screenHeight: widget.screenHeight,
+              screenWidth: widget.screenWidth,
+            );
+          }
                 return Card(
                   margin: const EdgeInsets.all(10),
                   child: Column(
@@ -283,18 +334,14 @@ class PetCareInsightCard extends StatelessWidget {
                             children: [
                               IconButton(
                                 icon: Icon(
-                                  hasReacted
-                                      ? Icons.thumb_up
+                                  userReaction != null
+                                      ? ReactionUtils.getReactionIcon(userReaction!)
                                       : Icons.thumb_up_outlined,
-                                  color: hasReacted ? Colors.blue : null,
+                                  color: userReaction != null
+                                      ? ReactionUtils.getReactionColor(userReaction!)
+                                      : null,
                                 ),
-                                onPressed: () async {
-                                  if (hasReacted) {
-                                    await postViewModel.removeReaction(post.postId);
-                                  } else {
-                                    await postViewModel.addReaction(post.postId, 'like');
-                                  }
-                                },
+                                onPressed: _handleReaction,
                               ),
                               Text('$reactionCount likes'),
                             ],
@@ -315,11 +362,6 @@ class PetCareInsightCard extends StatelessWidget {
                     ],
                   ),
                 );
-              },
-            );
-          },
-        );
-      },
-    );
+
   }
 }

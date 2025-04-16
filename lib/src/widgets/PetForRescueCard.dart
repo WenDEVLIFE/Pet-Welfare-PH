@@ -11,9 +11,10 @@ import '../utils/AppColors.dart';
 import '../utils/ReactionUtils.dart';
 import '../view/ViewImage.dart';
 import '../view_model/ApplyAdoptionViewModel.dart';
+import 'CardShimmerWidget.dart';
 import 'CustomText.dart';
 
-class PetForRescueCard extends StatelessWidget {
+class PetForRescueCard extends StatefulWidget {
   final PostModel post;
   final double screenHeight;
   final double screenWidth;
@@ -24,35 +25,92 @@ class PetForRescueCard extends StatelessWidget {
     required this.screenHeight,
     required this.screenWidth,
   }) : super(key: key);
+
+
+
+  @override
+  State<PetForRescueCard> createState() => PetForRescueCardState();
+
+}
+
+class PetForRescueCardState extends State<PetForRescueCard> {
+  late PostModel post;
+  late double screenHeight;
+  late double screenWidth;
+  String? userReaction;
+  int reactionCount = 0;
+  int commentCount = 0;
+  bool isLoading = true;
+  bool hasReacted = false;
+  late PostViewModel postViewModel;
+
+
+
+  @override
+  void initState() {
+    super.initState();
+    post = widget.post;
+    postViewModel = Provider.of<PostViewModel>(context, listen: false);
+    screenHeight = widget.screenHeight;
+    screenWidth = widget.screenWidth;
+    _loadData();
+  }
+  Future<void> _loadData() async {
+    try {
+      final results = await Future.wait([
+        postViewModel.getUserReaction(widget.post.postId),
+        postViewModel.getReactionCount(widget.post.postId),
+        postViewModel.getCommentCount(widget.post.postId),
+      ]);
+
+      setState(() {
+        userReaction = results[0] as String?;
+        reactionCount = (results[1] as int?)!;
+        commentCount = (results[2] as int?)!;
+        isLoading = false;
+      });
+    } catch (e) {
+      print("Error loading post data: $e");
+      setState(() => isLoading = false);
+    }
+  }
+
+  Future<void> _handleReaction() async {
+    if (userReaction != null) {
+      await postViewModel.removeReaction(widget.post.postId);
+      setState(() {
+        userReaction = null;
+        reactionCount -= 1;
+      });
+    } else {
+      showModalBottomSheet(
+        context: context,
+        builder: (context) {
+          return ReactionModal(
+            onReactionSelected: (reaction) async {
+              await postViewModel.addReaction(widget.post.postId, reaction);
+              setState(() {
+                userReaction = reaction;
+                reactionCount += 1;
+              });
+              Navigator.pop(context); // Close the modal after selecting
+            },
+          );
+        },
+      );
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    final postViewModel = Provider.of<PostViewModel>(context, listen: false);
-    var formattedDate = postViewModel.formatTimestamp(post.timestamp);
+    final formattedDate = postViewModel.formatTimestamp(widget.post.timestamp);
 
-    return FutureBuilder<Map<String, dynamic>>(
-      future: Future.wait([
-        postViewModel.getUserReaction(post.postId),
-        postViewModel.getReactionCount(post.postId),
-        postViewModel.getCommentCount(post.postId),
-      ]).then((results) => {
-        'userReaction': results[0],
-        'reactionCount': results[1],
-        'commentCount': results[2],
-      }),
-      builder: (context, snapshot) {
-        if (snapshot.connectionState == ConnectionState.waiting) {
-          return const Center(child: CircularProgressIndicator());
-        }
-
-        if (snapshot.hasError) {
-          return Center(child: Text('Error: ${snapshot.error}'));
-        }
-
-        var data = snapshot.data!;
-        String? userReaction = data['userReaction'];
-        bool hasReacted = userReaction != null;
-        int reactionCount = data['reactionCount'];
-        int commentCount = data['commentCount'];
+    if (isLoading) {
+      return PostCardSkeleton(
+        screenHeight: widget.screenHeight,
+        screenWidth: widget.screenWidth,
+      );
+    }
 
         return Card(
           margin: const EdgeInsets.all(10),
@@ -296,27 +354,14 @@ class PetForRescueCard extends StatelessWidget {
                     children: [
                       IconButton(
                         icon: Icon(
-                          hasReacted
+                          userReaction != null
                               ? ReactionUtils.getReactionIcon(userReaction!)
                               : Icons.thumb_up_outlined,
-                          color: hasReacted ? ReactionUtils.getReactionColor(userReaction!) : null,
+                          color: userReaction != null
+                              ? ReactionUtils.getReactionColor(userReaction!)
+                              : null,
                         ),
-                        onPressed: () async {
-                          if (hasReacted) {
-                            await postViewModel.removeReaction(post.postId);
-                          } else {
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (context) {
-                                return ReactionModal(
-                                  onReactionSelected: (reaction) async {
-                                    await postViewModel.addReaction(post.postId, reaction);
-                                  },
-                                );
-                              },
-                            );
-                          }
-                        },
+                        onPressed: _handleReaction,
                       ),
                       Text('$reactionCount likes', style: const TextStyle(
                         fontFamily: 'SmoochSans',
@@ -365,8 +410,6 @@ class PetForRescueCard extends StatelessWidget {
             ],
           ),
         );
-      },
-    );
   }
 
 }
