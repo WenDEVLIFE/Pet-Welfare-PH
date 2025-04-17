@@ -468,11 +468,6 @@ class SearchPetViewModel extends ChangeNotifier {
             Colors.red, 'Please select a color or pattern');
         return;
       }
-
-      if (addressController.text.isEmpty) {
-        ToastComponent().showMessage(Colors.red, 'Please enter a address');
-        return;
-      }
       await postViewModel.startSearchFoundPets(searchParams);
     }
     else if (selectedSearchType == 'Missing Pets') {
@@ -508,11 +503,6 @@ class SearchPetViewModel extends ChangeNotifier {
       if (selectedColor == null) {
         ToastComponent().showMessage(
             Colors.red, 'Please select a color or pattern');
-        return;
-      }
-
-      if (addressController.text.isEmpty) {
-        ToastComponent().showMessage(Colors.red, 'Please enter a address');
         return;
       }
       await postViewModel.startSearchMissingPets(searchParams);
@@ -553,10 +543,6 @@ class SearchPetViewModel extends ChangeNotifier {
         return;
       }
 
-      if (addressController.text.isEmpty) {
-        ToastComponent().showMessage(Colors.red, 'Please enter a address');
-        return;
-      }
       await postViewModel.startSearchPetsForRescue(searchParams);
     }
 
@@ -576,10 +562,6 @@ class SearchPetViewModel extends ChangeNotifier {
         return;
       }
 
-      if (addressController.text.isEmpty) {
-        ToastComponent().showMessage(Colors.red, 'Please enter a address');
-        return;
-      }
       await postViewModel.startSearchPetCareInsights(searchParams);
     }
     else {

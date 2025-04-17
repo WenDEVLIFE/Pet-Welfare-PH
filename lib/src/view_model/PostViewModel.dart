@@ -503,7 +503,6 @@ class PostViewModel extends ChangeNotifier {
         'province': post.petProvinceAdopt,
         'city': post.petCityAdopt,
         'barangay': post.petBarangayAdopt,
-        'address': post.petAddressAdopt,
       };
 
       // Add breed dynamically based on PetTypeAdopt
@@ -557,7 +556,6 @@ class PostViewModel extends ChangeNotifier {
         'region': post.petRegion,
         'province': post.petProvince,
         'city': post.petCity,
-        'address': post.petAddress,
       };
 
       // Add breed dynamically based on PetTypeAdopt
@@ -608,7 +606,6 @@ class PostViewModel extends ChangeNotifier {
         'region': post.petRegion,
         'province': post.petProvince,
         'city': post.petCity,
-        'address': post.petAddress,
       };
 
       // Add breed dynamically based on PetTypeAdopt
@@ -655,7 +652,6 @@ class PostViewModel extends ChangeNotifier {
         'petSize': post.rescuePetSize,
         'petGender': post.rescuePetGender,
         'colorPattern': post.rescuePetColor,
-        'address': post.rescueAddress,
       };
 
       // Add breed dynamically based on PetTypeAdopt
@@ -712,13 +708,12 @@ class PostViewModel extends ChangeNotifier {
     return isEqual;
   }
 
-  startSearchPetCareInsights(Map<String, dynamic> searchParams) {
+  Future <void> startSearchPetCareInsights(Map<String, dynamic> searchParams) async {
     filterVetAndTravelPost = vetAndtravelPost.where((post) {
       final postFields = {
         'region': post.establismentRegion,
         'province': post.establismentProvinces,
         'city': post.establismentCity,
-        'address': post.establismentAdddress,
       };
 
 

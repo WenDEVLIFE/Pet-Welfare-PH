@@ -256,22 +256,6 @@ class SearchPetModal extends StatelessWidget{
                       ),
                     ),
                     ],
-                    CustomText(
-                      text: 'Address',
-                      size: 18,
-                      color: Colors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomTextField(controller:
-                    postViewModel.addressController,
-                        screenHeight: screenHeight,
-                        hintText: 'Enter Address',
-                        fontSize: 16,
-                        keyboardType: TextInputType.text
-                    ),
                   ],
                   if(postViewModel.selectedSearchType=='Pet Care Insights')...[
                     Padding(
@@ -325,22 +309,6 @@ class SearchPetModal extends StatelessWidget{
                           SizedBox(height: screenHeight * 0.01),
                         ],
                       ),
-                    ),
-                    CustomText(
-                      text: 'Address',
-                      size: 18,
-                      color: Colors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomTextField(controller:
-                    postViewModel.addressController,
-                        screenHeight: screenHeight,
-                        hintText: 'Enter Address',
-                        fontSize: 16,
-                        keyboardType: TextInputType.text
                     ),
                   ],
                   Center(
