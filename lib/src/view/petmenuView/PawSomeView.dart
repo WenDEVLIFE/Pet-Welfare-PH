@@ -42,7 +42,7 @@ class PawSomeState extends State<PawSomeView> {
               CustomSearchTextField(
                 controller: postViewModel.searchPostController,
                 screenHeight: screenHeight,
-                hintText: 'Search for paw-some experience post',
+                hintText: 'Search in Paw-some Experience',
                 fontSize: 16,
                 keyboardType: TextInputType.text,
                 onChanged: (searchText) {

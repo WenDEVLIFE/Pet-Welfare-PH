@@ -44,7 +44,7 @@ class VetAndTravelState extends State<VetAndTravelView> {
               CustomSearchTextField(
                 controller: postViewModel.searchPostController,
                 screenHeight: screenHeight,
-                hintText: 'Search for posts about Caring for Pet Care Insights',
+                hintText: 'Search in Pet Care Insights',
                 fontSize: 16,
                 keyboardType: TextInputType.text,
                 onChanged: (searchText) {

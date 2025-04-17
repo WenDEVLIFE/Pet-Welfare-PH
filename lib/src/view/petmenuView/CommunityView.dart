@@ -41,7 +41,7 @@ class CommunityState extends State<CommunityView> {
               CustomSearchTextField(
                 controller: postViewModel.searchPostController,
                 screenHeight: screenHeight,
-                hintText: 'Search for posts about community post',
+                hintText: 'Search in Community Announcements',
                 fontSize: 16,
                 keyboardType: TextInputType.text,
                 onChanged: (searchText) {

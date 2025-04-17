@@ -46,7 +46,7 @@ class AidState extends State<CallOfAidView> {
               CustomSearchTextField(
                 controller: postViewModel.searchPostController,
                 screenHeight: screenHeight,
-                hintText: 'Search for call for aid post',
+                hintText: 'Search in Call For Aid post',
                 fontSize: 16,
                 keyboardType: TextInputType.text,
                 onChanged: (searchText) {
@@ -55,13 +55,11 @@ class AidState extends State<CallOfAidView> {
               ),
               Expanded(
                 child: postViewModel.filteredPost.isEmpty
-                    ? Center(child: Text('No ${postViewModel.searchPostController.text} found'))
+                    ? Center(child: Text('No ${postViewModel.searchPostController.text} call of aid post found'))
                     : ListView.builder(
                   itemCount: postViewModel.filteredPost.length,
                   itemBuilder: (context, index) {
                     var post = postViewModel.filteredPost[index];
-                    var formattedDate = postViewModel.formatTimestamp(post.timestamp);
-
                     return CallForAidCard(
                         post: post,
                         screenHeight: screenHeight,

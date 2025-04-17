@@ -44,7 +44,7 @@ class MissingPetState extends State<MissingPetView> {
               CustomSearchTextField(
                 controller: postViewModel.searchPostController,
                 screenHeight: screenHeight,
-                hintText: 'Search for missing pets name, breed, or location, etc.',
+                hintText: 'Search in Missing Pets',
                 fontSize: 16,
                 keyboardType: TextInputType.text,
                 onChanged: (searchText) {

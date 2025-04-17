@@ -37,7 +37,7 @@ class ProtectPetState extends State<ProtectPetView> {
               CustomSearchTextField(
                 controller: postViewModel.searchPostController,
                 screenHeight: screenHeight,
-                hintText: 'Search for posts about protecting pets',
+                hintText: 'Search in Protect Our Pets:Report Abuse',
                 fontSize: 16,
                 keyboardType: TextInputType.text,
                 onChanged: (searchText) {
