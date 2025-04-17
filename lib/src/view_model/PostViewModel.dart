@@ -341,7 +341,8 @@ class PostViewModel extends ChangeNotifier {
     if (search.isEmpty) {
       filteredPost = _posts;
     } else {
-      filteredPost = _posts.where((post) => post.tags.any((tag) => tag.name.toLowerCase().contains(search.toLowerCase()))).toList();
+      filteredPost = _posts.where((post) => post.tags.any((tag) => tag.name.toLowerCase().contains(search.toLowerCase()))
+          ||   post.postOwnerName.toLowerCase().contains(search)).toList();
     }
     notifyListeners();
   }
@@ -353,6 +354,7 @@ class PostViewModel extends ChangeNotifier {
     } else {
       filterMissingPost = missingPost.where((post) =>
       post.petName.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.postOwnerName.toLowerCase().contains(searchText) ||
           post.petType.toLowerCase().contains(searchText.toLowerCase()) ||
           post.petBreed.toLowerCase().contains(searchText.toLowerCase()) ||
           post.petGender.toLowerCase().contains(searchText.toLowerCase()) ||
@@ -375,6 +377,7 @@ class PostViewModel extends ChangeNotifier {
     } else {
       filterFoundPost = foundPost.where((post) =>
       post.petName.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.postOwnerName.toLowerCase().contains(searchText) ||
           post.petType.toLowerCase().contains(searchText.toLowerCase()) ||
           post.petBreed.toLowerCase().contains(searchText.toLowerCase()) ||
           post.petGender.toLowerCase().contains(searchText.toLowerCase()) ||
@@ -395,7 +398,8 @@ class PostViewModel extends ChangeNotifier {
     if (search.isEmpty) {
       filterPawExperiencePost = pawExperiencePost;
     } else {
-      filterPawExperiencePost = pawExperiencePost.where((post) => post.tags.any((tag) => tag.name.toLowerCase().contains(search.toLowerCase()))).toList();
+      filterPawExperiencePost = pawExperiencePost.where((post) => post.tags.any((tag) => tag.name.toLowerCase().contains(search.toLowerCase()))
+          ||   post.postOwnerName.toLowerCase().contains(search)).toList();
     }
     notifyListeners();
   }
@@ -416,7 +420,9 @@ class PostViewModel extends ChangeNotifier {
     if (search.isEmpty) {
       filterCommunityPost.addAll(communityPost);
     } else {
-      filterCommunityPost.addAll(communityPost.where((post) => post.postDescription.toLowerCase().contains(search.toLowerCase())));
+      filterCommunityPost.addAll(communityPost.where((post) =>
+          post.tags.any((tag) => tag.name.toLowerCase().contains(search.toLowerCase())) ||
+          post.postOwnerName.toLowerCase().contains(search)).toList());
     }
     notifyListeners();
   }
@@ -426,7 +432,8 @@ class PostViewModel extends ChangeNotifier {
     if (search.isEmpty) {
       filterVetAndTravelPost = vetAndtravelPost;
     } else {
-      filterVetAndTravelPost = vetAndtravelPost.where((post) => post.tags.any((tag) => tag.name.toLowerCase().contains(search.toLowerCase()))).toList();
+      filterVetAndTravelPost = vetAndtravelPost.where((post) => post.tags.any((tag) => tag.name.toLowerCase().contains(search.toLowerCase()))
+          ||   post.postOwnerName.toLowerCase().contains(search) ).toList();
     }
     notifyListeners();
   }
@@ -437,6 +444,7 @@ class PostViewModel extends ChangeNotifier {
       filterPetAdoptPost = petAdoptPost;
     } else {
      filterPetAdoptPost = petAdoptPost.where((post) => post.tags.any((tag) => tag.name.toLowerCase().contains(search.toLowerCase()))
+         || post.postOwnerName.toLowerCase().contains(search)
          || post.petNameAdopt.toLowerCase().contains(search.toLowerCase()) || post.petBreedAdopt.toLowerCase().contains(search.toLowerCase())
          || post.petAgeAdopt.toLowerCase().contains(search.toLowerCase()) || post.petGenderAdopt.toLowerCase().contains(search.toLowerCase()) ||
          post.petColorAdopt.toLowerCase().contains(search.toLowerCase()) || post.petSizeAdopt.toLowerCase().contains(search.toLowerCase())
@@ -453,6 +461,7 @@ class PostViewModel extends ChangeNotifier {
       filterPawExperiencePost = pawExperiencePost;
     } else {
       filterPawExperiencePost = pawExperiencePost.where((post) =>
+         post.postOwnerName.toLowerCase().contains(searchText) ||
           post.tags.any((tag) => tag.name.toLowerCase().contains(searchText.toLowerCase()))).toList();
     }
     notifyListeners();
@@ -464,6 +473,7 @@ class PostViewModel extends ChangeNotifier {
       filterCallforAidPost = callforAidPost;
     } else {
       filterCallforAidPost = callforAidPost.where((post) =>post.bankHolder.toLowerCase().contains(searchText.toLowerCase()) ||
+          post.postOwnerName.toLowerCase().contains(searchText) ||
           post.tags.any((tag) => tag.name.toLowerCase().contains(searchText.toLowerCase())) || post.postDescription.toLowerCase().contains(searchText.toLowerCase()) ||
           post.accountNumber.toLowerCase().contains(searchText.toLowerCase()) ||  post.estimatedAmount.toLowerCase().contains(searchText.toLowerCase())
           ||  post.donationType.toLowerCase().contains(searchText.toLowerCase()) ||  post.donationType.toLowerCase().contains(searchText.toLowerCase())
@@ -478,7 +488,8 @@ class PostViewModel extends ChangeNotifier {
     if (searchText.isEmpty) {
       filterPetForRescuePost = petforRescuePost;
     } else {
-      filterPetForRescuePost = petforRescuePost.where((post) => post.tags.any((tag) => tag.name.toLowerCase().contains(searchText.toLowerCase()))
+      filterPetForRescuePost = petforRescuePost.where((post) => post.tags.any((tag) => tag.name.toLowerCase().contains(searchText.toLowerCase())) ||
+          post.postOwnerName.toLowerCase().contains(searchText)
           || post.rescuePetSize.toLowerCase().contains(searchText.toLowerCase()) || post.rescueStatus.toLowerCase().contains(searchText.toLowerCase())
       ||post.rescueAddress.toLowerCase().contains(searchText.toLowerCase()) || post.rescuePetColor.toLowerCase().contains(searchText.toLowerCase())
           || post.rescueBreed.toLowerCase().contains(searchText.toLowerCase()) || post.petType.toLowerCase().contains(searchText.toLowerCase())).toList();
