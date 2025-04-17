@@ -95,7 +95,8 @@ class PostModel {
       tagList.add(TagModel.fromDocument(tagDoc));
     }
 
-    var userDoc = await FirebaseFirestore.instance.collection('Users').doc(doc['PostOwnerID']).get();
+    var userId = doc['PostOwnerID'];
+    var userDoc = await FirebaseFirestore.instance.collection('Users').doc(userId).get();
     var petDoc = await FirebaseFirestore.instance.collection('PetDetailsCollection').doc(doc.id).get();
     var petDocAdopt = await FirebaseFirestore.instance.collection('AdoptionDetails').doc(doc.id).get();
     var donationDoc = await FirebaseFirestore.instance.collection('DonationDetails').doc(doc.id).get();

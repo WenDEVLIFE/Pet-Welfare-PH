@@ -86,7 +86,7 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Change Establishment Details',
+          'Change Business Details',
           style: TextStyle(
             color: AppColors.white,
             fontFamily: 'SmoochSans',
@@ -109,7 +109,7 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                     children: <Widget>[
                       SizedBox(height: screenHeight * 0.01),
                       const Text(
-                        'Shelter/Clinic Name',
+                        'Business Name',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w900,
@@ -121,13 +121,13 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                       CustomTextField(
                         controller: viewModel.shelterNameController,
                         screenHeight: screenHeight,
-                        hintText: 'Enter Shelter/Clinic Name',
+                        hintText: 'Enter Business Name',
                         fontSize: 16,
                         keyboardType: TextInputType.text,
                       ),
                       SizedBox(height: screenHeight * 0.02),
                       const Text(
-                        'Shelter/Clinic Profile',
+                        'Business Profile',
                         style: TextStyle(
                           fontSize: 20,
                           fontWeight: FontWeight.w600,
@@ -162,7 +162,7 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                         ),
                       ),
                       SizedBox(height: screenHeight * 0.02),
-                      const Text('SELECT YOUR ESTABLISHMENT TYPE',
+                      const Text('Select Your Business Type',
                           style: TextStyle(
                               fontSize: 18,
                               fontWeight: FontWeight.w700,
@@ -218,7 +218,7 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                       ),
                       SizedBox(height: screenHeight * 0.02),
                       const Text(
-                        'Shelter/Clinic Description',
+                        'Business Description',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w900,
@@ -230,13 +230,13 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                       CustomTextField(
                         controller: viewModel.shelterDescriptionController,
                         screenHeight: screenHeight,
-                        hintText: 'Enter Shelter/Clinic Description',
+                        hintText: 'Business Description',
                         fontSize: 16,
                         keyboardType: TextInputType.text,
                       ),
                       SizedBox(height: screenHeight * 0.02),
                       const Text(
-                        'Shelter/Clinic Address',
+                        'Business Address',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w900,
@@ -248,13 +248,13 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                       CustomTextField(
                         controller: viewModel.shelterAddressController,
                         screenHeight: screenHeight,
-                        hintText: 'Enter Shelter/Clinic Address',
+                        hintText: 'Enter Business Address',
                         fontSize: 16,
                         keyboardType: TextInputType.text,
                       ),
                       SizedBox(height: screenHeight * 0.02),
                       const Text(
-                        'Shelter/Clinic Phone Number',
+                        'Business Phone Number',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w900,
@@ -266,13 +266,13 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                       CustomTextField(
                         controller: viewModel.shelterPhoneNumber,
                         screenHeight: screenHeight,
-                        hintText: 'Enter Shelter/Clinic Phone Number',
+                        hintText: 'Enter Business Phone Number',
                         fontSize: 16,
                         keyboardType: TextInputType.number,
                       ),
                       SizedBox(height: screenHeight * 0.02),
                       const Text(
-                        'Shelter/Clinic Email',
+                        'Business Email',
                         style: TextStyle(
                           fontSize: 18,
                           fontWeight: FontWeight.w900,
@@ -284,7 +284,7 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                       CustomTextField(
                         controller: viewModel.shelterEmailController,
                         screenHeight: screenHeight,
-                        hintText: 'Enter Shelter/Clinic Email',
+                        hintText: 'Enter Business Email',
                         fontSize: 16,
                         keyboardType: TextInputType.text,
                       ),
@@ -371,7 +371,7 @@ class _EditEstablishmentScreenState extends State<EditEstablishmentScreen> {
                             padding: const EdgeInsets.symmetric(horizontal: 50, vertical: 10),
                           ),
                           child: const Text(
-                            'Update Establishment',
+                            'Update Business',
                             style: TextStyle(
                               color: Colors.white,
                               fontFamily: 'SmoochSans',

@@ -37,7 +37,7 @@ class ApprovedShelterClinicViewState extends State<ApprovedShelterClinicView> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Shelter & Clinic',
+          'All Business',
           style: TextStyle(
             color: AppColors.white,
             fontFamily: 'SmoochSans',
@@ -66,7 +66,7 @@ class ApprovedShelterClinicViewState extends State<ApprovedShelterClinicView> {
             Navigator.pop(context);
             Navigator.pushNamed(context, AppRoutes.subscription);
           }),
-          _buildDrawerItem(Icons.holiday_village_outlined, 'Clinic & Shelter', () {
+          _buildDrawerItem(Icons.holiday_village_outlined, 'All Business', () {
             Navigator.pop(context);
           }),
           _buildDrawerItem(Icons.report_gmailerrorred_sharp, 'Reports', () {

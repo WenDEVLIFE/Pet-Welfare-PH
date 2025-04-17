@@ -5,7 +5,7 @@ import 'package:pet_welfrare_ph/src/view_model/EstablishmentViewModel.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/SearchTextField.dart';
-import 'editdirectory/EditEstablishmentView.dart';
+import 'editdirectory/EditBusinessView.dart';
 import '../utils/AppColors.dart';
 import '../utils/Route.dart';
 

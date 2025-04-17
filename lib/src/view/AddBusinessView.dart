@@ -50,7 +50,7 @@ class _AddShelterClinicState extends State<AddShelterClinic> {
     return Scaffold(
       appBar: AppBar(
         title: const Text(
-          'Add Shelter & Clinic',
+          'Add Business Location',
           style: TextStyle(
             color: Colors.white,
             fontFamily: 'SmoochSans',
@@ -76,7 +76,7 @@ class _AddShelterClinicState extends State<AddShelterClinic> {
                       children: <Widget>[
                         SizedBox(height: screenHeight * 0.01),
                         CustomText(
-                          text:'Shelter/Clinic Name',
+                          text:'Business Name',
                           size: 18,
                           color: Colors.black,
                           weight: FontWeight.w700,
@@ -88,13 +88,13 @@ class _AddShelterClinicState extends State<AddShelterClinic> {
                         CustomTextField(
                             controller: viewModel.shelterNameController,
                             screenHeight: screenHeight,
-                            hintText: 'Enter Shelter/Clinic Name',
+                            hintText: 'Enter Business Name',
                             fontSize: 16,
                             keyboardType: TextInputType.text
                         ),
                         SizedBox(height: screenHeight * 0.02),
                         CustomText(
-                          text:  'Shelter/Clinic Profile',
+                          text:  'Business Profile',
                           size: 18,
                           color: Colors.black,
                           weight: FontWeight.w700,
@@ -133,7 +133,7 @@ class _AddShelterClinicState extends State<AddShelterClinic> {
                           ),
                         ),
                         SizedBox(height: screenHeight * 0.02),
-                        const Text('SELECT YOUR ESTABLISHMENT TYPE',
+                        const Text('Select Your Business Type',
                             style: TextStyle(
                                 fontSize: 18,
                                 fontWeight: FontWeight.w700,
@@ -147,11 +147,11 @@ class _AddShelterClinicState extends State<AddShelterClinic> {
                             viewModel.updateEstablishmentType(newValue!);
                           },
                           itemLabel: (String value) => value,
-                          hint: 'Establisment Type',
+                          hint: 'Business Type',
                         ),
                         SizedBox(height: screenHeight * 0.02),
                         CustomText(
-                          text:   'Shelter/Clinic Description',
+                          text:   'Business Description',
                           size: 18,
                           color: Colors.black,
                           weight: FontWeight.w700,
@@ -163,13 +163,13 @@ class _AddShelterClinicState extends State<AddShelterClinic> {
                         CustomTextField(
                             controller: viewModel.shelterDescriptionController,
                             screenHeight: screenHeight,
-                            hintText: 'Enter Shelter/Clinic Description',
+                            hintText: 'Business Description',
                             fontSize: 16,
                             keyboardType: TextInputType.text
                         ),
                         SizedBox(height: screenHeight * 0.02),
                         CustomText(
-                          text:'Shelter/Clinic Address',
+                          text:'Business Address',
                           size: 18,
                           color: Colors.black,
                           weight: FontWeight.w700,
@@ -181,13 +181,13 @@ class _AddShelterClinicState extends State<AddShelterClinic> {
                         CustomTextField(
                             controller: viewModel.shelterAddressController,
                             screenHeight: screenHeight,
-                            hintText: 'Enter Shelter/Clinic Address',
+                            hintText: 'Enter Business Address',
                             fontSize: 16,
                             keyboardType: TextInputType.text
                         ),
                         SizedBox(height: screenHeight * 0.02),
                         CustomText(
-                          text: 'Shelter/Clinic Phone Number',
+                          text: 'Business Phone Number',
                           size: 18,
                           color: Colors.black,
                           weight: FontWeight.w700,
@@ -199,13 +199,13 @@ class _AddShelterClinicState extends State<AddShelterClinic> {
                         CustomTextField(
                             controller: viewModel.shelterPhoneNumber,
                             screenHeight: screenHeight,
-                            hintText: 'Enter Shelter/Clinic Phone Number',
+                            hintText: 'Enter Business Phone Number',
                             fontSize: 16,
                             keyboardType: TextInputType.phone
                         ),
                         SizedBox(height: screenHeight * 0.02),
                         CustomText(
-                          text: 'Shelter/Clinic Email',
+                          text: 'Business Email',
                           size: 18,
                           color: Colors.black,
                           weight: FontWeight.w700,
@@ -217,7 +217,7 @@ class _AddShelterClinicState extends State<AddShelterClinic> {
                         CustomTextField(
                             controller: viewModel.shelterEmailController,
                             screenHeight: screenHeight,
-                            hintText: 'Enter Shelter/Clinic Email',
+                            hintText: 'Enter Business Email',
                             fontSize: 16,
                             keyboardType: TextInputType.text
                         ),
@@ -300,7 +300,7 @@ class _AddShelterClinicState extends State<AddShelterClinic> {
                         SizedBox(height: screenHeight * 0.02),
                         Center(
                           child:  CustomButton(
-                            hint: 'Add Shelter/Clinic',
+                            hint: 'Add Business',
                             size:  14,
                             color1: AppColors.orange,
                             textcolor2: AppColors.white,

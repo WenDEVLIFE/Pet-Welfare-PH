@@ -50,7 +50,7 @@ class SubscriptionState extends State<SubscriptionView> {
             Navigator.pop(context);
             Navigator.pushReplacementNamed(context, AppRoutes.subscription);
           }),
-          _buildDrawerItem(Icons.holiday_village_outlined, 'Clinic & Shelter', () {
+          _buildDrawerItem(Icons.holiday_village_outlined, 'All Business', () {
             Navigator.pop(context);
             Navigator.pushReplacementNamed(context, AppRoutes.adminViewEstablishment);
           }),
