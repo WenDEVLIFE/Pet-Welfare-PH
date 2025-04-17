@@ -18,6 +18,7 @@ class MessageViewModel extends ChangeNotifier {
   String ImageReceiver = '';
   String selectedImagePath= '';
   String receiverName = '';
+  String uid = '';
 
   final MessageRepository messageRepository = MessageRepositoryImpl();
   final Loadprofilerespository _loadprofilerespository = LoadProfileImpl();
@@ -26,12 +27,15 @@ class MessageViewModel extends ChangeNotifier {
   List<ChatModel> _chats = [];
   List<ChatModel> filteredChats = [];
 
-  Stream<List<MessageModel>> get messagesStream => messageRepository.getMessage();
+  // Stream to listen for messages
+  Stream<List<MessageModel>> get messagesStream => messageRepository.getMessage(uid);
+
   Stream<List<ChatModel>> get chatsStream => messageRepository.getChat();
 
   // Load the receiver's profile
   Future<void> loadReceiver(String uid) async {
     try {
+      this.uid = uid;
       var profileData = await _loadprofilerespository.loadProfile2(uid).first;
       if (profileData != null) {
         receiverName = profileData['name'] ?? "";
@@ -44,6 +48,15 @@ class MessageViewModel extends ChangeNotifier {
       }
     } catch (e) {
       ToastComponent().showMessage(Colors.red, 'Error loading profile: $e');
+    }
+  }
+
+  void listenToMessages() {
+    if (uid.isNotEmpty) {
+      messagesStream.listen((messages) {
+        _messages = messages;
+        notifyListeners();
+      });
     }
   }
 
@@ -82,7 +95,7 @@ class MessageViewModel extends ChangeNotifier {
     } else {
       filteredChats = _chats.where((chats) {
         return chats.name.toLowerCase().contains(query.toLowerCase()) ||
-            chats.name.toLowerCase().contains(query.toLowerCase());
+            chats.lastMessage.toLowerCase().contains(query.toLowerCase());
       }).toList();
     }
     notifyListeners();

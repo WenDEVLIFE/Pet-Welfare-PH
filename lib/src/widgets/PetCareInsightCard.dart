@@ -9,7 +9,7 @@ import '../modal/ReactionModal.dart';
 import '../utils/AppColors.dart';
 import '../utils/ReactionUtils.dart';
 import '../view/ViewImage.dart';
-import 'CardShimmerWidget.dart';
+import '../Animation/CardShimmerWidget.dart';
 import 'CustomText.dart';
 
 class PetCareInsightCard extends StatefulWidget {

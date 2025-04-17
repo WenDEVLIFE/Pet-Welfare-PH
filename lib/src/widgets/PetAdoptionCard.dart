@@ -11,7 +11,7 @@ import '../utils/AppColors.dart';
 import '../utils/ReactionUtils.dart';
 import '../view/ViewImage.dart';
 import '../view_model/ApplyAdoptionViewModel.dart';
-import 'CardShimmerWidget.dart';
+import '../Animation/CardShimmerWidget.dart';
 import 'CustomText.dart';
 
 class PetAdoptionCard extends StatefulWidget {

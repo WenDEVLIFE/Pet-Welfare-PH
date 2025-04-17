@@ -8,7 +8,7 @@ import  'package:provider/provider.dart';
 import '../utils/ReactionUtils.dart';
 import '../view/ViewImage.dart';
 import '../view_model/PostViewModel.dart';
-import 'CardShimmerWidget.dart';
+import '../Animation/CardShimmerWidget.dart';
 
 class ProtectPetCard extends StatefulWidget {
   final PostModel post;

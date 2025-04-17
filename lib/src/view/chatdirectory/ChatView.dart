@@ -1,10 +1,12 @@
 
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 import 'package:pet_welfrare_ph/src/view_model/MessageViewModel.dart';
 import 'package:pet_welfrare_ph/src/model/ChatModel.dart';
 
+import '../../Animation/MessageShimmer.dart';
 import '../../utils/Route.dart';
 
 class ChatView extends StatelessWidget {
@@ -72,7 +74,7 @@ class ChatView extends StatelessWidget {
               stream: messageViewModel.chatsStream,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
+                  return MessageShimmer(width: screenWidth * 0.99, height: screenHeight * 0.2);
                 } else if (snapshot.hasError) {
                   return Center(child: Text('Error: ${snapshot.error}'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
@@ -93,8 +95,16 @@ class ChatView extends StatelessWidget {
                         title: Text(chat.name),
                         subtitle: Text(chat.lastMessage),
                         onTap: () {
+                          // Get current user's ID
+                          final currentUserId = FirebaseAuth.instance.currentUser!.uid;
+
+                          // Determine which ID is the other user (not current user)
+                          final otherUserId = currentUserId == chat.senderID
+                              ? chat.receiverID
+                              : chat.senderID;
+
                           Navigator.pushNamed(context, AppRoutes.message, arguments: {
-                            'receiverID': chat.receiverID
+                            'receiverID': otherUserId
                           });
                         },
                       );

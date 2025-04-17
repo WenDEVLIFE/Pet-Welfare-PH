@@ -11,7 +11,7 @@ import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import '../utils/AppColors.dart';
 
 abstract class MessageRepository {
-  Stream<List<MessageModel>> getMessage();
+  Stream<List<MessageModel>> getMessage(String receiverId);
   Future<void>sendMessage(Map<String, dynamic> message);
   Stream<List<ChatModel>> getChat();
 
@@ -24,22 +24,38 @@ class MessageRepositoryImpl implements MessageRepository {
   final FirebaseStorage _storage = FirebaseStorage.instance;
 
   @override
-  Stream<List<MessageModel>> getMessage() {
+  Stream<List<MessageModel>> getMessage(String receiverId) {
     User user = _auth.currentUser!;
-    return _firestore.collection('Chatrooms')
-        .where('participants', arrayContains: user.uid)
+    String currentUserId = user.uid;
+
+    return _firestore
+        .collection('Chatrooms')
+        .where('participants', arrayContains: currentUserId)
         .snapshots()
-        .asyncExpand((querySnapshot) {
-      return Stream.fromFutures(querySnapshot.docs.map((doc) {
-        return doc.reference.collection('Messages')
-            .orderBy('timestamp', descending: false)
-            .snapshots()
-            .asyncMap((messageSnapshot) async {
-          return Future.wait(messageSnapshot.docs.map((messageDoc) async {
-            return await MessageModel.fromDocumentSnapshotWithUserData(messageDoc);
-          }).toList());
-        }).first;
-      }));
+        .asyncMap((querySnapshot) async {
+      List<MessageModel> messages = [];
+
+      for (var doc in querySnapshot.docs) {
+        // Check if this chatroom involves the receiver we want
+        List<dynamic> participants = doc['participants'];
+        if (participants.contains(receiverId)) {
+          // Found the right chatroom - get its messages
+          QuerySnapshot messagesSnapshot = await doc.reference
+              .collection('Messages')
+              .orderBy('timestamp', descending: false)
+              .get();
+
+          for (var messageDoc in messagesSnapshot.docs) {
+            MessageModel message = await MessageModel.fromDocumentSnapshotWithUserData(messageDoc);
+            messages.add(message);
+          }
+
+          // We found the chatroom we want, no need to check others
+          break;
+        }
+      }
+
+      return messages;
     });
   }
 
@@ -123,10 +139,10 @@ class MessageRepositoryImpl implements MessageRepository {
   @override
   Stream<List<ChatModel>> getChat() {
     User user = _auth.currentUser!;
-    String userid = user.uid;
+    String currentUserId = user.uid;
 
     return _firestore.collection('Chatrooms')
-        .where('participants', arrayContains: userid)
+        .where('participants', arrayContains: currentUserId)
         .snapshots()
         .asyncMap((querySnapshot) async {
       List<ChatModel> chatList = [];
@@ -135,21 +151,23 @@ class MessageRepositoryImpl implements MessageRepository {
         var senderID = chatData['senderID'];
         var receiverID = chatData['receiverID'];
 
-        var senderDoc = await _firestore.collection('Users').doc(senderID).get();
-        var receiverDoc = await _firestore.collection('Users').doc(receiverID).get();
+        // Determine the other user's ID (the one who isn't the current user)
+        String otherUserId = (currentUserId == senderID) ? receiverID : senderID;
 
-        var senderName = senderDoc['Name'];
-        var receiverName = receiverDoc['Name'];
-        var profilePath = userid == receiverID ? senderDoc['ProfileUrl'] : receiverDoc['ProfileUrl'];
-        var displayName = userid == receiverID ? senderName : receiverName;
+        // Get the other user's document
+        var otherUserDoc = await _firestore.collection('Users').doc(otherUserId).get();
+
+        // Get the other user's name and profile picture
+        var otherUserName = otherUserDoc['Name'] ?? 'Unknown';
+        var otherUserProfile = otherUserDoc['ProfileUrl'] ?? '';
 
         chatList.add(ChatModel(
-          id: doc.id,
-         name: displayName,
-          profilepath: profilePath,
-          lastMessage: chatData['lastMessage'],
-          senderID: senderID,
-          receiverID: receiverID
+            id: doc.id,
+            name: otherUserName,
+            profilepath: otherUserProfile,
+            lastMessage: chatData['lastMessage'] ?? '',
+            senderID: senderID,
+            receiverID: receiverID
         ));
       }
       return chatList;

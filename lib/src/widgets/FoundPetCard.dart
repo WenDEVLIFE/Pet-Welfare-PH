@@ -11,7 +11,7 @@ import '../view/ViewImage.dart';
 import '../view_model/PostViewModel.dart';
 import 'package:provider/provider.dart';
 
-import 'CardShimmerWidget.dart';
+import '../Animation/CardShimmerWidget.dart';
 import 'CustomText.dart';
 
 class FoundPetCard extends StatefulWidget {

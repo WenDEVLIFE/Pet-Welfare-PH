@@ -8,7 +8,7 @@ import '../DialogView/ReportDialog.dart';
 import '../modal/ReactionModal.dart';
 import '../utils/ReactionUtils.dart';
 import '../view/ViewImage.dart';
-import 'CardShimmerWidget.dart';
+import '../Animation/CardShimmerWidget.dart';
 
 class PostCard extends StatefulWidget {
   final PostModel post;
