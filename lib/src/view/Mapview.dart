@@ -222,7 +222,7 @@ class MapViewState extends State<MapView> {
             SpeedDialChild(
               child: const Icon(Icons.house, color: AppColors.white),
               backgroundColor: AppColors.orange,
-              label: 'My Pet Shelter & Clinic',
+              label: 'My Business',
               onTap: () {
                 Navigator.pushNamed(context, AppRoutes.shelterClinic);
               },

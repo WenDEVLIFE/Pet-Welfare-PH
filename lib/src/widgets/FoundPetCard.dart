@@ -7,6 +7,7 @@ import '../DialogView/ReportDialog.dart';
 import '../modal/ReactionModal.dart';
 import '../utils/AppColors.dart';
 import '../utils/ReactionUtils.dart';
+import '../utils/Route.dart';
 import '../view/ViewImage.dart';
 import '../view_model/PostViewModel.dart';
 import 'package:provider/provider.dart';
@@ -152,40 +153,47 @@ class _FoundPetCardState extends State<FoundPetCard> {
               ),
               const Spacer(),
               PopupMenuButton<String>(
-                onSelected: (value) {
-                  // Handle menu item selection
-                  print('Selected: $value');
-                },
-                itemBuilder: (BuildContext context) {
-                  return [
-                    PopupMenuItem<String>(
-                      value: 'Edit',
-                      child: const Text('Edit'),
-                      onTap: () {
-                        // Handle edit action
-                      },
-                    ),
-                    PopupMenuItem<String>(
-                      value: 'Delete',
-                      child: const Text('Delete'),
-                      onTap: () {
-                        // Handle edit action
-                      },
-                    ),
+                itemBuilder: (context) {
+                  final currentUserId = Provider.of<PostViewModel>(context, listen: false).currentUserId;
+                  final isAdmin = postViewModel.role.toLowerCase() == 'admin' || postViewModel.role.toLowerCase()=="sub-admin";
+                  final isPostOwner = widget.post.postOwnerId == currentUserId;
 
-                    PopupMenuItem<String>(
+                  return [
+                    if (isAdmin || isPostOwner)
+                      PopupMenuItem(value: 'Edit', child: const Text('Edit'), onTap: (){
+
+                      },),
+                    if (isAdmin || isPostOwner)
+                      PopupMenuItem(value: 'Delete', child: const Text('Delete'), onTap: (){
+
+                        // Determine which ID is the other user (not current user)
+                        final otherUserId = currentUserId == widget.post.postOwnerId
+                            ? widget.post.postOwnerId
+                            : widget.post.postOwnerId;
+
+                        Navigator.pushNamed(context, AppRoutes.message, arguments: {
+                          'receiverID': otherUserId
+                        });
+                      },),
+                    if (!isPostOwner)
+                      PopupMenuItem(value: 'Message', child: const Text('Message')),
+                    PopupMenuItem(
                       value: 'Report',
                       child: const Text('Report'),
                       onTap: () {
-                        // Handle edit action
-                        showDialog(context: context, builder: (context) {
-                          return ReportDialog(post.postId);
-                        });
+                        Future.delayed(
+                          Duration.zero,
+                              () => showDialog(
+                            context: context,
+                            builder: (context) => ReportDialog(widget.post.postId),
+                          ),
+                        );
                       },
                     ),
+
                   ];
                 },
-                icon: const Icon(Icons.more_vert), // Three dots icon
+                icon: const Icon(Icons.more_vert),
               ),
             ],
           ),

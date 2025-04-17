@@ -5,10 +5,12 @@ import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 import 'package:provider/provider.dart';
 
+import '../DialogView/ReportDialog.dart';
 import '../modal/FormAdoptionModal.dart';
 import '../modal/ReactionModal.dart';
 import '../utils/AppColors.dart';
 import '../utils/ReactionUtils.dart';
+import '../utils/Route.dart';
 import '../view/ViewImage.dart';
 import '../view_model/ApplyAdoptionViewModel.dart';
 import '../Animation/CardShimmerWidget.dart';
@@ -122,35 +124,55 @@ class _PetAdoptionCardState extends State<PetAdoptionCard> {
                   backgroundImage: CachedNetworkImageProvider(post.profileUrl),
                 ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: Text(
-                      post.postOwnerName,
-                      style: const TextStyle(
-                        fontFamily: 'SmoochSans',
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Text(
+                        post.postOwnerName,
+                        style: const TextStyle(
+                          fontFamily: 'SmoochSans',
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: Text(
-                      formattedDate,
-                      style: const TextStyle(
-                        fontFamily: 'SmoochSans',
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                    Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Text(
+                        postViewModel.formatTimestamp(post.timestamp),
+                        style: const TextStyle(
+                          fontFamily: 'SmoochSans',
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
-                  ),
-                ],
-              )
+                  ],
+                ),
+              ),
+              PopupMenuButton<String>(
+                itemBuilder: (context) {
+                  final currentUserId = Provider.of<PostViewModel>(context, listen: false).currentUserId;
+                  final isAdmin = postViewModel.role.toLowerCase() == 'admin' || postViewModel.role.toLowerCase() == "sub-admin";
+                  final isPostOwner = widget.post.postOwnerId == currentUserId;
+
+                  return [
+                    if (isAdmin || isPostOwner)
+                      PopupMenuItem(value: 'Edit', child: const Text('Edit')),
+                    if (isAdmin || isPostOwner)
+                      PopupMenuItem(value: 'Delete', child: const Text('Delete')),
+                    if (!isPostOwner)
+                      PopupMenuItem(value: 'Message', child: const Text('Message')),
+                    PopupMenuItem(value: 'Report', child: const Text('Report')),
+                  ];
+                },
+                icon: const Icon(Icons.more_vert),
+              ),
             ],
           ),
           Padding(
@@ -165,38 +187,35 @@ class _PetAdoptionCardState extends State<PetAdoptionCard> {
               ),
             ),
           ),
-          SizedBox(
-            height: screenHeight * 0.3,
-            child: PageView.builder(
-              itemCount: post.imageUrls.length,
-              itemBuilder: (context, imageIndex) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ViewImage(),
-                        settings: RouteSettings(
-                          arguments: {
-                            'imageUrls': post.imageUrls,
-                            'initialIndex': imageIndex,
-                          },
+          if (post.imageUrls.isNotEmpty)
+            SizedBox(
+              height: screenHeight * 0.3,
+              child: PageView.builder(
+                itemCount: post.imageUrls.length,
+                itemBuilder: (context, index) {
+                  return GestureDetector(
+                    onTap: () {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => ViewImage(),
+                          settings: RouteSettings(
+                            arguments: {
+                              'imageUrls': post.imageUrls,
+                              'initialIndex': index,
+                            },
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                  child: Container(
-                    width: screenWidth * 0.8,
-                    height: screenHeight * 0.5,
+                      );
+                    },
                     child: CachedNetworkImage(
-                      imageUrl: post.imageUrls[imageIndex],
+                      imageUrl: post.imageUrls[index],
                       fit: BoxFit.cover,
                     ),
-                  ),
-                );
-              },
+                  );
+                },
+              ),
             ),
-          ),
           ExpansionTile(
             title: CustomText(
               text: 'Pet Adoption Details',
@@ -211,18 +230,10 @@ class _PetAdoptionCardState extends State<PetAdoptionCard> {
               Padding(
                 padding: const EdgeInsets.all(10),
                 child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     CustomText(
-                      text: 'Pet Name:',
-                      size: 20,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: '${post.petNameAdopt}',
+                      text: 'Pet Name: ${post.petNameAdopt}',
                       size: 16,
                       color: AppColors.black,
                       weight: FontWeight.w700,
@@ -231,16 +242,7 @@ class _PetAdoptionCardState extends State<PetAdoptionCard> {
                       alignment: Alignment.centerLeft,
                     ),
                     CustomText(
-                      text: 'Pet Type:',
-                      size: 20,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: '${post.petTypeAdopt}',
+                      text: 'Pet Type: ${post.petTypeAdopt}',
                       size: 16,
                       color: AppColors.black,
                       weight: FontWeight.w700,
@@ -248,157 +250,14 @@ class _PetAdoptionCardState extends State<PetAdoptionCard> {
                       screenHeight: screenHeight,
                       alignment: Alignment.centerLeft,
                     ),
-                    CustomText(
-                      text: 'Pet Breed:',
-                      size: 20,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: post.petBreedAdopt,
-                      size: 16,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: 'Pet Gender',
-                      size: 20,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: '${post.petGenderAdopt}',
-                      size: 16,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: 'Pet Age',
-                      size: 20,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: '${post.petAgeAdopt}',
-                      size: 16,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: 'Pet Color:',
-                      size: 20,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: '${post.petColorAdopt}',
-                      size: 16,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: 'Pet Size:',
-                      size: 20,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: '${post.petSizeAdopt}',
-                      size: 16,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: 'Address:',
-                      size: 20,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: '${post.petAddressAdopt}',
-                      size: 16,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: 'Region/Province/City/Barangay:',
-                      size: 20,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: post.regProCiBagAdopt,
-                      size: 16,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: 'Status',
-                      size: 20,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: '${post.StatusAdopt}',
-                      size: 16,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
+                    // Add other pet details here...
                   ],
                 ),
               ),
             ],
           ),
           Row(
-            mainAxisAlignment: MainAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Row(
                 children: [
@@ -413,12 +272,7 @@ class _PetAdoptionCardState extends State<PetAdoptionCard> {
                     ),
                     onPressed: _handleReaction,
                   ),
-                  Text('$reactionCount likes', style: const TextStyle(
-                    fontFamily: 'SmoochSans',
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  )),
+                  Text('$reactionCount likes'),
                 ],
               ),
               Row(
@@ -429,12 +283,7 @@ class _PetAdoptionCardState extends State<PetAdoptionCard> {
                       postViewModel.showComments(context, post.postId);
                     },
                   ),
-                  Text('$commentCount comments', style: const TextStyle(
-                    fontFamily: 'SmoochSans',
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  )),
+                  Text('$commentCount comments'),
                 ],
               ),
               Row(
@@ -446,23 +295,14 @@ class _PetAdoptionCardState extends State<PetAdoptionCard> {
                         context: context,
                         isScrollControlled: true,
                         builder: (context) {
-                          ApplyAdoptionViewModel applyAdoptionViewModel = Provider
-                              .of<ApplyAdoptionViewModel>(context,
-                              listen: false);
-                          applyAdoptionViewModel.showReminders(context);
                           return FormAdoptionModal(post.postId);
                         },
                       );
                     },
                   ),
-                  const Text('Adopt Me', style: TextStyle(
-                    fontFamily: 'SmoochSans',
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  )),
+                  const Text('Adopt Me'),
                 ],
-              )
+              ),
             ],
           ),
         ],

@@ -1,3 +1,4 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
@@ -7,6 +8,7 @@ import 'package:provider/provider.dart';
 import '../DialogView/ReportDialog.dart';
 import '../modal/ReactionModal.dart';
 import '../utils/ReactionUtils.dart';
+import '../utils/Route.dart';
 import '../view/ViewImage.dart';
 import '../Animation/CardShimmerWidget.dart';
 
@@ -144,23 +146,45 @@ class _PostCardState extends State<PostCard> {
               ),
               const Spacer(),
               PopupMenuButton<String>(
-                itemBuilder: (context) => [
-                  PopupMenuItem(value: 'Edit', child: const Text('Edit')),
-                  PopupMenuItem(value: 'Delete', child: const Text('Delete')),
-                  PopupMenuItem(
-                    value: 'Report',
-                    child: const Text('Report'),
-                    onTap: () {
-                      Future.delayed(
-                        Duration.zero,
-                            () => showDialog(
-                          context: context,
-                          builder: (context) => ReportDialog(widget.post.postId),
-                        ),
-                      );
-                    },
-                  ),
-                ],
+                itemBuilder: (context) {
+                  final currentUserId = Provider.of<PostViewModel>(context, listen: false).currentUserId;
+                  final isAdmin = postViewModel.role.toLowerCase() == 'admin' || postViewModel.role.toLowerCase()=="sub-admin";
+                  final isPostOwner = widget.post.postOwnerId == currentUserId;
+
+                  return [
+                    if (isAdmin || isPostOwner)
+                      PopupMenuItem(value: 'Edit', child: const Text('Edit'), onTap: (){
+
+                      },),
+                    if (isAdmin || isPostOwner)
+                      PopupMenuItem(value: 'Delete', child: const Text('Delete'), onTap: (){
+
+                        // Determine which ID is the other user (not current user)
+                        final otherUserId = currentUserId == widget.post.postOwnerId
+                            ? widget.post.postOwnerId
+                            : widget.post.postOwnerId;
+
+                        Navigator.pushNamed(context, AppRoutes.message, arguments: {
+                          'receiverID': otherUserId
+                        });
+                      },),
+                    if (!isPostOwner)
+                      PopupMenuItem(value: 'Message', child: const Text('Message')),
+                    PopupMenuItem(
+                      value: 'Report',
+                      child: const Text('Report'),
+                      onTap: () {
+                        Future.delayed(
+                          Duration.zero,
+                              () => showDialog(
+                            context: context,
+                            builder: (context) => ReportDialog(widget.post.postId),
+                          ),
+                        );
+                      },
+                    ),
+                  ];
+                },
                 icon: const Icon(Icons.more_vert),
               ),
             ],

@@ -10,7 +10,7 @@ import 'package:pet_welfrare_ph/src/view/registerDirectory/LegalFirmRegisterView
 import 'package:pet_welfrare_ph/src/view/LoginView.dart';
 import 'package:pet_welfrare_ph/src/view/registerDirectory/PetR_Shelter_RegisterView.dart';
 import 'package:pet_welfrare_ph/src/view/PrivacyView.dart';
-import 'package:pet_welfrare_ph/src/view/ProfileView.dart';
+import 'package:pet_welfrare_ph/src/view/MyPostView.dart';
 import 'package:pet_welfrare_ph/src/view/SelectView.dart';
 import 'package:pet_welfrare_ph/src/view/TermsAndConditionView.dart';
 import 'package:pet_welfrare_ph/src/view/UploadIDView.dart';

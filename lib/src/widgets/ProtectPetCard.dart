@@ -1,11 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
+import '../DialogView/ReportDialog.dart';
 import '../modal/ReactionModal.dart';
 import '../model/PostModel.dart';
 import 'package:flutter/material.dart';
 import  'package:provider/provider.dart';
 
 import '../utils/ReactionUtils.dart';
+import '../utils/Route.dart';
 import '../view/ViewImage.dart';
 import '../view_model/PostViewModel.dart';
 import '../Animation/CardShimmerWidget.dart';
@@ -148,20 +150,30 @@ class _ProtectPetCardState extends State<ProtectPetCard> {
               ),
               const Spacer(),
               PopupMenuButton<String>(
-                onSelected: (value) {
-                  // Handle menu item selection
-                  print('Selected: $value');
-                },
-                itemBuilder: (BuildContext context) {
-                  return [
-                    PopupMenuItem<String>(
-                      value: 'Edit',
-                      child: const Text('Edit'),
-                      onTap: () {
-                        // Handle edit action
-                      },
-                    ),
+                itemBuilder: (context) {
+                  final currentUserId = Provider.of<PostViewModel>(context, listen: false).currentUserId;
+                  final isAdmin = postViewModel.role.toLowerCase() == 'admin' || postViewModel.role.toLowerCase()=="sub-admin";
+                  final isPostOwner = widget.post.postOwnerId == currentUserId;
 
+                  return [
+                    if (isAdmin || isPostOwner)
+                      PopupMenuItem(value: 'Edit', child: const Text('Edit'), onTap: (){
+
+                      },),
+                    if (isAdmin || isPostOwner)
+                      PopupMenuItem(value: 'Delete', child: const Text('Delete'), onTap: (){
+
+                        // Determine which ID is the other user (not current user)
+                        final otherUserId = currentUserId == widget.post.postOwnerId
+                            ? widget.post.postOwnerId
+                            : widget.post.postOwnerId;
+
+                        Navigator.pushNamed(context, AppRoutes.message, arguments: {
+                          'receiverID': otherUserId
+                        });
+                      },),
+                    if (!isPostOwner)
+                      PopupMenuItem(value: 'Message', child: const Text('Message')),
                     PopupMenuItem<String>(
                       value: 'Update Status',
                       child: const Text('Update Status'),
@@ -169,24 +181,23 @@ class _ProtectPetCardState extends State<ProtectPetCard> {
                         // Handle edit action
                       },
                     ),
-                    PopupMenuItem<String>(
-                      value: 'Delete',
-                      child: const Text('Delete'),
-                      onTap: () {
-                        // Handle edit action
-                      },
-                    ),
-
-                    PopupMenuItem<String>(
+                    PopupMenuItem(
                       value: 'Report',
                       child: const Text('Report'),
                       onTap: () {
-                        // Handle edit action
+                        Future.delayed(
+                          Duration.zero,
+                              () => showDialog(
+                            context: context,
+                            builder: (context) => ReportDialog(widget.post.postId),
+                          ),
+                        );
                       },
                     ),
+
                   ];
                 },
-                icon: const Icon(Icons.more_vert), // Three dots icon
+                icon: const Icon(Icons.more_vert),
               ),
 
             ],

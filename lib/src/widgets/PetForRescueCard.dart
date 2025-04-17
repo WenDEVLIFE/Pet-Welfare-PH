@@ -5,10 +5,12 @@ import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 import 'package:provider/provider.dart';
 
+import '../DialogView/ReportDialog.dart';
 import '../modal/FormAdoptionModal.dart';
 import '../modal/ReactionModal.dart';
 import '../utils/AppColors.dart';
 import '../utils/ReactionUtils.dart';
+import '../utils/Route.dart';
 import '../view/ViewImage.dart';
 import '../view_model/ApplyAdoptionViewModel.dart';
 import '../Animation/CardShimmerWidget.dart';
@@ -112,304 +114,331 @@ class PetForRescueCardState extends State<PetForRescueCard> {
       );
     }
 
-        return Card(
-          margin: const EdgeInsets.all(10),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+    return Card(
+      margin: const EdgeInsets.all(10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
             children: [
-              Row(
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: CircleAvatar(
-                      radius: screenHeight * 0.03,
-                      backgroundImage: CachedNetworkImageProvider(post.profileUrl),
-                    ),
-                  ),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Padding(
-                        padding: const EdgeInsets.all(5),
-                        child: Text(
-                          post.postOwnerName,
-                          style: const TextStyle(
-                            fontFamily: 'SmoochSans',
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                      Padding(
-                        padding: const EdgeInsets.all(5),
-                        child: Text(
-                          formattedDate,
-                          style: const TextStyle(
-                            fontFamily: 'SmoochSans',
-                            color: Colors.black,
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                          ),
-                        ),
-                      ),
-                    ],
-                  )
-                ],
-              ),
               Padding(
                 padding: const EdgeInsets.all(10),
-                child: Text(
-                  post.postDescription,
-                  style: const TextStyle(
-                    fontFamily: 'SmoochSans',
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
+                child: CircleAvatar(
+                  radius: screenHeight * 0.03,
+                  backgroundImage: CachedNetworkImageProvider(post.profileUrl),
                 ),
               ),
-              SizedBox(
-                height: screenHeight * 0.3,
-                child: PageView.builder(
-                  itemCount: post.imageUrls.length,
-                  itemBuilder: (context, imageIndex) {
-                    return GestureDetector(
+              Expanded( // Use Expanded to take up remaining space
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Text(
+                        post.postOwnerName,
+                        style: const TextStyle(
+                          fontFamily: 'SmoochSans',
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Text(
+                        formattedDate,
+                        style: const TextStyle(
+                          fontFamily: 'SmoochSans',
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              PopupMenuButton<String>(
+                itemBuilder: (context) {
+                  final currentUserId = Provider.of<PostViewModel>(context, listen: false).currentUserId;
+                  final isAdmin = postViewModel.role.toLowerCase() == 'admin' || postViewModel.role.toLowerCase() == "sub-admin";
+                  final isPostOwner = widget.post.postOwnerId == currentUserId;
+
+                  return [
+                    if (isAdmin || isPostOwner)
+                      PopupMenuItem(value: 'Edit', child: const Text('Edit')),
+                    if (isAdmin || isPostOwner)
+                      PopupMenuItem(value: 'Delete', child: const Text('Delete')),
+                    if (!isPostOwner)
+                      PopupMenuItem(value: 'Message', child: const Text('Message')),
+                    PopupMenuItem(
+                      value: 'Report',
+                      child: const Text('Report'),
                       onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => ViewImage(),
-                            settings: RouteSettings(
-                              arguments: {
-                                'imageUrls': post.imageUrls,
-                                'initialIndex': imageIndex,
-                              },
-                            ),
+                        Future.delayed(
+                          Duration.zero,
+                              () => showDialog(
+                            context: context,
+                            builder: (context) => ReportDialog(widget.post.postId),
                           ),
                         );
                       },
-                      child: Container(
-                        width: screenWidth * 0.8,
-                        height: screenHeight * 0.5,
-                        child: CachedNetworkImage(
-                          imageUrl: post.imageUrls[imageIndex],
-                          fit: BoxFit.cover,
+                    ),
+                  ];
+                },
+                icon: const Icon(Icons.more_vert),
+              ),
+            ],
+          ),
+          Padding(
+            padding: const EdgeInsets.all(10),
+            child: Text(
+              post.postDescription,
+              style: const TextStyle(
+                fontFamily: 'SmoochSans',
+                color: Colors.black,
+                fontSize: 16,
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: screenHeight * 0.3,
+            child: PageView.builder(
+              itemCount: post.imageUrls.length,
+              itemBuilder: (context, imageIndex) {
+                return GestureDetector(
+                  onTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => ViewImage(),
+                        settings: RouteSettings(
+                          arguments: {
+                            'imageUrls': post.imageUrls,
+                            'initialIndex': imageIndex,
+                          },
                         ),
                       ),
                     );
                   },
-                ),
-              ),
-              ExpansionTile(
-                title: CustomText(
-                  text: 'Pet Rescue Details',
-                  size: 24,
-                  color: AppColors.black,
-                  weight: FontWeight.w700,
-                  align: TextAlign.left,
-                  screenHeight: screenHeight,
-                  alignment: Alignment.centerLeft,
-                ),
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(10),
-                    child: Column(
-                      children: [
-                        CustomText(
-                          text: 'Pet Type:',
-                          size: 20,
-                          color: AppColors.black,
-                          weight: FontWeight.w700,
-                          align: TextAlign.left,
-                          screenHeight: screenHeight,
-                          alignment: Alignment.centerLeft,
-                        ),
-                        CustomText(
-                          text: '${post.rescuePetType}',
-                          size: 16,
-                          color: AppColors.black,
-                          weight: FontWeight.w700,
-                          align: TextAlign.left,
-                          screenHeight: screenHeight,
-                          alignment: Alignment.centerLeft,
-                        ),
-                        CustomText(
-                          text: 'Pet Breed:',
-                          size: 20,
-                          color: AppColors.black,
-                          weight: FontWeight.w700,
-                          align: TextAlign.left,
-                          screenHeight: screenHeight,
-                          alignment: Alignment.centerLeft,
-                        ),
-                        CustomText(
-                          text: post.rescueBreed,
-                          size: 16,
-                          color: AppColors.black,
-                          weight: FontWeight.w700,
-                          align: TextAlign.left,
-                          screenHeight: screenHeight,
-                          alignment: Alignment.centerLeft,
-                        ),
-                        CustomText(
-                          text: 'Pet Gender',
-                          size: 20,
-                          color: AppColors.black,
-                          weight: FontWeight.w700,
-                          align: TextAlign.left,
-                          screenHeight: screenHeight,
-                          alignment: Alignment.centerLeft,
-                        ),
-                        CustomText(
-                          text: '${post.rescuePetGender}',
-                          size: 16,
-                          color: AppColors.black,
-                          weight: FontWeight.w700,
-                          align: TextAlign.left,
-                          screenHeight: screenHeight,
-                          alignment: Alignment.centerLeft,
-                        ),
-                        CustomText(
-                          text: 'Pet Color:',
-                          size: 20,
-                          color: AppColors.black,
-                          weight: FontWeight.w700,
-                          align: TextAlign.left,
-                          screenHeight: screenHeight,
-                          alignment: Alignment.centerLeft,
-                        ),
-                        CustomText(
-                          text: '${post.rescuePetColor}',
-                          size: 16,
-                          color: AppColors.black,
-                          weight: FontWeight.w700,
-                          align: TextAlign.left,
-                          screenHeight: screenHeight,
-                          alignment: Alignment.centerLeft,
-                        ),
-                        CustomText(
-                          text: 'Pet Size:',
-                          size: 20,
-                          color: AppColors.black,
-                          weight: FontWeight.w700,
-                          align: TextAlign.left,
-                          screenHeight: screenHeight,
-                          alignment: Alignment.centerLeft,
-                        ),
-                        CustomText(
-                          text: '${post.rescuePetSize}',
-                          size: 16,
-                          color: AppColors.black,
-                          weight: FontWeight.w700,
-                          align: TextAlign.left,
-                          screenHeight: screenHeight,
-                          alignment: Alignment.centerLeft,
-                        ),
-                        CustomText(
-                          text: 'Address:',
-                          size: 20,
-                          color: AppColors.black,
-                          weight: FontWeight.w700,
-                          align: TextAlign.left,
-                          screenHeight: screenHeight,
-                          alignment: Alignment.centerLeft,
-                        ),
-                        CustomText(
-                          text: '${post.rescueAddress}',
-                          size: 16,
-                          color: AppColors.black,
-                          weight: FontWeight.w700,
-                          align: TextAlign.left,
-                          screenHeight: screenHeight,
-                          alignment: Alignment.centerLeft,
-                        ),
-                        CustomText(
-                          text: 'Status',
-                          size: 20,
-                          color: AppColors.black,
-                          weight: FontWeight.w700,
-                          align: TextAlign.left,
-                          screenHeight: screenHeight,
-                          alignment: Alignment.centerLeft,
-                        ),
-                        CustomText(
-                          text: '${post.rescueStatus}',
-                          size: 16,
-                          color: AppColors.black,
-                          weight: FontWeight.w700,
-                          align: TextAlign.left,
-                          screenHeight: screenHeight,
-                          alignment: Alignment.centerLeft,
-                        ),
-                      ],
+                  child: CachedNetworkImage(
+                    imageUrl: post.imageUrls[imageIndex],
+                    fit: BoxFit.cover,
+                  ),
+                );
+              },
+            ),
+          ),
+          ExpansionTile(
+            title: CustomText(
+              text: 'Pet Rescue Details',
+              size: 24,
+              color: AppColors.black,
+              weight: FontWeight.w700,
+              align: TextAlign.left,
+              screenHeight: screenHeight,
+              alignment: Alignment.centerLeft,
+            ),
+            children: [
+              Padding(
+                padding: const EdgeInsets.all(10),
+                child: Column(
+                  children: [
+                    CustomText(
+                      text: 'Pet Type:',
+                      size: 20,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
                     ),
-                  ),
-                ],
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: Icon(
-                          userReaction != null
-                              ? ReactionUtils.getReactionIcon(userReaction!)
-                              : Icons.thumb_up_outlined,
-                          color: userReaction != null
-                              ? ReactionUtils.getReactionColor(userReaction!)
-                              : null,
-                        ),
-                        onPressed: _handleReaction,
-                      ),
-                      Text('$reactionCount likes', style: const TextStyle(
-                        fontFamily: 'SmoochSans',
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      )),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.comment),
-                        onPressed: () {
-                          postViewModel.showComments(context, post.postId);
-                        },
-                      ),
-                      Text('$commentCount comments', style: const TextStyle(
-                        fontFamily: 'SmoochSans',
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      )),
-                    ],
-                  ),
-                  Row(
-                    children: [
-                      IconButton(
-                        icon: const Icon(Icons.pets),
-                        onPressed: () {
-                          showModalBottomSheet(
-                            context: context,
-                            isScrollControlled: true,
-                            builder: (context) {
-                              ApplyAdoptionViewModel applyAdoptionViewModel = Provider.of<ApplyAdoptionViewModel>(context, listen: false);
-                              applyAdoptionViewModel.showReminders(context);
-                              return FormAdoptionModal(post.postId);
-                            },
-                          );
-                        },
-                      ),
-                    ],
-                  )
-                ],
+                    CustomText(
+                      text: '${post.rescuePetType}',
+                      size: 16,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomText(
+                      text: 'Pet Breed:',
+                      size: 20,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomText(
+                      text: post.rescueBreed,
+                      size: 16,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomText(
+                      text: 'Pet Gender',
+                      size: 20,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomText(
+                      text: '${post.rescuePetGender}',
+                      size: 16,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomText(
+                      text: 'Pet Color:',
+                      size: 20,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomText(
+                      text: '${post.rescuePetColor}',
+                      size: 16,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomText(
+                      text: 'Pet Size:',
+                      size: 20,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomText(
+                      text: '${post.rescuePetSize}',
+                      size: 16,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomText(
+                      text: 'Address:',
+                      size: 20,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomText(
+                      text: '${post.rescueAddress}',
+                      size: 16,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomText(
+                      text: 'Status',
+                      size: 20,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomText(
+                      text: '${post.rescueStatus}',
+                      size: 16,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                  ],
+                ),
               ),
             ],
           ),
-        );
+          Row(
+            mainAxisAlignment: MainAxisAlignment.start,
+            children: [
+              Row(
+                children: [
+                  IconButton(
+                    icon: Icon(
+                      userReaction != null
+                          ? ReactionUtils.getReactionIcon(userReaction!)
+                          : Icons.thumb_up_outlined,
+                      color: userReaction != null
+                          ? ReactionUtils.getReactionColor(userReaction!)
+                          : null,
+                    ),
+                    onPressed: _handleReaction,
+                  ),
+                  Text('$reactionCount likes', style: const TextStyle(
+                    fontFamily: 'SmoochSans',
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  )),
+                ],
+              ),
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.comment),
+                    onPressed: () {
+                      postViewModel.showComments(context, post.postId);
+                    },
+                  ),
+                  Text('$commentCount comments', style: const TextStyle(
+                    fontFamily: 'SmoochSans',
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  )),
+                ],
+              ),
+              Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.pets),
+                    onPressed: () {
+                      showModalBottomSheet(
+                        context: context,
+                        isScrollControlled: true,
+                        builder: (context) {
+                          ApplyAdoptionViewModel applyAdoptionViewModel = Provider.of<ApplyAdoptionViewModel>(context, listen: false);
+                          applyAdoptionViewModel.showReminders(context);
+                          return FormAdoptionModal(post.postId);
+                        },
+                      );
+                    },
+                  ),
+                ],
+              )
+            ],
+          ),
+        ],
+      ),
+    );
   }
-
 }

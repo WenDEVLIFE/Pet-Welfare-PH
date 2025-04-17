@@ -8,10 +8,12 @@ import 'package:intl/intl.dart';
 
 import '../modal/CommentModal.dart';
 import '../model/CommentModel.dart';
+import '../utils/SessionManager.dart';
 
 class PostViewModel extends ChangeNotifier {
   final TextEditingController searchPostController = TextEditingController();
   String role = '';
+  String currentUserId = '';
 
   List<PostModel> _posts = [];
   List<PostModel> filteredPost = [];
@@ -76,6 +78,17 @@ class PostViewModel extends ChangeNotifier {
     listenToPetAdoptPost();
     listenToCallforAidPost();
     listenToPetForRescuePost();
+    loadData();
+  }
+
+  // initialize role and current user id
+  void loadData() async{
+     final sessionManager = SessionManager();
+      sessionManager.getUserInfo().then((userData) {
+       role = userData!['role'] ?? '';
+       currentUserId = userData!['uid'] ?? '';
+       notifyListeners();
+     });
   }
 
   // this is for the set post
