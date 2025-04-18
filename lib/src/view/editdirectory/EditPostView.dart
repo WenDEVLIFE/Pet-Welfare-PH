@@ -13,6 +13,7 @@ import 'package:provider/provider.dart';
 import '../../model/BarangayModel.dart';
 import '../../model/BreedModel.dart';
 import '../../model/CityModel.dart';
+import '../../model/ImageModel.dart';
 import '../../model/ProvinceModel.dart';
 import '../../model/RegionModel.dart';
 import '../../utils/AppColors.dart';
@@ -171,17 +172,30 @@ class _EditPostViewState extends State<EditPostView> {
                       ),
                     ),
                   ),
-                  EditImageUploadWidget(
-                    screenWidth: screenWidth,
-                    screenHeight: screenHeight,
-                    images: createPostViewModel.imagesList.map((image) => image.url).toList(), // Ensure this is a List<String>
-                    onPickImage: (){
-                      createPostViewModel.insertSelectedImage(postId);
-                    },
-                    onRemoveImage: (url) {
+              StreamBuilder<List<ImageModel>>(
+                stream: createPostViewModel.imageStream, // Use the image stream here
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Center(child: Text('Error: ${snapshot.error}'));
+                  } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                    return Center(child: Text('No images available'));
+                  } else {
+                    return EditImageUploadWidget(
+                      screenWidth: screenWidth,
+                      screenHeight: screenHeight,
+                      images: snapshot.data!.map((image) => image.url).toList(), // Map the stream data to a list of URLs
+                      onPickImage: () async {
+                        await createPostViewModel.insertSelectedImage(postId);
+                      },
+                      onRemoveImage: (url) {
 
-                    },
-                  ),
+                      },
+                    );
+                  }
+                },
+              ),
                   CustomText(
                     text: 'Tags',
                     size: 18,

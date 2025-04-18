@@ -1233,10 +1233,11 @@ class CreatePostViewModel extends ChangeNotifier {
           File imageFile = File(image.path);
           await postRepository.addImage(id, imageFile);
 
-          // Optionally fetch updated images from the stream
+          // Fetch updated images from the stream
           await for (var images in imageStream) {
             imagesList.clear();
             imagesList.addAll(images);
+            notifyListeners(); // Notify listeners after updating the list
             break; // Stop after the first update
           }
         } catch (e) {
