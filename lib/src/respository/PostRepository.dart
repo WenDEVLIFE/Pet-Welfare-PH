@@ -72,6 +72,15 @@ abstract class PostRepository {
 
   Future <void> uploadReportAbuse(List<File> images, String selectedChip, Map<String, String> petData, List<String> tags);
 
+  Future <void> editDetails(String selectedChip, Map<String, dynamic> petData);
+
+  Future <void> editTags(List<String> tags);
+
+  Future <void> editImages(List<File> images);
+
+  Future <void> removeImageDb(String imageId, String postID) ;
+
+  Future<void> addImage(String postID, File image);
 }
 
 class PostRepositoryImpl implements PostRepository {
@@ -1076,6 +1085,41 @@ class PostRepositoryImpl implements PostRepository {
       throw Exception('Failed to upload post: $e');
     }
   }
+
+  Future <void> editDetails(String selectedChip, Map<String, dynamic> petData) async{
+
+  }
+
+  Future <void> editTags(List<String> tags) async{
+
+  }
+
+  Future <void> editImages(List<File> images) async{
+
+  }
+
+  Future <void> removeImageDb(String imageId, String postID) async{
+
+  }
+
+  Future<void> addImage(String postID, File image) async {
+    try {
+      String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+      Reference storageRef = _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
+      UploadTask uploadTask = storageRef.putFile(image);
+      TaskSnapshot taskSnapshot = await uploadTask;
+      String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+
+      // Add image URL to the images sub-collection
+      await _firestore.collection('PostCollection').doc(postID).collection('ImageCollection').add({
+        'FileUrl': downloadUrl,
+        'FileName': '$fileName.jpg',
+      });
+    } catch (e) {
+      throw Exception('Failed to upload image: $e');
+    }
+  }
+
 
 
 }
