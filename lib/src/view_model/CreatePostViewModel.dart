@@ -1179,7 +1179,7 @@ class CreatePostViewModel extends ChangeNotifier {
   }
 
 
-  void LoadEditDetails(String postId, String category) async {
+  Future <void> LoadEditDetails(String postId, String category) async {
     postID = postId;
     try {
       // Fetch post details
@@ -1191,56 +1191,62 @@ class CreatePostViewModel extends ChangeNotifier {
         selectedChip = category;
 
         // Listen to image stream and update imagesList
-        imageStream.listen((images) {
+        await for (var images in imageStream) {
           imagesList.clear();
           imagesList.addAll(images);
           notifyListeners();
-        });
+          break; // Stop after the first update
+        }
 
         // Listen to tag stream and update tagsList
-        tagStream.listen((tags) {
+        await for (var tags in tagStream) {
           tagsList.clear();
           tagsList.addAll(tags);
           notifyListeners();
-        });
+          break; // Stop after the first update
+        }
 
         // Populate pet-related fields if applicable
         if (category == 'Missing Pets' || category == 'Found Pets') {
-          String petType = postDetails['pet_type'] ?? 'Cat';
-          String petBreed = postDetails['pet_breed'] ?? 'Unknown';
-          String petColor = postDetails['pet_color'] ?? 'Unknown';
-          String petAge = postDetails['pet_age'] ?? 'Unknown';
-
           petName.text = postDetails['pet_name'] ?? '';
-          selectedPetType = petType;
-          selectedColorPattern = petColor;
-          selectedPetAge = petAge;
+          selectedPetType = postDetails['pet_type'] ?? 'Cat';
+          selectedColorPattern = postDetails['pet_color'] ?? 'Unknown';
+          selectedPetAge = postDetails['pet_age'] ?? 'Unknown';
           selectedPetGender = postDetails['gender'] ?? 'Male';
           selectedPetSize = postDetails['size'] ?? 'Tiny';
           address.text = postDetails['address'] ?? '';
         }
       }
     } catch (e) {
-      print('Failed to load edit details: $e');
+      ToastComponent().showMessage(Colors.red, 'Failed to load details: $e');
     }
-
     notifyListeners();
   }
 
-  void insertSelectedImage(String id) async {
+  Future <void> insertSelectedImage(String id) async {
     final ImagePicker picker = ImagePicker();
     final XFile? image = await picker.pickImage(source: ImageSource.gallery);
     if (image != null) {
       if (imagesList.length < 5) {
-        // Convert image.path to a File object
-        File imageFile = File(image.path);
-        await postRepository.addImage(id, imageFile);
+        try {
+          // Convert image.path to a File object
+          File imageFile = File(image.path);
+          await postRepository.addImage(id, imageFile);
 
-        notifyListeners();
+          // Optionally fetch updated images from the stream
+          await for (var images in imageStream) {
+            imagesList.clear();
+            imagesList.addAll(images);
+            break; // Stop after the first update
+          }
+        } catch (e) {
+          ToastComponent().showMessage(Colors.red, 'Failed to upload image: $e');
+        }
       } else {
         ToastComponent().showMessage(Colors.red, 'You can only upload up to 5 images');
       }
     }
+    notifyListeners();
   }
 
 

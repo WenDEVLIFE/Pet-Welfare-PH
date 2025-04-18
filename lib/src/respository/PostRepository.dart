@@ -1196,6 +1196,8 @@ class PostRepositoryImpl implements PostRepository {
         'FileUrl': downloadUrl,
         'FileName': '$fileName.jpg',
       });
+
+      ToastComponent().showMessage(AppColors.orange, 'Image added successfully');
     } catch (e) {
       throw Exception('Failed to upload image: $e');
     }
