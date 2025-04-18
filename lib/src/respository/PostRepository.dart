@@ -11,6 +11,8 @@ import 'dart:io';
 import 'package:uuid/uuid.dart';
 
 import '../model/CommentModel.dart';
+import '../model/ImageModel.dart';
+import '../model/TagModel.dart';
 import '../utils/AppColors.dart';
 import 'dart:developer' as developer;
 
@@ -81,6 +83,12 @@ abstract class PostRepository {
   Future <void> removeImageDb(String imageId, String postID) ;
 
   Future<void> addImage(String postID, File image);
+
+  Future<Map<String, dynamic>> getPostDetails(String postId, String category);
+
+  Stream  <List<ImageModel>> loadImage (String postId);
+  Stream <List<TagModel>> getTagData (String postId);
+
 }
 
 class PostRepositoryImpl implements PostRepository {
@@ -1084,6 +1092,79 @@ class PostRepositoryImpl implements PostRepository {
     } catch (e) {
       throw Exception('Failed to upload post: $e');
     }
+  }
+
+
+  @override
+  Future<Map<String, dynamic>> getPostDetails(String postId, String category) async {
+    try {
+      // Fetch the main post details
+      DocumentSnapshot postSnapshot = await _firestore.collection('PostCollection').doc(postId).get();
+      if (!postSnapshot.exists) {
+        throw Exception('Post with ID $postId not found in PostCollection.');
+      }
+
+      Map<String, dynamic> postDetails = postSnapshot.data() as Map<String, dynamic>? ?? {};
+      if (postDetails.isEmpty) {
+        throw Exception('Post data for ID $postId is empty.');
+      }
+
+      // Map category to corresponding collection name
+      final categoryToCollection = {
+        'Missing Pets': 'PetDetailsCollection',
+        'Found Pets': 'PetDetailsCollection',
+        'Pet Adoption': 'AdoptionDetails',
+        'Pets For Rescue': 'PetRescueDetails',
+        'Vet and Travel': 'VetTravelDetails',
+        'Donation': 'DonationDetails',
+      };
+
+      // Get the collection name based on the category
+      String? collectionName = categoryToCollection[category];
+
+      // Fetch additional details if a collection is determined
+      if (collectionName != null) {
+        DocumentSnapshot additionalDetailsSnapshot =
+        await _firestore.collection(collectionName).doc(postId).get();
+
+        if (additionalDetailsSnapshot.exists) {
+          Map<String, dynamic> additionalDetails =
+              additionalDetailsSnapshot.data() as Map<String, dynamic>? ?? {};
+          postDetails.addAll(additionalDetails);
+        }
+      }
+
+      return postDetails;
+    } catch (e) {
+      throw Exception('Failed to fetch post details for ID $postId: $e');
+    }
+  }
+
+
+  Stream<List<ImageModel>> loadImage(String id) {
+    return _firestore
+        .collection('PostCollection')
+        .doc(id)
+        .collection('ImageCollection')
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return ImageModel.fromDocument(doc);
+      }).toList();
+    });
+  }
+
+  Stream<List<TagModel>> getTagData(String id) {
+    return _firestore
+        .collection('PostCollection')
+        .doc(id)
+        .collection('TagsCollection')
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return TagModel.fromDocument(doc);
+      }).toList();
+    });
   }
 
   Future <void> editDetails(String selectedChip, Map<String, dynamic> petData) async{

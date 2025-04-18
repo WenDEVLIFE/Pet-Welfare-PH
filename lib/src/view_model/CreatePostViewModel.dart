@@ -97,7 +97,7 @@ class CreatePostViewModel extends ChangeNotifier {
 
   List<String> chipLabels1 = [];
 
-  final PostRepository postRepository = PostRepositoryImpl();
+   PostRepository postRepository = PostRepositoryImpl();
 
   String selectedChip = 'Pet Appreciation';
 
@@ -161,6 +161,11 @@ class CreatePostViewModel extends ChangeNotifier {
   // This is for the edit post variables
   List<ImageModel> imagesList = [];
   List<TagModel> tagsList = [];
+
+  String postID = '';
+  Stream<List<ImageModel>> get imageStream => postRepository.loadImage(postID);
+  Stream<List<TagModel>> get tagStream => postRepository.getTagData(postID);
+
 
   // Constructor
   CreatePostViewModel() {
@@ -1173,10 +1178,71 @@ class CreatePostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void LoadEditDetails(String postid, String category) async{
 
+  void LoadEditDetails(String postId, String category) async {
+    postID = postId;
+    try {
+      // Fetch post details
+      Map<String, dynamic> postDetails = await postRepository.getPostDetails(postId, category);
 
+      if (postDetails.isNotEmpty) {
+        // Populate post-related fields
+        postController.text = postDetails['post'] ?? '';
+        selectedChip = category;
 
+        // Listen to image stream and update imagesList
+        imageStream.listen((images) {
+          imagesList.clear();
+          imagesList.addAll(images);
+          notifyListeners();
+        });
+
+        // Listen to tag stream and update tagsList
+        tagStream.listen((tags) {
+          tagsList.clear();
+          tagsList.addAll(tags);
+          notifyListeners();
+        });
+
+        // Populate pet-related fields if applicable
+        if (category == 'Missing Pets' || category == 'Found Pets') {
+          String petType = postDetails['pet_type'] ?? 'Cat';
+          String petBreed = postDetails['pet_breed'] ?? 'Unknown';
+          String petColor = postDetails['pet_color'] ?? 'Unknown';
+          String petAge = postDetails['pet_age'] ?? 'Unknown';
+
+          petName.text = postDetails['pet_name'] ?? '';
+          selectedPetType = petType;
+          selectedColorPattern = petColor;
+          selectedPetAge = petAge;
+          selectedPetGender = postDetails['gender'] ?? 'Male';
+          selectedPetSize = postDetails['size'] ?? 'Tiny';
+          address.text = postDetails['address'] ?? '';
+        }
+      }
+    } catch (e) {
+      print('Failed to load edit details: $e');
+    }
+
+    notifyListeners();
   }
+
+  void insertSelectedImage(String id) async {
+    final ImagePicker picker = ImagePicker();
+    final XFile? image = await picker.pickImage(source: ImageSource.gallery);
+    if (image != null) {
+      if (imagesList.length < 5) {
+        // Convert image.path to a File object
+        File imageFile = File(image.path);
+        await postRepository.addImage(id, imageFile);
+
+        notifyListeners();
+      } else {
+        ToastComponent().showMessage(Colors.red, 'You can only upload up to 5 images');
+      }
+    }
+  }
+
+
 
 }

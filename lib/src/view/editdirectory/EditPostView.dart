@@ -1,6 +1,9 @@
+import 'dart:io';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
+import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:pet_welfrare_ph/src/widgets/CustomButton.dart';
 import 'package:pet_welfrare_ph/src/widgets/CustomDropdown.dart';
 import 'package:pet_welfrare_ph/src/widgets/CustomText.dart';
@@ -16,6 +19,7 @@ import '../../utils/AppColors.dart';
 import '../../view_model/CreatePostViewModel.dart';
 import '../../widgets/CustomMapWidget.dart';
 import '../../widgets/CustomTextField.dart';
+import '../../widgets/EditImageUploadWidget.dart';
 import '../../widgets/ImageUploadWidget.dart';
 import '../../widgets/TagWidget.dart';
 
@@ -41,6 +45,7 @@ class _EditPostViewState extends State<EditPostView> {
     category = widget.category;
     createPostViewModel = Provider.of<CreatePostViewModel>(context, listen: false);
     createPostViewModel.LoadEditDetails(postId, category);
+    ToastComponent().showMessage(AppColors.orange , '$postId + ' ' + $category');
 
   }
 
@@ -60,23 +65,23 @@ class _EditPostViewState extends State<EditPostView> {
         title: Row(
           children: [
             CustomText(
-              text: createPostViewModel.selectedChip == "Missing Pets"
+              text: category == "Missing Pets"
                   ? 'Edit a missing pet'
-                  : createPostViewModel.selectedChip == "Found Pets"
+                  : category == "Found Pets"
                   ? 'Edit a found pet'
-                  : createPostViewModel.selectedChip == "Pet Adoption"
+                  : category== "Pet Adoption"
                   ? 'Edit for pet adoption'
-                  : createPostViewModel.selectedChip == "Pet Care Insights"
+                  : category == "Pet Care Insights"
                   ? 'Edit for pet care insights'
-                  : createPostViewModel.selectedChip == "Pets For Rescue"
+                  : category== "Pets For Rescue"
                   ? 'Edit pet for rescue'
-                  : createPostViewModel.selectedChip == "Call for Aid"
+                  :category == "Call for Aid"
                   ? 'Edit call for aid'
-                  : createPostViewModel.selectedChip == "Pet Appreciation"
+                  :category == "Pet Appreciation"
                   ? 'Edit pet appreciation'
-                  : createPostViewModel.selectedChip == "Paw-some Experience"
+                  : category == "Paw-some Experience"
                   ? 'Edit for paw-some experience'
-                  : createPostViewModel.selectedChip == "Protect Our Pets: Report Abuse"
+                  : category == "Protect Our Pets: Report Abuse"
                   ? 'Edit report abuse' : 'Edit community post',
               size: 18,
               color: Colors.white,
@@ -101,21 +106,29 @@ class _EditPostViewState extends State<EditPostView> {
         child: Column(
           children: [
             CustomText(
-              text:  createPostViewModel.selectedChip == "Missing Pets"
+              text:  category == "Missing Pets"
                   ? 'Enter the details of the missing pet'
-                  : createPostViewModel.selectedChip == "Found Pets"
+                  : category == "Found Pets"
                   ? 'Enter the details of the found pet'
-                  : createPostViewModel.selectedChip == "Pet Adoption"
+                  : category == "Pet Adoption"
                   ? 'Enter the details of the pet for adoption'
-                  : createPostViewModel.selectedChip == "Find a Home: Rescue & Shelter"
+                  : category == "Find a Home: Rescue & Shelter"
                   ? 'Enter the details of the Rescue & Shelter'
-                  : createPostViewModel.selectedChip == "Pet Adoption"
+                  : category == "Pet Adoption"
                   ? 'Enter the details of the pet for adoption'
-                  : createPostViewModel.selectedChip == "Pet Care Insights"
+                  : category == "Pet Care Insights"
                   ? 'Enter the details of the pet care insights'
-                  : createPostViewModel.selectedChip == "Pets For Rescue"
+                  : category == "Pets For Rescue"
                   ? 'Enter the details of the pet for rescue'
-                  : 'Create a post' ,
+                   : category == "Call for Aid"
+                  ? 'Enter the details of the call for aid'
+                  : category == "Pet Appreciation"
+                  ? 'Enter the details of the pet appreciation'
+                  : category == "Paw-some Experience"
+                   ? 'Enter the details of the paw-some experience'
+                  : category == "Protect Our Pets: Report Abuse"
+                  ? 'Enter the details of the report abuse'
+                  : 'Enter the details of the community post',
               size: 18,
               color: Colors.black,
               weight: FontWeight.w700,
@@ -145,12 +158,15 @@ class _EditPostViewState extends State<EditPostView> {
                 ),
               ),
             ),
-            ImageUploadWidget(
+            EditImageUploadWidget(
               screenWidth: screenWidth,
               screenHeight: screenHeight,
-              images: createPostViewModel.images,
+              images: createPostViewModel.imagesList.map((image) => image.url).toList(), // Ensure this is a List<String>
               onPickImage: createPostViewModel.pickImage,
-              onRemoveImage: createPostViewModel.removeImage,
+              onRemoveImage: (url) {
+                createPostViewModel.imagesList.removeWhere((image) => image.url == url);
+                createPostViewModel.notifyListeners();
+              },
             ),
             CustomText(
               text: 'Tags',
@@ -165,30 +181,13 @@ class _EditPostViewState extends State<EditPostView> {
               padding: const EdgeInsets.all(10.0),
               child: TagsInputWidget(
                 tagController: createPostViewModel.tagController,
-                tags: createPostViewModel.tags,
+                tags: createPostViewModel.tagsList.map((tag) => tag.name).toList(),
                 onAddTag: createPostViewModel.addTag,
                 onRemoveTag: createPostViewModel.removeTag,
                 screenHeight: screenHeight,
               ),
             ),
-            CustomText(
-              text: 'Select a category',
-              size: 18,
-              color: Colors.black,
-              weight: FontWeight.w700,
-              align: TextAlign.left,
-              screenHeight: screenHeight,
-              alignment: Alignment.centerLeft,
-            ),
-            CustomDropDown(value: createPostViewModel.selectedChip,
-              items: createPostViewModel.chipLabels1,
-              onChanged: (String? newValue) {
-                createPostViewModel.setSelectRole(newValue!);
-              },
-              itemLabel: (String value) => value,
-              hint: 'Select a category',
-            ),
-            if (createPostViewModel.selectedChip == "Missing Pets" || createPostViewModel.selectedChip == "Found Pets" ||  createPostViewModel.selectedChip =="Pet Adoption") ...[
+            if (category == "Missing Pets" || category == "Found Pets" ||  category =="Pet Adoption") ...[
               CustomText(
                 text: 'Pet Name',
                 size: 18,
@@ -209,7 +208,7 @@ class _EditPostViewState extends State<EditPostView> {
                 ),
               ),
               if(createPostViewModel.selectedPetType =='Cat' || createPostViewModel.selectedPetType =='Dog') ...[
-                if(createPostViewModel.selectedPetType =='Missing Pets' || createPostViewModel.selectedPetType =='Found Pets') ...[
+                if(category =='Missing Pets' || category =='Found Pets') ...[
                   CustomText(
                     text: 'Pet Collar',
                     size: 18,
@@ -349,11 +348,11 @@ class _EditPostViewState extends State<EditPostView> {
                   hint: 'Select Dog Breed',
                 ),
               ],
-              if (createPostViewModel.selectedChip == "Missing Pets" || createPostViewModel.selectedChip == "Found Pets") ...[
+              if (category == "Missing Pets" || category == "Found Pets") ...[
                 CustomText(
-                  text:   createPostViewModel.selectedChip == "Missing Pets"
+                  text:   category == "Missing Pets"
                       ? 'Select the date the pet went missing'
-                      : createPostViewModel.selectedChip == "Found Pets"
+                      : category == "Found Pets"
                       ? 'Select the date the pet was found'
                       : 'Select the date the pet was found',
                   size: 18,
@@ -457,11 +456,11 @@ class _EditPostViewState extends State<EditPostView> {
                   ],
                 ),
               ),
-              if (createPostViewModel.selectedChip == "Missing Pets" || createPostViewModel.selectedChip == "Found Pets") ...[
+              if (category== "Missing Pets" || category == "Found Pets") ...[
                 CustomText(
-                  text: createPostViewModel.selectedChip == "Missing Pets"
+                  text: category == "Missing Pets"
                       ? 'Select a location for missing pet'
-                      : createPostViewModel.selectedChip == "Found Pets"
+                      : category == "Found Pets"
                       ? 'Select a location for found pet'
                       : 'Select a location for found pet',
                   size: 18,
@@ -539,7 +538,7 @@ class _EditPostViewState extends State<EditPostView> {
                 ),
               ],
             ],
-            if(createPostViewModel.selectedChip=='Pet Care Insights')...[
+            if(category=='Pet Care Insights')...[
               CustomText(
                 text: 'Clinic Name/Establishment Name',
                 size: 18,
@@ -624,7 +623,7 @@ class _EditPostViewState extends State<EditPostView> {
                 ),
               ),
             ],
-            if(createPostViewModel.selectedChip=='Pets For Rescue')...[
+            if(category=='Pets For Rescue')...[
               CustomText(
                 text: 'Select Pet Type',
                 size: 18,
@@ -746,19 +745,19 @@ class _EditPostViewState extends State<EditPostView> {
                 hint: 'Select Colors or patterns',
               ),
             ],
-            if (createPostViewModel.selectedChip == "Pet Adoption" || createPostViewModel.selectedChip == "Missing Pets" ||
-                createPostViewModel.selectedChip == "Found Pets" ||createPostViewModel.selectedChip == "Pets For Rescue" ||
-                createPostViewModel.selectedChip == "Pet Care Insights" ) ...[
+            if (category == "Pet Adoption" || category == "Missing Pets" ||
+                category == "Found Pets" ||category== "Pets For Rescue" ||
+                category == "Pet Care Insights" ) ...[
               CustomText(
-                text: createPostViewModel.selectedChip == "Missing Pets"
+                text: category == "Missing Pets"
                     ? 'Enter the Street Address, Building, House No for missing pet'
-                    : createPostViewModel.selectedChip == "Found Pets"
+                    : category == "Found Pets"
                     ? 'Enter the Street Address, Building, House No for found pet'
-                    : createPostViewModel.selectedChip == "Pet Adoption"
+                    : category == "Pet Adoption"
                     ? 'Enter the Street Address, Building, House No for pet adoption'
-                    : createPostViewModel.selectedChip == "Pet Care Insights"
+                    : category == "Pet Care Insights"
                     ? 'Enter the Street Address, Building, House No for pet insights'
-                    : createPostViewModel.selectedChip == "Pets For Rescue"
+                    : category== "Pets For Rescue"
                     ? 'Enter the Street Address, Building, House No for pet rescue'
                     : 'Enter the Street Address, Building, House No',
 
@@ -779,7 +778,7 @@ class _EditPostViewState extends State<EditPostView> {
                 ),
               ),
             ],
-            if(createPostViewModel.selectedChip == 'Call for Aid')...[
+            if(category == 'Call for Aid')...[
               const Padding(
                 padding: EdgeInsets.all(10.0),
                 child: Align(
@@ -912,7 +911,7 @@ class _EditPostViewState extends State<EditPostView> {
             ],
             Center(
                 child: CustomButton(
-                  hint: 'Post Now',
+                  hint: 'Save Edit',
                   size: 18,
                   color1: AppColors.orange,
                   textcolor2: Colors.white,

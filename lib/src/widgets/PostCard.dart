@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
+import 'package:pet_welfrare_ph/src/view/editdirectory/EditPostView.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 import 'package:provider/provider.dart';
 
@@ -154,6 +155,15 @@ class _PostCardState extends State<PostCard> {
                   return [
                     if (isAdmin || isPostOwner)
                       PopupMenuItem(value: 'Edit', child: const Text('Edit'), onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditPostView(
+                              postId: widget.post.postId,
+                              category: widget.post.category,
+                            ),
+                          ),
+                        );
 
                       },),
                     if (isAdmin || isPostOwner)

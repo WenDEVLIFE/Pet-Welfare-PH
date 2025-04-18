@@ -9,6 +9,7 @@ import '../utils/AppColors.dart';
 import '../utils/ReactionUtils.dart';
 import '../utils/Route.dart';
 import '../view/ViewImage.dart';
+import '../view/editdirectory/EditPostView.dart';
 import '../view_model/PostViewModel.dart';
 import 'package:provider/provider.dart';
 
@@ -72,7 +73,7 @@ class _MissingPetCardState extends State<MissingPetCard> {
     }
   }
 
-  Future<void> _handleReaction() async {
+  Future<void> handleReaction() async {
     if (userReaction != null) {
       await postViewModel.removeReaction(widget.post.postId);
       setState(() {
@@ -161,7 +162,15 @@ class _MissingPetCardState extends State<MissingPetCard> {
                       return [
                         if (isAdmin || isPostOwner)
                           PopupMenuItem(value: 'Edit', child: const Text('Edit'), onTap: (){
-
+                            Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => EditPostView(
+                                  postId: widget.post.postId,
+                                  category: widget.post.category,
+                                ),
+                              ),
+                            );
                           },),
                         if (isAdmin || isPostOwner)
                           PopupMenuItem(value: 'Delete', child: const Text('Delete'), onTap: (){
@@ -475,27 +484,14 @@ class _MissingPetCardState extends State<MissingPetCard> {
                     children: [
                       IconButton(
                         icon: Icon(
-                          hasReacted
+                          userReaction != null
                               ? ReactionUtils.getReactionIcon(userReaction!)
                               : Icons.thumb_up_outlined,
-                          color: hasReacted ? ReactionUtils.getReactionColor(userReaction!) : null,
+                          color: userReaction != null
+                              ? ReactionUtils.getReactionColor(userReaction!)
+                              : null,
                         ),
-                        onPressed: () async {
-                          if (hasReacted) {
-                            await postViewModel.removeReaction(post.postId);
-                          } else {
-                            showModalBottomSheet(
-                              context: context,
-                              builder: (context) {
-                                return ReactionModal(
-                                  onReactionSelected: (reaction) async {
-                                    await postViewModel.addReaction(post.postId, reaction);
-                                  },
-                                );
-                              },
-                            );
-                          }
-                        },
+                        onPressed: handleReaction,
                       ),
                       Text('$reactionCount likes', style: const TextStyle(
                         fontFamily: 'SmoochSans',

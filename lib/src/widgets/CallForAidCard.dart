@@ -11,6 +11,7 @@ import '../utils/AppColors.dart';
 import '../utils/ReactionUtils.dart';
 import '../utils/Route.dart';
 import '../view/ViewImage.dart';
+import '../view/editdirectory/EditPostView.dart';
 import '../view_model/PostViewModel.dart';
 import 'package:provider/provider.dart';
 
@@ -165,7 +166,15 @@ class _CallForAidCardState extends State<CallForAidCard> {
                     if (isAdmin || isPostOwner)
                       PopupMenuItem(
                         value: 'Edit', child: const Text('Edit'), onTap: () {
-
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditPostView(
+                              postId: widget.post.postId,
+                              category: widget.post.category,
+                            ),
+                          ),
+                        );
                       },),
                     if (isAdmin || isPostOwner)
                       PopupMenuItem(value: 'Delete',

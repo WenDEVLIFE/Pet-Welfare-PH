@@ -12,6 +12,7 @@ import '../utils/AppColors.dart';
 import '../utils/ReactionUtils.dart';
 import '../utils/Route.dart';
 import '../view/ViewImage.dart';
+import '../view/editdirectory/EditPostView.dart';
 import '../view_model/ApplyAdoptionViewModel.dart';
 import '../Animation/CardShimmerWidget.dart';
 import 'CustomText.dart';
@@ -167,7 +168,17 @@ class PetForRescueCardState extends State<PetForRescueCard> {
 
                   return [
                     if (isAdmin || isPostOwner)
-                      PopupMenuItem(value: 'Edit', child: const Text('Edit')),
+                      PopupMenuItem(value: 'Edit', child: const Text('Edit'), onTap: (){
+                        Navigator.push(
+                          context,
+                          MaterialPageRoute(
+                            builder: (context) => EditPostView(
+                              postId: widget.post.postId,
+                              category: widget.post.category,
+                            ),
+                          ),
+                        );
+                      },),
                     if (isAdmin || isPostOwner)
                       PopupMenuItem(value: 'Delete', child: const Text('Delete')),
                     if (!isPostOwner)
