@@ -62,13 +62,6 @@ class PostViewModel extends ChangeNotifier {
   Stream<List<PostModel>> get callforAidPostStream => postRepository.getCallforAid();
   Stream<List<PostModel>> get petForRescue => postRepository.getFindHome();
 
-  String? userReaction;
-  int reactionCount = 0;
-  int commentCount = 0;
-  bool isLoading = true;
-  bool hasReacted = false;
-
-
  // Initialize the PostViewModel
   PostViewModel() {
     searchPostController.addListener(() {

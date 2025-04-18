@@ -19,15 +19,44 @@ import '../../widgets/CustomTextField.dart';
 import '../../widgets/ImageUploadWidget.dart';
 import '../../widgets/TagWidget.dart';
 
-class EditPostView extends StatelessWidget{
+class EditPostView extends StatefulWidget{
+  late String postId;
+  late String category;
+  EditPostView({Key? key, required this.postId , required this.category}) : super(key: key);
+
+  @override
+  State<EditPostView> createState() => _EditPostViewState();
+
+}
+
+class _EditPostViewState extends State<EditPostView> {
+  late CreatePostViewModel createPostViewModel;
+  late String postId;
+  late String category;
+
+  @override
+  void initState() {
+    super.initState();
+    postId = widget.postId;
+    category = widget.category;
+    createPostViewModel = Provider.of<CreatePostViewModel>(context, listen: false);
+    createPostViewModel.LoadEditDetails(postId, category);
+
+  }
+
   @override
   Widget build(BuildContext context) {
-    final CreatePostViewModel createPostViewModel = Provider.of<CreatePostViewModel>(context);
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       appBar: AppBar(
+        leading: IconButton(
+          icon: const Icon(Icons.arrow_back),
+          onPressed: () {
+            Navigator.pop(context);
+          },
+        ),
         title: Row(
           children: [
             CustomText(

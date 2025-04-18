@@ -6,6 +6,7 @@ import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:pet_welfrare_ph/src/model/EstablishmentModel.dart';
+import 'package:pet_welfrare_ph/src/model/ImageModel.dart';
 import 'package:pet_welfrare_ph/src/respository/LocationRespository.dart';
 import 'package:pet_welfrare_ph/src/respository/PostRepository.dart';
 import 'package:pet_welfrare_ph/src/services/OpenStreetMapService.dart';
@@ -20,6 +21,7 @@ import 'package:pet_welfrare_ph/src/model/CityModel.dart';
 import 'package:pet_welfrare_ph/src/model/BarangayModel.dart';
 
 import '../model/BreedModel.dart';
+import '../model/TagModel.dart';
 import '../services/LocationService.dart';
 import '../services/PetAPI.dart';
 import '../utils/NotificationUtils.dart';
@@ -156,6 +158,9 @@ class CreatePostViewModel extends ChangeNotifier {
 
   String role = '';
 
+  // This is for the edit post variables
+  List<ImageModel> imagesList = [];
+  List<TagModel> tagsList = [];
 
   // Constructor
   CreatePostViewModel() {
@@ -1161,4 +1166,17 @@ class CreatePostViewModel extends ChangeNotifier {
       tags.remove(tag);
       notifyListeners();
   }
+
+  // This is for  the update section here do not touch
+  void setSelectedLocation(LatLng location) {
+    selectedLocation = location;
+    notifyListeners();
+  }
+
+  void LoadEditDetails(String postid, String category) async{
+
+
+
+  }
+
 }
