@@ -238,9 +238,11 @@ class CreatePostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeImage(File image) {
-    _images.remove(image);
+  void removeImage(String imageId, String url, String postId) async {
+    _images.removeWhere((image) => image.path == imageId);
+    await postRepository.deleteImage(imageId, url, postId);
     notifyListeners();
+
   }
 
   void setSelectRole(String selectedValue) {

@@ -189,8 +189,14 @@ class _EditPostViewState extends State<EditPostView> {
                       onPickImage: () async {
                         await createPostViewModel.insertSelectedImage(postId);
                       },
-                      onRemoveImage: (url) {
+                      onRemoveImage: (url) async {
 
+                        String imageId = snapshot.data!.firstWhere((image) => image.url == url).id.toString();
+                        createPostViewModel.removeImage(
+                          imageId,
+                          url,
+                          postId,
+                        );
                       },
                     );
                   }

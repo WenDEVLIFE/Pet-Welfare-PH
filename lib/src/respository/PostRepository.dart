@@ -80,7 +80,7 @@ abstract class PostRepository {
 
   Future <void> editImages(List<File> images);
 
-  Future <void> removeImageDb(String imageId, String postID) ;
+  Future <void> deleteImage(String imageId, String url, String postId);
 
   Future<void> addImage(String postID, File image);
 
@@ -1140,7 +1140,7 @@ class PostRepositoryImpl implements PostRepository {
     }
   }
 
-
+  // load the image
   Stream<List<ImageModel>> loadImage(String id) {
     return _firestore
         .collection('PostCollection')
@@ -1154,6 +1154,7 @@ class PostRepositoryImpl implements PostRepository {
     });
   }
 
+  // load the tag
   Stream<List<TagModel>> getTagData(String id) {
     return _firestore
         .collection('PostCollection')
@@ -1167,22 +1168,49 @@ class PostRepositoryImpl implements PostRepository {
     });
   }
 
+  // Edit post in the database
+  @override
   Future <void> editDetails(String selectedChip, Map<String, dynamic> petData) async{
 
   }
 
+  // Edit tags in the database
+  @override
   Future <void> editTags(List<String> tags) async{
 
   }
 
+  // Edit images in the database
+  @override
   Future <void> editImages(List<File> images) async{
 
   }
 
-  Future <void> removeImageDb(String imageId, String postID) async{
-
+  // Remove image from the database
+  @override
+  Future<void> deleteImage(String imageId, String url, String postId) {
+    return _firestore.collection('PostCollection').doc(postId).collection('ImageCollection').doc(imageId).delete().then((_) {
+      // Remove the image from Firebase Storage
+      Reference storageRef = _firebaseStorage.refFromURL(url);
+      ToastComponent().showMessage(AppColors.orange, 'Image deleted successfully');
+      return storageRef.delete();
+    }).catchError((error) {
+      throw Exception('Failed to delete image: $error');
+    });
   }
 
+  // Remove image from the storage
+  Future<void> removeImageStorage(String imageId) async {
+    try {
+      Reference storageRef = _firebaseStorage.ref().child('PostFolder/$imageId');
+      await storageRef.delete();
+      ToastComponent().showMessage(AppColors.orange, 'Image removed successfully');
+    } catch (e) {
+      throw Exception('Failed to remove image: $e');
+    }
+  }
+
+  // Add image to the database
   Future<void> addImage(String postID, File image) async {
     try {
       String fileName = DateTime.now().millisecondsSinceEpoch.toString();
@@ -1202,7 +1230,6 @@ class PostRepositoryImpl implements PostRepository {
       throw Exception('Failed to upload image: $e');
     }
   }
-
 
 
 }
