@@ -1183,8 +1183,9 @@ class CreatePostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeTag(String tag) {
-
+  void removeTag(String tag) async  {
+    await postRepository.removeTag(tag, postID);
+    tags.remove(tag);
 
       notifyListeners();
   }

@@ -78,6 +78,7 @@ abstract class PostRepository {
 
   Future <void> addTag(String tag, String postID);
 
+  Future<void> removeTag (String tag, String postID);
 
   Future <void> deleteImage(String imageId, String url, String postId);
 
@@ -1173,24 +1174,40 @@ class PostRepositoryImpl implements PostRepository {
 
   }
 
-  // Edit tags in the database
+  // Edit an add tags in the database
   @override
   Future <void> addTag(String tag, String postID) async{
 
-    WriteBatch batch = _firestore.batch();
-    if(tag.isNotEmpty){
-      DocumentReference tagRef = _firestore.collection('PostCollection').doc(postID).collection('TagsCollection').doc();
-      batch.set(tagRef, {'tags': tag});
-      await batch.commit();
-      ToastComponent().showMessage(AppColors.orange, 'Tag added successfully');
-    }
+     QuerySnapshot tagSnapshot = await _firestore.collection('PostCollection').doc(postID).collection('TagsCollection').where('tag', isEqualTo: tag).get();
 
-    else{
-      // Handle the case when tags are empty
-      ToastComponent().showMessage(AppColors.orange, 'No tags to add');
-    }
+      if (tagSnapshot.docs.isEmpty) {
+        DocumentReference tagRef = _firestore.collection('PostCollection').doc(postID).collection('TagsCollection').doc();
+        await tagRef.set({
+          'tag': tag,
+          'timestamp': FieldValue.serverTimestamp(),
+        });
+        ToastComponent().showMessage(AppColors.orange, 'Tag added successfully');
+      } else {
+        throw Exception('Tag already exists');
+      }
 
   }
+
+  // remove an add tags in the database
+  @override
+  Future <void> removeTag(String tag, String postID) async{
+    QuerySnapshot tagSnapshot = await _firestore.collection('PostCollection').doc(postID).collection('TagsCollection').where('tag', isEqualTo: tag).get();
+
+    if (tagSnapshot.docs.isNotEmpty) {
+      for (QueryDocumentSnapshot doc in tagSnapshot.docs) {
+        await doc.reference.delete();
+      }
+      ToastComponent().showMessage(AppColors.orange, 'Tag removed successfully');
+    } else {
+      throw Exception('Tag not found');
+    }
+  }
+
 
   // Remove image from the database
   @override
