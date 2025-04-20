@@ -7,6 +7,7 @@ import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:pet_welfrare_ph/src/widgets/CustomButton.dart';
 import 'package:pet_welfrare_ph/src/widgets/CustomDropdown.dart';
 import 'package:pet_welfrare_ph/src/widgets/CustomText.dart';
+import 'package:pet_welfrare_ph/src/widgets/EditTagWidget.dart';
 import 'package:pet_welfrare_ph/src/widgets/MapSearchTextField.dart';
 import 'package:provider/provider.dart';
 
@@ -213,11 +214,13 @@ class _EditPostViewState extends State<EditPostView> {
                   ),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
-                    child: TagsInputWidget(
+                    child: EditTagWidget(
                       tagController: createPostViewModel.tagController,
                       tags: createPostViewModel.tagsList.map((tag) => tag.name).toList(),
                       onAddTag: createPostViewModel.addTag,
                       onRemoveTag: createPostViewModel.removeTag,
+                      onSelectTag: createPostViewModel.setSelectedTag,
+                      selectedTag: createPostViewModel.selectedTag,
                       screenHeight: screenHeight,
                     ),
                   ),

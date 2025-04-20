@@ -161,6 +161,7 @@ class CreatePostViewModel extends ChangeNotifier {
   // This is for the edit post variables
   List<ImageModel> imagesList = [];
   List<TagModel> tagsList = [];
+  String? selectedTag;
 
   String postID = '';
   Stream<List<ImageModel>> get imageStream => postRepository.loadImage(postID);
@@ -1175,6 +1176,11 @@ class CreatePostViewModel extends ChangeNotifier {
         }
       notifyListeners();
     }
+  }
+
+  void setSelectedTag(String tag) {
+    selectedTag = tag;
+    notifyListeners();
   }
 
   void removeTag(String tag) {
