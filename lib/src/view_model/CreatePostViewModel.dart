@@ -1161,16 +1161,25 @@ class CreatePostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void addTag(String tag) {
+  // Add the tag to the database
+ Future <void> addTag(String tag) async{
     if (tag.isNotEmpty && !tags.contains(tag)) {
-      tags.add(tag);
-      tagController.clear();
+       try{
+         postRepository.addTag(tag, postID);
+         tags.add(tag);
+         tagController.clear();
+       }
+        catch (e) {
+          print('Failed to add tag: $e');
+          ToastComponent().showMessage(Colors.red, 'Failed to add tag: $e');
+        }
       notifyListeners();
     }
   }
 
   void removeTag(String tag) {
-      tags.remove(tag);
+
+
       notifyListeners();
   }
 

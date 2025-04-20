@@ -76,9 +76,8 @@ abstract class PostRepository {
 
   Future <void> editDetails(String selectedChip, Map<String, dynamic> petData);
 
-  Future <void> editTags(List<String> tags);
+  Future <void> addTag(String tag, String postID);
 
-  Future <void> editImages(List<File> images);
 
   Future <void> deleteImage(String imageId, String url, String postId);
 
@@ -1176,13 +1175,20 @@ class PostRepositoryImpl implements PostRepository {
 
   // Edit tags in the database
   @override
-  Future <void> editTags(List<String> tags) async{
+  Future <void> addTag(String tag, String postID) async{
 
-  }
+    WriteBatch batch = _firestore.batch();
+    if(tag.isNotEmpty){
+      DocumentReference tagRef = _firestore.collection('PostCollection').doc(postID).collection('TagsCollection').doc();
+      batch.set(tagRef, {'tags': tag});
+      await batch.commit();
+      ToastComponent().showMessage(AppColors.orange, 'Tag added successfully');
+    }
 
-  // Edit images in the database
-  @override
-  Future <void> editImages(List<File> images) async{
+    else{
+      // Handle the case when tags are empty
+      ToastComponent().showMessage(AppColors.orange, 'No tags to add');
+    }
 
   }
 
