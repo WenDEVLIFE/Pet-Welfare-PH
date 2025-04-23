@@ -7,6 +7,7 @@ import '../Animation/CardShimmerWidget.dart';
 import '../DialogView/ReportDialog.dart';
 import '../modal/DonateModal.dart';
 import '../modal/ReactionModal.dart';
+import '../model/TagModel.dart';
 import '../utils/AppColors.dart';
 import '../utils/ReactionUtils.dart';
 import '../utils/Route.dart';
@@ -228,63 +229,93 @@ class _CallForAidCardState extends State<CallForAidCard> {
               ),
             ),
           ),
-          if (post.tags.isNotEmpty) ...[
-            const Padding(
-              padding: EdgeInsets.all(10),
-              child: Text(
-                'Tags',
-                style: TextStyle(
-                  fontFamily: 'SmoochSans',
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.all(10),
-              child: Wrap(
-                spacing: 8.0,
-                runSpacing: 4.0,
-                children: post.tags.map((tag) {
-                  return Chip(
-                    label: Text(tag.name),
-                  );
-                }).toList(),
-              ),
-            ),
-          ],
-          SizedBox(
-            height: screenHeight * 0.3,
-            child: PageView.builder(
-              itemCount: post.imageUrls.length,
-              itemBuilder: (context, imageIndex) {
-                return GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ViewImage(),
-                        settings: RouteSettings(
-                          arguments: {
-                            'imageUrls': post.imageUrls,
-                            'initialIndex': imageIndex,
-                          },
+          StreamBuilder<List<TagModel>>(
+            stream: post.tagStream,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator(); // Show a loading indicator while waiting for data
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}'); // Handle errors
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const SizedBox(); // Return an empty widget if no tags are available
+              } else {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        'Tags',
+                        style: TextStyle(
+                          fontFamily: 'SmoochSans',
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
                         ),
                       ),
-                    );
-                  },
-                  child: Container(
-                    width: screenWidth * 0.8,
-                    height: screenHeight * 0.5,
-                    child: CachedNetworkImage(
-                      imageUrl: post.imageUrls[imageIndex],
-                      fit: BoxFit.cover,
                     ),
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Wrap(
+                        spacing: 8.0,
+                        runSpacing: 4.0,
+                        children: snapshot.data!.map((tag) {
+                          return Chip(
+                            label: Text(tag.name), // Replace `tag.name` with the appropriate field
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ],
+                );
+              }
+            },
+          ),
+          StreamBuilder<List<String>>(
+            stream: post.imageStream,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator()); // Show a loading indicator
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}')); // Handle errors
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(child: Text('')); // Handle empty stream
+              } else {
+                final imageUrls = snapshot.data!;
+                return SizedBox(
+                  height: screenHeight * 0.3,
+                  child: PageView.builder(
+                    itemCount: imageUrls.length,
+                    itemBuilder: (context, imageIndex) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ViewImage(),
+                              settings: RouteSettings(
+                                arguments: {
+                                  'imageUrls': imageUrls,
+                                  'initialIndex': imageIndex,
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          width: screenWidth * 0.8,
+                          height: screenHeight * 0.5,
+                          child: CachedNetworkImage(
+                            imageUrl: imageUrls[imageIndex],
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    },
                   ),
                 );
-              },
-            ),
+              }
+            },
           ),
           ExpansionTile(
             title: CustomText(

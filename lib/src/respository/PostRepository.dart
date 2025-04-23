@@ -1183,8 +1183,7 @@ class PostRepositoryImpl implements PostRepository {
       if (tagSnapshot.docs.isEmpty) {
         DocumentReference tagRef = _firestore.collection('PostCollection').doc(postID).collection('TagsCollection').doc();
         await tagRef.set({
-          'tag': tag,
-          'timestamp': FieldValue.serverTimestamp(),
+          'tags': tag,
         });
         ToastComponent().showMessage(AppColors.orange, 'Tag added successfully');
       } else {
@@ -1196,7 +1195,7 @@ class PostRepositoryImpl implements PostRepository {
   // remove an add tags in the database
   @override
   Future <void> removeTag(String tag, String postID) async{
-    QuerySnapshot tagSnapshot = await _firestore.collection('PostCollection').doc(postID).collection('TagsCollection').where('tag', isEqualTo: tag).get();
+    QuerySnapshot tagSnapshot = await _firestore.collection('PostCollection').doc(postID).collection('TagsCollection').where('tags', isEqualTo: tag).get();
 
     if (tagSnapshot.docs.isNotEmpty) {
       for (QueryDocumentSnapshot doc in tagSnapshot.docs) {

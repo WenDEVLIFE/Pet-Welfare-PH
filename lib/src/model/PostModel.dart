@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:pet_welfrare_ph/src/model/TagModel.dart';
@@ -8,8 +10,10 @@ class PostModel {
   final String postOwnerId;
   final String category;
   final Timestamp timestamp;
-  final List<String> imageUrls;
-  final List<TagModel> tags;
+  late final List<String> imageUrls;
+  late final List<TagModel> tags;
+  final Stream<List<TagModel>>? tagStream;
+  final Stream <List<String>>? imageStream;
   final String postOwnerName;
   final String profileUrl;
   String caseStatus='';
@@ -69,6 +73,8 @@ class PostModel {
   String establismentBarangay='';
   String establismentRegion='';
 
+  StreamSubscription<List<TagModel>>? _tagSubscription;
+  StreamSubscription<List<String>>? _imageSubscription;
 
   PostModel({
     required this.postId,
@@ -78,6 +84,8 @@ class PostModel {
     required this.timestamp,
     required this.imageUrls,
     required this.tags,
+    this.tagStream,
+    this.imageStream,
     required this.postOwnerName,
     required this.profileUrl,
   });
@@ -94,6 +102,19 @@ class PostModel {
     for (var tagDoc in tagsCollection.docs) {
       tagList.add(TagModel.fromDocument(tagDoc));
     }
+
+    // Initialize streams
+    Stream<List<TagModel>> tagStream = doc.reference
+        .collection('TagsCollection')
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => TagModel.fromDocument(doc)).toList());
+
+    Stream<List<String>> imageStream = doc.reference
+        .collection('ImageCollection')
+        .snapshots()
+        .map((snapshot) => snapshot.docs.map((doc) => doc['FileUrl'] as String).toList());
+
+
 
     var userId = doc['PostOwnerID'];
     var userDoc = await FirebaseFirestore.instance.collection('Users').doc(userId).get();
@@ -114,6 +135,8 @@ class PostModel {
       timestamp: doc['Timestamp'],
       imageUrls: imageUrls,
       tags: tagList,
+      tagStream: tagStream,
+      imageStream: imageStream,
       postOwnerName: userDoc['Name'],
       profileUrl: userDoc['ProfileUrl']
     )
@@ -173,5 +196,24 @@ class PostModel {
       ..establismentRegion = establishmentDoc.data()?['Region'] ?? ''
      ..caseStatus = postCollection.data()?['CaseStatus'] ?? '';
 
+  }
+
+  void initializeStreams() {
+    if (tagStream != null) {
+      _tagSubscription = tagStream!.listen((updatedTags) {
+        tags = updatedTags;
+      });
+    }
+
+    if (imageStream != null) {
+      _imageSubscription = imageStream!.listen((updatedImageUrls) {
+        imageUrls = updatedImageUrls;
+      });
+    }
+  }
+
+  void disposeStreams() {
+    _tagSubscription?.cancel();
+    _imageSubscription?.cancel();
   }
 }

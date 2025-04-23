@@ -8,6 +8,7 @@ import 'package:provider/provider.dart';
 
 import '../DialogView/ReportDialog.dart';
 import '../modal/ReactionModal.dart';
+import '../model/TagModel.dart';
 import '../utils/ReactionUtils.dart';
 import '../utils/Route.dart';
 import '../view/ViewImage.dart';
@@ -34,12 +35,14 @@ class _PostCardState extends State<PostCard> {
   int reactionCount = 0;
   int commentCount = 0;
   bool isLoading = true;
+  late PostModel post;
 
   late PostViewModel postViewModel;
 
   @override
   void initState() {
     super.initState();
+    post = widget.post;
     postViewModel = Provider.of<PostViewModel>(context, listen: false);
     _loadData();
   }
@@ -93,6 +96,8 @@ class _PostCardState extends State<PostCard> {
   @override
   Widget build(BuildContext context) {
     final formattedDate = postViewModel.formatTimestamp(widget.post.timestamp);
+    final screenHeight = widget.screenHeight;
+    final screenWidth = widget.screenWidth;
 
     if (isLoading) {
       return PostCardSkeleton(
@@ -213,56 +218,94 @@ class _PostCardState extends State<PostCard> {
             ),
           ),
           // --- Tags ---
-          if (widget.post.tags.isNotEmpty) ...[
-            const Padding(
-              padding: EdgeInsets.symmetric(horizontal: 10),
-              child: Text(
-                'Tags',
-                style: const TextStyle(
-                  fontFamily: 'SmoochSans',
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
-                ),
-              ),
-            ),
-            Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 10),
-              child: Wrap(
-                spacing: 8,
-                runSpacing: 4,
-                children: widget.post.tags.map((tag) => Chip(label: Text(tag.name))).toList(),
-              ),
-            ),
-          ],
-          // --- Images ---
-          if (widget.post.imageUrls.isNotEmpty)
-            SizedBox(
-              height: widget.screenHeight * 0.3,
-              child: PageView.builder(
-                itemCount: widget.post.imageUrls.length,
-                itemBuilder: (context, index) => GestureDetector(
-                  onTap: () {
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => ViewImage(),
-                        settings: RouteSettings(arguments: {
-                          'imageUrls': widget.post.imageUrls,
-                          'initialIndex': index,
-                        }),
+          StreamBuilder<List<TagModel>>(
+            stream: post.tagStream,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const CircularProgressIndicator(); // Show a loading indicator while waiting for data
+              } else if (snapshot.hasError) {
+                return Text('Error: ${snapshot.error}'); // Handle errors
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const SizedBox(); // Return an empty widget if no tags are available
+              } else {
+                return Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    const Padding(
+                      padding: EdgeInsets.all(10),
+                      child: Text(
+                        'Tags',
+                        style: TextStyle(
+                          fontFamily: 'SmoochSans',
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
-                    );
-                  },
-                  child: CachedNetworkImage(
-                    imageUrl: widget.post.imageUrls[index],
-                    fit: BoxFit.cover,
-                    width: widget.screenWidth,
+                    ),
+                    Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: Wrap(
+                        spacing: 8.0,
+                        runSpacing: 4.0,
+                        children: snapshot.data!.map((tag) {
+                          return Chip(
+                            label: Text(tag.name), // Replace `tag.name` with the appropriate field
+                          );
+                        }).toList(),
+                      ),
+                    ),
+                  ],
+                );
+              }
+            },
+          ),
+          StreamBuilder<List<String>>(
+            stream: post.imageStream,
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return const Center(child: CircularProgressIndicator()); // Show a loading indicator
+              } else if (snapshot.hasError) {
+                return Center(child: Text('Error: ${snapshot.error}')); // Handle errors
+              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                return const Center(child: Text('')); // Handle empty stream
+              } else {
+                final imageUrls = snapshot.data!;
+                return SizedBox(
+                  height: screenHeight * 0.3,
+                  child: PageView.builder(
+                    itemCount: imageUrls.length,
+                    itemBuilder: (context, imageIndex) {
+                      return GestureDetector(
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => ViewImage(),
+                              settings: RouteSettings(
+                                arguments: {
+                                  'imageUrls': imageUrls,
+                                  'initialIndex': imageIndex,
+                                },
+                              ),
+                            ),
+                          );
+                        },
+                        child: Container(
+                          width: screenWidth * 0.8,
+                          height: screenHeight * 0.5,
+                          child: CachedNetworkImage(
+                            imageUrl: imageUrls[imageIndex],
+                            fit: BoxFit.cover,
+                          ),
+                        ),
+                      );
+                    },
                   ),
-                ),
-              ),
-            ),
-          // --- Reaction Row ---
+                );
+              }
+            },
+          ),
           Row(
             children: [
               IconButton(

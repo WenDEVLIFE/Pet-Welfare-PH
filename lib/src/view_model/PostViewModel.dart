@@ -67,17 +67,24 @@ class PostViewModel extends ChangeNotifier {
     searchPostController.addListener(() {
       searchPost(searchPostController.text);
     });
-    listenToPost();
-    listenToMissingPost();
-    listenToFoundPost();
-    listenToPawExperiencePost();
-    listenToProtectedPost();
-    listenToCommunityPost();
-    listenToVetAndTravelPost();
-    listenToPetAdoptPost();
-    listenToCallforAidPost();
-    listenToPetForRescuePost();
-    loadData();
+
+    initializeListeners();
+  }
+
+  Future<void> initializeListeners() async {
+    await Future.wait([
+      listenToPost(),
+      listenToMissingPost(),
+      listenToFoundPost(),
+      listenToPawExperiencePost(),
+      listenToProtectedPost(),
+      listenToCommunityPost(),
+      listenToVetAndTravelPost(),
+      listenToPetAdoptPost(),
+      listenToCallforAidPost(),
+      listenToPetForRescuePost(),
+      loadData(),
+    ] as Iterable<Future>);
   }
 
   // initialize role and current user id
@@ -258,7 +265,7 @@ class PostViewModel extends ChangeNotifier {
     }
   }
 
-  void listenToPost() async {
+  Future <void> listenToPost() async {
     posTream.listen((posts) {
       _posts = posts;
       filteredPost = posts;
@@ -267,7 +274,7 @@ class PostViewModel extends ChangeNotifier {
   }
 
   // Listen to missing post
-  void listenToMissingPost() async {
+  Future <void> listenToMissingPost() async {
     missingPostStream.listen((missingPosts) {
       missingPost = missingPosts;
       filterMissingPost = missingPosts;
@@ -276,8 +283,8 @@ class PostViewModel extends ChangeNotifier {
   }
 
   // Listen to found post
-  void listenToFoundPost() {
-    foundPostStream.listen((foundPosts) async{
+  Future  <void> listenToFoundPost()  async {
+    foundPostStream.listen((foundPosts) {
       foundPost = foundPosts;
       filterFoundPost = foundPosts;
       notifyListeners();
@@ -285,7 +292,7 @@ class PostViewModel extends ChangeNotifier {
   }
 
   // Listen to paw experience post
-  void listenToPawExperiencePost() async {
+  Future <void> listenToPawExperiencePost() async {
     pawExperiencePostStream.listen((pawExperiencePosts) {
       pawExperiencePost = pawExperiencePosts;
       filterPawExperiencePost = pawExperiencePosts;
@@ -294,7 +301,7 @@ class PostViewModel extends ChangeNotifier {
   }
 
   // Listen to protected post
-  void listenToProtectedPost() async {
+  Future <void> listenToProtectedPost() async {
     protectedPostStream.listen((protectedPosts) {
       protectedPost = protectedPosts;
       filterProtectedPost = protectedPosts;
@@ -303,7 +310,7 @@ class PostViewModel extends ChangeNotifier {
   }
 
   // Listen to community post
-  void listenToCommunityPost() async{
+  Future <void> listenToCommunityPost() async{
     communityPostStream.listen((communityPosts) {
       communityPost = communityPosts;
       filterCommunityPost = communityPosts;
@@ -312,7 +319,7 @@ class PostViewModel extends ChangeNotifier {
   }
 
   // Listen to vet and travel post
-  void listenToVetAndTravelPost() async {
+  Future <void> listenToVetAndTravelPost() async {
     vetAndTravelPostStream.listen((travelPosts) {
       vetAndtravelPost = travelPosts;
       filterVetAndTravelPost = travelPosts;
@@ -321,7 +328,7 @@ class PostViewModel extends ChangeNotifier {
   }
 
   // Listen to pet adopt post
-  void listenToPetAdoptPost() async {
+  Future <void> listenToPetAdoptPost() async {
     petAdoptPostStream.listen((adoptpost) {
       petAdoptPost = adoptpost;
       filterPetAdoptPost = adoptpost;
@@ -330,7 +337,7 @@ class PostViewModel extends ChangeNotifier {
   }
 
   // Listen to call for aid post
-  void listenToCallforAidPost() async {
+  Future <void> listenToCallforAidPost() async {
     callforAidPostStream.listen((aidPost) {
       callforAidPost = aidPost;
       filterCallforAidPost = aidPost;
@@ -339,7 +346,7 @@ class PostViewModel extends ChangeNotifier {
   }
 
   // Listen to pet for rescue post
-  void listenToPetForRescuePost() async {
+  Future <void> listenToPetForRescuePost() async {
     petForRescue.listen((rescuePost) {
       petforRescuePost = rescuePost;
       filterPetForRescuePost = rescuePost;

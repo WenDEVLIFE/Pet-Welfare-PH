@@ -239,7 +239,7 @@ class CreatePostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeImage(String imageId, String url, String postId) async {
+  void removeImageData(String imageId, String url, String postId) async {
     _images.removeWhere((image) => image.path == imageId);
     await postRepository.deleteImage(imageId, url, postId);
     notifyListeners();
@@ -1167,8 +1167,11 @@ class CreatePostViewModel extends ChangeNotifier {
     if (tag.isNotEmpty && !tags.contains(tag)) {
        try{
          postRepository.addTag(tag, postID);
-         tags.add(tag);
-         tagController.clear();
+         await for (var tagdata in tagStream) {
+           tagsList.clear();
+           tagsList.addAll(tagdata);
+           notifyListeners();
+         }
        }
         catch (e) {
           print('Failed to add tag: $e');
@@ -1183,9 +1186,10 @@ class CreatePostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeTag(String tag) async  {
-    await postRepository.removeTag(tag, postID);
-    tags.remove(tag);
+  void removeTag(String tagname) async  {
+    tagsList.removeWhere((tag) => tag.name == tagname);
+    await postRepository.removeTag(tagname, postID);
+
 
       notifyListeners();
   }
@@ -1217,9 +1221,9 @@ class CreatePostViewModel extends ChangeNotifier {
         }
 
         // Listen to tag stream and update tagsList
-        await for (var tags in tagStream) {
+        await for (var tagdata in tagStream) {
           tagsList.clear();
-          tagsList.addAll(tags);
+          tagsList.addAll(tagdata);
           notifyListeners();
           break; // Stop after the first update
         }
@@ -1269,5 +1273,8 @@ class CreatePostViewModel extends ChangeNotifier {
   }
 
 
-
+  Future  <void> removeImage(File p1) async  {
+    _images.removeWhere((image) => image.path == p1.path);
+    notifyListeners();
+  }
 }

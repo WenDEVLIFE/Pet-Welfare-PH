@@ -39,6 +39,7 @@ class _EditPostViewState extends State<EditPostView> {
   late CreatePostViewModel createPostViewModel;
   late String postId;
   late String category;
+  late Future<void> _loadEditDetailsFuture;
 
   @override
   void initState() {
@@ -49,7 +50,7 @@ class _EditPostViewState extends State<EditPostView> {
     createPostViewModel = Provider.of<CreatePostViewModel>(context, listen: false);
 
     // Load edit details
-    createPostViewModel.LoadEditDetails(postId, category);
+    _loadEditDetailsFuture = createPostViewModel.LoadEditDetails(postId, category);
 
     // Show a toast message
     ToastComponent().showMessage(AppColors.orange, '$postId + $category');
@@ -110,7 +111,7 @@ class _EditPostViewState extends State<EditPostView> {
         backgroundColor: AppColors.orange,
       ),
       body: FutureBuilder(
-        future: createPostViewModel.LoadEditDetails(postId, category),
+        future: _loadEditDetailsFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
             return Center(child: CircularProgressIndicator());
@@ -193,7 +194,7 @@ class _EditPostViewState extends State<EditPostView> {
                       onRemoveImage: (url) async {
 
                         String imageId = snapshot.data!.firstWhere((image) => image.url == url).id.toString();
-                        createPostViewModel.removeImage(
+                        createPostViewModel.removeImageData(
                           imageId,
                           url,
                           postId,
@@ -203,15 +204,6 @@ class _EditPostViewState extends State<EditPostView> {
                   }
                 },
               ),
-                  CustomText(
-                    text: 'Tags',
-                    size: 18,
-                    color: Colors.black,
-                    weight: FontWeight.w700,
-                    align: TextAlign.left,
-                    screenHeight: screenHeight,
-                    alignment: Alignment.centerLeft,
-                  ),
                   Padding(
                     padding: const EdgeInsets.all(10.0),
                     child: EditTagWidget(
