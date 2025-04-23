@@ -17,6 +17,7 @@ import '../../model/CityModel.dart';
 import '../../model/ImageModel.dart';
 import '../../model/ProvinceModel.dart';
 import '../../model/RegionModel.dart';
+import '../../model/TagModel.dart';
 import '../../utils/AppColors.dart';
 import '../../view_model/CreatePostViewModel.dart';
 import '../../widgets/CustomMapWidget.dart';
@@ -204,17 +205,61 @@ class _EditPostViewState extends State<EditPostView> {
                   }
                 },
               ),
-                  Padding(
-                    padding: const EdgeInsets.all(10.0),
-                    child: EditTagWidget(
-                      tagController: createPostViewModel.tagController,
-                      tags: createPostViewModel.tagsList.map((tag) => tag.name).toList(),
-                      onAddTag: createPostViewModel.addTag,
-                      onRemoveTag: createPostViewModel.removeTag,
-                      onSelectTag: createPostViewModel.setSelectedTag,
-                      selectedTag: createPostViewModel.selectedTag,
-                      screenHeight: screenHeight,
+                  Padding(padding: const EdgeInsets.all(10.0),
+                      child:TextField(
+                    controller:createPostViewModel.tagController,
+                    decoration: InputDecoration(
+                      labelText: 'Enter a tag',
+                      suffixIcon: IconButton(
+                        icon: const Icon(Icons.add),
+                        onPressed: () {
+                          if (createPostViewModel.tagController.text.trim().isNotEmpty) {
+                            createPostViewModel.addTag(createPostViewModel.tagController.text.trim());
+                            createPostViewModel.tagController.clear();
+                          }
+                        },
+                      ),
                     ),
+                    onSubmitted: (value) {
+                      if (value.trim().isNotEmpty) {
+                        createPostViewModel.addTag(value.trim());
+                        createPostViewModel.tagController.clear();
+                      }
+                    },
+                  ), // Title for tags
+               ),
+                  CustomText(
+                    text: 'Your Tags',
+                    size: 18,
+                    color: Colors.black,
+                    weight: FontWeight.w700,
+                    align: TextAlign.left,
+                    screenHeight: screenHeight,
+                    alignment: Alignment.centerLeft,
+                  ),
+                  StreamBuilder(stream: createPostViewModel.tagStream ,
+                      builder: (context, snapshot) {
+                        if (snapshot.connectionState == ConnectionState.waiting) {
+                          return Center(child: CircularProgressIndicator());
+                        } else if (snapshot.hasError) {
+                          return Center(child: Text('Error: ${snapshot.error}'));
+                        } else if (!snapshot.hasData || (snapshot.data as List<TagModel>).isEmpty) {
+                          return Center(child: Text('No tags available'));
+                        } else {
+                          return Padding(
+                            padding: const EdgeInsets.all(10.0),
+                            child: EditTagWidget(
+                              tagController: createPostViewModel.tagController,
+                              tags: createPostViewModel.tagsList.map((tag) => tag.name).toList(),
+                              onAddTag: createPostViewModel.addTag,
+                              onRemoveTag: createPostViewModel.removeTag,
+                              onSelectTag: createPostViewModel.setSelectedTag,
+                              selectedTag: createPostViewModel.selectedTag,
+                              screenHeight: screenHeight,
+                            ),
+                          );
+                        }
+                      }
                   ),
                   if (category == "Missing Pets" || category == "Found Pets" ||  category =="Pet Adoption") ...[
                     CustomText(
@@ -945,7 +990,7 @@ class _EditPostViewState extends State<EditPostView> {
                         color1: AppColors.orange,
                         textcolor2: Colors.white,
                         onPressed: () async {
-                          createPostViewModel.postNow(context);
+                          createPostViewModel.editNow(context, category);
                         },
                       )
                   ),

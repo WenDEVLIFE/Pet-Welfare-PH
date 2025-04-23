@@ -74,7 +74,7 @@ abstract class PostRepository {
 
   Future <void> uploadReportAbuse(List<File> images, String selectedChip, Map<String, String> petData, List<String> tags);
 
-  Future <void> editDetails(String selectedChip, Map<String, dynamic> petData);
+  Future <void> editDetails(String selectedChip, Map<String, dynamic> petData, String postID);
 
   Future <void> addTag(String tag, String postID);
 
@@ -1170,7 +1170,16 @@ class PostRepositoryImpl implements PostRepository {
 
   // Edit post in the database
   @override
-  Future <void> editDetails(String selectedChip, Map<String, dynamic> petData) async{
+  Future <void> editDetails(String selectedChip, Map<String, dynamic> petData, String postID) async{
+
+    String post = petData['post'];
+
+    if (selectedChip =='Pet Appreciation') {
+
+      await _firestore.collection('PostCollection').doc(postID).update({
+        'PostDescription': post,
+      });
+    }
 
   }
 

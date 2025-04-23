@@ -25,40 +25,8 @@ class EditTagWidget extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        // TextField for adding tags
-        TextField(
-          controller: tagController,
-          decoration: InputDecoration(
-            labelText: 'Enter a tag',
-            suffixIcon: IconButton(
-              icon: const Icon(Icons.add),
-              onPressed: () {
-                if (tagController.text.trim().isNotEmpty) {
-                  onAddTag(tagController.text.trim());
-                  tagController.clear();
-                }
-              },
-            ),
-          ),
-          onSubmitted: (value) {
-            if (value.trim().isNotEmpty) {
-              onAddTag(value.trim());
-              tagController.clear();
-            }
-          },
-        ),
-        const SizedBox(height: 10),
-        // Title for tags
-        Text(
-          'Your Tags',
-          style: TextStyle(
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            color: Colors.black,
-          ),
-        ),
-        const SizedBox(height: 10),
         // Display tags as chips
+        SizedBox(height: 8.0),
         Wrap(
           spacing: 8.0,
           children: tags.map((tag) {

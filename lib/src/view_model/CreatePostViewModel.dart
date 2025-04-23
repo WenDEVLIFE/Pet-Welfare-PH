@@ -239,13 +239,6 @@ class CreatePostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeImageData(String imageId, String url, String postId) async {
-    _images.removeWhere((image) => image.path == imageId);
-    await postRepository.deleteImage(imageId, url, postId);
-    notifyListeners();
-
-  }
-
   void setSelectRole(String selectedValue) {
     selectedChip = selectedValue;
     notifyListeners();
@@ -1166,10 +1159,11 @@ class CreatePostViewModel extends ChangeNotifier {
  Future <void> addTag(String tag) async{
     if (tag.isNotEmpty && !tags.contains(tag)) {
        try{
-         postRepository.addTag(tag, postID);
-         await for (var tagdata in tagStream) {
+         await postRepository.addTag(tag, postID);
+
+         await for (var tags in tagStream) {
            tagsList.clear();
-           tagsList.addAll(tagdata);
+           tagsList.addAll(tags);
            notifyListeners();
          }
        }
@@ -1186,12 +1180,19 @@ class CreatePostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void removeTag(String tagname) async  {
-    tagsList.removeWhere((tag) => tag.name == tagname);
-    await postRepository.removeTag(tagname, postID);
+  Future <void> removeTag(String tagname) async {
+    try {
 
+      // Update the local list
+      tagsList.removeWhere((tag) => tag.name == tagname);
+      // Remove the tag from the backend
+      await postRepository.removeTag(tagname, postID);
 
+      // Notify listeners to update the UI
       notifyListeners();
+    } catch (e) {
+      print('Failed to remove tag: $e');
+    }
   }
 
   // This is for  the update section here do not touch
@@ -1209,7 +1210,7 @@ class CreatePostViewModel extends ChangeNotifier {
 
       if (postDetails.isNotEmpty) {
         // Populate post-related fields
-        postController.text = postDetails['post'] ?? '';
+        postController.text = postDetails['PostDescription'] ?? '';
         selectedChip = category;
 
         // Listen to image stream and update imagesList
@@ -1272,9 +1273,22 @@ class CreatePostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  void removeImageData(String imageId, String url, String postId) async {
+    _images.removeWhere((image) => image.path == imageId);
+    await postRepository.deleteImage(imageId, url, postId);
+    notifyListeners();
+
+  }
 
   Future  <void> removeImage(File p1) async  {
     _images.removeWhere((image) => image.path == p1.path);
     notifyListeners();
+  }
+
+  Future <void> editNow(BuildContext context, String category)  async {
+    var data = {
+      'post': postController.text,
+    };
+    await postRepository.editDetails(category, data, postID);
   }
 }
