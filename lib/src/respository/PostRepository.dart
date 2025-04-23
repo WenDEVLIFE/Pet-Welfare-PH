@@ -1174,7 +1174,7 @@ class PostRepositoryImpl implements PostRepository {
 
     String post = petData['post'];
 
-    if (selectedChip =='Pet Appreciation') {
+    if (selectedChip =='Pet Appreciation' || selectedChip =='Paw-some Experience' || selectedChip == 'Protect Our Pets: Report Abuse' || selectedChip == 'Community Announcement') {
 
       await _firestore.collection('PostCollection').doc(postID).update({
         'PostDescription': post,
