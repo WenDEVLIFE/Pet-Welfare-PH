@@ -1174,11 +1174,44 @@ class PostRepositoryImpl implements PostRepository {
 
     String post = petData['post'];
 
+    // Update the post description
     if (selectedChip =='Pet Appreciation' || selectedChip =='Paw-some Experience' || selectedChip == 'Protect Our Pets: Report Abuse' || selectedChip == 'Community Announcement') {
 
       await _firestore.collection('PostCollection').doc(postID).update({
         'PostDescription': post,
       });
+    }
+
+     // Update the pet details
+    if(selectedChip =='Missing Pets' || selectedChip =='Found Pets'){
+
+      await _firestore.collection('PostCollection').doc(postID).update({
+        'PostDescription': post,
+      });
+
+      // Update the pet details
+      Map<String, dynamic> updateData = {
+        'PostDescription': post,
+        'PetColor': petData['pet_color'],
+        'PetAge': petData['pet_age'],
+        'PetSize': petData['pet_size'],
+        'Region': petData['region'],
+        'Province': petData['province'],
+        'City': petData['city'],
+        'Latitude': petData['lat'],
+        'Longitude': petData['long'],
+        'Barangay': petData['barangay'],
+        'Address': petData['address'],
+      };
+
+    // Add PetType and PetBreed only if pet_type is Cat or Dog
+      if (petData['pet_type'] == 'Cat' || petData['pet_type'] == 'Dog') {
+        updateData['PetType'] = petData['pet_type'];
+        updateData['PetBreed'] = petData['pet_breed'];
+      }
+
+    // Update the document
+      await _firestore.collection('PetDetailsCollection').doc(postID).update(updateData);
     }
 
   }

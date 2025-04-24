@@ -1380,6 +1380,24 @@ class CreatePostViewModel extends ChangeNotifier {
   Future <void> editNow(BuildContext context, String category)  async {
     var data = {
       'post': postController.text,
+       'pet_name': petName.text,
+      'pet_type': selectedPetType.toString(),
+      'pet_breed': selectedPetType == 'Cat'
+          ? selectedCatBreed!.name
+          : selectedDogBreed!.name,
+      'pet_color': selectedColorPattern,
+      'pet_age': selectedPetAge,
+      'date': dateController.text,
+      'lat': selectedLocation!.latitude,
+      'long' :selectedLocation!.longitude,
+      'pet_size': selectedPetSize,
+      'pet_collor': selectedColorPattern,
+      'region': selectedRegion!.region,
+      'province': selectedProvince!.provinceName,
+       'city': selectedCity!.cityName,
+        'barangay' : selectedBarangay!.barangayName,
+      'address': address.text,
+
     };
     await postRepository.editDetails(category, data, postID);
     notifyListeners();
