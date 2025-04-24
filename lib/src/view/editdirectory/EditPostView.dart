@@ -49,6 +49,7 @@ class _EditPostViewState extends State<EditPostView> {
     category = widget.category;
     // Initialize createPostViewModel immediately
     createPostViewModel = Provider.of<CreatePostViewModel>(context, listen: false);
+    createPostViewModel.setInitialLocation();
 
     // Load edit details
     _loadEditDetailsFuture = createPostViewModel.LoadEditDetails(postId, category);
@@ -69,6 +70,7 @@ class _EditPostViewState extends State<EditPostView> {
           icon: const Icon(Icons.arrow_back),
           onPressed: () {
             Navigator.pop(context);
+            createPostViewModel.clearAllEdits();
           },
         ),
         title: Row(
@@ -387,7 +389,10 @@ class _EditPostViewState extends State<EditPostView> {
                         ),
                       ),
                       CustomDropDown<Breed>(
-                        value: createPostViewModel.selectedCatBreed,
+                        value: createPostViewModel.catBreeds.firstWhere(
+                              (breed) => breed == createPostViewModel.selectedCatBreed,
+                          orElse: () =>  createPostViewModel.catBreeds.first,
+                        ),
                         items: createPostViewModel.catBreeds,
                         onChanged: (Breed? newValue) {
                           createPostViewModel.selectedCatBreed1(newValue);
@@ -413,7 +418,10 @@ class _EditPostViewState extends State<EditPostView> {
                         ),
                       ),
                       CustomDropDown<Breed>(
-                        value: createPostViewModel.selectedDogBreed,
+                        value:  createPostViewModel.dogBreeds.firstWhere(
+                              (breed) => breed == createPostViewModel.selectedDogBreed,
+                          orElse: () =>  createPostViewModel.dogBreeds.first,
+                        ),
                         items: createPostViewModel.dogBreeds,
                         onChanged: (Breed? newValue) {
                           createPostViewModel.selectedDogBreed2(newValue);
