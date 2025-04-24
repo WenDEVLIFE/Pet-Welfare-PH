@@ -23,8 +23,6 @@ import '../../view_model/CreatePostViewModel.dart';
 import '../../widgets/CustomMapWidget.dart';
 import '../../widgets/CustomTextField.dart';
 import '../../widgets/EditImageUploadWidget.dart';
-import '../../widgets/ImageUploadWidget.dart';
-import '../../widgets/TagWidget.dart';
 
 class EditPostView extends StatefulWidget{
   late String postId;
@@ -294,13 +292,17 @@ class _EditPostViewState extends State<EditPostView> {
                           screenHeight: screenHeight,
                           alignment: Alignment.centerLeft,
                         ),
-                        CustomDropDown(value: createPostViewModel.selectedCollar,
-                          items: createPostViewModel.collarList,
-                          onChanged: (String? newValue) {
-                            createPostViewModel.setCollarType(newValue);
-                          },
-                          itemLabel: (String value) => value,
-                          hint: 'Select Pet Collar',
+                        Consumer<CreatePostViewModel>(
+                            builder: (context, viewModel, child){
+                              return  CustomDropDown(value: createPostViewModel.selectedCollar,
+                                items: createPostViewModel.collarList,
+                                onChanged: (String? newValue) async {
+                                  await createPostViewModel.setCollarType(newValue);
+                                },
+                                itemLabel: (String value) => value,
+                                hint: 'Select Pet Collar',
+                              );
+                            }
                         ),
                       ],
                     ],
@@ -313,13 +315,17 @@ class _EditPostViewState extends State<EditPostView> {
                       screenHeight: screenHeight,
                       alignment: Alignment.centerLeft,
                     ),
-                    CustomDropDown(value: createPostViewModel.selectedPetAge,
-                      items: createPostViewModel.petAgeList,
-                      onChanged: (String? newValue) {
-                        createPostViewModel.setPetAge(newValue);
-                      },
-                      itemLabel: (String value) => value,
-                      hint: 'Select Pet Age',
+                    Consumer<CreatePostViewModel>(
+                        builder: (context, viewModel, child){
+                          return CustomDropDown(value: createPostViewModel.selectedPetAge,
+                            items: createPostViewModel.petAgeList,
+                            onChanged: (String? newValue)async {
+                              await createPostViewModel.setPetAge(newValue);
+                            },
+                            itemLabel: (String value) => value,
+                            hint: 'Select Pet Age',
+                          );
+                        }
                     ),
                     CustomText(
                       text: 'Pet Gender',
@@ -330,14 +336,18 @@ class _EditPostViewState extends State<EditPostView> {
                       screenHeight: screenHeight,
                       alignment: Alignment.centerLeft,
                     ),
-                    CustomDropDown(value: createPostViewModel.selectedPetGender,
-                      items: createPostViewModel.petGender,
-                      onChanged: (String? newValue) {
-                        createPostViewModel.setPetGender(newValue);
-                      },
-                      itemLabel: (String value) => value,
-                      hint: 'Select Pet Gender',
-                    ),
+                   Consumer<CreatePostViewModel>(
+                      builder: (context, viewModel, child){
+                        return CustomDropDown(value: createPostViewModel.selectedPetGender,
+                          items: createPostViewModel.petGender,
+                          onChanged: (String? newValue) async {
+                            await createPostViewModel.setPetGender(newValue);
+                          },
+                          itemLabel: (String value) => value,
+                          hint: 'Select Pet Gender',
+                        );
+                      }
+                   ),
                     CustomText(
                       text:  'Pet Size',
                       size: 18,
@@ -347,13 +357,17 @@ class _EditPostViewState extends State<EditPostView> {
                       screenHeight: screenHeight,
                       alignment: Alignment.centerLeft,
                     ),
-                    CustomDropDown(value: createPostViewModel.selectedPetSize,
-                      items: createPostViewModel.petSize,
-                      onChanged: (String? newValue) {
-                        createPostViewModel.setPetSize(newValue);
-                      },
-                      itemLabel: (String value) => value,
-                      hint: 'Select Pet Size',
+                    Consumer<CreatePostViewModel>(
+                        builder: (context, viewModel, child){
+                          return   CustomDropDown(value: createPostViewModel.selectedPetSize,
+                            items: createPostViewModel.petSize,
+                            onChanged: (String? newValue) async {
+                              await createPostViewModel.setPetSize(newValue);
+                            },
+                            itemLabel: (String value) => value,
+                            hint: 'Select Pet Size',
+                          );
+                        }
                     ),
                     CustomText(
                       text:   'Colors or patterns',
@@ -364,13 +378,17 @@ class _EditPostViewState extends State<EditPostView> {
                       screenHeight: screenHeight,
                       alignment: Alignment.centerLeft,
                     ),
-                    CustomDropDown(value: createPostViewModel.selectedColorPattern,
-                      items: createPostViewModel.colorpatter,
-                      onChanged: (String? newValue) {
-                        createPostViewModel.setColor(newValue);
-                      },
-                      itemLabel: (String value) => value,
-                      hint: 'Select Colors or patterns',
+                    Consumer<CreatePostViewModel>(
+                        builder: (context, viewModel, child){
+                          return    CustomDropDown(value: createPostViewModel.selectedColorPattern,
+                            items: createPostViewModel.colorpatter,
+                            onChanged: (String? newValue) async {
+                              createPostViewModel.setColor(newValue);
+                            },
+                            itemLabel: (String value) => value,
+                            hint: 'Select Colors or patterns',
+                          );
+                        }
                     ),
                     if (createPostViewModel.selectedPetType == 'Cat') ...[
                       const Padding(
@@ -388,17 +406,21 @@ class _EditPostViewState extends State<EditPostView> {
                           ),
                         ),
                       ),
-                      CustomDropDown<Breed>(
-                        value: createPostViewModel.catBreeds.firstWhere(
-                              (breed) => breed == createPostViewModel.selectedCatBreed,
-                          orElse: () =>  createPostViewModel.catBreeds.first,
-                        ),
-                        items: createPostViewModel.catBreeds,
-                        onChanged: (Breed? newValue) {
-                          createPostViewModel.selectedCatBreed1(newValue);
-                        },
-                        itemLabel: (Breed value) => value.name,
-                        hint: 'Select Cat Breed',
+                      Consumer<CreatePostViewModel>(
+                          builder: (context, viewModel, child){
+                            return  CustomDropDown<Breed>(
+                              value: createPostViewModel.catBreeds.firstWhere(
+                                    (breed) => breed == createPostViewModel.selectedCatBreed,
+                                orElse: () =>  createPostViewModel.catBreeds.first,
+                              ),
+                              items: createPostViewModel.catBreeds,
+                              onChanged: (Breed? newValue)  async{
+                                createPostViewModel.selectedCatBreed1(newValue);
+                              },
+                              itemLabel: (Breed value) => value.name,
+                              hint: 'Select Cat Breed',
+                            );
+                          }
                       ),
                     ],
                     if (createPostViewModel.selectedPetType == 'Dog') ...[
@@ -417,17 +439,21 @@ class _EditPostViewState extends State<EditPostView> {
                           ),
                         ),
                       ),
-                      CustomDropDown<Breed>(
-                        value:  createPostViewModel.dogBreeds.firstWhere(
-                              (breed) => breed == createPostViewModel.selectedDogBreed,
-                          orElse: () =>  createPostViewModel.dogBreeds.first,
-                        ),
-                        items: createPostViewModel.dogBreeds,
-                        onChanged: (Breed? newValue) {
-                          createPostViewModel.selectedDogBreed2(newValue);
-                        },
-                        itemLabel: (Breed value) => value.name,
-                        hint: 'Select Dog Breed',
+                      Consumer<CreatePostViewModel>(
+                          builder: (context, viewModel, child){
+                            return CustomDropDown<Breed>(
+                              value:  createPostViewModel.dogBreeds.firstWhere(
+                                    (breed) => breed == createPostViewModel.selectedDogBreed,
+                                orElse: () =>  createPostViewModel.dogBreeds.first,
+                              ),
+                              items: createPostViewModel.dogBreeds,
+                              onChanged: (Breed? newValue) async {
+                                createPostViewModel.selectedDogBreed2(newValue);
+                              },
+                              itemLabel: (Breed value) => value.name,
+                              hint: 'Select Dog Breed',
+                            );
+                          }
                       ),
                     ],
                     if (category == "Missing Pets" || category == "Found Pets") ...[
@@ -488,23 +514,26 @@ class _EditPostViewState extends State<EditPostView> {
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          CustomDropDown<RegionModel>(
-                            value: createPostViewModel.selectedRegion,
-                            items: createPostViewModel.regions,
-                            onChanged: (RegionModel? newValue) {
-                              createPostViewModel.setSelectedRegion(newValue);
-                            },
-                            itemLabel: (RegionModel value) => value.region,
-                            hint: 'Select Region',
+                          Consumer<CreatePostViewModel>(
+                              builder: (context, viewModel, child){
+                                return  CustomDropDown<RegionModel>(
+                                  value: createPostViewModel.selectedRegion,
+                                  items: createPostViewModel.regions,
+                                  onChanged: (RegionModel? newValue) async {
+                                    createPostViewModel.setSelectedRegion(newValue);
+                                  },
+                                  itemLabel: (RegionModel value) => value.region,
+                                  hint: 'Select Region',
+                                );
+                              }
                           ),
-                          SizedBox(height: screenHeight * 0.01),
                           SizedBox(height: screenHeight * 0.01),
                           if (createPostViewModel.selectedRegion != null)
                             SizedBox(height: screenHeight * 0.01),
                           CustomDropDown<ProvinceModel>(
                             value: createPostViewModel.selectedProvince,
                             items: createPostViewModel.provinces,
-                            onChanged: (ProvinceModel? newValue) {
+                            onChanged: (ProvinceModel? newValue)async {
                               createPostViewModel.setSelectedProvince(newValue);
                             },
                             itemLabel: (ProvinceModel value) => value.provinceName,
@@ -513,26 +542,34 @@ class _EditPostViewState extends State<EditPostView> {
                           SizedBox(height: screenHeight * 0.01),
                           if (createPostViewModel.selectedProvince != null)
                             SizedBox(height: screenHeight * 0.01),
-                          CustomDropDown<CityModel>(
-                            value: createPostViewModel.selectedCity,
-                            items: createPostViewModel.cities,
-                            onChanged: (CityModel? newValue) {
-                              createPostViewModel.setSelectedCity(newValue);
-                            },
-                            itemLabel: (CityModel value) => value.cityName,
-                            hint: 'Select City',
+                          Consumer<CreatePostViewModel>(
+                              builder: (context, viewModel, child){
+                                return  CustomDropDown<CityModel>(
+                                  value: createPostViewModel.selectedCity,
+                                  items: createPostViewModel.cities,
+                                  onChanged: (CityModel? newValue) async{
+                                    createPostViewModel.setSelectedCity(newValue);
+                                  },
+                                  itemLabel: (CityModel value) => value.cityName,
+                                  hint: 'Select City',
+                                );
+                              }
                           ),
                           SizedBox(height: screenHeight * 0.01),
                           if (createPostViewModel.selectedCity != null)
                             SizedBox(height: screenHeight * 0.01),
-                          CustomDropDown<BarangayModel>(
-                            value: createPostViewModel.selectedBarangay,
-                            items: createPostViewModel.barangays,
-                            onChanged: (BarangayModel? newValue) {
-                              createPostViewModel.setSelectedBarangay(newValue);
-                            },
-                            itemLabel: (BarangayModel value) => value.barangayName,
-                            hint: 'Select Barangay',
+                          Consumer<CreatePostViewModel>(
+                              builder: (context, viewModel, child){
+                                return    CustomDropDown<BarangayModel>(
+                                  value: createPostViewModel.selectedBarangay,
+                                  items: createPostViewModel.barangays,
+                                  onChanged: (BarangayModel? newValue) async {
+                                    createPostViewModel.setSelectedBarangay(newValue);
+                                  },
+                                  itemLabel: (BarangayModel value) => value.barangayName,
+                                  hint: 'Select Barangay',
+                                );
+                              }
                           ),
                           SizedBox(height: screenHeight * 0.01),
                         ],
@@ -559,7 +596,7 @@ class _EditPostViewState extends State<EditPostView> {
                             lat: createPostViewModel.lat,
                             long: createPostViewModel.long,
                             selectedLocation: createPostViewModel.selectedLocation,
-                            onLocationSelected: (LatLng coordinates) {
+                            onLocationSelected: (LatLng coordinates) async {
                               createPostViewModel.updateLocation(coordinates);
                             },
                           ),
@@ -654,51 +691,66 @@ class _EditPostViewState extends State<EditPostView> {
                               fontWeight: FontWeight.w600,
                             ),
                           ),
-                          CustomDropDown<RegionModel>(
-                            value: createPostViewModel.selectedRegion,
-                            items: createPostViewModel.regions,
-                            onChanged: (RegionModel? newValue) {
-                              createPostViewModel.setSelectedRegion(newValue);
-                            },
-                            itemLabel: (RegionModel value) => value.region,
-                            hint: 'Select Region',
+                          Consumer<CreatePostViewModel>(
+                              builder: (context, viewModel, child){
+                                return CustomDropDown<RegionModel>(
+                                  value: createPostViewModel.selectedRegion,
+                                  items: createPostViewModel.regions,
+                                  onChanged: (RegionModel? newValue) async {
+                                    createPostViewModel.setSelectedRegion(newValue);
+                                  },
+                                  itemLabel: (RegionModel value) => value.region,
+                                  hint: 'Select Region',
+                                );
+                              }
                           ),
-                          SizedBox(height: screenHeight * 0.01),
                           SizedBox(height: screenHeight * 0.01),
                           if (createPostViewModel.selectedRegion != null)
                             SizedBox(height: screenHeight * 0.01),
-                          CustomDropDown<ProvinceModel>(
-                            value: createPostViewModel.selectedProvince,
-                            items: createPostViewModel.provinces,
-                            onChanged: (ProvinceModel? newValue) {
-                              createPostViewModel.setSelectedProvince(newValue);
-                            },
-                            itemLabel: (ProvinceModel value) => value.provinceName,
-                            hint: 'Select Province',
+                          Consumer<CreatePostViewModel>(
+                              builder: (context, viewModel, child){
+                                return CustomDropDown<ProvinceModel>(
+                                  value: createPostViewModel.selectedProvince,
+                                  items: createPostViewModel.provinces,
+                                  onChanged: (ProvinceModel? newValue) async {
+                                    createPostViewModel.setSelectedProvince(newValue);
+                                  },
+                                  itemLabel: (ProvinceModel value) => value.provinceName,
+                                  hint: 'Select Province',
+                                );
+                              }
                           ),
                           SizedBox(height: screenHeight * 0.01),
                           if (createPostViewModel.selectedProvince != null)
                             SizedBox(height: screenHeight * 0.01),
-                          CustomDropDown<CityModel>(
-                            value: createPostViewModel.selectedCity,
-                            items: createPostViewModel.cities,
-                            onChanged: (CityModel? newValue) {
-                              createPostViewModel.setSelectedCity(newValue);
-                            },
-                            itemLabel: (CityModel value) => value.cityName,
-                            hint: 'Select City',
+                          Consumer<CreatePostViewModel>(
+                              builder: (context, viewModel, child) {
+                                return CustomDropDown<CityModel>(
+                                  value: createPostViewModel.selectedCity,
+                                  items: createPostViewModel.cities,
+                                  onChanged: (CityModel? newValue) async {
+                                    createPostViewModel.setSelectedCity(newValue);
+                                  },
+                                  itemLabel: (CityModel value) => value.cityName,
+                                  hint: 'Select City',
+                                );
+                              }
                           ),
                           SizedBox(height: screenHeight * 0.01),
                           if (createPostViewModel.selectedCity != null)
                             SizedBox(height: screenHeight * 0.01),
-                          CustomDropDown<BarangayModel>(
-                            value: createPostViewModel.selectedBarangay,
-                            items: createPostViewModel.barangays,
-                            onChanged: (BarangayModel? newValue) {
-                              createPostViewModel.setSelectedBarangay(newValue);
-                            },
-                            itemLabel: (BarangayModel value) => value.barangayName,
-                            hint: 'Select Barangay',
+                          Consumer<CreatePostViewModel>(
+                              builder: (context, viewModel, child) {
+                                return  CustomDropDown<BarangayModel>(
+                                  value: createPostViewModel.selectedBarangay,
+                                  items: createPostViewModel.barangays,
+                                  onChanged: (BarangayModel? newValue) async {
+                                    createPostViewModel.setSelectedBarangay(newValue);
+                                  },
+                                  itemLabel: (BarangayModel value) => value.barangayName,
+                                  hint: 'Select Barangay',
+                                );
+                              }
                           ),
                           SizedBox(height: screenHeight * 0.01),
                         ],
@@ -715,13 +767,17 @@ class _EditPostViewState extends State<EditPostView> {
                       screenHeight: screenHeight,
                       alignment: Alignment.centerLeft,
                     ),
-                    CustomDropDown(value: createPostViewModel.selectedPetType,
-                      items: createPostViewModel.petTypes,
-                      onChanged: (String? newValue) {
-                        createPostViewModel.setPetType(newValue);
-                      },
-                      itemLabel: (String value) => value,
-                      hint: 'Select Pet Type',
+                    Consumer<CreatePostViewModel>(
+                        builder: (context, viewModel, child) {
+                          return  CustomDropDown(value: createPostViewModel.selectedPetType,
+                            items: createPostViewModel.petTypes,
+                            onChanged: (String? newValue) {
+                              createPostViewModel.setPetType(newValue);
+                            },
+                            itemLabel: (String value) => value,
+                            hint: 'Select Pet Type',
+                          );
+                        }
                     ),
                     if (createPostViewModel.selectedPetType == 'Cat') ...[
                       const Padding(
@@ -739,14 +795,18 @@ class _EditPostViewState extends State<EditPostView> {
                           ),
                         ),
                       ),
-                      CustomDropDown<Breed>(
-                        value: createPostViewModel.selectedCatBreed,
-                        items: createPostViewModel.catBreeds,
-                        onChanged: (Breed? newValue) {
-                          createPostViewModel.selectedCatBreed1(newValue);
-                        },
-                        itemLabel: (Breed value) => value.name,
-                        hint: 'Select Cat Breed',
+                      Consumer<CreatePostViewModel>(
+                          builder: (context, viewModel, child) {
+                            return CustomDropDown<Breed>(
+                              value: createPostViewModel.selectedCatBreed,
+                              items: createPostViewModel.catBreeds,
+                              onChanged: (Breed? newValue)  async {
+                                createPostViewModel.selectedCatBreed1(newValue);
+                              },
+                              itemLabel: (Breed value) => value.name,
+                              hint: 'Select Cat Breed',
+                            );
+                          }
                       ),
                     ],
                     if (createPostViewModel.selectedPetType == 'Dog') ...[
@@ -765,14 +825,18 @@ class _EditPostViewState extends State<EditPostView> {
                           ),
                         ),
                       ),
-                      CustomDropDown<Breed>(
-                        value: createPostViewModel.selectedDogBreed,
-                        items: createPostViewModel.dogBreeds,
-                        onChanged: (Breed? newValue) {
-                          createPostViewModel.selectedDogBreed2(newValue);
-                        },
-                        itemLabel: (Breed value) => value.name,
-                        hint: 'Select Dog Breed',
+                      Consumer<CreatePostViewModel>(
+                          builder: (context, viewModel, child) {
+                            return  CustomDropDown<Breed>(
+                              value: createPostViewModel.selectedDogBreed,
+                              items: createPostViewModel.dogBreeds,
+                              onChanged: (Breed? newValue)  async {
+                                createPostViewModel.selectedDogBreed2(newValue);
+                              },
+                              itemLabel: (Breed value) => value.name,
+                              hint: 'Select Dog Breed',
+                            );
+                          }
                       ),
                     ],
                     CustomText(
@@ -784,13 +848,17 @@ class _EditPostViewState extends State<EditPostView> {
                       screenHeight: screenHeight,
                       alignment: Alignment.centerLeft,
                     ),
-                    CustomDropDown(value: createPostViewModel.selectedPetGender,
-                      items: createPostViewModel.petGender,
-                      onChanged: (String? newValue) {
-                        createPostViewModel.setPetGender(newValue);
-                      },
-                      itemLabel: (String value) => value,
-                      hint: 'Select Pet Gender',
+                    Consumer<CreatePostViewModel>(
+                        builder: (context, viewModel, child) {
+                          return CustomDropDown(value: createPostViewModel.selectedPetGender,
+                            items: createPostViewModel.petGender,
+                            onChanged: (String? newValue) async {
+                              createPostViewModel.setPetGender(newValue);
+                            },
+                            itemLabel: (String value) => value,
+                            hint: 'Select Pet Gender',
+                          );
+                        }
                     ),
                     CustomText(
                       text:  'Pet Size',
@@ -801,13 +869,17 @@ class _EditPostViewState extends State<EditPostView> {
                       screenHeight: screenHeight,
                       alignment: Alignment.centerLeft,
                     ),
-                    CustomDropDown(value: createPostViewModel.selectedPetSize,
-                      items: createPostViewModel.petSize,
-                      onChanged: (String? newValue) {
-                        createPostViewModel.setPetSize(newValue);
-                      },
-                      itemLabel: (String value) => value,
-                      hint: 'Select Pet Size',
+                    Consumer<CreatePostViewModel>(
+                        builder: (context, viewModel, child) {
+                          return  CustomDropDown(value: createPostViewModel.selectedPetSize,
+                            items: createPostViewModel.petSize,
+                            onChanged: (String? newValue) async  {
+                              createPostViewModel.setPetSize(newValue);
+                            },
+                            itemLabel: (String value) => value,
+                            hint: 'Select Pet Size',
+                          );
+                        }
                     ),
                     CustomText(
                       text:   'Colors or patterns',
@@ -818,13 +890,17 @@ class _EditPostViewState extends State<EditPostView> {
                       screenHeight: screenHeight,
                       alignment: Alignment.centerLeft,
                     ),
-                    CustomDropDown(value: createPostViewModel.selectedColorPattern,
-                      items: createPostViewModel.colorpatter,
-                      onChanged: (String? newValue) {
-                        createPostViewModel.setColor(newValue);
-                      },
-                      itemLabel: (String value) => value,
-                      hint: 'Select Colors or patterns',
+                    Consumer<CreatePostViewModel>(
+                        builder: (context, viewModel, child) {
+                          return  CustomDropDown(value: createPostViewModel.selectedColorPattern,
+                            items: createPostViewModel.colorpatter,
+                            onChanged: (String? newValue) async {
+                              createPostViewModel.setColor(newValue);
+                            },
+                            itemLabel: (String value) => value,
+                            hint: 'Select Colors or patterns',
+                          );
+                        }
                     ),
                   ],
                   if (category == "Pet Adoption" || category == "Missing Pets" ||
@@ -876,14 +952,18 @@ class _EditPostViewState extends State<EditPostView> {
                         ),
                       ),
                     ),
-                    CustomDropDown<String?>(
-                      value: createPostViewModel.selectedTypeOfDonation,
-                      items: createPostViewModel.typeOfDonation,
-                      onChanged: (String? newValue) {
-                        createPostViewModel.setselectedDonation(newValue);
-                      },
-                      itemLabel: (String? value) => value!,
-                      hint: 'Select a Donation Type',
+                    Consumer<CreatePostViewModel>(
+                        builder: (context, viewModel, child) {
+                          return  CustomDropDown<String?>(
+                            value: createPostViewModel.selectedTypeOfDonation,
+                            items: createPostViewModel.typeOfDonation,
+                            onChanged: (String? newValue) async {
+                              createPostViewModel.setselectedDonation(newValue);
+                            },
+                            itemLabel: (String? value) => value!,
+                            hint: 'Select a Donation Type',
+                          );
+                        }
                     ),
                     const Padding(
                       padding: EdgeInsets.all(10.0),
@@ -900,14 +980,18 @@ class _EditPostViewState extends State<EditPostView> {
                         ),
                       ),
                     ),
-                    CustomDropDown<String?>(
-                      value: createPostViewModel.selectedBankType,
-                      items: createPostViewModel.bankType,
-                      onChanged: (String? newValue) {
-                        createPostViewModel.setSelectedBank(newValue);
-                      },
-                      itemLabel: (String? value) => value!,
-                      hint: 'Select Bank',
+                    Consumer<CreatePostViewModel>(
+                        builder: (context, viewModel, child) {
+                          return CustomDropDown<String?>(
+                            value: createPostViewModel.selectedBankType,
+                            items: createPostViewModel.bankType,
+                            onChanged: (String? newValue) async {
+                              createPostViewModel.setSelectedBank(newValue);
+                            },
+                            itemLabel: (String? value) => value!,
+                            hint: 'Select Bank',
+                          );
+                        }
                     ),
                     CustomText(
                       text: 'Bank Holder Name',
@@ -962,14 +1046,18 @@ class _EditPostViewState extends State<EditPostView> {
                         ),
                       ),
                     ),
-                    CustomDropDown<String?>(
-                      value: createPostViewModel.selectedDonationType,
-                      items: createPostViewModel.donationType,
-                      onChanged: (String? newValue) {
-                        createPostViewModel.setSelectDonation(newValue);
-                      },
-                      itemLabel: (String? value) => value!,
-                      hint: 'Select a purpose of raising funds',
+                    Consumer<CreatePostViewModel>(
+                        builder: (context, viewModel, child) {
+                          return CustomDropDown<String?>(
+                            value: createPostViewModel.selectedDonationType,
+                            items: createPostViewModel.donationType,
+                            onChanged: (String? newValue)  async {
+                              createPostViewModel.setSelectDonation(newValue);
+                            },
+                            itemLabel: (String? value) => value!,
+                            hint: 'Select a purpose of raising funds',
+                          );
+                        }
                     ),
                     CustomText(
                       text: 'Estimated Amount',
@@ -997,7 +1085,7 @@ class _EditPostViewState extends State<EditPostView> {
                         size: 18,
                         color1: AppColors.orange,
                         textcolor2: Colors.white,
-                        onPressed: () async {
+                        onPressed: () async  {
                           createPostViewModel.editNow(context, category);
                         },
                       )
@@ -1011,6 +1099,6 @@ class _EditPostViewState extends State<EditPostView> {
       ),
     );
   }
-  
-  
+
+
 }

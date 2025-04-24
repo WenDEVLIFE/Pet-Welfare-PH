@@ -825,7 +825,7 @@ class CreatePostViewModel extends ChangeNotifier {
   }
 
   // This is for the region
-  void setSelectedRegion(RegionModel? region) {
+  Future <void> setSelectedRegion(RegionModel? region)  async {
     selectedRegion = region;
     selectedProvince = null;
     provinces = [];
@@ -839,79 +839,79 @@ class CreatePostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setSelectedProvince(ProvinceModel? province) {
+  Future <void> setSelectedProvince(ProvinceModel? province) async {
     selectedProvince = province;
     selectedCity = null;
     cities = [];
     selectedBarangay = null;
     barangays = [];
     if (province != null) {
-      fetchCities(province.provinceCode);
+      await fetchCities(province.provinceCode);
     }
     notifyListeners();
   }
 
   // This is for set city
-  void setSelectedCity(CityModel? city) {
+  Future <void> setSelectedCity(CityModel? city) async {
     selectedCity = city;
     selectedBarangay = null;
     barangays = [];
     if (city != null) {
-      fetchBarangays(city.cityCode);
+      await fetchBarangays(city.cityCode);
     }
     notifyListeners();
   }
 
   // This is for the barangay
-  void setSelectedBarangay(BarangayModel? barangay) {
+  Future <void> setSelectedBarangay(BarangayModel? barangay) async{
     selectedBarangay = barangay;
     notifyListeners();
   }
 
    // This is for the cat breed
-  void selectedCatBreed1(Breed? newValue) {
+  Future <void> selectedCatBreed1(Breed? newValue) async {
     selectedCatBreed = newValue;
     notifyListeners();
   }
 
   // This is for the dog breed
-  void selectedDogBreed2(Breed? newValue) {
+  Future <void> selectedDogBreed2(Breed? newValue) async{
     selectedDogBreed = newValue;
     notifyListeners();
   }
 
   // This is for the pet type
-  void setPetType(String? newValue) {
+  Future <void> setPetType(String? newValue) async {
     selectedPetType = newValue!;
     notifyListeners();
   }
 
   // This is for the color or pattern
-  void setColor(String? newValue) {
+  Future <void> setColor(String? newValue) async {
     selectedColorPattern = newValue!;
     notifyListeners();
   }
 
   // This is for the color type
-  void setCollarType(String? newValue) {
+  Future <void> setCollarType(String? newValue) async {
     selectedCollar = newValue!;
     notifyListeners();
   }
 
   // This is for the gender
-  void setPetGender(String? newValue) {
+  Future <void> setPetGender(String? newValue) async{
     selectedPetGender = newValue!;
     notifyListeners();
   }
 
   // This is for the size
-  void setPetSize(String? newValue) {
+  Future <void> setPetSize(String? newValue) async {
     selectedPetSize = newValue!;
     notifyListeners();
   }
 
   // This is for the age
-  void setPetAge(String? newValue) {
+  Future <void> setPetAge(String? newValue) async {
     selectedPetAge = newValue!;
     notifyListeners();
   }
@@ -927,7 +927,7 @@ class CreatePostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  void setSelectedEstablishment(EstablishmentModel? establishment) {
+  Future <void> setSelectedEstablishment(EstablishmentModel? establishment) async {
     selectedEstablisment = establishment;
     notifyListeners();
   }
@@ -1139,18 +1139,18 @@ class CreatePostViewModel extends ChangeNotifier {
   }
 
   // This is for the donation type set the bank
-  void setSelectedBank(String? newValue) {
+  Future <void> setSelectedBank(String? newValue) async {
     selectedBankType = newValue!;
     notifyListeners();
   }
 
   // This is for te set donation type
-  void setSelectDonation(String? newValue) {
+  Future <void> setSelectDonation(String? newValue) async {
     selectedDonationType = newValue!;
     notifyListeners();
   }
 
-  void setselectedDonation(String? newValue) {
+  Future <void> setselectedDonation(String? newValue)  async {
     selectedTypeOfDonation = newValue!;
     notifyListeners();
   }
@@ -1196,7 +1196,7 @@ class CreatePostViewModel extends ChangeNotifier {
   }
 
   // This is for  the update section here do not touch
-  void setSelectedLocation(LatLng location) {
+  Future <void> setSelectedLocation(LatLng location)  async {
     selectedLocation = location;
     notifyListeners();
   }
@@ -1328,6 +1328,8 @@ class CreatePostViewModel extends ChangeNotifier {
           ToastComponent().showMessage(Colors.green, 'Location loaded successfully $selectedLocation');
 
           await addPin(selectedLocation!);
+
+
         }
       }
     } catch (e) {
@@ -1380,6 +1382,7 @@ class CreatePostViewModel extends ChangeNotifier {
       'post': postController.text,
     };
     await postRepository.editDetails(category, data, postID);
+    notifyListeners();
   }
 
   void clearAllEdits(){
@@ -1404,8 +1407,6 @@ class CreatePostViewModel extends ChangeNotifier {
     tagsList = [];
 
     imagesList = [];
-
-
-
+ notifyListeners();
   }
 }
