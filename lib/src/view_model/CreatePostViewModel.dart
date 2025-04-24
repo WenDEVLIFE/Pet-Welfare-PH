@@ -1325,7 +1325,7 @@ class CreatePostViewModel extends ChangeNotifier {
               : 0;
           selectedLocation = LatLng(lat,long);
 
-          ToastComponent().showMessage(Colors.green, 'Location loaded successfully $selectedLocationw');
+          ToastComponent().showMessage(Colors.green, 'Location loaded successfully $selectedLocation');
 
           await addPin(selectedLocation!);
         }
