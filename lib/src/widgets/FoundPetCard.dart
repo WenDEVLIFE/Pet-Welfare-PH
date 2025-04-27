@@ -175,7 +175,11 @@ class _FoundPetCardState extends State<FoundPetCard> {
                       },),
                     if (isAdmin || isPostOwner)
                       PopupMenuItem(value: 'Delete', child: const Text('Delete'), onTap: (){
-
+                        // Delete the image to the database
+                        postViewModel.deletePost(post.category, context, post.postId);
+                      },),
+                    if (!isPostOwner)
+                      PopupMenuItem(value: 'Message', child: const Text('Message'), onTap: (){
                         // Determine which ID is the other user (not current user)
                         final otherUserId = currentUserId == widget.post.postOwnerId
                             ? widget.post.postOwnerId
@@ -185,8 +189,6 @@ class _FoundPetCardState extends State<FoundPetCard> {
                           'receiverID': otherUserId
                         });
                       },),
-                    if (!isPostOwner)
-                      PopupMenuItem(value: 'Message', child: const Text('Message')),
                     PopupMenuItem(
                       value: 'Report',
                       child: const Text('Report'),

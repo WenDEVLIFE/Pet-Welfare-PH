@@ -89,6 +89,8 @@ abstract class PostRepository {
   Stream  <List<ImageModel>> loadImage (String postId);
   Stream <List<TagModel>> getTagData (String postId);
 
+  Future<void> deletePost(String category, String postId);
+
 }
 
 class PostRepositoryImpl implements PostRepository {
@@ -1395,6 +1397,55 @@ class PostRepositoryImpl implements PostRepository {
       ToastComponent().showMessage(AppColors.orange, 'Image added successfully');
     } catch (e) {
       throw Exception('Failed to upload image: $e');
+    }
+  }
+
+  // This will delete the post
+  @override
+  Future<void> deletePost(String category, String postId) async {
+    try {
+      // Fetch all images from the ImageCollection sub-collection
+      QuerySnapshot imageSnapshot = await _firestore
+          .collection('PostCollection')
+          .doc(postId)
+          .collection('ImageCollection')
+          .get();
+
+      // Delete each image from Firebase Storage
+      if (imageSnapshot.docs.isNotEmpty) {
+        for (var doc in imageSnapshot.docs) {
+          String imageUrl = doc['FileUrl'];
+          Reference storageRef = _firebaseStorage.refFromURL(imageUrl);
+          await storageRef.delete();
+        }
+      }
+
+      // Delete the post and its related data based on the category
+      if (category == 'Pet Appreciation' ||
+          category == 'Paw-some Experience' ||
+          category == 'Protect Our Pets: Report Abuse' ||
+          category == 'Community Announcement') {
+        await _firestore.collection('PostCollection').doc(postId).delete();
+      } else if (category == 'Missing Pets' || category == 'Found Pets') {
+        await _firestore.collection('PostCollection').doc(postId).delete();
+        await _firestore.collection('PetDetailsCollection').doc(postId).delete();
+      } else if (category == 'Pet Adoption') {
+        await _firestore.collection('PostCollection').doc(postId).delete();
+        await _firestore.collection('AdoptionDetails').doc(postId).delete();
+      } else if (category == 'Pets For Rescue') {
+        await _firestore.collection('PostCollection').doc(postId).delete();
+        await _firestore.collection('PetRescueDetails').doc(postId).delete();
+      } else if (category == 'Pet Care Insights') {
+        await _firestore.collection('PostCollection').doc(postId).delete();
+        await _firestore.collection('VetTravelDetails').doc(postId).delete();
+      } else if (category == 'Call for Aid') {
+        await _firestore.collection('PostCollection').doc(postId).delete();
+        await _firestore.collection('DonationDetails').doc(postId).delete();
+      } else {
+        throw Exception('Invalid category');
+      }
+    } catch (e) {
+      throw Exception('Failed to delete post: $e');
     }
   }
 

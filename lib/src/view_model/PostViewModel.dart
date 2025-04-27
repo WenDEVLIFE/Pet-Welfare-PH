@@ -3,6 +3,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 import 'package:pet_welfrare_ph/src/respository/PostRepository.dart';
+import 'package:sn_progress_dialog/progress_dialog.dart';
 import 'package:timeago/timeago.dart' as timeago;
 import 'package:intl/intl.dart';
 
@@ -769,4 +770,20 @@ class PostViewModel extends ChangeNotifier {
     notifyListeners();
 
   }
+
+  // This will delete the post from the database
+  void deletePost(String category, BuildContext context, String postID) async{
+    ProgressDialog pd = ProgressDialog(context: context);
+    pd.show(msg: "Deleting post...");
+    try{
+      await postRepository.deletePost(postID, category);
+    } catch (e) {
+      print('Failed to delete post: $e');
+    } finally {
+      pd.close();
+    }
+
+    notifyListeners();
+  }
+
 }
