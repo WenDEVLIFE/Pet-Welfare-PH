@@ -17,6 +17,7 @@ import '../view_model/PostViewModel.dart';
 import 'package:provider/provider.dart';
 
 import 'CustomText.dart';
+import 'ExpandableText.dart';
 
 class CallForAidCard extends StatefulWidget {
   final PostModel post;
@@ -217,14 +218,8 @@ class _CallForAidCardState extends State<CallForAidCard> {
           ),
           Padding(
             padding: const EdgeInsets.all(10),
-            child: Text(
-              post.postDescription,
-              style: const TextStyle(
-                fontFamily: 'SmoochSans',
-                color: Colors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+            child: ExpandableText(
+              text: post.postDescription,
             ),
           ),
           StreamBuilder<List<TagModel>>(

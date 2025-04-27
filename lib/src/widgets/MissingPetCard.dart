@@ -16,6 +16,7 @@ import 'package:provider/provider.dart';
 
 import '../Animation/CardShimmerWidget.dart';
 import 'CustomText.dart';
+import 'ExpandableText.dart';
 
 class MissingPetCard extends StatefulWidget {
   final PostModel post;
@@ -218,14 +219,8 @@ class _MissingPetCardState extends State<MissingPetCard> {
               ),
               Padding(
                 padding: const EdgeInsets.all(10),
-                child: Text(
-                  post.postDescription,
-                  style: const TextStyle(
-                    fontFamily: 'SmoochSans',
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  ),
+                child: ExpandableText(
+                  text: post.postDescription,
                 ),
               ),
               StreamBuilder<List<TagModel>>(

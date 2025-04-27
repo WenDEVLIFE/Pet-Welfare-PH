@@ -13,6 +13,7 @@ import '../view/ViewImage.dart';
 import '../view/editdirectory/EditPostView.dart';
 import '../view_model/PostViewModel.dart';
 import '../Animation/CardShimmerWidget.dart';
+import 'ExpandableText.dart';
 
 class ProtectPetCard extends StatefulWidget {
   final PostModel post;
@@ -228,14 +229,8 @@ class _ProtectPetCardState extends State<ProtectPetCard> {
           ),
           Padding(
             padding: const EdgeInsets.all(10),
-            child: Text(
-              post.postDescription,
-              style: const TextStyle(
-                fontFamily: 'SmoochSans',
-                color: Colors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+            child: ExpandableText(
+              text: post.postDescription,
             ),
           ),
           StreamBuilder<List<TagModel>>(

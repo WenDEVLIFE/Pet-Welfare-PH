@@ -13,6 +13,7 @@ import '../utils/ReactionUtils.dart';
 import '../utils/Route.dart';
 import '../view/ViewImage.dart';
 import '../Animation/CardShimmerWidget.dart';
+import 'ExpandableText.dart';
 
 class PostCard extends StatefulWidget {
   final PostModel post;
@@ -210,14 +211,8 @@ class _PostCardState extends State<PostCard> {
           // --- Post Description ---
           Padding(
             padding: const EdgeInsets.all(10),
-            child: Text(
-              widget.post.postDescription,
-              style: const TextStyle(
-                fontFamily: 'SmoochSans',
-                color: Colors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+            child: ExpandableText(
+              text: post.postDescription,
             ),
           ),
           // --- Tags ---

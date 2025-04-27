@@ -17,6 +17,7 @@ import '../view/editdirectory/EditPostView.dart';
 import '../view_model/ApplyAdoptionViewModel.dart';
 import '../Animation/CardShimmerWidget.dart';
 import 'CustomText.dart';
+import 'ExpandableText.dart';
 
 class PetForRescueCard extends StatefulWidget {
   final PostModel post;
@@ -217,14 +218,8 @@ class PetForRescueCardState extends State<PetForRescueCard> {
           ),
           Padding(
             padding: const EdgeInsets.all(10),
-            child: Text(
-              post.postDescription,
-              style: const TextStyle(
-                fontFamily: 'SmoochSans',
-                color: Colors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ),
+            child: ExpandableText(
+              text: post.postDescription,
             ),
           ),
           StreamBuilder<List<TagModel>>(
