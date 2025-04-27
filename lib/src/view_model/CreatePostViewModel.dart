@@ -1509,6 +1509,15 @@ class CreatePostViewModel extends ChangeNotifier {
 
         }
 
+        if(category=='Call for Aid'){
+          selectedBankType = postDetails['BankName'] ?? 'Unknown';
+          selectedTypeOfDonation = postDetails['DonationType'] ?? 'Unknown';
+          amountController .text = postDetails['EstimatedAmount'] ?? '';
+          bankNameController .text = postDetails['BankHolder'] ?? '';
+          selectedTypeOfDonation = postDetails['PurposeOfDonation'] ?? 'Unknown';
+          accountNameController .text = postDetails['AccountName'] ?? '';
+        }
+
       }
     } catch (e) {
       ToastComponent().showMessage(Colors.red, 'Failed to load details: $e');

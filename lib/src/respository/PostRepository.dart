@@ -1115,8 +1115,8 @@ class PostRepositoryImpl implements PostRepository {
         'Found Pets': 'PetDetailsCollection',
         'Pet Adoption': 'AdoptionDetails',
         'Pets For Rescue': 'PetRescueDetails',
-        'Vet and Travel': 'VetTravelDetails',
-        'Donation': 'DonationDetails',
+        'Pet Care Insights': 'VetTravelDetails',
+        'Call for Aid': 'DonationDetails',
       };
 
       // Get the collection name based on the category
