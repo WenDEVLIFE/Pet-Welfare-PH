@@ -1331,6 +1331,44 @@ class CreatePostViewModel extends ChangeNotifier {
 
 
         }
+
+        if(category =='Pets For Rescue'){
+          address.text = postDetails['Address'] ?? '';
+          selectedPetType = postDetails['PetType'] ?? 'Unknown';
+          selectedPetSize = postDetails['PetSize'] ?? 'Tiny';
+          selectedPetGender  = postDetails['PetGender'] ??'';
+          selectedColorPattern = postDetails['PetColor'] ?? 'Unknown';
+
+
+          if (selectedPetType == 'Dog') {
+            fetchDogBreeds();
+            selectedDogBreed = postDetails['PetBreed'] != null
+                ? dogBreeds.firstWhere(
+                  (breed) => breed.name == postDetails['PetBreed'],
+              orElse: () =>
+                  Breed(
+                      id: "", name: "Unknown", temperament: "", imageUrl: ""),
+            )
+                : null;
+          }
+
+
+          if (selectedPetType == 'Cat') {
+            fetchCatBreeds();
+            selectedCatBreed = postDetails['PetBreed'] != null
+                ? catBreeds.firstWhere(
+                  (breed) => breed.name == postDetails['PetBreed'],
+              orElse: () =>
+                  Breed(
+                      id: "", name: "Unknown", temperament: "", imageUrl: ""),
+            )
+                : null;
+          }
+
+
+
+
+        }
       }
     } catch (e) {
       ToastComponent().showMessage(Colors.red, 'Failed to load details: $e');
