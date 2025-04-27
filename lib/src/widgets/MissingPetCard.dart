@@ -17,6 +17,7 @@ import 'package:provider/provider.dart';
 import '../Animation/CardShimmerWidget.dart';
 import 'CustomText.dart';
 import 'ExpandableText.dart';
+import 'ExpandedTags.dart';
 
 class MissingPetCard extends StatefulWidget {
   final PostModel post;
@@ -233,34 +234,10 @@ class _MissingPetCardState extends State<MissingPetCard> {
                   } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                     return const SizedBox(); // Return an empty widget if no tags are available
                   } else {
-                    return Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        const Padding(
-                          padding: EdgeInsets.all(10),
-                          child: Text(
-                            'Tags',
-                            style: TextStyle(
-                              fontFamily: 'SmoochSans',
-                              color: Colors.black,
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                            ),
-                          ),
-                        ),
-                        Padding(
-                          padding: const EdgeInsets.all(10),
-                          child: Wrap(
-                            spacing: 8.0,
-                            runSpacing: 4.0,
-                            children: snapshot.data!.map((tag) {
-                              return Chip(
-                                label: Text(tag.name), // Replace `tag.name` with the appropriate field
-                              );
-                            }).toList(),
-                          ),
-                        ),
-                      ],
+                    final tags = snapshot.data!.map((tag) => tag.name).toList();
+                    return Padding(
+                      padding: const EdgeInsets.all(10),
+                      child: ExpandableTags(tags: tags),
                     );
                   }
                 },
