@@ -1584,6 +1584,12 @@ class CreatePostViewModel extends ChangeNotifier {
        'city': selectedCity!.cityName,
         'barangay' : selectedBarangay!.barangayName,
       'address': address.text,
+      'bank_name': selectedBankType,
+      'account_name': accountNameController.text,
+      'bank_holder': bankNameController.text,
+      'purpose_of_donation': selectedTypeOfDonation,
+      'amount': amountController.text,
+      'clinic_name': clinicNameController.text,
 
     };
     await postRepository.editDetails(category, data, postID);

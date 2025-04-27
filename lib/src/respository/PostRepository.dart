@@ -1181,6 +1181,10 @@ class PostRepositoryImpl implements PostRepository {
       await _firestore.collection('PostCollection').doc(postID).update({
         'PostDescription': post,
       });
+
+      // Update the pet details
+      ToastComponent().showMessage(AppColors.orange, '$selectedChip data updated successfully');
+
     }
 
      // Update the pet details
@@ -1196,6 +1200,7 @@ class PostRepositoryImpl implements PostRepository {
         'PetColor': petData['pet_color'],
         'PetAge': petData['pet_age'],
         'PetSize': petData['pet_size'],
+        'PetType': petData['pet_type'],
         'PetGender': petData['pet_gender'],
         'Region': petData['region'],
         'Province': petData['province'],
@@ -1208,12 +1213,13 @@ class PostRepositoryImpl implements PostRepository {
 
     // Add PetType and PetBreed only if pet_type is Cat or Dog
       if (petData['pet_type'] == 'Cat' || petData['pet_type'] == 'Dog') {
-        updateData['PetType'] = petData['pet_type'];
         updateData['PetBreed'] = petData['pet_breed'];
       }
 
     // Update the document
       await _firestore.collection('PetDetailsCollection').doc(postID).update(updateData);
+
+      ToastComponent().showMessage(AppColors.orange, '$selectedChip details updated successfully');
     }
 
     if(selectedChip=='Pets For Rescue'){
@@ -1233,11 +1239,81 @@ class PostRepositoryImpl implements PostRepository {
 
        await _firestore.collection('PetRescueDetails').doc(postID).update(updateData);
 
-       ToastComponent().showMessage(AppColors.orange, 'Pet Rescue data updated successfully');
+       ToastComponent().showMessage(AppColors.orange, '$selectedChip data updated successfully');
 
     }
 
+    // This is for the pet adoption
     if(selectedChip=='Pet Adoption'){
+      await _firestore.collection('PostCollection').doc(postID).update({
+        'PostDescription': post,
+      });
+
+      // Update the pet details
+      Map<String, dynamic> updateData = {
+        'PetName': petData['pet_name'],
+        'PetColor': petData['pet_color'],
+        'PetAge': petData['pet_age'],
+        'PetSize': petData['pet_size'],
+        'PetGender': petData['pet_gender'],
+        'Region': petData['region'],
+        'Province': petData['province'],
+        'City': petData['city'],
+        'Barangay': petData['barangay'],
+        'Address': petData['address'],
+      };
+
+      if (petData['pet_type'] == 'Cat' || petData['pet_type'] == 'Dog') {
+        updateData['PetBreed'] = petData['pet_breed'];
+      }
+
+      await _firestore.collection('AdoptionDetails').doc(postID).update(updateData);
+
+      ToastComponent().showMessage(AppColors.orange, '$selectedChip data updated successfully');
+
+    }
+
+    // This is for the  Vet Travel
+    if(selectedChip=='Pet Care Insights'){
+      await _firestore.collection('PostCollection').doc(postID).update({
+        'PostDescription': post,
+      });
+
+      // Update the pet details
+      Map<String, dynamic> updateData = {
+        'Region': petData['region'],
+        'Province': petData['province'],
+        'City': petData['city'],
+        'ClinicName': petData['clinic_name'],
+        'Barangay': petData['barangay'],
+        'Address': petData['address'],
+      };
+
+      await _firestore.collection('VetTravelDetails').doc(postID).update(updateData);
+
+      ToastComponent().showMessage(AppColors.orange, '$selectedChip data updated successfully');
+
+    }
+
+    // This is for the donation
+    if(selectedChip=='Call for Aid'){
+      await _firestore.collection('PostCollection').doc(postID).update({
+        'PostDescription': post,
+      });
+
+      // Update the pet details
+      Map<String, dynamic> updateData = {
+        'BankHolder': petData['account_name'],
+        'BankName': petData['bank_type'],
+        'AccountNumber': petData['account_number'],
+        'DonationType': petData['donation_type'],
+        'PurposeOfDonation': petData['purpose_of_donation'],
+        'EstimatedAmount': petData['amount'],
+      };
+
+      await _firestore.collection('DonationDetails').doc(postID).update(updateData);
+
+      ToastComponent().showMessage(AppColors.orange, '$selectedChip data updated successfully');
 
     }
 
