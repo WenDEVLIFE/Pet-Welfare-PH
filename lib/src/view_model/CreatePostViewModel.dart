@@ -1237,6 +1237,7 @@ class CreatePostViewModel extends ChangeNotifier {
           selectedPetAge = postDetails['PetAge'] ?? 'Unknown';
           selectedPetGender = postDetails['PetGender'] ?? 'Male';
           selectedPetSize = postDetails['PetSize'] ?? 'Tiny';
+          selectedCollar = postDetails['PetCollar'] ?? 'None';
           address.text = postDetails['Address'] ?? '';
 
           // Match the region and fetch provinces
@@ -1332,6 +1333,7 @@ class CreatePostViewModel extends ChangeNotifier {
 
         }
 
+        // for pet  for rescue
         if(category =='Pets For Rescue'){
           address.text = postDetails['Address'] ?? '';
           selectedPetType = postDetails['PetType'] ?? 'Unknown';
@@ -1365,10 +1367,148 @@ class CreatePostViewModel extends ChangeNotifier {
                 : null;
           }
 
+        }
+
+        // for pet adoption
+        if(category=='Pet Adoption'){
+          address.text = postDetails['Address'] ?? '';
+          petName.text = postDetails['PetName'] ?? '';
+          selectedPetType = postDetails['PetType'] ?? 'Cat';
+          selectedColorPattern = postDetails['PetColor'] ?? 'Unknown';
+          selectedPetAge = postDetails['PetAge'] ?? 'Unknown';
+          selectedPetGender = postDetails['PetGender'] ?? 'Male';
+          selectedPetSize = postDetails['PetSize'] ?? 'Tiny';
+          address.text = postDetails['Address'] ?? '';
+
+          // Match the region and fetch provinces
+          await fetchRegions();
+          selectedRegion = postDetails['Region'] != null
+              ? regions.firstWhere(
+                (region) => region.region.trim().toLowerCase() == postDetails['Region'].trim().toLowerCase(),
+            orElse: () => RegionModel(region: "Unknown", regionCode: ""),
+          )
+              : null;
+
+          if (selectedRegion != null) {
+
+          }
+
+          await fetchProvinces(selectedRegion!.regionCode);
+          // Match the province and fetch cities
+          selectedProvince = postDetails['Province'] != null
+              ? provinces.firstWhere(
+                (province) => province.provinceName.trim().toLowerCase() == postDetails['Province'].trim().toLowerCase(),
+            orElse: () => ProvinceModel(provinceName: "Unknown", provinceCode: ""),
+          )
+              : null;
+
+          // Fetch cities and ensure the list is populated
+          await fetchCities(selectedProvince!.provinceCode);
+
+          // Match the city and assign directly from the cities list
+          selectedCity = postDetails['City'] != null
+              ? cities.firstWhere(
+                (city) => city.cityName.trim().toLowerCase() == postDetails['City']!.trim().toLowerCase(),
+            orElse: () => CityModel(cityName: "Unknown", cityCode: ""),
+          )
+              : null;
+
+          // Ensure the selectedCity is part of the cities list
+          if (selectedCity != null && !cities.contains(selectedCity)) {
+            selectedCity = null; // Reset if not found in the list
+          }
 
 
+          // Match the barangay
+          await fetchBarangays(selectedCity!.cityCode);
+          selectedBarangay = postDetails['Barangay'] != null
+              ? barangays.firstWhere(
+                (barangay) => barangay.barangayName.trim().toLowerCase() == postDetails['Barangay'].trim().toLowerCase(),
+            orElse: () => BarangayModel(municipalityCode: "", barangayName: "Unknown"),
+          )
+              : null;
+
+
+
+          if (selectedPetType == 'Dog') {
+            fetchDogBreeds();
+            selectedDogBreed = postDetails['PetBreed'] != null
+                ? dogBreeds.firstWhere(
+                  (breed) => breed.name == postDetails['PetBreed'],
+              orElse: () =>
+                  Breed(
+                      id: "", name: "Unknown", temperament: "", imageUrl: ""),
+            )
+                : null;
+          }
+
+
+          if (selectedPetType == 'Cat') {
+            fetchCatBreeds();
+            selectedCatBreed = postDetails['PetBreed'] != null
+                ? catBreeds.firstWhere(
+                  (breed) => breed.name == postDetails['PetBreed'],
+              orElse: () =>
+                  Breed(
+                      id: "", name: "Unknown", temperament: "", imageUrl: ""),
+            )
+                : null;
+          }
+        }
+
+        if(category =='Pet Care Insights'){
+          address.text = postDetails['Address'] ?? '';
+          clinicNameController.text = postDetails['ClinicName'] ?? '';
+          // Match the region and fetch provinces
+          await fetchRegions();
+          selectedRegion = postDetails['Region'] != null
+              ? regions.firstWhere(
+                (region) => region.region.trim().toLowerCase() == postDetails['Region'].trim().toLowerCase(),
+            orElse: () => RegionModel(region: "Unknown", regionCode: ""),
+          )
+              : null;
+
+          if (selectedRegion != null) {
+
+          }
+
+          await fetchProvinces(selectedRegion!.regionCode);
+          // Match the province and fetch cities
+          selectedProvince = postDetails['Province'] != null
+              ? provinces.firstWhere(
+                (province) => province.provinceName.trim().toLowerCase() == postDetails['Province'].trim().toLowerCase(),
+            orElse: () => ProvinceModel(provinceName: "Unknown", provinceCode: ""),
+          )
+              : null;
+
+          // Fetch cities and ensure the list is populated
+          await fetchCities(selectedProvince!.provinceCode);
+
+          // Match the city and assign directly from the cities list
+          selectedCity = postDetails['City'] != null
+              ? cities.firstWhere(
+                (city) => city.cityName.trim().toLowerCase() == postDetails['City']!.trim().toLowerCase(),
+            orElse: () => CityModel(cityName: "Unknown", cityCode: ""),
+          )
+              : null;
+
+          // Ensure the selectedCity is part of the cities list
+          if (selectedCity != null && !cities.contains(selectedCity)) {
+            selectedCity = null; // Reset if not found in the list
+          }
+
+
+          // Match the barangay
+          await fetchBarangays(selectedCity!.cityCode);
+          selectedBarangay = postDetails['Barangay'] != null
+              ? barangays.firstWhere(
+                (barangay) => barangay.barangayName.trim().toLowerCase() == postDetails['Barangay'].trim().toLowerCase(),
+            orElse: () => BarangayModel(municipalityCode: "", barangayName: "Unknown"),
+          )
+              : null;
 
         }
+
       }
     } catch (e) {
       ToastComponent().showMessage(Colors.red, 'Failed to load details: $e');
@@ -1429,7 +1569,7 @@ class CreatePostViewModel extends ChangeNotifier {
       'lat': selectedLocation!.latitude,
       'long' :selectedLocation!.longitude,
       'pet_size': selectedPetSize,
-      'pet_collor': selectedColorPattern,
+       'pet_gender' :selectedPetGender,
       'region': selectedRegion!.region,
       'province': selectedProvince!.provinceName,
        'city': selectedCity!.cityName,

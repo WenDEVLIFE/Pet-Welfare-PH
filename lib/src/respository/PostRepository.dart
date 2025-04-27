@@ -1196,6 +1196,7 @@ class PostRepositoryImpl implements PostRepository {
         'PetColor': petData['pet_color'],
         'PetAge': petData['pet_age'],
         'PetSize': petData['pet_size'],
+        'PetGender': petData['pet_gender'],
         'Region': petData['region'],
         'Province': petData['province'],
         'City': petData['city'],
@@ -1213,6 +1214,31 @@ class PostRepositoryImpl implements PostRepository {
 
     // Update the document
       await _firestore.collection('PetDetailsCollection').doc(postID).update(updateData);
+    }
+
+    if(selectedChip=='Pets For Rescue'){
+      await _firestore.collection('PostCollection').doc(postID).update({
+        'PostDescription': post,
+      });
+
+
+      // Update the pet details
+      Map<String, dynamic> updateData = {
+        'PetColor': petData['pet_color'],
+        'PetSize': petData['pet_size'],
+        'PetGender': petData['pet_gender'],
+        'Address': petData['address'],
+        'PetBreed' : petData['pet_breed'],
+      };
+
+       await _firestore.collection('PetRescueDetails').doc(postID).update(updateData);
+
+       ToastComponent().showMessage(AppColors.orange, 'Pet Rescue data updated successfully');
+
+    }
+
+    if(selectedChip=='Pet Adoption'){
+
     }
 
   }
