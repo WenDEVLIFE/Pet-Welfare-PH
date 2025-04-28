@@ -91,6 +91,8 @@ abstract class PostRepository {
 
   Future<void> deletePost(String category, String postId);
 
+  Stream<List<PostModel>> getMyPost();
+
 }
 
 class PostRepositoryImpl implements PostRepository {
@@ -1447,6 +1449,21 @@ class PostRepositoryImpl implements PostRepository {
     } catch (e) {
       throw Exception('Failed to delete post: $e');
     }
+  }
+
+  // get the post owner post
+  @override
+  Stream<List<PostModel>> getMyPost() {
+    User ? user = FirebaseAuth.instance.currentUser;
+    String id = user!.uid;
+
+    return _firestore.collection('PostCollection')
+        .where('PostOwnerID', isEqualTo: id)
+        .snapshots()
+        .asyncMap((snapshot) async {
+      List<Future<PostModel>> postFutures = snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
+      return await Future.wait(postFutures);
+    });
   }
 
 

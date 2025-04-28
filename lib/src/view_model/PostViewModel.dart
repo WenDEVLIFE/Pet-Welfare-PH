@@ -46,7 +46,11 @@ class PostViewModel extends ChangeNotifier {
   List<PostModel> petforRescuePost = [];
   List<PostModel> filterPetForRescuePost = [];
 
+  List<PostModel> myPostlist = [];
+  List<PostModel> filterMyPost = [];
+
   List<CommentModel> comments = [];
+
 
   final TextEditingController petNameController = TextEditingController();
 
@@ -62,6 +66,7 @@ class PostViewModel extends ChangeNotifier {
   Stream<List<PostModel>> get petAdoptPostStream => postRepository.getPetAdoption();
   Stream<List<PostModel>> get callforAidPostStream => postRepository.getCallforAid();
   Stream<List<PostModel>> get petForRescue => postRepository.getFindHome();
+  Stream<List<PostModel>> get myPost => postRepository.getMyPost();
 
  // Initialize the PostViewModel
   PostViewModel() {
@@ -84,6 +89,7 @@ class PostViewModel extends ChangeNotifier {
       listenToPetAdoptPost(),
       listenToCallforAidPost(),
       listenToPetForRescuePost(),
+      listenToMyPost(),
       loadData(),
     ] as Iterable<Future>);
   }
@@ -166,6 +172,13 @@ class PostViewModel extends ChangeNotifier {
     petforRescuePost = posts;
     filterPetForRescuePost = posts;
     searchPetForRescue(searchPostController.text);
+  }
+
+  // this is for the set my post
+  void setMyPost(List<PostModel> posts, {bool notify = true}) {
+    myPostlist = posts;
+    filterMyPost = posts;
+    searchPost(searchPostController.text);
   }
 
   // get format timestap
@@ -355,6 +368,15 @@ class PostViewModel extends ChangeNotifier {
     });
   }
 
+  // Listen to my post
+  Future <void> listenToMyPost() async {
+    myPost.listen((myPosts) {
+      myPostlist = myPosts;
+      filterMyPost = myPosts;
+      notifyListeners();
+    });
+  }
+
 
   // search post
   void searchPost(String search) {
@@ -503,6 +525,7 @@ class PostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Search Pet for Rescue Post
   void searchPetForRescue(String searchText) {
 
     if (searchText.isEmpty) {
@@ -516,6 +539,41 @@ class PostViewModel extends ChangeNotifier {
     }
     notifyListeners();
 
+  }
+
+  // This will search user post
+  void searchMyPost(String searchText){
+     if (searchText.isEmpty) {
+       filterMyPost = myPostlist;
+     }
+      else {
+        filterMyPost = myPostlist.where((post) => post.tags.any((tag) => tag.name.toLowerCase().contains(searchText.toLowerCase())) ||
+            post.postOwnerName.toLowerCase().contains(searchText)
+            || post.rescuePetSize.toLowerCase().contains(searchText.toLowerCase()) || post.rescueStatus.toLowerCase().contains(searchText.toLowerCase())
+            ||post.rescueAddress.toLowerCase().contains(searchText.toLowerCase()) || post.rescuePetColor.toLowerCase().contains(searchText.toLowerCase())
+        || post.establisHment_Clinic_Name.toLowerCase().contains(searchText.toLowerCase()) || post.establismentRegion.toLowerCase().contains(searchText.toLowerCase())
+            || post.establismentProvinces.toLowerCase().contains(searchText.toLowerCase()) || post.establismentCity.toLowerCase().contains(searchText.toLowerCase())
+            || post.petNameAdopt.toLowerCase().contains(searchText.toLowerCase()) || post.petBreedAdopt.toLowerCase().contains(searchText.toLowerCase())
+            || post.petAgeAdopt.toLowerCase().contains(searchText.toLowerCase()) || post.petGenderAdopt.toLowerCase().contains(searchText.toLowerCase()) ||
+            post.petColorAdopt.toLowerCase().contains(searchText.toLowerCase()) || post.petSizeAdopt.toLowerCase().contains(searchText.toLowerCase())
+            || post.petAddressAdopt.toLowerCase().contains(searchText.toLowerCase()) || post.regProCiBagAdopt.toLowerCase().contains(searchText.toLowerCase())
+            || post.dateAdopt.toLowerCase().contains(searchText.toLowerCase()) || post.petTypeAdopt.toLowerCase().contains(searchText.toLowerCase())
+            || post.bankHolder.toLowerCase().contains(searchText.toLowerCase()) ||
+            post.accountNumber.toLowerCase().contains(searchText.toLowerCase()) ||  post.estimatedAmount.toLowerCase().contains(searchText.toLowerCase())
+            ||  post.donationType.toLowerCase().contains(searchText.toLowerCase()) ||  post.donationType.toLowerCase().contains(searchText.toLowerCase())
+            ||  post.statusDonation.toLowerCase().contains(searchText.toLowerCase())
+            || post.petName.toLowerCase().contains(searchText.toLowerCase()) ||
+            post.postOwnerName.toLowerCase().contains(searchText) ||
+            post.tags.any((tag) => tag.name.toLowerCase().contains(searchText.toLowerCase())) || post.postDescription.toLowerCase().contains(searchText.toLowerCase()) ||
+            post.petType.toLowerCase().contains(searchText.toLowerCase()) ||
+            post.petBreed.toLowerCase().contains(searchText.toLowerCase()) ||
+            post.petGender.toLowerCase().contains(searchText.toLowerCase()) ||
+            post.petAge.toLowerCase().contains(searchText.toLowerCase()) ||
+            post.petColor.toLowerCase().contains(searchText.toLowerCase()) ||
+            post.petAddress.toLowerCase().contains(searchText.toLowerCase()) ||
+            post.petCollar.toLowerCase().contains(searchText.toLowerCase()) ||
+            post.rescueBreed.toLowerCase().contains(searchText.toLowerCase()) || post.petType.toLowerCase().contains(searchText.toLowerCase())).toList();
+      }
   }
 
 
