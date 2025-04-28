@@ -2,6 +2,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
+import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:pet_welfrare_ph/src/view/editdirectory/EditPostView.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 import 'package:provider/provider.dart';
@@ -178,6 +179,7 @@ class _PostCardState extends State<PostCard> {
 
                         // Delete the image to the database
                         postViewModel.deletePost(post.category, context, post.postId);
+                        ToastComponent().showMessage(Colors.green, 'Selected ${post.category} post deleted successfully');
                       },),
                     if (!isPostOwner)
                       PopupMenuItem(value: 'Message', child: const Text('Message') ,onTap: (){

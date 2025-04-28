@@ -1405,6 +1405,11 @@ class PostRepositoryImpl implements PostRepository {
   // This will delete the post
   @override
   Future<void> deletePost(String category, String postId) async {
+
+    // Trim and log the category for debugging
+    category = category.trim();
+    print('Deleting post with category: $category');
+
     try {
       // Fetch all images from the ImageCollection sub-collection
       QuerySnapshot imageSnapshot = await _firestore
@@ -1423,24 +1428,24 @@ class PostRepositoryImpl implements PostRepository {
       }
 
       // Delete the post and its related data based on the category
-      if (category == 'Pet Appreciation' ||
-          category == 'Paw-some Experience' ||
-          category == 'Protect Our Pets: Report Abuse' ||
-          category == 'Community Announcement') {
+      if (category.toLowerCase() == 'pet appreciation' ||
+          category.toLowerCase() == 'paw-some experience' ||
+          category.toLowerCase() == 'protect our pets: report abuse' ||
+          category.toLowerCase() == 'community announcement') {
         await _firestore.collection('PostCollection').doc(postId).delete();
-      } else if (category == 'Missing Pets' || category == 'Found Pets') {
+      } else if (category.toLowerCase() == 'missing pets' || category.toLowerCase() == 'found pets') {
         await _firestore.collection('PostCollection').doc(postId).delete();
         await _firestore.collection('PetDetailsCollection').doc(postId).delete();
-      } else if (category == 'Pet Adoption') {
+      } else if (category.toLowerCase() == 'pet adoption') {
         await _firestore.collection('PostCollection').doc(postId).delete();
         await _firestore.collection('AdoptionDetails').doc(postId).delete();
-      } else if (category == 'Pets For Rescue') {
+      } else if (category.toLowerCase() == 'pets for rescue') {
         await _firestore.collection('PostCollection').doc(postId).delete();
         await _firestore.collection('PetRescueDetails').doc(postId).delete();
-      } else if (category == 'Pet Care Insights') {
+      } else if (category.toLowerCase() == 'pet care insights') {
         await _firestore.collection('PostCollection').doc(postId).delete();
         await _firestore.collection('VetTravelDetails').doc(postId).delete();
-      } else if (category == 'Call for Aid') {
+      } else if (category.toLowerCase() == 'call for aid') {
         await _firestore.collection('PostCollection').doc(postId).delete();
         await _firestore.collection('DonationDetails').doc(postId).delete();
       } else {
