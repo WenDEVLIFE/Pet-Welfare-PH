@@ -12,6 +12,7 @@ import '../model/TagModel.dart';
 import '../utils/AppColors.dart';
 import '../utils/ReactionUtils.dart';
 import '../utils/Route.dart';
+import '../utils/ToastComponent.dart';
 import '../view/ViewImage.dart';
 import '../view/editdirectory/EditPostView.dart';
 import '../view_model/ApplyAdoptionViewModel.dart';
@@ -185,7 +186,8 @@ class PetForRescueCardState extends State<PetForRescueCard> {
                     if (isAdmin || isPostOwner)
                       PopupMenuItem(value: 'Delete', child: const Text('Delete'), onTap: (){
                         // Delete the image to the database
-                        postViewModel.deletePost(post.category, context, post.postId);
+                        postViewModel.deletePost(widget.post.category,context, widget.post.postId);
+                        ToastComponent().showMessage(Colors.green, 'Post Deleted Successfully');
                       },),
                     if (!isPostOwner)
                       PopupMenuItem(value: 'Message', child: const Text('Message'), onTap: (){
