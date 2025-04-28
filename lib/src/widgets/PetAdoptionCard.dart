@@ -178,6 +178,12 @@ class _PetAdoptionCardState extends State<PetAdoptionCard> {
                           ),
                         );
                       },),
+                     if (isAdmin || isPostOwner)
+                       PopupMenuItem(child: const Text('View Submit Adoptions'), onTap: (){
+
+                         // This will view the submit adoption
+
+                       },),
                     if (isAdmin || isPostOwner)
                       PopupMenuItem(value: 'Delete', child: const Text('Delete'), onTap: (){
                         // Delete the image to the database

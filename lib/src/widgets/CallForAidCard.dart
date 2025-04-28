@@ -180,6 +180,12 @@ class _CallForAidCardState extends State<CallForAidCard> {
                         );
                       },),
                     if (isAdmin || isPostOwner)
+                      PopupMenuItem(child: const Text('View Submit Donations'), onTap: (){
+
+                        // This will view the submit adoption
+
+                      },),
+                    if (isAdmin || isPostOwner)
                       PopupMenuItem(value: 'Delete', child: const Text('Delete'), onTap: (){
                         // Delete the image to the database
                         postViewModel.deletePost(post.category, context, post.postId);
