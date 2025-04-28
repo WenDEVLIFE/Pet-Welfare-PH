@@ -834,7 +834,7 @@ class PostViewModel extends ChangeNotifier {
     ProgressDialog pd = ProgressDialog(context: context);
     pd.show(msg: "Deleting post...");
     try{
-      await postRepository.deletePost(postID, category);
+      await postRepository.deletePost(category, postID);
     } catch (e) {
       print('Failed to delete post: $e');
     } finally {

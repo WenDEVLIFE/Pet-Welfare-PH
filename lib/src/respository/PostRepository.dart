@@ -1407,7 +1407,7 @@ class PostRepositoryImpl implements PostRepository {
   Future<void> deletePost(String category, String postId) async {
 
     // Trim and log the category for debugging
-    category = category.trim();
+    category = category.trim().toLowerCase();
     print('Deleting post with category: $category');
 
     try {
@@ -1428,24 +1428,24 @@ class PostRepositoryImpl implements PostRepository {
       }
 
       // Delete the post and its related data based on the category
-      if (category.toLowerCase() == 'pet appreciation' ||
-          category.toLowerCase() == 'paw-some experience' ||
-          category.toLowerCase() == 'protect our pets: report abuse' ||
-          category.toLowerCase() == 'community announcement') {
+      if (category == 'pet appreciation' ||
+          category == 'paw-some experience' ||
+          category == 'protect our pets: report abuse' ||
+          category == 'community announcement') {
         await _firestore.collection('PostCollection').doc(postId).delete();
-      } else if (category.toLowerCase() == 'missing pets' || category.toLowerCase() == 'found pets') {
+      } else if (category == 'missing pets' || category.toLowerCase() == 'found pets') {
         await _firestore.collection('PostCollection').doc(postId).delete();
         await _firestore.collection('PetDetailsCollection').doc(postId).delete();
-      } else if (category.toLowerCase() == 'pet adoption') {
+      } else if (category == 'pet adoption') {
         await _firestore.collection('PostCollection').doc(postId).delete();
         await _firestore.collection('AdoptionDetails').doc(postId).delete();
-      } else if (category.toLowerCase() == 'pets for rescue') {
+      } else if (category == 'pets for rescue') {
         await _firestore.collection('PostCollection').doc(postId).delete();
         await _firestore.collection('PetRescueDetails').doc(postId).delete();
-      } else if (category.toLowerCase() == 'pet care insights') {
+      } else if (category == 'pet care insights') {
         await _firestore.collection('PostCollection').doc(postId).delete();
         await _firestore.collection('VetTravelDetails').doc(postId).delete();
-      } else if (category.toLowerCase() == 'call for aid') {
+      } else if (category == 'call for aid') {
         await _firestore.collection('PostCollection').doc(postId).delete();
         await _firestore.collection('DonationDetails').doc(postId).delete();
       } else {

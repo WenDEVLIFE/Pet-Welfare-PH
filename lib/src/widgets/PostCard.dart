@@ -178,8 +178,8 @@ class _PostCardState extends State<PostCard> {
                       PopupMenuItem(value: 'Delete', child: const Text('Delete'), onTap: (){
 
                         // Delete the image to the database
-                        postViewModel.deletePost(post.category, context, post.postId);
-                        ToastComponent().showMessage(Colors.green, 'Selected ${post.category} post deleted successfully');
+                        postViewModel.deletePost(widget.post.category,context, widget.post.postId);
+                        ToastComponent().showMessage(Colors.green, 'Post Deleted Successfully');
                       },),
                     if (!isPostOwner)
                       PopupMenuItem(value: 'Message', child: const Text('Message') ,onTap: (){
