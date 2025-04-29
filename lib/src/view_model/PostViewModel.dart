@@ -68,6 +68,9 @@ class PostViewModel extends ChangeNotifier {
   Stream<List<PostModel>> get petForRescue => postRepository.getFindHome();
   Stream<List<PostModel>> get myPost => postRepository.getMyPost();
 
+  List<String> petStatusOptions =[];
+  String? selectedPetStatus;
+
  // Initialize the PostViewModel
   PostViewModel() {
     searchPostController.addListener(() {
@@ -842,6 +845,37 @@ class PostViewModel extends ChangeNotifier {
     }
 
     notifyListeners();
+  }
+
+  // load the the pet petOptionsStatus
+  Future <void> loadPetStatusOptions(String category) async {
+
+    if(category=='Missing Pets'){
+
+    }
+    if (category =='Found Pets'){
+
+    }
+
+    if(category =='Pet Adoption'){
+
+    }
+
+    if(category =='Call for Aid'){
+
+    }
+
+
+    notifyListeners();
+  }
+
+  // This will update the post status
+  void updatePetStatus(String postId, BuildContext context) async {
+
+  }
+
+  void setSelectedPetStatus(String? newValue) {
+
   }
 
 }
