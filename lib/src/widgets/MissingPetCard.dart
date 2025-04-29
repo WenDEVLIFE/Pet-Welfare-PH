@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 
 import '../DialogView/ReportDialog.dart';
+import '../modal/PetStatusModal.dart';
 import '../modal/ReactionModal.dart';
 import '../model/TagModel.dart';
 import '../utils/AppColors.dart';
@@ -175,6 +176,12 @@ class _MissingPetCardState extends State<MissingPetCard> {
                               ),
                             );
                           },),
+                        PopupMenuItem(child: const Text('Update Status'), onTap: (){
+                          // This will view the update adoption
+                          showModalBottomSheet(context: context, isScrollControlled: true, builder: (context) {
+                            return PetStatusModal(post.postId, post.category);
+                          });
+                        },),
                         if (isAdmin || isPostOwner)
                           PopupMenuItem(value: 'Delete', child: const Text('Delete'), onTap: (){
                             // Delete the image to the database

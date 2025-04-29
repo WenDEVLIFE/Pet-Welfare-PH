@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pet_welfrare_ph/src/modal/PetStatusModal.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 import 'package:provider/provider.dart';
@@ -181,9 +182,13 @@ class _PetAdoptionCardState extends State<PetAdoptionCard> {
                      if (isAdmin || isPostOwner)
                        PopupMenuItem(child: const Text('View Submit Adoptions'), onTap: (){
 
-                         // This will view the submit adoption
-
                        },),
+                    PopupMenuItem(child: const Text('Update Status'), onTap: (){
+                      // This will view the update adoption
+                      showModalBottomSheet(context: context, isScrollControlled: true, builder: (context) {
+                        return PetStatusModal(post.postId, post.category);
+                      });
+                    },),
                     if (isAdmin || isPostOwner)
                       PopupMenuItem(value: 'Delete', child: const Text('Delete'), onTap: (){
                         // Delete the image to the database

@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import '../DialogView/ReportDialog.dart';
+import '../modal/PetStatusModal.dart';
 import '../modal/ReactionModal.dart';
 import '../model/PostModel.dart';
 import 'package:flutter/material.dart';
@@ -158,6 +159,7 @@ class _ProtectPetCardState extends State<ProtectPetCard> {
                   final currentUserId = Provider.of<PostViewModel>(context, listen: false).currentUserId;
                   final isAdmin = postViewModel.role.toLowerCase() == 'admin' || postViewModel.role.toLowerCase()=="sub-admin";
                   final isPostOwner = widget.post.postOwnerId == currentUserId;
+                  final isPetAdvocate = postViewModel.role.toLowerCase() == 'animal welfare advocate';
 
                   return [
                     if (isAdmin || isPostOwner)
@@ -172,6 +174,13 @@ class _ProtectPetCardState extends State<ProtectPetCard> {
                           ),
                         );
                       },),
+                    if (isPetAdvocate)
+                    PopupMenuItem(child: const Text('Update Case Status'), onTap: (){
+                      // This will view the update adoption
+                      showModalBottomSheet(context: context, isScrollControlled: true, builder: (context) {
+                        return PetStatusModal(post.postId, post.category);
+                      });
+                    },),
                     if (isAdmin || isPostOwner)
                       PopupMenuItem(value: 'Delete', child: const Text('Delete'), onTap: (){
                         // Delete the image to the database

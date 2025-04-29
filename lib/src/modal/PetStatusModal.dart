@@ -11,10 +11,9 @@ import 'package:provider/provider.dart';
 class PetStatusModal extends StatefulWidget{
 
   final String postId;
-  final String status;
   final String category;
 
-  PetStatusModal(this.postId, this.status, this.category);
+  PetStatusModal(this.postId, this.category);
 
    @override
   _PetStatusModalState createState() => _PetStatusModalState();
@@ -31,7 +30,6 @@ class _PetStatusModalState extends State<PetStatusModal> {
   void initState() {
     super.initState();
     postId = widget.postId;
-    status = widget.status;
     category = widget.category;
     postViewModel = Provider.of<PostViewModel>(context, listen: false);
     postViewModel.loadPetStatusOptions(category);
@@ -60,7 +58,9 @@ class _PetStatusModalState extends State<PetStatusModal> {
                 category =='Missing Pets' ? 'Update Missing Pet Status' :
                 category == 'Found Pets' ? 'Update Found Pet Status' :
                 category == 'Pet Adoption' ? 'Update Pet Adoption Status' :
-                category =='Call for Aid' ? 'Update Call for Aid Status' : 'Update Pet Status' ,
+                category =='Call for Aid' ? 'Update Call for Aid Status' :
+                category =='Protect Our Pets: Report Abuse' ? 'Update Report Abuse Status' :
+                'Update Pet Status' ,
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -105,7 +105,7 @@ class _PetStatusModalState extends State<PetStatusModal> {
                       color1: AppColors.orange,
                       textcolor2: AppColors.white,
                       onPressed: () {
-                        postViewModel.updatePetStatus(postId, context);
+                        postViewModel.updatePetStatus(postId, context, category);
                       },
                     ),
                   ),

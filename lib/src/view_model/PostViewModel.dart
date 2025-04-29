@@ -9,7 +9,9 @@ import 'package:intl/intl.dart';
 
 import '../modal/CommentModal.dart';
 import '../model/CommentModel.dart';
+import '../utils/AppColors.dart';
 import '../utils/SessionManager.dart';
+import '../utils/ToastComponent.dart';
 
 class PostViewModel extends ChangeNotifier {
   final TextEditingController searchPostController = TextEditingController();
@@ -851,17 +853,53 @@ class PostViewModel extends ChangeNotifier {
   Future <void> loadPetStatusOptions(String category) async {
 
     if(category=='Missing Pets'){
+      petStatusOptions = [
+        'Still missing',
+        'Adopted',
+         'Reunited with owner',
+      ];
 
+      selectedPetStatus =  'Still missing';
     }
     if (category =='Found Pets'){
+      petStatusOptions = [
+        'Still roaming',
+        'Reunited with owner',
+        'Adopted',
+      ];
 
+      selectedPetStatus =  'Still roaming';
     }
 
     if(category =='Pet Adoption'){
+      petStatusOptions = [
+        'Still up for adoption',
+        'Adopted',
+      ];
 
+      selectedPetStatus =  'Still up for adoption';
     }
 
     if(category =='Call for Aid'){
+      petStatusOptions = [
+        'Ongoing',
+        'Paused',
+        'Fullfilled',
+      ];
+
+      selectedPetStatus =  'Ongoing';
+    }
+    if(category =='Protect Our Pets: Report Abuse'){
+
+      petStatusOptions = [
+        'Will investigate',
+        'Ongoing Investigation',
+         'Case has been filled',
+        'Case has been resolved',
+        'Acctions to be taken',
+      ];
+
+      selectedPetStatus =  'Will investigate';
 
     }
 
@@ -870,11 +908,25 @@ class PostViewModel extends ChangeNotifier {
   }
 
   // This will update the post status
-  void updatePetStatus(String postId, BuildContext context) async {
+  void updatePetStatus(String postId, BuildContext context, String category) async {
+    ProgressDialog pd = ProgressDialog(context: context);
+    pd.show(msg: "Updating post status...");
+    try{
+      await postRepository.updatePetStatus(postId, category, selectedPetStatus!);
+      ToastComponent().showMessage(AppColors.orange, 'Status updated successfully');
+    } catch (e) {
+      print('Failed to update post status: $e');
+    } finally {
+      pd.close();
+    }
 
   }
 
+  // This will update the post status
   void setSelectedPetStatus(String? newValue) {
+
+    selectedPetStatus = newValue;
+    notifyListeners();
 
   }
 

@@ -93,6 +93,8 @@ abstract class PostRepository {
 
   Stream<List<PostModel>> getMyPost();
 
+  Future<void> updatePetStatus(String postId, String category, String selectedStatus);
+
 }
 
 class PostRepositoryImpl implements PostRepository {
@@ -1469,6 +1471,32 @@ class PostRepositoryImpl implements PostRepository {
       List<Future<PostModel>> postFutures = snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
       return await Future.wait(postFutures);
     });
+  }
+
+  @override
+  Future<void> updatePetStatus(String postId, String category, String selectedStatus) async {
+    if (category == 'Missing Pets' || category == 'Found Pets') {
+      ToastComponent().showMessage(AppColors.orange, 'Status updated successfully');
+      return _firestore.collection('PetDetailsCollection').doc(postId).update({
+        'Status': selectedStatus,
+      });
+    } else if (category == 'Pet Adoption') {
+      return _firestore.collection('AdoptionDetails').doc(postId).update({
+        'Status': selectedStatus,
+      });
+    } else if (category == 'Protect Our Pets: Report Abuse') {
+      return _firestore.collection('PostCollection').doc(postId).update({
+        'Status': selectedStatus,
+      });
+    }
+    else if (category == 'Call for Aid') {
+      return _firestore.collection('DonationDetails').doc(postId).update({
+        'Status': selectedStatus,
+      });
+    }
+    else {
+      throw Exception('Invalid category');
+    }
   }
 
 
