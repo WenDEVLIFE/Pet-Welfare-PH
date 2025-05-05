@@ -64,7 +64,14 @@ class ViewAdoptionModal extends StatelessWidget {
                   itemCount: viewModel.adoptions.length,
                   itemBuilder: (context, index) {
                     final adoptionDetails = viewModel.adoptions[index];
-                    return Padding(
+
+                    return Card(
+                        margin: const EdgeInsets.symmetric(vertical: 8.0, horizontal: 16.0),
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(12),
+                        ),
+                    child:  Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
@@ -218,6 +225,7 @@ class ViewAdoptionModal extends StatelessWidget {
                           ),
                         ],
                       ),
+                    ),
                     );
                   },
                 );
