@@ -1,0 +1,20 @@
+{
+  "buildFiles": [
+    "/Users/wen/Development/flutter/packages/flutter_tools/gradle/src/main/groovy/CMakeLists.txt"
+  ],
+  "cleanCommandsComponents": [
+    [
+      "/Users/wen/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+      "-C",
+      "/Users/wen/AndroidStudioProjects/Pet-Welfare-PH/android/app/.cxx/Debug/686j3c15/x86",
+      "clean"
+    ]
+  ],
+  "buildTargetsCommandComponents": [
+    "/Users/wen/Library/Android/sdk/cmake/3.22.1/bin/ninja",
+    "-C",
+    "/Users/wen/AndroidStudioProjects/Pet-Welfare-PH/android/app/.cxx/Debug/686j3c15/x86",
+    "{LIST_OF_TARGETS_TO_BUILD}"
+  ],
+  "libraries": {}
+}

@@ -1,0 +1,2 @@
+/Users/wen/AndroidStudioProjects/Pet-Welfare-PH/android/app/.cxx/Debug/686j3c15/x86_64/CMakeFiles/edit_cache.dir
+/Users/wen/AndroidStudioProjects/Pet-Welfare-PH/android/app/.cxx/Debug/686j3c15/x86_64/CMakeFiles/rebuild_cache.dir

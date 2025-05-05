@@ -83,7 +83,7 @@ class PostViewModel extends ChangeNotifier {
   }
 
   Future<void> initializeListeners() async {
-    await Future.wait([
+    await Future.wait(<Future<dynamic>>[
       listenToPost(),
       listenToMissingPost(),
       listenToFoundPost(),
@@ -96,11 +96,11 @@ class PostViewModel extends ChangeNotifier {
       listenToPetForRescuePost(),
       listenToMyPost(),
       loadData(),
-    ] as Iterable<Future>);
+    ]);
   }
 
   // initialize role and current user id
-  void loadData() async{
+  Future <void> loadData() async{
      final sessionManager = SessionManager();
       sessionManager.getUserInfo().then((userData) {
        role = userData!['role'] ?? '';
