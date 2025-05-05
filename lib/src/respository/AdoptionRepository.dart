@@ -1,10 +1,13 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:pet_welfrare_ph/src/model/AdoptionModel.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 
 abstract class AdoptionRepository {
   Future <void> submitAdoptionForm(Map<String, String> applyForm, Function clearForm);
+
+  Stream<List<AdoptionModel>> getAdoptionStream(String id);
 
 }
 
@@ -45,6 +48,21 @@ class AdoptionRepositoryImpl implements AdoptionRepository {
 
     clearForm();
     ToastComponent().showMessage(Colors.green, 'Adoption form submitted successfully');
+  }
+
+  // added get the data from the submitted adoption form
+  @override
+  Stream<List<AdoptionModel>> getAdoptionStream(String id) {
+    return _firestore
+        .collection('PostCollection')
+        .doc(id)
+        .collection('AdoptionForm')
+        .snapshots()
+        .map((querySnapshot) {
+      return querySnapshot.docs.map((doc) {
+        return AdoptionModel.fromDocumentSnapshot(doc);
+      }).toList();
+    });
   }
 
 }

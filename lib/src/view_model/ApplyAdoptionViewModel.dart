@@ -6,6 +6,7 @@ import 'package:pet_welfrare_ph/src/respository/UserRepository.dart';
 import 'package:pet_welfrare_ph/src/services/LocationService.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
+import '../model/AdoptionModel.dart';
 import '../model/BarangayModel.dart';
 import '../model/CityModel.dart';
 import '../model/ProvinceModel.dart';
@@ -40,6 +41,11 @@ class ApplyAdoptionViewModel extends ChangeNotifier {
   bool isLoading = false;
 
   LocationService locationService = LocationService();
+
+  List<AdoptionModel> adoptions = [];
+  List <AdoptionModel> filteredAdoptions = [];
+
+  Stream <List<AdoptionModel>>? adoptionStream;
 
   ApplyAdoptionViewModel() {
     fetchRegions();
@@ -305,4 +311,22 @@ class ApplyAdoptionViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  Future<void> getPetAdoption(String postId) async {
+    isLoading = true;
+    notifyListeners();
+
+    try {
+      // Listen to the stream from the repository
+      adoptionStream = adoptionRepository.getAdoptionStream(postId);
+      adoptionStream!.listen((adoptionList) {
+        adoptions = adoptionList;
+        isLoading = false;
+        notifyListeners();
+      });
+    } catch (e) {
+      print('Error fetching adoptions: $e');
+      isLoading = false;
+      notifyListeners();
+    }
+  }
 }

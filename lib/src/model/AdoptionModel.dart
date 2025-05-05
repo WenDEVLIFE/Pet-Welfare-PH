@@ -1,6 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
-class AdoptionModal {
+class AdoptionModel {
 
   final String adoptionID;
 
@@ -26,7 +26,7 @@ class AdoptionModal {
 
 
 
-  AdoptionModal({
+  AdoptionModel({
     required this.adoptionID,
     required this.adoptionName,
     required this.facebookUsername,
@@ -40,8 +40,8 @@ class AdoptionModal {
     required this.barangay,
   });
 
-  factory AdoptionModal.fromDocumentSnapshot(DocumentSnapshot doc){
-    return AdoptionModal(
+  factory AdoptionModel.fromDocumentSnapshot(DocumentSnapshot doc){
+    return AdoptionModel(
       adoptionID: doc.id ?? '',
       adoptionName: doc['Name'] ?? '',
       facebookUsername: doc['FacebookUsername'] ?? '',

@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/modal/PetStatusModal.dart';
+import 'package:pet_welfrare_ph/src/modal/ViewAdoptionModal.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 import 'package:provider/provider.dart';
@@ -181,7 +182,9 @@ class _PetAdoptionCardState extends State<PetAdoptionCard> {
                       },),
                      if (isAdmin || isPostOwner)
                        PopupMenuItem(child: const Text('View Submit Adoptions'), onTap: (){
-
+                         showModalBottomSheet(context: context, isScrollControlled: true, builder: (context) {
+                           return ViewAdoptionModal(postId: widget.post.postId);
+                         });
                        },),
                     PopupMenuItem(child: const Text('Update Status'), onTap: (){
                       // This will view the update adoption
@@ -307,8 +310,28 @@ class _PetAdoptionCardState extends State<PetAdoptionCard> {
                       screenHeight: screenHeight,
                       alignment: Alignment.centerLeft,
                     ),
+                    if (post.petType == 'Others (for birds, reptiles, etc.)') ...[
+                      CustomText(
+                        text: 'Pet Type: ${post.petTypeAdopt}',
+                        size: 16,
+                        color: AppColors.black,
+                        weight: FontWeight.w700,
+                        align: TextAlign.left,
+                        screenHeight: screenHeight,
+                        alignment: Alignment.centerLeft,
+                      ),
+                    ],
                     CustomText(
-                      text: 'Pet Type: ${post.petTypeAdopt}',
+                      text: 'Pet Breed:',
+                      size: 20,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomText(
+                      text: post.petBreedAdopt,
                       size: 16,
                       color: AppColors.black,
                       weight: FontWeight.w700,
@@ -316,7 +339,132 @@ class _PetAdoptionCardState extends State<PetAdoptionCard> {
                       screenHeight: screenHeight,
                       alignment: Alignment.centerLeft,
                     ),
-                    // Add other pet details here...
+                    CustomText(
+                      text: 'Pet Gender',
+                      size: 20,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomText(
+                      text: post.petGenderAdopt,
+                      size: 16,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomText(
+                      text: 'Pet Age',
+                      size: 20,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomText(
+                      text: post.petAgeAdopt,
+                      size: 16,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomText(
+                      text: 'Pet Color:',
+                      size: 20,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomText(
+                      text: post.petColorAdopt,
+                      size: 16,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomText(
+                      text: 'Pet Size:',
+                      size: 20,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomText(
+                      text: post.petSizeAdopt,
+                      size: 16,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomText(
+                      text: 'Address:',
+                      size: 20,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomText(
+                      text: post.petAddressAdopt,
+                      size: 16,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomText(
+                      text: 'Region/Province/City/Barangay:',
+                      size: 20,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomText(
+                      text: '${post.petRegionAdopt}, ${post.petProvinceAdopt}, ${post.petCityAdopt}, ${post.petBarangayAdopt}',
+                      size: 16,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomText(
+                      text: 'Status',
+                      size: 20,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                    CustomText(
+                      text: post.StatusAdopt,
+                      size: 16,
+                      color: AppColors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),                    // Add other pet details here...
                   ],
                 ),
               ),

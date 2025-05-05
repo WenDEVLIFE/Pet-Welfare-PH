@@ -1,8 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:provider/provider.dart';
 import 'package:pet_welfrare_ph/src/view_model/ApplyAdoptionViewModel.dart';
 
-class ViewAdoptionModal extends StatelessWidget{
+import '../utils/AppColors.dart';
+import '../widgets/CustomText.dart';
 
+class ViewAdoptionModal extends StatelessWidget {
   final String postId;
   const ViewAdoptionModal({Key? key, required this.postId}) : super(key: key);
 
@@ -10,6 +13,12 @@ class ViewAdoptionModal extends StatelessWidget{
   Widget build(BuildContext context) {
     double screenHeight = MediaQuery.of(context).size.height;
     double screenWidth = MediaQuery.of(context).size.width;
+
+    // Trigger data fetch when the modal is opened
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<ApplyAdoptionViewModel>(context, listen: false).getPetAdoption(postId);
+    });
+
     return Container(
       padding: const EdgeInsets.all(16.0),
       decoration: const BoxDecoration(
@@ -41,27 +50,20 @@ class ViewAdoptionModal extends StatelessWidget{
           ),
           const SizedBox(height: 10),
           Expanded(
-            child: StreamBuilder<List<ApplyAdoptionViewModel>>(
-              stream: postViewModel.getPetAdoption(widget.postId),
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
+            child: Consumer<ApplyAdoptionViewModel>(
+              builder: (context, viewModel, child) {
+                if (viewModel.isLoading) {
                   return const Center(child: CircularProgressIndicator());
                 }
 
-                if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                }
-
-                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                if (viewModel.adoptions.isEmpty) {
                   return const Center(child: Text('No adoptions found.'));
                 }
 
-                var adoption = snapshot.data!;
-
                 return ListView.builder(
-                  itemCount: adoption.length,
+                  itemCount: viewModel.adoptions.length,
                   itemBuilder: (context, index) {
-                    final adoptionDetails = adoption[index];
+                    final adoptionDetails = viewModel.adoptions[index];
                     return Padding(
                       padding: const EdgeInsets.symmetric(vertical: 8.0),
                       child: Row(
@@ -73,7 +75,7 @@ class ViewAdoptionModal extends StatelessWidget{
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
                                 Text(
-                                  adoptionDetails.Name,
+                                  adoptionDetails.adoptionName,
                                   style: const TextStyle(
                                     fontFamily: 'SmoochSans',
                                     color: Colors.black,
@@ -83,7 +85,7 @@ class ViewAdoptionModal extends StatelessWidget{
                                 ),
                                 const SizedBox(height: 5),
                                 Text(
-                                  adoptionDetails.commentText,
+                                  adoptionDetails.adoptionType,
                                   style: const TextStyle(
                                     fontFamily: 'SmoochSans',
                                     color: Colors.black,
@@ -91,14 +93,115 @@ class ViewAdoptionModal extends StatelessWidget{
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
-                                Text(
-                                  adoptionDetails.formattedTimestamp,
-                                  style: const TextStyle(
-                                    fontFamily: 'SmoochSans',
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
+                                ExpansionTile(
+                                  title: CustomText(
+                                    text:  adoptionDetails.adoptionType =='Foster' ? 'Foster Details' : 'Adoption Details',
+                                    size: 24,
+                                    color: AppColors.black,
+                                    weight: FontWeight.w700,
+                                    align: TextAlign.left,
+                                    screenHeight: screenHeight,
+                                    alignment: Alignment.centerLeft,
                                   ),
+                                  children: [
+                                    Padding(
+                                      padding: const EdgeInsets.all(10),
+                                      child: Column(
+                                        children: [
+                                          CustomText(
+                                            text: 'Facebook Username:',
+                                            size: 20,
+                                            color: AppColors.black,
+                                            weight: FontWeight.w700,
+                                            align: TextAlign.left,
+                                            screenHeight: screenHeight,
+                                            alignment: Alignment.centerLeft,
+                                          ),
+                                          CustomText(
+                                            text: adoptionDetails.facebookUsername,
+                                             size: 16,
+                                            color: AppColors.black,
+                                            weight: FontWeight.w700,
+                                            align: TextAlign.left,
+                                            screenHeight: screenHeight,
+                                            alignment: Alignment.centerLeft,
+                                          ),
+                                          CustomText(
+                                            text: 'Email Address:',
+                                            size: 20,
+                                            color: AppColors.black,
+                                            weight: FontWeight.w700,
+                                            align: TextAlign.left,
+                                            screenHeight: screenHeight,
+                                            alignment: Alignment.centerLeft,
+                                          ),
+                                          CustomText(
+                                            text: 'Phone Number:',
+                                            size: 20,
+                                            color: AppColors.black,
+                                            weight: FontWeight.w700,
+                                            align: TextAlign.left,
+                                            screenHeight: screenHeight,
+                                            alignment: Alignment.centerLeft,
+                                          ),
+                                          CustomText(
+                                            text: adoptionDetails.phoneNum,
+                                            size: 16,
+                                            color: AppColors.black,
+                                            weight: FontWeight.w700,
+                                            align: TextAlign.left,
+                                            screenHeight: screenHeight,
+                                            alignment: Alignment.centerLeft,
+                                          ),
+                                          CustomText(
+                                            text: adoptionDetails.email,
+                                            size: 16,
+                                            color: AppColors.black,
+                                            weight: FontWeight.w700,
+                                            align: TextAlign.left,
+                                            screenHeight: screenHeight,
+                                            alignment: Alignment.centerLeft,
+                                          ),
+                                          CustomText(
+                                            text: 'Address:',
+                                            size: 20,
+                                            color: AppColors.black,
+                                            weight: FontWeight.w700,
+                                            align: TextAlign.left,
+                                            screenHeight: screenHeight,
+                                            alignment: Alignment.centerLeft,
+                                          ),
+                                          CustomText(
+                                            text: '${adoptionDetails.address}',
+                                            size: 16,
+                                            color: AppColors.black,
+                                            weight: FontWeight.w700,
+                                            align: TextAlign.left,
+                                            screenHeight: screenHeight,
+                                            alignment: Alignment.centerLeft,
+                                          ),
+                                          CustomText(
+                                            text: 'Region/Province/City/Barangay:',
+                                            size: 20,
+                                            color: AppColors.black,
+                                            weight: FontWeight.w700,
+                                            align: TextAlign.left,
+                                            screenHeight: screenHeight,
+                                            alignment: Alignment.centerLeft,
+                                          ),
+                                          CustomText(
+                                            text: '${adoptionDetails.region}, ${adoptionDetails.province}, ${adoptionDetails.city}, ${adoptionDetails.barangay}',
+                                            size: 16,
+                                            color: AppColors.black,
+                                            weight: FontWeight.w700,
+                                            align: TextAlign.left,
+                                            screenHeight: screenHeight,
+                                            alignment: Alignment.centerLeft,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                  ],
                                 ),
                               ],
                             ),
@@ -108,6 +211,7 @@ class ViewAdoptionModal extends StatelessWidget{
                               IconButton(
                                 icon: const Icon(Icons.delete, color: Colors.red),
                                 onPressed: () async {
+                                  // Handle delete action
                                 },
                               ),
                             ],
@@ -124,6 +228,4 @@ class ViewAdoptionModal extends StatelessWidget{
       ),
     );
   }
-
-
 }
