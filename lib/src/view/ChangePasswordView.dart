@@ -93,7 +93,7 @@ class ChangePasswordState extends State<ChangePasswordView> {
                   ),
                   child: ElevatedButton(
                     onPressed: () {
-                      // Add your update password logic here
+                      viewModel.updatePassword(context);
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: Colors.black,
