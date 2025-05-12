@@ -81,28 +81,50 @@ class ViewAdoptionModal extends StatelessWidget {
                             child: Column(
                               crossAxisAlignment: CrossAxisAlignment.start,
                               children: [
-                                Text(
-                                  adoptionDetails.adoptionName,
-                                  style: const TextStyle(
-                                    fontFamily: 'SmoochSans',
-                                    color: Colors.black,
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                CustomText(
+                                  text:  "Name of Adopter:",
+                                  size: 20,
+                                  color: AppColors.black,
+                                  weight: FontWeight.w700,
+                                  align: TextAlign.left,
+                                  screenHeight: screenHeight,
+                                  alignment: Alignment.centerLeft,
+                                ),
+                                CustomText(
+                                  text:    adoptionDetails.adoptionName,
+                                  size: 16,
+                                  color: AppColors.black,
+                                  weight: FontWeight.w700,
+                                  align: TextAlign.left,
+                                  screenHeight: screenHeight,
+                                  alignment: Alignment.centerLeft,
+                                ),
+                                CustomText(
+                                  text: "Type of Adopter:",
+                                  size: 20,
+                                  color: AppColors.black,
+                                  weight: FontWeight.w700,
+                                  align: TextAlign.left,
+                                  screenHeight: screenHeight,
+                                  alignment: Alignment.centerLeft,
                                 ),
                                 const SizedBox(height: 5),
-                                Text(
-                                  adoptionDetails.adoptionType,
-                                  style: const TextStyle(
-                                    fontFamily: 'SmoochSans',
-                                    color: Colors.black,
-                                    fontSize: 14,
-                                    fontWeight: FontWeight.w600,
-                                  ),
+                                CustomText(
+                                  text:      adoptionDetails.adoptionType,
+                                  size: 16,
+                                  color: AppColors.black,
+                                  weight: FontWeight.w700,
+                                  align: TextAlign.left,
+                                  screenHeight: screenHeight,
+                                  alignment: Alignment.centerLeft,
                                 ),
                                 ExpansionTile(
+                                  iconColor: AppColors.black,
+                                  collapsedIconColor: AppColors.black,
+                                  textColor: AppColors.black,
+                                  leading: const Icon(Icons.pets),
                                   title: CustomText(
-                                    text:  adoptionDetails.adoptionType =='Foster' ? 'Foster Details' : 'Adoption Details',
+                                    text: adoptionDetails.adoptionType == 'Foster' ? 'Foster Details                 ' : 'Adoption Details         ',
                                     size: 24,
                                     color: AppColors.black,
                                     weight: FontWeight.w700,
@@ -110,10 +132,12 @@ class ViewAdoptionModal extends StatelessWidget {
                                     screenHeight: screenHeight,
                                     alignment: Alignment.centerLeft,
                                   ),
+                                  initiallyExpanded: true,
                                   children: [
                                     Padding(
                                       padding: const EdgeInsets.all(10),
                                       child: Column(
+                                        crossAxisAlignment: CrossAxisAlignment.start,
                                         children: [
                                           CustomText(
                                             text: 'Facebook Username:',
@@ -126,7 +150,7 @@ class ViewAdoptionModal extends StatelessWidget {
                                           ),
                                           CustomText(
                                             text: adoptionDetails.facebookUsername,
-                                             size: 16,
+                                            size: 16,
                                             color: AppColors.black,
                                             weight: FontWeight.w700,
                                             align: TextAlign.left,

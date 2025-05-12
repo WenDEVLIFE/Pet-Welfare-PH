@@ -301,6 +301,10 @@ class _CallForAidCardState extends State<CallForAidCard> {
             },
           ),
           ExpansionTile(
+            iconColor: AppColors.black,
+            collapsedIconColor: AppColors.black,
+            textColor: AppColors.black,
+            leading: const Icon(Icons.handshake_rounded),
             title: CustomText(
               text: 'Donation Details',
               size: 24,

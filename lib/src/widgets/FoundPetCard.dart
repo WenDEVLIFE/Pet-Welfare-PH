@@ -289,6 +289,10 @@ class _FoundPetCardState extends State<FoundPetCard> {
             },
           ),
           ExpansionTile(
+            iconColor: AppColors.black,
+            collapsedIconColor: AppColors.black,
+            textColor: AppColors.black,
+            leading: const Icon(Icons.handshake_rounded),
             title: CustomText(
               text: 'Found Pet Details',
               size: 24,

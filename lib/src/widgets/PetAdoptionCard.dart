@@ -286,6 +286,10 @@ class _PetAdoptionCardState extends State<PetAdoptionCard> {
             },
           ),
           ExpansionTile(
+            iconColor: AppColors.black,
+            collapsedIconColor: AppColors.black,
+            textColor: AppColors.black,
+            leading: const Icon(Icons.pets),
             title: CustomText(
               text: 'Pet Adoption Details',
               size: 24,

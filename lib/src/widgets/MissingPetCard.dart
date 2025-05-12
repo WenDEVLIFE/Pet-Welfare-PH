@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 
 import '../DialogView/ReportDialog.dart';
@@ -296,6 +297,10 @@ class _MissingPetCardState extends State<MissingPetCard> {
                 },
               ),
               ExpansionTile(
+                iconColor: AppColors.black,
+                collapsedIconColor: AppColors.black,
+                textColor: AppColors.black,
+                leading: const Icon(FontAwesomeIcons.paw),
                 title: CustomText(
                   text: 'Missing Pet Details',
                   size: 24,
