@@ -8,8 +8,12 @@ import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/SessionManager.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 
+import '../model/DonationModel.dart';
+
 abstract class DonationRepository {
   Future <void> submitDonation(Map<String, dynamic> donation);
+
+  Stream <List<DonationModel>> getDonationList(String postId);
 }
 
 class DonationRepositoryImpl implements DonationRepository {
@@ -79,5 +83,19 @@ class DonationRepositoryImpl implements DonationRepository {
         print(e);
       }
     }
+  }
+
+  // Get the donation list from the database
+  @override
+  Stream<List<DonationModel>> getDonationList(String postId) {
+    return _firestore.collection('PostCollection')
+        .doc(postId)
+        .collection('DonationCollection')
+        .snapshots()
+        .map((snapshot) {
+      return snapshot.docs.map((doc) {
+        return DonationModel.fromDocumentSnapshot(doc);
+      }).toList();
+    });
   }
 }

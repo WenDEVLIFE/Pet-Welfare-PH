@@ -1,6 +1,9 @@
+import 'dart:async';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:pet_welfrare_ph/src/model/DonationModel.dart';
 import 'package:pet_welfrare_ph/src/respository/DonationRepository.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
 
@@ -15,6 +18,16 @@ class DonateViewModel extends ChangeNotifier {
 
   List<String> donationType = ['Bank Transfer','Cash', 'Non-Cash/In-Kind'];
   String? selectedDonationType = 'Cash';
+
+  List<DonationModel> donationList = [];
+
+  // Fetch the donation list
+  final StreamController<List<DonationModel>> _donationStreamController =
+  StreamController<List<DonationModel>>();
+
+  // Expose the stream
+  Stream<List<DonationModel>> get donationStream =>
+      _donationStreamController.stream;
 
 
   // Select a transaction date
@@ -123,6 +136,20 @@ class DonateViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
+  // Initialize the donation stream
+  void initializeDonationStream(String postId) {
+    _donationRepository.getDonationList(postId).listen((donations) {
+      donationList = donations;
+      _donationStreamController.add(donations);
+      notifyListeners();
+    });
+  }
+
+  @override
+  void dispose() {
+    _donationStreamController.close();
+    super.dispose();
+  }
 
 
 }
