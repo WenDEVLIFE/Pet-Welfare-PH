@@ -459,23 +459,7 @@ class _CallForAidCardState extends State<CallForAidCard> {
                       color: hasReacted ? ReactionUtils.getReactionColor(
                           userReaction!) : null,
                     ),
-                    onPressed: () async {
-                      if (hasReacted) {
-                        await postViewModel.removeReaction(post.postId);
-                      } else {
-                        showModalBottomSheet(
-                          context: context,
-                          builder: (context) {
-                            return ReactionModal(
-                              onReactionSelected: (reaction) async {
-                                await postViewModel.addReaction(
-                                    post.postId, reaction);
-                              },
-                            );
-                          },
-                        );
-                      }
-                    },
+                    onPressed: _handleReaction,
                   ),
                   Text('$reactionCount likes', style: const TextStyle(
                     fontFamily: 'SmoochSans',
