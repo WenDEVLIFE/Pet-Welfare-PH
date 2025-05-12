@@ -31,6 +31,7 @@ class DonationRepositoryImpl implements DonationRepository {
     String amount = donation['amount'];
     String date = donation['date'];
     String time = donation['time'];
+    String donatorName = donation['donatorName'];
     String donationType = donation['donationType'];
 
     final userdata = await _sessionManager.getUserInfo();
@@ -57,6 +58,7 @@ class DonationRepositoryImpl implements DonationRepository {
             'Amount': amount,
             'Date': date,
             'Time': time,
+            'DonatorName': donatorName,
             'DonationType': donationType,
             'TransactionFile': '$fileName.jpg',
             'TransactionPath': downloadUrl,

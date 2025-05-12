@@ -56,6 +56,23 @@ class DonateModal extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
                   CustomText(
+                    text: 'Donators Name',
+                    size: 25,
+                    color: AppColors.black,
+                    weight: FontWeight.w600,
+                    align: TextAlign.left,
+                    screenHeight: screenHeight,
+                    alignment: Alignment.centerLeft,
+                  ),
+                  SizedBox(height: screenHeight * 0.01),
+                  CustomTextField(
+                    controller: viewModel.nameController,
+                    screenHeight: screenHeight,
+                    hintText: 'Enter donators name...',
+                    fontSize: 16,
+                    keyboardType: TextInputType.text,
+                  ),
+                  CustomText(
                     text: 'Type of Donation',
                     size: 25,
                     color: AppColors.black,

@@ -12,6 +12,7 @@ class DonateViewModel extends ChangeNotifier {
   TextEditingController amount = TextEditingController();
   TextEditingController dateController = TextEditingController();
   TextEditingController timeController = TextEditingController();
+  TextEditingController nameController = TextEditingController();
   String transactionPath='';
 
   final DonationRepository _donationRepository = DonationRepositoryImpl();
@@ -20,6 +21,9 @@ class DonateViewModel extends ChangeNotifier {
   String? selectedDonationType = 'Cash';
 
   List<DonationModel> donationList = [];
+
+  bool isLoading = false;
+
 
   // Fetch the donation list
   final StreamController<List<DonationModel>> _donationStreamController =
@@ -77,6 +81,7 @@ class DonateViewModel extends ChangeNotifier {
         pd.show(max: 100, msg: 'Submitting...');
         try {
           var donation = {
+            'donatorName': nameController.text,
             'amount': amountValue,
             'date': dateValue,
             'time': timeValue,
@@ -86,6 +91,7 @@ class DonateViewModel extends ChangeNotifier {
           };
           _donationRepository.submitDonation(donation);
           Navigator.of(context).pop();
+          clearFields();
         } catch (e) {
           print(e);
         }
@@ -105,6 +111,7 @@ class DonateViewModel extends ChangeNotifier {
         pd.show(max: 100, msg: 'Submitting...');
         try {
           var donation = {
+            'donatorName': nameController.text,
             'amount': 'n/a',
             'date': dateValue,
             'time': timeValue,
@@ -114,6 +121,7 @@ class DonateViewModel extends ChangeNotifier {
           };
           _donationRepository.submitDonation(donation);
           Navigator.of(context).pop();
+          clearFields();
         } catch (e) {
           print(e);
         }
@@ -149,6 +157,15 @@ class DonateViewModel extends ChangeNotifier {
   void dispose() {
     _donationStreamController.close();
     super.dispose();
+  }
+
+  void clearFields() {
+    amount.clear();
+    dateController.clear();
+    timeController.clear();
+    nameController.clear();
+    transactionPath = '';
+    selectedDonationType = 'Cash';
   }
 
 

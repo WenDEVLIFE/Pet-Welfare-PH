@@ -54,12 +54,12 @@ class AidState extends State<CallOfAidView> {
                 },
               ),
               Expanded(
-                child: postViewModel.filteredPost.isEmpty
+                child: postViewModel.filterCallforAidPost.isEmpty
                     ? Center(child: Text('No ${postViewModel.searchPostController.text} call of aid post found'))
                     : ListView.builder(
-                  itemCount: postViewModel.filteredPost.length,
+                  itemCount: postViewModel.filterCallforAidPost.length,
                   itemBuilder: (context, index) {
-                    var post = postViewModel.filteredPost[index];
+                    var post = postViewModel.filterCallforAidPost[index];
                     return CallForAidCard(
                         post: post,
                         screenHeight: screenHeight,

@@ -4,40 +4,39 @@ class DonationModel {
 
   final String id;
 
-  final String accountNumber;
-
-  final String bankName;
-
-  final String bankHolder;
-
+  final String donationname;
   final String donationType;
 
   final String amount;
 
+  final String time;
+
   final String purposeOfDonation;
+
+  final String transactionPath;
 
 
 
   DonationModel ({
     required this.id,
-    required this.accountNumber,
-    required this.bankName,
-    required this.bankHolder,
+    required this.donationname,
     required this.donationType,
     required this.amount,
+    required this.time,
     required this.purposeOfDonation,
+    required this.transactionPath,
   });
 
   factory DonationModel.fromDocumentSnapshot(
       DocumentSnapshot doc) {
     return DonationModel(
       id: doc.id,
-      accountNumber: doc['AccountNumber'],
-      bankName: doc['BankName'],
-      bankHolder: doc['BankHolder'],
-      donationType: doc['DonationType'],
-      amount: doc['EstimatedAmount'],
-      purposeOfDonation: doc['PurposeOfDonation'],
+      donationname: doc['DonatorName'] ?? '',
+      donationType: doc['DonationType'] ?? '',
+      amount: doc['Amount'] ?? '',
+      time: doc['Time'] ?? '',
+      purposeOfDonation: doc['DonationType'] ?? '',
+      transactionPath: doc['TransactionPath'] ?? '',
     );
   }
 }

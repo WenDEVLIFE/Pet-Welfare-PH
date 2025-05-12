@@ -1,6 +1,7 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:pet_welfrare_ph/src/modal/ViewAdoptionModal.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 
 import '../Animation/CardShimmerWidget.dart';
@@ -8,6 +9,7 @@ import '../DialogView/ReportDialog.dart';
 import '../modal/DonateModal.dart';
 import '../modal/PetStatusModal.dart';
 import '../modal/ReactionModal.dart';
+import '../modal/ViewDonationModal.dart';
 import '../model/TagModel.dart';
 import '../utils/AppColors.dart';
 import '../utils/ReactionUtils.dart';
@@ -190,6 +192,9 @@ class _CallForAidCardState extends State<CallForAidCard> {
                       PopupMenuItem(child: const Text('View Submit Donations'), onTap: (){
 
                         // This will view the submit adoption
+                        showModalBottomSheet(context: context, isScrollControlled: true, builder: (context) {
+                          return ViewDonationModal(postId: post.postId);
+                        });
 
                       },),
                     if (isAdmin || isPostOwner)
