@@ -1448,8 +1448,21 @@ class PostRepositoryImpl implements PostRepository {
         await _firestore.collection('PostCollection').doc(postId).delete();
         await _firestore.collection('VetTravelDetails').doc(postId).delete();
       } else if (category == 'call for aid') {
+        QuerySnapshot donationSnapshot = await _firestore
+            .collection('PostCollection')
+            .doc(postId)
+            .collection('DonationCollection')
+            .get();
+
+        // Delete each document in the DonationCollection
+        for (QueryDocumentSnapshot doc in donationSnapshot.docs) {
+          await doc.reference.delete();
+            String imageUrl = doc['TransactionPath'];
+            Reference storageRef = _firebaseStorage.refFromURL(imageUrl);
+            await storageRef.delete();
+            await doc.reference.delete(); // Delete the document in Firestore
+        }
         await _firestore.collection('PostCollection').doc(postId).delete();
-        await _firestore.collection('DonationDetails').doc(postId).delete();
       } else {
         throw Exception('Invalid category');
       }
