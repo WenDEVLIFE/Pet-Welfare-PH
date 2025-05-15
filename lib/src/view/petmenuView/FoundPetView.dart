@@ -24,9 +24,12 @@ class FoundPetView extends StatefulWidget {
 }
 
 class FoundPetState extends State<FoundPetView> {
+  late PostViewModel postViewModel;
   @override
   void initState() {
     super.initState();
+    postViewModel = Provider.of<PostViewModel>(context, listen: false);
+    postViewModel.listenToFoundPost();
   }
 
   @override

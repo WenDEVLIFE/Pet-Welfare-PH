@@ -24,9 +24,12 @@ class VetAndTravelView extends StatefulWidget {
 }
 
 class VetAndTravelState extends State<VetAndTravelView> {
+  late PostViewModel postViewModel;
   @override
   void initState() {
     super.initState();
+    postViewModel = Provider.of<PostViewModel>(context, listen: false);
+    postViewModel.listenToVetAndTravelPost();
   }
 
   @override

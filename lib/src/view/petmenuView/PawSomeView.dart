@@ -22,9 +22,12 @@ class PawSomeView extends StatefulWidget {
 }
 
 class PawSomeState extends State<PawSomeView> {
+  late PostViewModel postViewModel;
   @override
   void initState() {
     super.initState();
+    postViewModel = Provider.of<PostViewModel>(context, listen: false);
+    postViewModel.listenToPawExperiencePost();
   }
 
   @override

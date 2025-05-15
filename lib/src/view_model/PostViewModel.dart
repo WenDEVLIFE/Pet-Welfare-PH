@@ -84,17 +84,6 @@ class PostViewModel extends ChangeNotifier {
 
   Future<void> initializeListeners() async {
     await Future.wait(<Future<dynamic>>[
-      listenToPost(),
-      listenToMissingPost(),
-      listenToFoundPost(),
-      listenToPawExperiencePost(),
-      listenToProtectedPost(),
-      listenToCommunityPost(),
-      listenToVetAndTravelPost(),
-      listenToPetAdoptPost(),
-      listenToCallforAidPost(),
-      listenToPetForRescuePost(),
-      listenToMyPost(),
       loadData(),
     ]);
   }

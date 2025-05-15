@@ -26,11 +26,13 @@ class CallOfAidView extends StatefulWidget {
 }
 
 class AidState extends State<CallOfAidView> {
+  late PostViewModel postViewModel;
   @override
   void initState() {
     super.initState();
+    postViewModel = Provider.of<PostViewModel>(context, listen: false);
+    postViewModel.listenToCallforAidPost();
   }
-
   @override
   Widget build(BuildContext context) {
     PostViewModel postViewModel = Provider.of<PostViewModel>(context, listen: false);

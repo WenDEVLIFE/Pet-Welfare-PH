@@ -22,6 +22,7 @@ class MissingPetState extends State<PetAdoptionView> {
   void initState() {
     super.initState();
     postViewModel = Provider.of<PostViewModel>(context, listen: false);
+    postViewModel.listenToPetAdoptPost();
   }
 
   @override

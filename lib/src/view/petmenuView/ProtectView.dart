@@ -17,9 +17,12 @@ class ProtectPetView extends StatefulWidget {
 }
 
 class ProtectPetState extends State<ProtectPetView> {
+  late PostViewModel postViewModel;
   @override
   void initState() {
     super.initState();
+    postViewModel = Provider.of<PostViewModel>(context, listen: false);
+    postViewModel.listenToProtectedPost();
   }
 
   @override

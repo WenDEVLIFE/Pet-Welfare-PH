@@ -24,9 +24,12 @@ class MissingPetView extends StatefulWidget {
 }
 
 class MissingPetState extends State<MissingPetView> {
+  late PostViewModel postViewModel;
   @override
   void initState() {
     super.initState();
+    postViewModel = Provider.of<PostViewModel>(context, listen: false);
+    postViewModel.listenToMissingPost();
   }
 
   @override

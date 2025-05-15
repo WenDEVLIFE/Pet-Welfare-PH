@@ -16,14 +16,16 @@ class PetAppreciateView extends StatefulWidget {
 }
 
 class _PetAppreciateViewState extends State<PetAppreciateView> {
+  late PostViewModel postViewModel;
   @override
   void initState() {
     super.initState();
+    postViewModel = Provider.of<PostViewModel>(context, listen: false);
+    postViewModel.listenToPost();
   }
 
   @override
   Widget build(BuildContext context) {
-    PostViewModel postViewModel = Provider.of<PostViewModel>(context);
 
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
