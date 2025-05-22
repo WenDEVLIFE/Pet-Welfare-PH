@@ -22,8 +22,13 @@ class ReportViewModel extends ChangeNotifier {
 
     if (reason.isNotEmpty) {
       // Handle the report submission logic here
+      var reportData = {
+        'PostID': postId,
+        'Reason': reason,
+        'FilePath': filePath,
+      };
       print('Report submitted with reason: $reason');
-      await reportRepository.submitReport(reason, postId, clear);
+      await reportRepository.submitReport(reportData, clear);
     } else {
       ToastComponent().showMessage(Colors.red, 'Please provide a reason for reporting this post.');
     }
