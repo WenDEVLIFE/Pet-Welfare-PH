@@ -56,6 +56,7 @@ class SubscriptionState extends State<SubscriptionView> {
           }),
           _buildDrawerItem(Icons.report_gmailerrorred_sharp, 'Reports', () {
             Navigator.pop(context);
+            Navigator.pushReplacementNamed(context, AppRoutes.reportView);
           }),
           _buildDrawerItem(Icons.info, 'About us', () {
             Navigator.pop(context);

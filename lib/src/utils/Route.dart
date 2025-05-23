@@ -1,5 +1,6 @@
 
 import 'package:flutter/cupertino.dart';
+import 'package:pet_welfrare_ph/src/view/admindirectory/ReportView.dart';
 import 'package:pet_welfrare_ph/src/widgets/UserNavigationComponent.dart';
 import 'package:pet_welfrare_ph/src/view/admindirectory/AddSubscriptionView.dart';
 import 'package:pet_welfrare_ph/src/view/admindirectory/DashboardView.dart';
@@ -75,6 +76,7 @@ class AppRoutes {
   static const String viewImageData = '/viewImageData';
   static const String createpost = '/createpost';
   static const String notification = '/notification';
+  static const String reportView = '/report';
 
   // Assign routes to the screens
   static Map<String, WidgetBuilder> routes = {
@@ -114,5 +116,6 @@ class AppRoutes {
     viewImageData : (context) => ViewImage(), // This is where the user can view the image data
     createpost : (context) => CreatePostView(), // This is where the user can create a post
     notification : (context) => const NotificationView(), // This is where the user can view the notification
+    reportView: (context) => const ReportView(), // This is where the admin can view report a post
   };
 }
