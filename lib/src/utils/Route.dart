@@ -2,7 +2,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:pet_welfrare_ph/src/widgets/UserNavigationComponent.dart';
 import 'package:pet_welfrare_ph/src/view/admindirectory/AddSubscriptionView.dart';
-import 'package:pet_welfrare_ph/src/view/DashboardView.dart';
+import 'package:pet_welfrare_ph/src/view/admindirectory/DashboardView.dart';
 import 'package:pet_welfrare_ph/src/view/petmenuView/CreatePostView.dart';
 import 'package:pet_welfrare_ph/src/view/registerDirectory/FurParentRegisterView.dart';
 import 'package:pet_welfrare_ph/src/view/HomeScreen.dart';
