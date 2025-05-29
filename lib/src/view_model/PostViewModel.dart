@@ -10,6 +10,7 @@ import 'package:intl/intl.dart';
 import '../modal/CommentModal.dart';
 import '../model/CommentModel.dart';
 import '../utils/AppColors.dart';
+import '../utils/Route.dart';
 import '../utils/SessionManager.dart';
 import '../utils/ToastComponent.dart';
 
@@ -915,6 +916,14 @@ class PostViewModel extends ChangeNotifier {
   void setSelectedPetStatus(String? newValue) {
 
     selectedPetStatus = newValue;
+    notifyListeners();
+
+  }
+
+  void navigatoToCreatePost(BuildContext context){
+
+
+    Navigator.pushNamed(context, AppRoutes.createpost);
     notifyListeners();
 
   }

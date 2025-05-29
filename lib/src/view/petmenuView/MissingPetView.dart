@@ -88,7 +88,7 @@ class MissingPetState extends State<MissingPetView> {
             label: 'Create Post',
             child: const Icon(Icons.create),
             onTap: () {
-              Navigator.pushNamed(context, AppRoutes.createpost);
+              postViewModel.navigatoToCreatePost(context);
             },
           ),
           SpeedDialChild(
