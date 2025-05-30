@@ -74,13 +74,15 @@ class CommunityState extends State<CommunityView> {
         activeBackgroundColor: AppColors.black,
         activeForegroundColor: AppColors.white,
         children: [
-          SpeedDialChild(
-            label: 'Create Post',
-            child: const Icon(Icons.create),
-            onTap: () {
-              Navigator.pushNamed(context, AppRoutes.createpost);
-            },
-          ),
+          if(postViewModel.role.toLowerCase()=='admin') ...[
+            SpeedDialChild(
+              label: 'Create Post',
+              child: const Icon(Icons.create),
+              onTap: () {
+                Navigator.pushNamed(context, AppRoutes.createpost);
+              },
+            ),
+          ],
           SpeedDialChild(
             label: 'Reload the Community Posts',
             child: const Icon(Icons.refresh),
