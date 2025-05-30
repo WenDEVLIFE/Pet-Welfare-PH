@@ -78,7 +78,7 @@ class CommunityState extends State<CommunityView> {
             label: 'Create Post',
             child: const Icon(Icons.create),
             onTap: () {
-              postViewModel.navigatoToCreatePost(context);
+              Navigator.pushNamed(context, AppRoutes.createpost);
             },
           ),
           SpeedDialChild(

@@ -95,6 +95,8 @@ abstract class PostRepository {
 
   Future<void> updatePetStatus(String postId, String category, String selectedStatus);
 
+  Future <bool> isUserVerified();
+
 }
 
 class PostRepositoryImpl implements PostRepository {
@@ -1510,6 +1512,36 @@ class PostRepositoryImpl implements PostRepository {
     else {
       throw Exception('Invalid category');
     }
+  }
+
+  @override
+  Future<bool> isUserVerified() async {
+    User? user = FirebaseAuth.instance.currentUser;
+    String userId = user!.uid;
+
+    // Get the document snapshot for the user
+    DocumentSnapshot documentSnapshot = await _firestore
+        .collection('Users')
+        .doc(userId)
+        .get();
+
+    // Check if the document exists and the status is "Pending"
+    if (documentSnapshot.exists) {
+      String status = documentSnapshot['Status'];
+      if (status == 'Pending') {
+        // User is not verified
+        return false;
+      } else if (status == 'Verified') {
+        // User is verified
+        return true;
+      } else {
+        // Handle other statuses if needed
+        throw Exception('Unknown user status: $status');
+      }
+    }
+
+    // Return false if the document does not exist
+    return false;
   }
 
 

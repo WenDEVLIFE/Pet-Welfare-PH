@@ -920,8 +920,15 @@ class PostViewModel extends ChangeNotifier {
 
   }
 
-  void navigatoToCreatePost(BuildContext context){
+  void navigatoToCreatePost(BuildContext context) async{
 
+    bool isUserVerified = await postRepository.isUserVerified();
+
+     if(!isUserVerified) {
+       ToastComponent().showMessage(
+           Colors.red, 'Please verify your account to create a post');
+       return;
+     }
 
     Navigator.pushNamed(context, AppRoutes.createpost);
     notifyListeners();
