@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+
 abstract class DashboardRepository {
 
   Future <int> getTotalUsers();
@@ -14,33 +16,65 @@ abstract class DashboardRepository {
 class DashboardRepositoryImpl implements DashboardRepository {
 
   Future <int> getTotalUsers() async {
-    // Simulate a network call or database query
-    await Future.delayed(Duration(seconds: 1));
-    return 100; // Example total users count
+
+    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('Users').get();
+
+    if (snapshot.docs.isEmpty) {
+      return 0; // No users found
+    } else {
+      return snapshot.docs.length; // Return the count of users
+    }
   }
 
   Future <int> getTotalPosts() async {
-    // Simulate a network call or database query
-    await Future.delayed(Duration(seconds: 1));
-    return 50; // Example total posts count
+
+    QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('PostCollection').get();
+
+    if (snapshot.docs.isEmpty) {
+      return 0; // No posts found
+    } else {
+      return snapshot.docs.length; // Return the count of posts
+    }
   }
 
   Future<int> getVerifiedUsers() async {
-    // Simulate a network call or database query
-    await Future.delayed(Duration(seconds: 1));
-    return 30; // Example total verified users count
+     QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('Users')
+        .where('Status', isEqualTo: "Approved")
+        .get();
+
+    if (snapshot.docs.isEmpty) {
+      return 0; // No verified users found
+    } else {
+      return snapshot.docs.length; // Return the count of verified users
+    }
   }
 
   Future <int> getUnverifiedUsers() async {
-    // Simulate a network call or database query
-    await Future.delayed(Duration(seconds: 1));
-    return 200; // Example total pets count
+
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('Users')
+        .where('Status', isEqualTo: "Pending")
+        .get();
+
+    if (snapshot.docs.isEmpty) {
+      return 0; // No unverified users found
+    } else {
+      return snapshot.docs.length; // Return the count of unverified users
+    }
   }
 
   Future <int> getBannedUsers() async {
-    // Simulate a network call or database query
-    await Future.delayed(Duration(seconds: 1));
-    return 10; // Example total banned users count
+    QuerySnapshot snapshot = await FirebaseFirestore.instance
+        .collection('Users')
+        .where('Status', isEqualTo: "Banned")
+        .get();
+
+    if (snapshot.docs.isEmpty) {
+      return 0; // No banned users found
+    } else {
+      return snapshot.docs.length; // Return the count of banned users
+    }
   }
 
 }
