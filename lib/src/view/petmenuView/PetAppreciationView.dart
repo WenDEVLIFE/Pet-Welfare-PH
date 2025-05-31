@@ -71,13 +71,15 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
         activeBackgroundColor: AppColors.black,
         activeForegroundColor: AppColors.white,
         children: [
-          SpeedDialChild(
-            label: 'Create Post',
-            child: const Icon(Icons.create),
-            onTap: () {
-              postViewModel.navigatoToCreatePost(context);
-            },
-          ),
+          if (postViewModel.role.toLowerCase()!='admin') ...[
+            SpeedDialChild(
+              label: 'Create Post',
+              child: const Icon(Icons.create),
+              onTap: () {
+                postViewModel.navigatoToCreatePost(context);
+              },
+            ),
+          ],
           SpeedDialChild(
             label: 'Reload the Pet Appreciation Posts',
             child: const Icon(Icons.refresh),

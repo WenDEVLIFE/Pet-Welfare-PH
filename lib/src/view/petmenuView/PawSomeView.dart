@@ -78,13 +78,15 @@ class PawSomeState extends State<PawSomeView> {
         activeBackgroundColor: AppColors.black,
         activeForegroundColor: AppColors.white,
         children: [
-          SpeedDialChild(
-            label: 'Create Post',
-            child: const Icon(Icons.create),
-            onTap: () {
-              postViewModel.navigatoToCreatePost(context);
-            },
-          ),
+          if (postViewModel.role.toLowerCase()!='admin') ...[
+            SpeedDialChild(
+              label: 'Create Post',
+              child: const Icon(Icons.create),
+              onTap: () {
+                postViewModel.navigatoToCreatePost(context);
+              },
+            ),
+          ],
           SpeedDialChild(
             label: 'Reload the PawSome Post',
             child: const Icon(Icons.refresh),

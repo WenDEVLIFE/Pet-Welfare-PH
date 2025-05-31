@@ -81,13 +81,15 @@ class VetAndTravelState extends State<VetAndTravelView> {
         activeBackgroundColor: AppColors.black,
         activeForegroundColor: AppColors.white,
         children: [
-          SpeedDialChild(
-            label: 'Reload the Vet & Travel Insight Posts',
-            child: const Icon(Icons.refresh),
-            onTap: () {
-              postViewModel.listenToVetAndTravelPost();
-            },
-          ),
+          if (postViewModel.role.toLowerCase()!='admin') ...[
+            SpeedDialChild(
+              label: 'Create Post',
+              child: const Icon(Icons.create),
+              onTap: () {
+                postViewModel.navigatoToCreatePost(context);
+              },
+            ),
+          ],
           SpeedDialChild(
             label: 'Advanced Search',
             child: const Icon(Icons.search),

@@ -71,13 +71,15 @@ class MissingPetState extends State<PetAdoptionView> {
         activeBackgroundColor: AppColors.black,
         activeForegroundColor: AppColors.white,
         children: [
-          SpeedDialChild(
-            label: 'Create Post',
-            child: const Icon(Icons.create),
-            onTap: () {
-              postViewModel.navigatoToCreatePost(context);
-            },
-          ),
+          if (postViewModel.role.toLowerCase()!='admin') ...[
+            SpeedDialChild(
+              label: 'Create Post',
+              child: const Icon(Icons.create),
+              onTap: () {
+                postViewModel.navigatoToCreatePost(context);
+              },
+            ),
+          ],
           SpeedDialChild(
             label: 'Advanced Search',
             child: const Icon(Icons.search),

@@ -73,13 +73,15 @@ class ProtectPetState extends State<ProtectPetView> {
         activeBackgroundColor: AppColors.black,
         activeForegroundColor: AppColors.white,
         children: [
-          SpeedDialChild(
-            label: 'Create Post',
-            child: const Icon(Icons.create),
-            onTap: () {
-              postViewModel.navigatoToCreatePost(context);
-            },
-          ),
+          if (postViewModel.role.toLowerCase()!='admin') ...[
+            SpeedDialChild(
+              label: 'Create Post',
+              child: const Icon(Icons.create),
+              onTap: () {
+                postViewModel.navigatoToCreatePost(context);
+              },
+            ),
+          ],
           SpeedDialChild(
             label: 'Reload the Protect Pets Posts',
             child: const Icon(Icons.refresh),
