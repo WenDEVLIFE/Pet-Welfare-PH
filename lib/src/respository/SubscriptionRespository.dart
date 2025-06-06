@@ -187,7 +187,7 @@ class SubscriptinImpl extends SubscriptionRespository {
         Timestamp? expiresAt = doc['SubscriptionExpiresAt'];
         if (expiresAt != null) {
           DateTime dateTime = expiresAt.toDate();
-          return DateFormat('yyyy-MM-dd HH:mm').format(dateTime); // Format to YYYY-MM-DD HH:MM
+          return DateFormat('yyyy-MM-dd HH:mm').format(dateTime);
         }
         return '';
       } else {
