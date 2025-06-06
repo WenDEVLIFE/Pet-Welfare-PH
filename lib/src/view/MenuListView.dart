@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:pet_welfrare_ph/src/view_model/MenuViewModel.dart';
 import '../widgets/LogoutDialog.dart';
 import '../model/MenuList.dart';
 import '../utils/AppColors.dart';
 import '../utils/Route.dart';
 import '../utils/SessionManager.dart';
+import 'package:provider/provider.dart';
 
 class MenuListWidget extends StatelessWidget {
   final List<MenuItem> menuItems = [
@@ -19,6 +21,8 @@ class MenuListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+
+    final MenuViewModel menuViewModel = Provider.of<MenuViewModel>(context, listen: false);
     return Column(
       children: [
         Flexible(
@@ -59,6 +63,8 @@ class MenuListWidget extends StatelessWidget {
                   }
                   else if (index == 6) {
 
+                    // Open the user subscription modal
+                    menuViewModel.openUserSubscription(context);
                   }
                   else if (index == 7) {
                     // Logout

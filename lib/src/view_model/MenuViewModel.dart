@@ -4,6 +4,7 @@ import 'package:flutter/scheduler.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:pet_welfrare_ph/src/modal/SubscriptionModal.dart';
 import 'package:pet_welfrare_ph/src/respository/LocationRespository.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 
@@ -104,6 +105,16 @@ class MenuViewModel extends ChangeNotifier {
       ToastComponent().showMessage(Colors.red, 'User pin does not exist');
     }
     notifyListeners();
+  }
+
+  void openUserSubscription(BuildContext context){
+    showModalBottomSheet(
+      context: context,
+      isScrollControlled: true,
+      builder: (context) {
+        return const SubscriptionModal();
+      },
+    );
   }
 
 
