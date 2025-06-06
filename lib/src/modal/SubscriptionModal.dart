@@ -21,7 +21,9 @@ class _SubscriptionModalState extends State<SubscriptionModal> {
   void initState() {
     super.initState();
     subscriptionViewModel = Provider.of<SubscriptionViewModel>(context, listen: false);
+    subscriptionViewModel.loadUserSubscription();
   }
+
 
   @override
   Widget build(BuildContext context) {
@@ -138,6 +140,52 @@ class _SubscriptionModalState extends State<SubscriptionModal> {
                         }
                       },
                     ),
+                    CustomText(
+                      text: 'Your Current Subscription',
+                      size: 18,
+                      color: Colors.black,
+                      weight: FontWeight.w700,
+                      align: TextAlign.left,
+                      screenHeight: screenHeight,
+                      alignment: Alignment.centerLeft,
+                    ),
+                Card(
+              color: AppColors.orange,
+              child: ListTile(
+              title: Text(
+                'Subscription Type: ${subscriptionViewModel.SubscriptionName}',
+                style: const TextStyle(
+                fontSize: 18,
+                fontWeight: FontWeight.w800,
+              fontFamily: 'SmoochSans',
+                color: Colors.white,
+              ),
+            ),
+        subtitle: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              'Monthly Plan: ${subscriptionViewModel.SubscriptionPrice}',
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+                fontFamily: 'SmoochSans',
+                color: Colors.white,
+              ),
+            ),
+            Text(
+              'Expires At: ${subscriptionViewModel.SubscriptionDuration}',
+              style: const TextStyle(
+                fontSize: 16,
+                fontWeight: FontWeight.w800,
+                fontFamily: 'SmoochSans',
+                color: Colors.white,
+              ),
+            ),
+          ],
+        ),
+      ),
+    ),
                   ],
                 ),
               ),

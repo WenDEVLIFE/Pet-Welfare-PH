@@ -22,6 +22,13 @@ class SubscriptionViewModel extends ChangeNotifier {
   // Stream of subscriptions
   Stream<List<SubscriptionModel>> get subscriptionsStream => _subscriptionRespository.getSubscriptions();
 
+  String SubscriptionName = '';
+
+  String SubscriptionPrice = '';
+
+  String SubscriptionDuration = '';
+
+
   // Set subscriptions
   void setSubscriptions(List<SubscriptionModel> subscriptions) {
     _subscriptions = subscriptions;
@@ -135,5 +142,24 @@ class SubscriptionViewModel extends ChangeNotifier {
     subscriptionNameController.clear();
     subscriptionPriceController.clear();
     subscriptionDurationController.clear();
+  }
+
+  Future<void> loadUserSubscription() async {
+    // Fetch subscription name first to avoid duplicate calls
+    String subscriptionName = await _subscriptionRespository.getUserSubscriptionName();
+
+    // Use Future.wait to fetch other details concurrently
+    List<dynamic> results = await Future.wait([
+      Future.value(subscriptionName), // Pass the already fetched subscription name
+      subscriptionName.toLowerCase() == 'free trial'
+          ? Future.value('Free Trial')
+          : _subscriptionRespository.getUserSubscriptionPrice("₱$subscriptionName"),
+      _subscriptionRespository.getUserSubscriptionDuration(),
+    ]);
+
+    // Assign results to respective variables
+    SubscriptionName = results[0] as String;
+    SubscriptionPrice = results[1] as String;
+    SubscriptionDuration = results[2] as String;
   }
 }

@@ -1,9 +1,11 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
 import '../model/SubcriptionModel.dart';
+import 'package:intl/intl.dart';
 
 abstract class SubscriptionRespository {
   Future<bool> checkIfSubscriptionExist(String subscriptionName);
@@ -11,6 +13,12 @@ abstract class SubscriptionRespository {
   Stream<List<SubscriptionModel>> getSubscriptions();
   Future<void> updateSubscriptionData(Map<String, String> subscriptionData, BuildContext context, String uid);
   void deleteSubscription(BuildContext context, String uid);
+
+  Future <String> getUserSubscriptionName();
+
+  Future <String> getUserSubscriptionPrice(String subscriptionName);
+
+  Future <String> getUserSubscriptionDuration();
 
 }
 
@@ -128,4 +136,67 @@ class SubscriptinImpl extends SubscriptionRespository {
       pd.close();
     }
   }
+
+  @override
+  Future<String> getUserSubscriptionName() async {
+    User user = FirebaseAuth.instance.currentUser!;
+
+    String uid = user.uid;
+
+    try {
+      DocumentSnapshot doc = await _firestore.collection('Users').doc(uid).get();
+      if (doc.exists) {
+        return doc['SubscriptionType'] ?? '';
+      } else {
+        return '';
+      }
+    } catch (e) {
+      print(e);
+      return '';
+    }
+
+  }
+
+  @override
+  Future<String> getUserSubscriptionPrice(String SubscriptionName) async {
+    User user = FirebaseAuth.instance.currentUser!;
+
+    String uid = user.uid;
+
+    try {
+      DocumentSnapshot doc = await _firestore.collection('Subscription').where('SubscriptionName', isEqualTo: SubscriptionName).get().then((snapshot) => snapshot.docs.first);
+      if (doc.exists) {
+        return doc['SubscriptionPrice'] ?? '';
+      } else {
+        return '';
+      }
+    } catch (e) {
+      print(e);
+      return '';
+    }
+  }
+
+  @override
+  Future<String> getUserSubscriptionDuration() async {
+    User user = FirebaseAuth.instance.currentUser!;
+    String uid = user.uid;
+
+    try {
+      DocumentSnapshot doc = await _firestore.collection('Users').doc(uid).get();
+      if (doc.exists) {
+        Timestamp? expiresAt = doc['SubscriptionExpiresAt'];
+        if (expiresAt != null) {
+          DateTime dateTime = expiresAt.toDate();
+          return DateFormat('yyyy-MM-dd HH:mm').format(dateTime); // Format to YYYY-MM-DD HH:MM
+        }
+        return '';
+      } else {
+        return '';
+      }
+    } catch (e) {
+      print(e);
+      return '';
+    }
+  }
+
 }
