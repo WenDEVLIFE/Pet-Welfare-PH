@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/SessionManager.dart';
+import 'package:pet_welfrare_ph/src/view_model/DashboardViewModel.dart';
 import '../../widgets/DrawerHeaderWidget.dart';
 import '../../widgets/LogoutDialog.dart';
 import '../../utils/AppColors.dart';
 import '../../utils/Route.dart';
+import 'package:provider/provider.dart';
 
 // Dashboard View
 class DashboardView extends StatefulWidget {
@@ -14,6 +16,16 @@ class DashboardView extends StatefulWidget {
 }
 
 class DashboardViewState extends State<DashboardView> {
+
+  late DashboardViewModel dashboardViewModel;
+  @override
+  void initState() {
+    super.initState();
+
+    dashboardViewModel = Provider.of<DashboardViewModel>(context, listen: false);
+
+    dashboardViewModel.initDashboard();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -27,22 +39,19 @@ class DashboardViewState extends State<DashboardView> {
           const DrawerHeaderWidget(),
           _buildDrawerItem(Icons.dashboard, 'Dashboard', () {
             Navigator.pop(context);
-            // Navigate to Home
+            Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
           }),
           _buildDrawerItem(Icons.verified_user_rounded, 'Users', () {
             Navigator.pop(context);
             Navigator.pushReplacementNamed(context, AppRoutes.userView);
-            // Navigate to Verified Users
           }),
           _buildDrawerItem(Icons.home, 'Home', () {
             Navigator.pop(context);
             Navigator.pushReplacementNamed(context, AppRoutes.homescreen);
-            // Navigate to Pending User Verification
           }),
           _buildDrawerItem(Icons.attach_money, 'Subscriptions', () {
             Navigator.pop(context);
             Navigator.pushReplacementNamed(context, AppRoutes.subscription);
-            // Navigate to Pending User Verification
           }),
           _buildDrawerItem(Icons.holiday_village_outlined, 'All Business', () {
             Navigator.pop(context);
@@ -50,7 +59,7 @@ class DashboardViewState extends State<DashboardView> {
           }),
           _buildDrawerItem(Icons.report_gmailerrorred_sharp, 'Reports', () {
             Navigator.pop(context);
-             Navigator.pushReplacementNamed(context, AppRoutes.reportView);
+            Navigator.pushReplacementNamed(context, AppRoutes.reportView);
           }),
           _buildDrawerItem(Icons.info, 'About us', () {
             Navigator.pop(context);
@@ -60,12 +69,10 @@ class DashboardViewState extends State<DashboardView> {
           _buildDrawerItem(Icons.check, 'Terms and Condition', () {
             Navigator.pop(context);
             Navigator.pushNamed(context, AppRoutes.termsAndConditions);
-            // Navigate to Terms and Conditions
           }),
           _buildDrawerItem(Icons.privacy_tip_outlined, 'Privacy Policy', () {
             Navigator.pop(context);
             Navigator.pushNamed(context, AppRoutes.privacyPolicy);
-            // Navigate to Privacy Policy
           }),
           _buildDrawerItem(Icons.logout, 'Logout', () {
             Navigator.pop(context);
@@ -74,17 +81,13 @@ class DashboardViewState extends State<DashboardView> {
               builder: (BuildContext context) {
                 return LogoutDialog(
                   onLogout: () async {
-                    // Perform logout action here
-                     await SessionManager().clearUserInfo();
-
-                     Navigator.pushReplacementNamed(context, AppRoutes.loginScreen);
-
+                    await SessionManager().clearUserInfo();
+                    Navigator.pushReplacementNamed(context, AppRoutes.loginScreen);
                     print('User logged out');
                   },
                 );
               },
             );
-            // Navigate to Logout
           }),
         ],
       ),
@@ -123,16 +126,16 @@ class DashboardViewState extends State<DashboardView> {
                       ),
                     ),
                     SizedBox(height: screenHeight * 0.02),
-                    const Card(
+                     Card(
                       color: AppColors.orange,
                       child: Column(
                         children: <Widget>[
                           ListTile(
-                            title: Row(
+                            title: const Row(
                               children: <Widget>[
                                 Icon(Icons.person, color: Colors.white),
                                 Text('Total Users',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w800,
                                     fontFamily: 'SmoochSans',
@@ -141,7 +144,7 @@ class DashboardViewState extends State<DashboardView> {
                                 ),
                               ],
                             ),
-                            subtitle: Text('100',
+                            subtitle: Text(dashboardViewModel.totalUser.toString(),
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w800,
@@ -154,16 +157,16 @@ class DashboardViewState extends State<DashboardView> {
                       ),
                     ),
                     SizedBox(height: screenHeight * 0.02),
-                    const Card(
+                     Card(
                       color: AppColors.orange,
                       child: Column(
                         children: <Widget>[
                           ListTile(
-                            title: Row(
+                            title: const Row(
                               children: <Widget>[
                                 Icon(Icons.post_add, color: Colors.white),
                                 Text('Total Posts',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w800,
                                     fontFamily: 'SmoochSans',
@@ -172,7 +175,7 @@ class DashboardViewState extends State<DashboardView> {
                                 ),
                               ],
                             ),
-                            subtitle: Text('100',
+                            subtitle: Text(dashboardViewModel.totalPost.toString(),
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w800,
@@ -185,12 +188,12 @@ class DashboardViewState extends State<DashboardView> {
                       ),
                     ),
                     SizedBox(height: screenHeight * 0.02),
-                    const Card(
+                     Card(
                       color: AppColors.orange,
                       child: Column(
                         children: <Widget>[
                           ListTile(
-                            title: Row(
+                            title:  const Row(
                               children: <Widget>[
                                 Icon(Icons.person_off, color: Colors.white),
                                 Text('Total Banned Users',
@@ -203,7 +206,7 @@ class DashboardViewState extends State<DashboardView> {
                                 ),
                               ],
                             ),
-                            subtitle: Text('100',
+                            subtitle: Text(dashboardViewModel.totalBannedUser.toString(),
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w800,
@@ -216,16 +219,16 @@ class DashboardViewState extends State<DashboardView> {
                       ),
                     ),
                     SizedBox(height: screenHeight * 0.02),
-                    const Card(
+                    Card(
                       color: AppColors.orange,
                       child: Column(
                         children: <Widget>[
                           ListTile(
-                            title: Row(
+                            title: const Row(
                               children: <Widget>[
                                 Icon(Icons.verified_user_rounded, color: Colors.white),
                                 Text('Total Verified User',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w800,
                                     fontFamily: 'SmoochSans',
@@ -234,7 +237,7 @@ class DashboardViewState extends State<DashboardView> {
                                 ),
                               ],
                             ),
-                            subtitle: Text('100',
+                            subtitle: Text(dashboardViewModel.totalApprovedUser.toString(),
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w800,
@@ -247,16 +250,16 @@ class DashboardViewState extends State<DashboardView> {
                       ),
                     ),
                     SizedBox(height: screenHeight * 0.02),
-                    const Card(
+                     Card(
                       color: AppColors.orange,
                       child: Column(
                         children: <Widget>[
                           ListTile(
-                            title: Row(
+                            title: const Row(
                               children: <Widget>[
                                 Icon(Icons.person_off_sharp, color: Colors.white),
                                 Text('Total Unverified User',
-                                  style: const TextStyle(
+                                  style: TextStyle(
                                     fontSize: 16,
                                     fontWeight: FontWeight.w800,
                                     fontFamily: 'SmoochSans',
@@ -265,7 +268,7 @@ class DashboardViewState extends State<DashboardView> {
                                 ),
                               ],
                             ),
-                            subtitle: Text('100',
+                            subtitle: Text(dashboardViewModel.totalPendingUser.toString(),
                               style: const TextStyle(
                                 fontSize: 16,
                                 fontWeight: FontWeight.w800,

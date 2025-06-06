@@ -7,6 +7,7 @@ import 'package:pet_welfrare_ph/src/utils/NotificationUtils.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
 import 'package:pet_welfrare_ph/src/view_model/ApplyAdoptionViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/CreatePostViewModel.dart';
+import 'package:pet_welfrare_ph/src/view_model/DashboardViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/DonateViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/DrawerHeadViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/AddAdminViewModel.dart';
@@ -82,6 +83,7 @@ class MyApp extends StatelessWidget {
         ChangeNotifierProvider(create: (_) => MessageViewModel()),
         ChangeNotifierProvider(create: (_) => CreatePostViewModel()),
         ChangeNotifierProvider(create: (_) => PostViewModel()),
+        ChangeNotifierProvider(create: (_) => DashboardViewModel()),
         ChangeNotifierProvider(create: (_) => NotificationViewModel()),
         ChangeNotifierProvider(create: (_) => SearchPetViewModel()),
         ChangeNotifierProvider(create: (_) => ReportViewModel()),

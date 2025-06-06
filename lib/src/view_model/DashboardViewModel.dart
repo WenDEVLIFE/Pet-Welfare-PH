@@ -1,13 +1,22 @@
 import 'package:flutter/cupertino.dart';
+import 'package:pet_welfrare_ph/src/respository/DashboardRepository.dart';
 
 class DashboardViewModel extends ChangeNotifier {
-  final int totalUser = 0;
-  final int totalPost = 0;
-  final int totalBannedUser = 0;
-  final int totalPendingUser = 0;
-  final int totalApprovedUser = 0;
+   int totalUser = 0;
+   int totalPost = 0;
+   int totalBannedUser = 0;
+   int totalPendingUser = 0;
+   int totalApprovedUser = 0;
 
-  void initDashboard() {
-    // Fetch data from database
+  final DashboardRepository dashboardRepository = DashboardRepositoryImpl();
+
+  Future <void> initDashboard() async {
+
+    totalUser = await dashboardRepository.getTotalUsers();
+    totalPost = await dashboardRepository.getTotalPosts();
+    totalBannedUser = await dashboardRepository.getBannedUsers();
+    totalPendingUser = await dashboardRepository.getUnverifiedUsers();
+    totalApprovedUser = await dashboardRepository.getVerifiedUsers();
+
   }
 }

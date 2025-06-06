@@ -18,7 +18,7 @@ class DashboardRepositoryImpl implements DashboardRepository {
   Future <int> getTotalUsers() async {
 
     QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('Users').get();
-
+    print("Documents: ${snapshot.docs}");
     if (snapshot.docs.isEmpty) {
       return 0; // No users found
     } else {
@@ -29,7 +29,7 @@ class DashboardRepositoryImpl implements DashboardRepository {
   Future <int> getTotalPosts() async {
 
     QuerySnapshot snapshot = await FirebaseFirestore.instance.collection('PostCollection').get();
-
+    print("Documents: ${snapshot.docs}");
     if (snapshot.docs.isEmpty) {
       return 0; // No posts found
     } else {
@@ -42,7 +42,7 @@ class DashboardRepositoryImpl implements DashboardRepository {
         .collection('Users')
         .where('Status', isEqualTo: "Approved")
         .get();
-
+     print("Documents: ${snapshot.docs}");
     if (snapshot.docs.isEmpty) {
       return 0; // No verified users found
     } else {
@@ -56,7 +56,7 @@ class DashboardRepositoryImpl implements DashboardRepository {
         .collection('Users')
         .where('Status', isEqualTo: "Pending")
         .get();
-
+    print("Documents: ${snapshot.docs}");
     if (snapshot.docs.isEmpty) {
       return 0; // No unverified users found
     } else {
@@ -69,7 +69,7 @@ class DashboardRepositoryImpl implements DashboardRepository {
         .collection('Users')
         .where('Status', isEqualTo: "Banned")
         .get();
-
+    print("Documents: ${snapshot.docs}");
     if (snapshot.docs.isEmpty) {
       return 0; // No banned users found
     } else {
