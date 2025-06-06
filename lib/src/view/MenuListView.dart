@@ -13,6 +13,7 @@ class MenuListWidget extends StatelessWidget {
     MenuItem(icon: Icons.check, title: 'Terms and Conditions'),
     MenuItem(icon: Icons.privacy_tip_outlined, title: 'Privacy Policy'),
     MenuItem(icon: Icons.info_outline, title: 'About Us'),
+    MenuItem(icon: Icons.info_outline, title: 'My Subscription'),
     MenuItem(icon: Icons.logout, title: 'Logout'),
   ];
 
@@ -55,7 +56,11 @@ class MenuListWidget extends StatelessWidget {
                   } else if (index == 5) {
                     // About Us
                     Navigator.pushNamed(context, AppRoutes.about);
-                  } else if (index == 6) {
+                  }
+                  else if (index == 6) {
+
+                  }
+                  else if (index == 7) {
                     // Logout
                     showDialog(
                       context: context,
