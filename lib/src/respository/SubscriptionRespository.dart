@@ -20,6 +20,8 @@ abstract class SubscriptionRespository {
 
   Future <String> getUserSubscriptionDuration();
 
+  Stream<bool> isUserSubscriptionExpired();
+
 }
 
 class SubscriptinImpl extends SubscriptionRespository {
@@ -198,5 +200,24 @@ class SubscriptinImpl extends SubscriptionRespository {
       return '';
     }
   }
+
+  @override
+  Stream<bool> isUserSubscriptionExpired() {
+    User user = FirebaseAuth.instance.currentUser!;
+    String uid = user.uid;
+
+    return _firestore.collection('Users').doc(uid).snapshots().map((doc) {
+      if (doc.exists) {
+        Timestamp? expiresAt = doc['SubscriptionExpiresAt'];
+        if (expiresAt != null) {
+          DateTime expirationDate = expiresAt.toDate();
+          DateTime currentDate = DateTime.now();
+          return currentDate.isAfter(expirationDate); // Check if current date is after expiration date
+        }
+      }
+      return true; // If no expiration date is found, consider it expired
+    });
+  }
+
 
 }
