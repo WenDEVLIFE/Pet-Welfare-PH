@@ -161,6 +161,10 @@ class PostRepositoryImpl implements PostRepository {
         // Wait for all uploads to complete
         await Future.wait(uploadTasks);
       }
+
+      else{
+        ToastComponent().showMessage(AppColors.orange, 'Post added successfully without images');
+      }
     } catch (e) {
       throw Exception('Failed to upload post: $e');
     }
