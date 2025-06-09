@@ -141,8 +141,8 @@ class CreatePostView extends StatelessWidget {
               child: TagsInputWidget(
                 tagController: createPostViewModel.tagController,
                 tags: createPostViewModel.tags,
-                onAddTag: createPostViewModel.addTag,
-                onRemoveTag: createPostViewModel.removeTag,
+                onAddTag: createPostViewModel.addTags,
+                onRemoveTag: (tag) => createPostViewModel.removeTagFromList(tag), // Pass as a callback
                 screenHeight: screenHeight,
               ),
             ),

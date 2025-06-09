@@ -284,10 +284,6 @@ class CreatePostViewModel extends ChangeNotifier {
     pd.show(max: 100, msg: 'Posting...');
     try {
       if (selectedChip == "Pet Appreciation") {
-        if (tags.isEmpty) {
-          ToastComponent().showMessage(
-              Colors.red, 'Please add at least one tag');
-        }
         if (postController.text.isEmpty) {
           ToastComponent().showMessage(Colors.red, 'Post cannot be empty');
         } else if (_images.isEmpty) {
@@ -1619,5 +1615,19 @@ class CreatePostViewModel extends ChangeNotifier {
 
     imagesList = [];
  notifyListeners();
+  }
+
+  Future <void> addTags(String tag) async {
+    if (tag.isNotEmpty && !tags.contains(tag)) {
+      tags.add(tag);
+      notifyListeners();
+    }
+  }
+
+  Future <void> removeTagFromList(String tag) async {
+    if (tags.contains(tag)) {
+      tags.remove(tag);
+      notifyListeners();
+    }
   }
 }

@@ -1,6 +1,7 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pet_welfrare_ph/src/model/PostModel.dart';
 import 'package:pet_welfrare_ph/src/respository/PostRepository.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
@@ -826,14 +827,13 @@ class PostViewModel extends ChangeNotifier {
 
   // This will delete the post from the database
   void deletePost(String category, BuildContext context, String postID) async{
-    ProgressDialog pd = ProgressDialog(context: context);
-    pd.show(msg: "Deleting post...");
     try{
       await postRepository.deletePost(category, postID);
     } catch (e) {
       print('Failed to delete post: $e');
+
     } finally {
-      pd.close();
+
     }
 
     notifyListeners();
@@ -927,6 +927,15 @@ class PostViewModel extends ChangeNotifier {
      if(!isUserVerified) {
        ToastComponent().showMessage(
            Colors.red, 'Please verify your account to create a post');
+
+       Fluttertoast.showToast(
+         msg: "Please verify your account to create a post",
+         toastLength: Toast.LENGTH_SHORT,
+         gravity: ToastGravity.BOTTOM,
+         backgroundColor: Colors.red,
+         textColor: Colors.white,
+         fontSize: 16.0,
+       );
        return;
      }
 
