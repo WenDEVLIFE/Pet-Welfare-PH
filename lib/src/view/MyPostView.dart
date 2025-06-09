@@ -58,18 +58,14 @@ class ProfileState extends State<ProfileView> {
           ),
           Expanded(
             child: postViewModel.filterMyPost.isEmpty
-                ? Center(
-              child: Text(
-                'No post of "${postViewModel.searchPostController.text}" found',
-              ),
-            )
-                : ListView.builder(
+              ? _buildEmptyState(postViewModel)
+              : ListView.builder(
               itemCount: postViewModel.filterMyPost.length,
               itemBuilder: (context, index) {
                 final post = postViewModel.filterMyPost[index];
                 final category = post.category;
 
-                // Use a helper method to return the appropriate widget
+                // Use a helper method to return  the appropriate widget
                 return _buildPostCard(category, post, screenHeight, screenWidth);
               },
             ),
@@ -78,6 +74,29 @@ class ProfileState extends State<ProfileView> {
       ),
     );
   }
+
+Widget _buildEmptyState(PostViewModel postViewModel) {
+  final bool isSearching = postViewModel.searchPostController.text.isNotEmpty;
+
+  if (isSearching) {
+    // Scenario 1: User searched, but no results were found
+    return Center(
+      child: Text(
+        'No results found for "${postViewModel.searchPostController.text}"',
+        textAlign: TextAlign.center,
+        style: const TextStyle(fontSize: 16, color: Colors.grey),
+      ),
+    );
+  } else {
+    // Scenario 2: User has not searched, and their post list is empty
+    return const Center(
+      child: Text(
+        "You haven't created any posts yet.",
+        style: TextStyle(fontSize: 18, color: Colors.grey),
+      ),
+    );
+  }
+}
 
   Widget _buildPostCard(String? category, dynamic post, double screenHeight, double screenWidth) {
     switch (category) {

@@ -15,6 +15,7 @@ import '../model/ImageModel.dart';
 import '../model/TagModel.dart';
 import '../utils/AppColors.dart';
 import 'dart:developer' as developer;
+import 'package:fluttertoast/fluttertoast.dart';
 
 abstract class PostRepository {
   Future<void> uploadPost(String postText, List<File> images, String category, List<String> tags);
@@ -1475,19 +1476,44 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   // get the post owner post
-  @override
-  Stream<List<PostModel>> getMyPost() {
-    User ? user = FirebaseAuth.instance.currentUser;
-    String id = user!.uid;
+@override
+Stream<List<PostModel>> getMyPost() {
+  User? user = FirebaseAuth.instance.currentUser;
 
-    return _firestore.collection('PostCollection')
-        .where('PostOwnerID', isEqualTo: id)
-        .snapshots()
-        .asyncMap((snapshot) async {
-      List<Future<PostModel>> postFutures = snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
-      return await Future.wait(postFutures);
-    });
+  if (user == null) {
+    Fluttertoast.showToast(msg: "DEBUG: User is not logged in.");
+    return Stream.value([]);
   }
+
+  String id = user.uid;
+
+  return _firestore
+      .collection('PostCollection')
+      .where('PostOwnerID', isEqualTo: id)
+      .snapshots()
+      .handleError((error) {
+        Fluttertoast.showToast(msg: "DEBUG: Stream Error: $error");
+      })
+      .asyncMap((snapshot) async {
+        if (snapshot.docs.isEmpty) {
+          Fluttertoast.showToast(msg: "DEBUG: No posts found.");
+          return [];
+        }
+
+        List<PostModel> posts = [];
+        for (var doc in snapshot.docs) {
+          try {
+            final post = await PostModel.fromDocument(doc);
+            posts.add(post);
+          } catch (e) {
+            Fluttertoast.showToast(msg: "DEBUG: Error parsing document ${doc.id}");
+          }
+        }
+        
+        Fluttertoast.showToast(msg: "DEBUG: Successfully loaded ${posts.length} posts.");
+        return posts;
+      });
+}
 
   @override
   Future<void> updatePetStatus(String postId, String category, String selectedStatus) async {
