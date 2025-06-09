@@ -19,9 +19,17 @@ class ProfileView extends StatefulWidget {
 }
 
 class ProfileState extends State<ProfileView> {
+  late PostViewModel postViewModel;
+
+   @override
+  void initState() {
+     super.initState();
+     postViewModel = Provider.of<PostViewModel>(context, listen: false);
+     postViewModel.listenToMyPost();
+   }
+
   @override
   Widget build(BuildContext context) {
-    final postViewModel = Provider.of<PostViewModel>(context);
     final screenWidth = MediaQuery.of(context).size.width;
     final screenHeight = MediaQuery.of(context).size.height;
 

@@ -70,7 +70,7 @@ class PostViewModel extends ChangeNotifier {
   Stream<List<PostModel>> get petAdoptPostStream => postRepository.getPetAdoption();
   Stream<List<PostModel>> get callforAidPostStream => postRepository.getCallforAid();
   Stream<List<PostModel>> get petForRescue => postRepository.getFindHome();
-  Stream<List<PostModel>> get myPost => postRepository.getMyPost();
+  Stream<List<PostModel>> get myPostStream => postRepository.getMyPost();
 
   List<String> petStatusOptions =[];
   String? selectedPetStatus;
@@ -276,6 +276,8 @@ class PostViewModel extends ChangeNotifier {
   }
 
   Future <void> listenToPost() async {
+    _posts.clear();
+    filteredPost.clear();
     posTream.listen((posts) {
       _posts = posts;
       filteredPost = posts;
@@ -294,6 +296,8 @@ class PostViewModel extends ChangeNotifier {
 
   // Listen to found post
   Future  <void> listenToFoundPost()  async {
+    foundPost.clear();
+    filterFoundPost.clear();
     foundPostStream.listen((foundPosts) {
       foundPost = foundPosts;
       filterFoundPost = foundPosts;
@@ -303,6 +307,8 @@ class PostViewModel extends ChangeNotifier {
 
   // Listen to paw experience post
   Future <void> listenToPawExperiencePost() async {
+    pawExperiencePost.clear();
+    filterPawExperiencePost.clear();
     pawExperiencePostStream.listen((pawExperiencePosts) {
       pawExperiencePost = pawExperiencePosts;
       filterPawExperiencePost = pawExperiencePosts;
@@ -312,6 +318,8 @@ class PostViewModel extends ChangeNotifier {
 
   // Listen to protected post
   Future <void> listenToProtectedPost() async {
+    protectedPost.clear();
+    filterProtectedPost.clear();
     protectedPostStream.listen((protectedPosts) {
       protectedPost = protectedPosts;
       filterProtectedPost = protectedPosts;
@@ -321,6 +329,8 @@ class PostViewModel extends ChangeNotifier {
 
   // Listen to community post
   Future <void> listenToCommunityPost() async{
+    communityPost.clear();
+    filterCommunityPost.clear();
     communityPostStream.listen((communityPosts) {
       communityPost = communityPosts;
       filterCommunityPost = communityPosts;
@@ -330,6 +340,8 @@ class PostViewModel extends ChangeNotifier {
 
   // Listen to vet and travel post
   Future <void> listenToVetAndTravelPost() async {
+    vetAndtravelPost.clear();
+    filterVetAndTravelPost.clear();
     vetAndTravelPostStream.listen((travelPosts) {
       vetAndtravelPost = travelPosts;
       filterVetAndTravelPost = travelPosts;
@@ -339,6 +351,8 @@ class PostViewModel extends ChangeNotifier {
 
   // Listen to pet adopt post
   Future <void> listenToPetAdoptPost() async {
+    petAdoptPost.clear();
+    filterPetAdoptPost.clear();
     petAdoptPostStream.listen((adoptpost) {
       petAdoptPost = adoptpost;
       filterPetAdoptPost = adoptpost;
@@ -348,6 +362,8 @@ class PostViewModel extends ChangeNotifier {
 
   // Listen to call for aid post
   Future <void> listenToCallforAidPost() async {
+    callforAidPost.clear();
+    filterCallforAidPost.clear();
     callforAidPostStream.listen((aidPost) {
       callforAidPost = aidPost;
       filterCallforAidPost = aidPost;
@@ -357,6 +373,8 @@ class PostViewModel extends ChangeNotifier {
 
   // Listen to pet for rescue post
   Future <void> listenToPetForRescuePost() async {
+    petforRescuePost.clear();
+    filterPetForRescuePost.clear();
     petForRescue.listen((rescuePost) {
       petforRescuePost = rescuePost;
       filterPetForRescuePost = rescuePost;
@@ -365,11 +383,19 @@ class PostViewModel extends ChangeNotifier {
   }
 
   // Listen to my post
-  Future <void> listenToMyPost() async {
-    myPost.listen((myPosts) {
-      myPostlist = myPosts;
-      filterMyPost = myPosts;
-      notifyListeners();
+  Future<void> listenToMyPost() async {
+    myPostlist.clear();
+    filterMyPost.clear();
+    myPostStream.listen((myPosts) {
+      if (myPosts.isNotEmpty) {
+        myPostlist = myPosts;
+        filterMyPost = myPosts;
+        notifyListeners();
+      } else {
+        print('No posts found in myPost stream.');
+      }
+    }).onError((error) {
+      print('Error listening to myPost stream: $error');
     });
   }
 
