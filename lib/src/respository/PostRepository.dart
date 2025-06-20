@@ -1481,7 +1481,7 @@ Stream<List<PostModel>> getMyPost() {
   User? user = FirebaseAuth.instance.currentUser;
 
   if (user == null) {
-    Fluttertoast.showToast(msg: "DEBUG: User is not logged in.");
+    Fluttertoast.showToast(msg: "User is not logged in.");
     return Stream.value([]);
   }
 
@@ -1492,11 +1492,11 @@ Stream<List<PostModel>> getMyPost() {
       .where('PostOwnerID', isEqualTo: id)
       .snapshots()
       .handleError((error) {
-        Fluttertoast.showToast(msg: "DEBUG: Stream Error: $error");
+        Fluttertoast.showToast(msg: "Error: Stream Error: $error");
       })
       .asyncMap((snapshot) async {
         if (snapshot.docs.isEmpty) {
-          Fluttertoast.showToast(msg: "DEBUG: No posts found.");
+          Fluttertoast.showToast(msg: "No posts found.");
           return [];
         }
 
@@ -1506,11 +1506,9 @@ Stream<List<PostModel>> getMyPost() {
             final post = await PostModel.fromDocument(doc);
             posts.add(post);
           } catch (e) {
-            Fluttertoast.showToast(msg: "DEBUG: Error parsing document ${doc.id}");
+            Fluttertoast.showToast(msg: "Error: Error parsing document ${doc.id}");
           }
         }
-        
-        Fluttertoast.showToast(msg: "DEBUG: Successfully loaded ${posts.length} posts.");
         return posts;
       });
 }

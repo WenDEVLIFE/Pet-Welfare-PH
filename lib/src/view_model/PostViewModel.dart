@@ -19,7 +19,9 @@ class PostViewModel extends ChangeNotifier {
   final TextEditingController searchPostController = TextEditingController();
   String role = '';
   String currentUserId = '';
-
+  bool _isSearching = false;
+  bool get isSearching => _isSearching;
+  
   List<PostModel> _posts = [];
   List<PostModel> filteredPost = [];
 
@@ -412,25 +414,32 @@ class PostViewModel extends ChangeNotifier {
   }
 
   // Missing Post
-  void searchMissingPost(String searchText) {
-    if (searchText.isEmpty) {
+  Future<void> searchMissingPost(String searchText) async {
+    _isSearching = true;
+    notifyListeners();
+    await Future.delayed(const Duration(milliseconds: 400));
+
+    final lowercasedSearchText = searchText.toLowerCase();
+
+    if (lowercasedSearchText.isEmpty) {
       filterMissingPost = missingPost;
     } else {
-      filterMissingPost = missingPost.where((post) =>
-      post.petName.toLowerCase().contains(searchText.toLowerCase()) ||
-          post.postOwnerName.toLowerCase().contains(searchText) ||
-          post.petType.toLowerCase().contains(searchText.toLowerCase()) ||
-          post.petBreed.toLowerCase().contains(searchText.toLowerCase()) ||
-          post.petGender.toLowerCase().contains(searchText.toLowerCase()) ||
-          post.petAge.toLowerCase().contains(searchText.toLowerCase()) ||
-          post.petColor.toLowerCase().contains(searchText.toLowerCase()) ||
-          post.petAddress.toLowerCase().contains(searchText.toLowerCase()) ||
-          post.petCollar.toLowerCase().contains(searchText.toLowerCase()) ||
-          post.regProCiBag.toLowerCase().contains(searchText.toLowerCase()) ||
-          post.date.toLowerCase().contains(searchText.toLowerCase()) ||
-          post.petSize.toLowerCase().contains(searchText.toLowerCase()) ||
-          post.PetType.toLowerCase().contains(searchText.toLowerCase())).toList();
+      filterMissingPost = missingPost.where((post) {
+        return post.petName.toLowerCase().contains(lowercasedSearchText) ||
+            post.postOwnerName.toLowerCase().contains(lowercasedSearchText) ||
+            post.petType.toLowerCase().contains(lowercasedSearchText) ||
+            post.petBreed.toLowerCase().contains(lowercasedSearchText) ||
+            post.petGender.toLowerCase().contains(lowercasedSearchText) ||
+            post.petAge.toLowerCase().contains(lowercasedSearchText) ||
+            post.petColor.toLowerCase().contains(lowercasedSearchText) ||
+            post.petAddress.toLowerCase().contains(lowercasedSearchText) ||
+            post.petCollar.toLowerCase().contains(lowercasedSearchText) ||
+            post.regProCiBag.toLowerCase().contains(lowercasedSearchText) ||
+            post.date.toLowerCase().contains(lowercasedSearchText) ||
+            post.petSize.toLowerCase().contains(lowercasedSearchText);
+      }).toList();
     }
+    _isSearching = false;
     notifyListeners();
   }
 
@@ -971,3 +980,4 @@ class PostViewModel extends ChangeNotifier {
   }
 
 }
+

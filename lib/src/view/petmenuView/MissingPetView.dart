@@ -25,59 +25,68 @@ class MissingPetView extends StatefulWidget {
 
 class MissingPetState extends State<MissingPetView> {
   late PostViewModel postViewModel;
+
   @override
   void initState() {
     super.initState();
     postViewModel = Provider.of<PostViewModel>(context, listen: false);
-    postViewModel.listenToMissingPost();
+
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (postViewModel.searchPostController.text.isNotEmpty) {
+        postViewModel.searchPostController.clear();
+      }
+      postViewModel.listenToMissingPost();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    PostViewModel postViewModel = Provider.of<PostViewModel>(context, listen: false);
-
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       body: Consumer<PostViewModel>(
-        builder: (context, postViewModel, child) {
+        builder: (context, viewModel, child) {
           return Column(
             children: [
               CustomSearchTextField(
-                controller: postViewModel.searchPostController,
+                controller: viewModel.searchPostController,
                 screenHeight: screenHeight,
                 hintText: 'Search in Missing Pets',
                 fontSize: 16,
                 keyboardType: TextInputType.text,
                 onChanged: (searchText) {
-                  postViewModel.searchMissingPost(searchText);
+                  viewModel.searchMissingPost(searchText);
                 },
               ),
-          Expanded(
-                  child: postViewModel.filterMissingPost.isEmpty
-                  ? Center(
-                    child: Text(
-                      'No ${postViewModel.searchPostController.text} missing pet post found',
-                    ),
-                  )
-                      : ListView.builder(
-                  itemCount: postViewModel.filterMissingPost.length,
-                  itemBuilder: (context, index) {
-                  var post = postViewModel.filterMissingPost[index];
-
-                  return MissingPetCard(post: post,
-                      screenHeight: screenHeight,
-                      screenWidth: screenWidth
-                  );
-                  },
-                  ),
-                ),
+              Expanded(
+                child: viewModel.isSearching
+                    ? const Center(child: CircularProgressIndicator()) 
+                    : viewModel.filterMissingPost.isEmpty
+                        ? Center(
+                            child: Text(
+                              viewModel.searchPostController.text.isEmpty
+                                  ? 'No missing pet posts available.'
+                                  : 'No results for "${viewModel.searchPostController.text}"',
+                            ),
+                          )
+                        : ListView.builder(
+                            itemCount: viewModel.filterMissingPost.length,
+                            itemBuilder: (context, index) {
+                              final post = viewModel.filterMissingPost[index];
+                              return MissingPetCard(
+                                post: post,
+                                screenHeight: screenHeight,
+                                screenWidth: screenWidth,
+                              );
+                            },
+                          ),
+              ),
             ],
           );
         },
       ),
-      floatingActionButton:SpeedDial(
+       floatingActionButton:SpeedDial(
         icon: Icons.add,
         backgroundColor: AppColors.black,
         foregroundColor: AppColors.white,
@@ -114,7 +123,7 @@ class MissingPetState extends State<MissingPetView> {
             },
           ),
         ],
-      )
+      ),
     );
   }
 }
