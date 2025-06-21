@@ -64,7 +64,7 @@ class MissingPetState extends State<MissingPetView> {
                     ? const Center(child: CircularProgressIndicator()) 
                     : viewModel.filterMissingPost.isEmpty
                         ? Center(
-                            child: Text(
+                            child: Text( 
                               viewModel.searchPostController.text.isEmpty
                                   ? 'No missing pet posts available.'
                                   : 'No results for "${viewModel.searchPostController.text}"',
