@@ -27,7 +27,7 @@ class ProtectPetState extends State<ProtectPetView> {
 
   @override
   Widget build(BuildContext context) {
-    PostViewModel postViewModel = Provider.of<PostViewModel>(context, listen: false);
+   // PostViewModel postViewModel = Provider.of<PostViewModel>(context, listen: false);
 
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
@@ -44,7 +44,7 @@ class ProtectPetState extends State<ProtectPetView> {
                 fontSize: 16,
                 keyboardType: TextInputType.text,
                 onChanged: (searchText) {
-                  postViewModel.searchProtectedPost(searchText);
+                  postViewModel.onSearchChanged(searchText);
                 },
               ),
           Expanded(

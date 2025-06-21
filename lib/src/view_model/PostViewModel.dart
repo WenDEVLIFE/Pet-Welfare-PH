@@ -16,11 +16,12 @@ import '../utils/SessionManager.dart';
 import '../utils/ToastComponent.dart';
 
 class PostViewModel extends ChangeNotifier {
-  final TextEditingController searchPostController = TextEditingController();
+  final searchPostController = TextEditingController();
   String role = '';
   String currentUserId = '';
   bool _isSearching = false;
   bool get isSearching => _isSearching;
+  Timer? _debounce;
   
   List<PostModel> _posts = [];
   List<PostModel> filteredPost = [];
@@ -100,6 +101,15 @@ class PostViewModel extends ChangeNotifier {
        currentUserId = userData!['uid'] ?? '';
        notifyListeners();
      });
+  }
+
+void onSearchChanged(String query) {
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+    
+    //search for protected post
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      searchProtectedPost(query);
+    });
   }
 
   // this is for the set post
@@ -480,9 +490,12 @@ class PostViewModel extends ChangeNotifier {
   // Protected Post
   void searchProtectedPost(String search) {
     if (search.isEmpty) {
-      filterProtectedPost = protectedPost;
+      filterProtectedPost = List.from(protectedPost);
     } else {
-      filterProtectedPost = protectedPost.where((post) => post.tags.any((tag) => tag.name.toLowerCase().contains(search.toLowerCase()))).toList();
+      filterProtectedPost = protectedPost
+          .where((post) => post.tags.any(
+              (tag) => tag.name.toLowerCase().contains(search.toLowerCase())))
+          .toList();
     }
     notifyListeners();
   }
@@ -978,6 +991,13 @@ class PostViewModel extends ChangeNotifier {
     notifyListeners();
 
   }
-
+  
+  @override
+  void dispose() {
+    _debounce?.cancel(); // Cancel the timer if it's active
+    searchPostController.dispose();
+    super.dispose();
+  }
+  
 }
 
