@@ -1623,7 +1623,7 @@ Future<void> editNow(BuildContext context, String category) async {
 
     if (context.mounted) Navigator.of(context).pop(); // Close the "Saving..." dialog
     _setSaving(false); // Reset state
-    ToastComponent().showMessage(AppColors.green, 'Details updated successfully!');
+    ToastComponent().showMessage(Colors.green, 'Details updated successfully!');
 
   } on DataUpdateException catch (e) {
     // On failure: close the loading dialog and show the specific error

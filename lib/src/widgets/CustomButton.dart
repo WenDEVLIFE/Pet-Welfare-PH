@@ -6,9 +6,10 @@ class CustomButton extends StatelessWidget {
    final double size;
     final Color color1;
    final Color textcolor2;
-    final VoidCallback onPressed;
+    final VoidCallback? onPressed;
 
-    CustomButton({
+    const CustomButton({
+      super.key,
       required this.hint,
       required this.size,
       required this.color1,
