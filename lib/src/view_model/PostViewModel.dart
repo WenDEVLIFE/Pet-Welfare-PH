@@ -23,6 +23,12 @@ class PostViewModel extends ChangeNotifier {
   bool _isSearching = false;
   bool get isSearching => _isSearching;
   Timer? _debounce;
+
+  bool _isInitialLoading = false;
+  bool get isInitialLoading => _isInitialLoading;
+
+  // globally hold subscription post on every tab.
+  StreamSubscription? _postSubscription;
   
   List<PostModel> _posts = [];
   List<PostModel> filteredPost = [];
@@ -348,6 +354,26 @@ void onSearchChanged(String query) {
     protectedPostStream.listen((protectedPosts) {
       protectedPost = protectedPosts;
       filterProtectedPost = protectedPosts;
+      notifyListeners();
+    });
+  }
+
+  Future<void> listenToProtectedPost() async {
+    _isInitialLoading = true;
+    notifyListeners();
+    
+    // avoid memory leaks
+    await _postSubscription?.cancel();
+
+    protectedPost.clear();
+    filterProtectedPost.clear();
+    _postSubscription = protectedPostStream.listen((protectedPosts) {
+      protectedPost = protectedPosts;
+      filterProtectedPost = protectedPosts;
+
+      if (_isInitialLoading) {
+        _isInitialLoading = false;
+      }
       notifyListeners();
     });
   }
@@ -1009,6 +1035,7 @@ void onSearchChanged(String query) {
   @override
   void dispose() {
     _debounce?.cancel(); // Cancel the timer if it's active
+    _postSubscription?.cancel();
     searchPostController.dispose();
     super.dispose();
   }

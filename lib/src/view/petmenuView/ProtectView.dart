@@ -47,39 +47,56 @@ class ProtectPetState extends State<ProtectPetView> {
                   postViewModel.onSearchChanged(searchText);
                 },
               ),
-           Expanded(
-
-            child: Builder(
-              builder: (context) {
-                if (postViewModel.isSearching) {
-                  return ListView.builder(
-                    itemCount: 5, 
-                    itemBuilder: (context, index) => PostCardSkeleton(
-                      screenHeight: screenHeight,
-                      screenWidth: screenWidth,
-                    ),
-                  );
-                }
-                if (postViewModel.filterProtectedPost.isEmpty &&
-                    postViewModel.searchPostController.text.isNotEmpty) {
-                  return Center(
-                      child: Text(
-                          'No "${postViewModel.searchPostController.text}" cases found'));
-                }
-                return ListView.builder(
-                  itemCount: postViewModel.filterProtectedPost.length,
-                  itemBuilder: (context, index) {
-                    var post = postViewModel.filterProtectedPost[index];
-                    return ProtectPetCard(
-                        post: post,
-                        screenHeight: screenHeight,
-                        screenWidth: screenWidth);
-                  },
-                );
-              },
-            ),
+              Expanded(
+  child: Builder(
+    builder: (context) {
+      // initial loading state
+      if (postViewModel.isInitialLoading) {
+        return ListView.builder(
+          itemCount: 5,
+          itemBuilder: (context, index) => PostCardSkeleton(
+            screenHeight: screenHeight,
+            screenWidth: screenWidth,
           ),
-                
+        );
+      }
+      
+      // responsible for showing active searching realtime debouncing
+      if (postViewModel.isSearching) {
+        return ListView.builder(
+          itemCount: 5,
+          itemBuilder: (context, index) => PostCardSkeleton(
+            screenHeight: screenHeight,
+            screenWidth: screenWidth,
+          ),
+        );
+      }
+      if (postViewModel.filterProtectedPost.isEmpty) {
+        if (postViewModel.searchPostController.text.isNotEmpty) {
+          return Center(
+            child: Text(
+              'No "${postViewModel.searchPostController.text}" cases found',
+            ),
+          );
+        }
+        return const Center(
+          child: Text("No posts found."), // generic empty message
+        );
+      }
+      
+      return ListView.builder(
+        itemCount: postViewModel.filterProtectedPost.length,
+        itemBuilder: (context, index) {
+          var post = postViewModel.filterProtectedPost[index];
+          return ProtectPetCard(
+              post: post,
+              screenHeight: screenHeight,
+              screenWidth: screenWidth);
+        },
+      );
+    },
+  ),
+),
             ],
           );
         },
