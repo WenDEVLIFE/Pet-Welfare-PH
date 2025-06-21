@@ -12,7 +12,7 @@ import 'package:pet_welfrare_ph/src/respository/PostRepository.dart';
 import 'package:pet_welfrare_ph/src/services/OpenStreetMapService.dart';
 import 'package:pet_welfrare_ph/src/utils/SessionManager.dart';
 import 'dart:io';
-import '../../utils/AppColors.dart';
+import '../utils/AppColors.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
 import 'package:http/http.dart' as http;
@@ -1565,7 +1565,7 @@ class CreatePostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-Future<void> editNow(BuildContext context, String category, String postID) async {
+Future<void> editNow(BuildContext context, String category) async {
   _setSaving(true);
   showDialog(
     context: context,

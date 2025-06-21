@@ -1089,12 +1089,12 @@ Consumer<CreatePostViewModel>(
         onPressed: isCurrentlySaving 
             ? null 
             : () {
-                createPostViewModel.editNow(context, category, postID);
+                createPostViewModel.editNow(context, category);
               },
             ),
            );
           },
-        )
+        ),
                   SizedBox(height: screenHeight * 0.02),
                 ],
               ),

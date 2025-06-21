@@ -108,7 +108,7 @@ void onSearchChanged(String query) {
   if (query.isEmpty) {
     _debounce?.cancel();
     _isSearching = false; 
-    _performSearch(""); 
+    searchProtectedPost(""); 
     return;
   }
 
