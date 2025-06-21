@@ -97,4 +97,9 @@ jobs:
       - name: Move APK
         run: cp build/app/outputs/flutter-apk/app-release.apk build/app/github_workflow/release/
 
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: flutter-release-apk
+          path: build/app/github_workflow/release/app-release.apk
 
