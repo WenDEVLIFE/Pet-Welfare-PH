@@ -110,11 +110,17 @@ class PostViewModel extends ChangeNotifier {
      });
   }
 
+// debounce realtime logic < BUG FIXED CLIENT LAG WRONG RESULTS ON SEARCH >
 void onSearchChanged(String query) {
   if (query.isEmpty) {
     _debounce?.cancel();
     _isSearching = false; 
+    
+    // more post function here...
+    
+    // protected post
     searchProtectedPost(""); 
+    
     return;
   }
 
@@ -128,6 +134,9 @@ void onSearchChanged(String query) {
   _debounce = Timer(const Duration(milliseconds: 500), () {
     searchProtectedPost(query);
   });
+  
+  // more search post function here...
+  
 }
 
 
@@ -347,17 +356,7 @@ void onSearchChanged(String query) {
     });
   }
 
-  // Listen to protected post
-  Future <void> listenToProtectedPost() async {
-    protectedPost.clear();
-    filterProtectedPost.clear();
-    protectedPostStream.listen((protectedPosts) {
-      protectedPost = protectedPosts;
-      filterProtectedPost = protectedPosts;
-      notifyListeners();
-    });
-  }
-
+  // Listen to protected post < BUG FIXED CLIENT LAG>
   Future<void> listenToProtectedPost() async {
     _isInitialLoading = true;
     notifyListeners();
