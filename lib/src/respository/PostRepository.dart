@@ -1,4 +1,5 @@
 import 'dart:math';
+import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -16,6 +17,8 @@ import '../model/TagModel.dart';
 import '../utils/AppColors.dart';
 import 'dart:developer' as developer;
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:pet_welfrare_ph/src/utils/enum.dart';
+import 'package:pet_welfrare_ph/src/exceptions/firestore_exceptions.dart';
 
 abstract class PostRepository {
   Future<void> uploadPost(String postText, List<File> images, String category, List<String> tags);
@@ -1179,34 +1182,29 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   // Edit post in the database
-  @override
-  Future <void> editDetails(String selectedChip, Map<String, dynamic> petData, String postID) async{
+@override
+Future<void> editDetails(String selectedChip, Map<String, dynamic> petData, String postID) async {
+  final postType = PostType.fromString(selectedChip);
+  if (postType == PostType.unknown) {
+    throw DataUpdateException('Unknown post type provided: $selectedChip');
+  }
 
-    String post = petData['post'];
+  final batch = _firestore.batch();
 
-    // Update the post description
+  final postDocRef = _firestore.collection('PostCollection').doc(postID);
+  batch.update(postDocRef, {'PostDescription': petData['post']});
 
-    if (selectedChip =='Pet Appreciation' || selectedChip =='Paw-some Experience' || selectedChip == 'Protect Our Pets: Report Abuse' || selectedChip == 'Community Announcement') {
+  switch (postType) {
+    case PostType.petAppreciation:
+    case PostType.pawsomeExperience:
+    case PostType.protectOurPets:
+    case PostType.communityAnnouncement:
+      break;
 
-      await _firestore.collection('PostCollection').doc(postID).update({
-        'PostDescription': post,
-      });
-
-      // Update the pet details
-      ToastComponent().showMessage(AppColors.orange, '$selectedChip data updated successfully');
-
-    }
-
-     // Update the pet details
-    if(selectedChip =='Missing Pets' || selectedChip =='Found Pets'){
-
-      await _firestore.collection('PostCollection').doc(postID).update({
-        'PostDescription': post,
-      });
-
-      // Update the pet details
-      Map<String, dynamic> updateData = {
-        'PostDescription': post,
+    case PostType.missingPets:
+    case PostType.foundPets:
+      final detailsDocRef = _firestore.collection('PetDetailsCollection').doc(postID);
+      final updateData = {
         'PetColor': petData['pet_color'],
         'PetAge': petData['pet_age'],
         'PetSize': petData['pet_size'],
@@ -1220,47 +1218,15 @@ class PostRepositoryImpl implements PostRepository {
         'Barangay': petData['barangay'],
         'Address': petData['address'],
       };
-
-    // Add PetType and PetBreed only if pet_type is Cat or Dog
       if (petData['pet_type'] == 'Cat' || petData['pet_type'] == 'Dog') {
         updateData['PetBreed'] = petData['pet_breed'];
       }
-
-    // Update the document
-      await _firestore.collection('PetDetailsCollection').doc(postID).update(updateData);
-
-      ToastComponent().showMessage(AppColors.orange, '$selectedChip details updated successfully');
-    }
-
-    if(selectedChip=='Pets For Rescue'){
-      await _firestore.collection('PostCollection').doc(postID).update({
-        'PostDescription': post,
-      });
-
-
-      // Update the pet details
-      Map<String, dynamic> updateData = {
-        'PetColor': petData['pet_color'],
-        'PetSize': petData['pet_size'],
-        'PetGender': petData['pet_gender'],
-        'Address': petData['address'],
-        'PetBreed' : petData['pet_breed'],
-      };
-
-       await _firestore.collection('PetRescueDetails').doc(postID).update(updateData);
-
-       ToastComponent().showMessage(AppColors.orange, '$selectedChip data updated successfully');
-
-    }
-
-    // This is for the pet adoption
-    if(selectedChip=='Pet Adoption'){
-      await _firestore.collection('PostCollection').doc(postID).update({
-        'PostDescription': post,
-      });
-
-      // Update the pet details
-      Map<String, dynamic> updateData = {
+      batch.update(detailsDocRef, updateData);
+      break;
+      
+    case PostType.petAdoption:
+      final adoptionDocRef = _firestore.collection('AdoptionDetails').doc(postID);
+      final updateData = {
         'PetName': petData['pet_name'],
         'PetColor': petData['pet_color'],
         'PetAge': petData['pet_age'],
@@ -1272,25 +1238,27 @@ class PostRepositoryImpl implements PostRepository {
         'Barangay': petData['barangay'],
         'Address': petData['address'],
       };
-
       if (petData['pet_type'] == 'Cat' || petData['pet_type'] == 'Dog') {
-        updateData['PetBreed'] = petData['pet_breed'];
+          updateData['PetBreed'] = petData['pet_breed'];
       }
+      batch.update(adoptionDocRef, updateData);
+      break;
 
-      await _firestore.collection('AdoptionDetails').doc(postID).update(updateData);
+    case PostType.petsForRescue:
+      final rescueDocRef = _firestore.collection('PetRescueDetails').doc(postID);
+      final updateData = {
+        'PetColor': petData['pet_color'],
+        'PetSize': petData['pet_size'],
+        'PetGender': petData['pet_gender'],
+        'Address': petData['address'],
+        'PetBreed' : petData['pet_breed'],
+      };
+      batch.update(rescueDocRef, updateData);
+      break;
 
-      ToastComponent().showMessage(AppColors.orange, '$selectedChip data updated successfully');
-
-    }
-
-    // This is for the  Vet Travel
-    if(selectedChip=='Pet Care Insights'){
-      await _firestore.collection('PostCollection').doc(postID).update({
-        'PostDescription': post,
-      });
-
-      // Update the pet details
-      Map<String, dynamic> updateData = {
+    case PostType.petCareInsights:
+      final vetTravelDocRef = _firestore.collection('VetTravelDetails').doc(postID);
+      final updateData = {
         'Region': petData['region'],
         'Province': petData['province'],
         'City': petData['city'],
@@ -1298,21 +1266,12 @@ class PostRepositoryImpl implements PostRepository {
         'Barangay': petData['barangay'],
         'Address': petData['address'],
       };
+      batch.update(vetTravelDocRef, updateData);
+      break;
 
-      await _firestore.collection('VetTravelDetails').doc(postID).update(updateData);
-
-      ToastComponent().showMessage(AppColors.orange, '$selectedChip data updated successfully');
-
-    }
-
-    // This is for the donation
-    if(selectedChip=='Call for Aid'){
-      await _firestore.collection('PostCollection').doc(postID).update({
-        'PostDescription': post,
-      });
-
-      // Update the pet details
-      Map<String, dynamic> updateData = {
+    case PostType.callForAid:
+      final donationDocRef = _firestore.collection('DonationDetails').doc(postID);
+      final updateData = {
         'BankHolder': petData['account_name'],
         'BankName': petData['bank_type'],
         'AccountNumber': petData['account_number'],
@@ -1320,14 +1279,27 @@ class PostRepositoryImpl implements PostRepository {
         'PurposeOfDonation': petData['purpose_of_donation'],
         'EstimatedAmount': petData['amount'],
       };
+      batch.update(donationDocRef, updateData);
+      break;
 
-      await _firestore.collection('DonationDetails').doc(postID).update(updateData);
-
-      ToastComponent().showMessage(AppColors.orange, '$selectedChip data updated successfully');
-
-    }
-
+    default:
+    // handles the 'unknown' case.
+      throw DataUpdateException('Logic for $selectedChip not implemented.');
   }
+
+  try {
+    await batch.commit().timeout(const Duration(seconds: 15));
+  } on TimeoutException {
+    // This is the "network is slow" indicator
+    throw DataUpdateException('The network is slow, please try again in a moment.');
+  } on FirebaseException catch (e) {
+    // Handle specific Firestore errors
+    throw DataUpdateException('An error occurred while saving: ${e.code}');
+  } catch (e) {
+    // Handle any other unexpected errors
+    throw DataUpdateException('An unexpected error occurred. Please try again.');
+  }
+}
 
   // Edit an add tags in the database
   @override

@@ -61,7 +61,14 @@ class CreatePostViewModel extends ChangeNotifier {
   var selectedPetAge = '1 month';
 
   bool isDone = false;
+  
+  bool _isSaving = false;
+  bool get isSaving => _isSaving;
 
+  void _setSaving(bool saving) {
+    _isSaving = saving;
+    notifyListeners(); 
+  }
 
   List<String> colorpatter = [
     'Calico',
@@ -1557,38 +1564,89 @@ class CreatePostViewModel extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future <void> editNow(BuildContext context, String category)  async {
+Future<void> editNow(BuildContext context, String category, String postID) async {
+  _setSaving(true);
+  showDialog(
+    context: context,
+    barrierDismissible: false,
+    builder: (BuildContext context) => PopScope(
+      canPop: false,
+      child: AlertDialog(
+        content: Row(
+          children: [
+            CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(AppColors.orange), // Example color
+            ),
+            SizedBox(width: 20),
+            Text("Saving changes..."),
+          ],
+        ),
+      ),
+    ),
+  );
+
+  try {
+    final petType = selectedPetType.toString();
+    String? breed;
+    if (petType == 'Cat' && selectedCatBreed != null) {
+      breed = selectedCatBreed!.name;
+    } else if (petType == 'Dog' && selectedDogBreed != null) {
+      breed = selectedDogBreed!.name;
+    }
+
     var data = {
       'post': postController.text,
-       'pet_name': petName.text,
-      'pet_type': selectedPetType.toString(),
-      'pet_breed': selectedPetType == 'Cat'
-          ? selectedCatBreed!.name
-          : selectedDogBreed!.name,
+      'pet_name': petName.text,
+      'pet_type': petType,
+      'pet_breed': breed,
       'pet_color': selectedColorPattern,
       'pet_age': selectedPetAge,
       'date': dateController.text,
-      'lat': selectedLocation!.latitude,
-      'long' :selectedLocation!.longitude,
+      'lat': selectedLocation?.latitude,
+      'long': selectedLocation?.longitude,
       'pet_size': selectedPetSize,
-       'pet_gender' :selectedPetGender,
-      'region': selectedRegion!.region,
-      'province': selectedProvince!.provinceName,
-       'city': selectedCity!.cityName,
-        'barangay' : selectedBarangay!.barangayName,
+      'pet_gender': selectedPetGender,
+      'region': selectedRegion?.region,
+      'province': selectedProvince?.provinceName,
+      'city': selectedCity?.cityName,
+      'barangay': selectedBarangay?.barangayName,
       'address': address.text,
-      'bank_name': selectedBankType,
+      'bank_type': selectedBankType,
       'account_name': accountNameController.text,
-      'bank_holder': bankNameController.text,
       'purpose_of_donation': selectedTypeOfDonation,
       'amount': amountController.text,
       'clinic_name': clinicNameController.text,
-
     };
+    
     await postRepository.editDetails(category, data, postID);
-    notifyListeners();
-  }
 
+    if (context.mounted) Navigator.of(context).pop(); // Close the "Saving..." dialog
+    _setSaving(false); // Reset state
+    ToastComponent().showMessage(AppColors.green, 'Details updated successfully!');
+
+  } on DataUpdateException catch (e) {
+    // On failure: close the loading dialog and show the specific error
+    if (context.mounted) Navigator.of(context).pop(); // Close the "Saving..." dialog
+    _setSaving(false); // Reset state
+
+    // Show an error dialog with the message from our custom exception
+    if (context.mounted) {
+      showDialog(
+        context: context,
+        builder: (context) => AlertDialog(
+          title: Text("Update Failed"),
+          content: Text(e.message), // e.g., "The network is slow..."
+          actions: [
+            TextButton(
+              child: Text("OK"),
+              onPressed: () => Navigator.of(context).pop(),
+            ),
+          ],
+        ),
+      );
+    }
+  }
+}
   void clearAllEdits(){
     postController.clear();
 

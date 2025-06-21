@@ -1077,17 +1077,25 @@ class _EditPostViewState extends State<EditPostView> {
                       ),
                     ),
                   ],
-                  Center(
-                      child: CustomButton(
-                        hint: 'Save Edit',
-                        size: 18,
-                        color1: AppColors.orange,
-                        textcolor2: Colors.white,
-                        onPressed: () async  {
-                          createPostViewModel.editNow(context, category);
-                        },
-                      )
-                  ),
+Consumer<CreatePostViewModel>(
+  builder: (context, createPostViewModel, child) {
+    final bool isCurrentlySaving = createPostViewModel.isSaving;
+    return Center(
+      child: CustomButton(
+        hint: 'Save Edit',
+        size: 18,.
+        color1: isCurrentlySaving ? Colors.grey : AppColors.orange,
+        
+        textcolor2: Colors.white,
+        onPressed: isCurrentlySaving 
+            ? null 
+            : () {
+                createPostViewModel.editNow(context, category, postID);
+              },
+            ),
+           );
+          },
+        )
                   SizedBox(height: screenHeight * 0.02),
                 ],
               ),
