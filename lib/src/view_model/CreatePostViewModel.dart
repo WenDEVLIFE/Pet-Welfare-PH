@@ -12,6 +12,7 @@ import 'package:pet_welfrare_ph/src/respository/PostRepository.dart';
 import 'package:pet_welfrare_ph/src/services/OpenStreetMapService.dart';
 import 'package:pet_welfrare_ph/src/utils/SessionManager.dart';
 import 'dart:io';
+import '../../utils/AppColors.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
 import 'package:http/http.dart' as http;
@@ -19,7 +20,7 @@ import 'package:pet_welfrare_ph/src/model/RegionModel.dart';
 import 'package:pet_welfrare_ph/src/model/ProvinceModel.dart';
 import 'package:pet_welfrare_ph/src/model/CityModel.dart';
 import 'package:pet_welfrare_ph/src/model/BarangayModel.dart';
-
+import 'package:pet_welfrare_ph/src/exceptions/firestore_exceptions.dart';
 import '../model/BreedModel.dart';
 import '../model/TagModel.dart';
 import '../services/LocationService.dart';
@@ -1575,8 +1576,8 @@ Future<void> editNow(BuildContext context, String category, String postID) async
         content: Row(
           children: [
             CircularProgressIndicator(
-              valueColor: AlwaysStoppedAnimation<Color>(AppColors.orange), // Example color
-            ),
+  valueColor: AlwaysStoppedAnimation<Color>(AppColors.orange),
+),
             SizedBox(width: 20),
             Text("Saving changes..."),
           ],

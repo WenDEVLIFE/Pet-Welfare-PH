@@ -1083,9 +1083,8 @@ Consumer<CreatePostViewModel>(
     return Center(
       child: CustomButton(
         hint: 'Save Edit',
-        size: 18,.
+        size: 18,
         color1: isCurrentlySaving ? Colors.grey : AppColors.orange,
-        
         textcolor2: Colors.white,
         onPressed: isCurrentlySaving 
             ? null 

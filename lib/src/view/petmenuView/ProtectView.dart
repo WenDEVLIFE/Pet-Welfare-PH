@@ -47,21 +47,39 @@ class ProtectPetState extends State<ProtectPetView> {
                   postViewModel.onSearchChanged(searchText);
                 },
               ),
-          Expanded(
-          child: postViewModel.filterProtectedPost.isEmpty
-          ? Center(child: Text('No ${postViewModel.searchPostController.text} cases found'))
-              : ListView.builder(
-          itemCount: postViewModel.filterProtectedPost.length,
-          itemBuilder: (context, index) {
-          var post = postViewModel.filterProtectedPost[index];
+           Expanded(
 
-          return ProtectPetCard(post: post,
-              screenHeight: screenHeight
-              , screenWidth: screenWidth
-          );
-                },
-                ),
-                ),
+            child: Builder(
+              builder: (context) {
+                if (postViewModel.isSearching) {
+                  return ListView.builder(
+                    itemCount: 5, 
+                    itemBuilder: (context, index) => PostCardSkeleton(
+                      screenHeight: screenHeight,
+                      screenWidth: screenWidth,
+                    ),
+                  );
+                }
+                if (postViewModel.filterProtectedPost.isEmpty &&
+                    postViewModel.searchPostController.text.isNotEmpty) {
+                  return Center(
+                      child: Text(
+                          'No "${postViewModel.searchPostController.text}" cases found'));
+                }
+                return ListView.builder(
+                  itemCount: postViewModel.filterProtectedPost.length,
+                  itemBuilder: (context, index) {
+                    var post = postViewModel.filterProtectedPost[index];
+                    return ProtectPetCard(
+                        post: post,
+                        screenHeight: screenHeight,
+                        screenWidth: screenWidth);
+                  },
+                );
+              },
+            ),
+          ),
+                
             ],
           );
         },
@@ -94,3 +112,4 @@ class ProtectPetState extends State<ProtectPetView> {
     );
   }
 }
+

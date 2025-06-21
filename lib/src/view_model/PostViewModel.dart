@@ -105,13 +105,25 @@ class PostViewModel extends ChangeNotifier {
   }
 
 void onSearchChanged(String query) {
-    if (_debounce?.isActive ?? false) _debounce!.cancel();
-    
-    //search for protected post
-    _debounce = Timer(const Duration(milliseconds: 500), () {
-      searchProtectedPost(query);
-    });
+  if (query.isEmpty) {
+    _debounce?.cancel();
+    _isSearching = false; 
+    _performSearch(""); 
+    return;
   }
+
+  if (!_isSearching) {
+    _isSearching = true;
+    notifyListeners(); 
+  }
+  if (_debounce?.isActive ?? false) _debounce!.cancel();
+  
+  //search for protected post
+  _debounce = Timer(const Duration(milliseconds: 500), () {
+    searchProtectedPost(query);
+  });
+}
+
 
   // this is for the set post
   void setPost(List<PostModel> posts, {bool notify = true}) {
@@ -498,6 +510,7 @@ void onSearchChanged(String query) {
               (tag) => tag.name.toLowerCase().contains(search.toLowerCase())))
           .toList();
     }
+    _isSearching = false;
     notifyListeners();
   }
 
