@@ -1,4 +1,6 @@
 import 'dart:io';
+import 'dart:async';
+import 'dart:typed_data';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -9,6 +11,7 @@ import 'package:pet_welfrare_ph/src/model/MessageModel.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 
 import '../utils/AppColors.dart';
+import 'package:rxdart/rxdart.dart';
 
 abstract class MessageRepository {
   Stream<List<MessageModel>> getMessage(String receiverId);
@@ -63,7 +66,7 @@ class MessageRepositoryImpl implements MessageRepository {
 
       return messages;
     });
-    }
+    });
   }
 
   // Send the message to the receiver or sender
@@ -184,8 +187,8 @@ class MessageRepositoryImpl implements MessageRepository {
         ));
       }
       return chatList;
+      });
     });
-    }
   }
 
 
