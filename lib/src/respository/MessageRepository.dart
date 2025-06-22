@@ -25,8 +25,14 @@ class MessageRepositoryImpl implements MessageRepository {
 
   @override
   Stream<List<MessageModel>> getMessage(String receiverId) {
-    User user = _auth.currentUser!;
-    String currentUserId = user.uid;
+    return _auth.authStateChanges().switchMap((user) {
+      // If the user is logged out, return an empty list of messages
+      if (user == null) {
+        return Stream.value([]);
+      }
+
+      // If a user is logged in, create the Firestore query with their UID
+      final String currentUserId = user.uid;
 
     return _firestore
         .collection('Chatrooms')
@@ -57,6 +63,7 @@ class MessageRepositoryImpl implements MessageRepository {
 
       return messages;
     });
+    }
   }
 
   // Send the message to the receiver or sender
@@ -138,9 +145,15 @@ class MessageRepositoryImpl implements MessageRepository {
   // fetch the chatrooms between the sender and receiver
   @override
   Stream<List<ChatModel>> getChat() {
-    User user = _auth.currentUser!;
-    String currentUserId = user.uid;
+    return _auth.authStateChanges().switchMap((user) {
+      // If the user is logged out, return an empty list of messages
+      if (user == null) {
+        return Stream.value([]);
+      }
 
+      // If a user is logged in, create the Firestore query with their UID
+      final String currentUserId = user.uid;
+      
     return _firestore.collection('Chatrooms')
         .where('participants', arrayContains: currentUserId)
         .snapshots()
@@ -172,6 +185,7 @@ class MessageRepositoryImpl implements MessageRepository {
       }
       return chatList;
     });
+    }
   }
 
 
