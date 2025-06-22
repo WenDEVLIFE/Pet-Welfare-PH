@@ -32,7 +32,7 @@ dependencies:
   image_picker: ^1.1.2
   sn_progress_dialog: ^1.1.4
   uuid: ^4.5.1
-  cached_network_image: ^3.3.1
+  cached_network_image: ^3.4.1
   path: ^1.9.0
   flutter_map: ^4.0.0
   latlong2: ^0.8.2
@@ -47,7 +47,7 @@ dependencies:
   firebase_app_check: ^0.3.2+2
   firebase_admin: ^0.3.0
   cloud_functions: ^5.3.2
-  http: ^0.13.3
+  http: ^1.2.1
   timeago: ^3.0.2
   philippines_rpcmb: ^0.0.3
   async: ^2.8.2
@@ -101,4 +101,4 @@ flutter:
         - asset: assets/fonts/SmoochSans-Medium.ttf
           weight: 500
         - asset: assets/fonts/SmoochSans-Light.ttf
-          weight: 300
+          
