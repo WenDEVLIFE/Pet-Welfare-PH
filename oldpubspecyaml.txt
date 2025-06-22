@@ -1,7 +1,9 @@
 CHANGED DEPENDENCIES ARE:
 
+old:
 http: ^0.13.3
 cached_network_image: ^3.3.1
+flutter_map: ^4.0.0
 
 IF YOU WANT TO USE THE OLD DEPENDENCIES DOWNGRADE RXDART:
 
