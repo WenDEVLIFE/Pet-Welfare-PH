@@ -53,7 +53,7 @@ class AddAdminViewModel extends ChangeNotifier {
       bool userExists = await _repository.checkIfUserExists(name.text, email.text);
       bool checkEmail = await _repository.checkValidateEmail(email.text);
       bool checkPassword = await _repository.checkPassword(password.text, confirmpassword.text);
-      final (bool isValid, String? errorMessage) = await _repository.checkPasswordComplexity(passwordController.text);
+      final (bool isValid, String? errorMessage) = await _repository.checkPasswordComplexity(password.text);
 
       if (userExists) {
         Fluttertoast.showToast(
