@@ -53,7 +53,8 @@ class AddAdminViewModel extends ChangeNotifier {
       bool userExists = await _repository.checkIfUserExists(name.text, email.text);
       bool checkEmail = await _repository.checkValidateEmail(email.text);
       bool checkPassword = await _repository.checkPassword(password.text, confirmpassword.text);
-      bool checkPasswordComplexity = await _repository.checkPasswordComplexity(password.text);
+      final (bool isValid, String? errorMessage) = await _repository.checkPasswordComplexity(passwordController.text);
+
       if (userExists) {
         Fluttertoast.showToast(
           msg: 'User with this name or email already exists',
@@ -89,19 +90,19 @@ class AddAdminViewModel extends ChangeNotifier {
           fontSize: 16.0,
         );
       }
-
-      if (!checkPasswordComplexity) {
-        Fluttertoast.showToast(
-          msg: 'Password must contain at least 1 uppercase, 1 lowercase, 1 number, 1 special character and must be 8 characters long',
-          toastLength: Toast.LENGTH_SHORT,
-          gravity: ToastGravity.BOTTOM,
-          timeInSecForIosWeb: 1,
-          backgroundColor: CupertinoColors.systemRed,
-          textColor: CupertinoColors.white,
-          fontSize: 16.0,
-        );
-      }
-      else {
+      
+      if (!isValid) {
+  Fluttertoast.showToast(
+    msg: errorMessage ?? "Your password does not meet the requirements.",
+    toastLength: Toast.LENGTH_SHORT,
+    gravity: ToastGravity.BOTTOM,
+    timeInSecForIosWeb: 1,
+    backgroundColor: CupertinoColors.systemRed,
+    textColor: CupertinoColors.white,
+    fontSize: 16.0,
+  );
+  return; 
+}else {
         // Proceed with adding the user
         var userData = {
           'name': name.text,
@@ -111,6 +112,7 @@ class AddAdminViewModel extends ChangeNotifier {
         };
         _repository.registerUser(userData, context, clearText);
       }
+      
     }
   }
 

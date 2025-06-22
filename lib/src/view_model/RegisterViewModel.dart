@@ -74,7 +74,6 @@ class RegisterViewModel extends ChangeNotifier {
     bool userExists = await _repository.checkIfUserExists(nameController.text, emailController.text);
     bool checkEmail = await _repository.checkValidateEmail(emailController.text);
     bool checkPassword = await _repository.checkPassword(passwordController.text, confirmPasswordController.text);
-    bool checkPasswordComplexity = await _repository.checkPasswordComplexity(passwordController.text);
     final (bool isValid, String? errorMessage) = await _repository.checkPasswordComplexity(passwordController.text);
 
     if (userExists) {
