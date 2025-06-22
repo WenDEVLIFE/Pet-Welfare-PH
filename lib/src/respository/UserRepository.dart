@@ -17,7 +17,7 @@ abstract class UserRepository {
   Future<bool> checkIfUserExists(String name, String email);
   Future<bool> checkValidateEmail(String email);
   Future<bool> checkPassword(String password, String confirmPassword);
-  Future<bool> checkPasswordComplexity(String password);
+  Future<(bool, String?)> checkPasswordComplexity(String password);
   Future<void> registerUser(Map<String, dynamic> userData, BuildContext context, void Function() clearText);
   Stream<List<UserModel>> loadUserData();
   Future<void> approveUser(String uid);
@@ -73,11 +73,32 @@ class UserRepositoryImpl implements UserRepository {
   }
 
   // This will check if the password is complex
-  Future<bool> checkPasswordComplexity(String password) async {
-    String pattern =
-        r'^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[!@#\$&*~%^&*()_+|<>?{}\\[\\]~-;:+=-]).{8,}$';
-    return RegExp(pattern).hasMatch(password);
+Future<(bool, String?)> checkPasswordComplexity(String password) async {
+  
+  if (password.length < 8) {
+    // Return a 'false' success status and the specific error message
+    return (false, "Password must be at least 8 characters");
   }
+  
+  if (!RegExp(r'[A-Z]').hasMatch(password)) {
+    return (false, "Password must contain an uppercase letter");
+  }
+  
+  if (!RegExp(r'[a-z]').hasMatch(password)) {
+    return (false, "Password must contain a lowercase letter");
+  }
+  
+  if (!RegExp(r'[0-9]').hasMatch(password)) {
+    return (false, "Password must contain a number");
+  }
+  
+  if (!RegExp(r'[!@#$%^&*(),.?":{}|<>]').hasMatch(password)) {
+    return (false, "Password must contain a special character");
+  }
+
+  // On success, return a 'true' status and a null error message
+  return (true, null);
+}
 
   // Check if the phone number is valid
   Future<bool> checkPhoneNumber(String phoneNumber) async {

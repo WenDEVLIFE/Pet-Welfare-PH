@@ -75,6 +75,7 @@ class RegisterViewModel extends ChangeNotifier {
     bool checkEmail = await _repository.checkValidateEmail(emailController.text);
     bool checkPassword = await _repository.checkPassword(passwordController.text, confirmPasswordController.text);
     bool checkPasswordComplexity = await _repository.checkPasswordComplexity(passwordController.text);
+    final (bool isValid, String? errorMessage) = await _repository.checkPasswordComplexity(passwordController.text);
 
     if (userExists) {
       Fluttertoast.showToast(
@@ -115,18 +116,19 @@ class RegisterViewModel extends ChangeNotifier {
       return; // Stop further execution
     }
 
-    if (!checkPasswordComplexity) {
-      Fluttertoast.showToast(
-        msg: 'Password must contain at least 1 uppercase, 1 lowercase, 1 number, 1 special character and must be 8 characters long',
-        toastLength: Toast.LENGTH_SHORT,
-        gravity: ToastGravity.BOTTOM,
-        timeInSecForIosWeb: 1,
-        backgroundColor: CupertinoColors.systemRed,
-        textColor: CupertinoColors.white,
-        fontSize: 16.0,
-      );
-      return; // Stop further execution
-    }
+if (!isValid) {
+  Fluttertoast.showToast(
+    msg: errorMessage ?? "Your password does not meet the requirements.",
+    toastLength: Toast.LENGTH_SHORT,
+    gravity: ToastGravity.BOTTOM,
+    timeInSecForIosWeb: 1,
+    backgroundColor: CupertinoColors.systemRed,
+    textColor: CupertinoColors.white,
+    fontSize: 16.0,
+  );
+  return; 
+}
+
 
     // Proceed with adding the user
     Navigator.pushNamed(context, AppRoutes.uploadIDScreen, arguments: {
