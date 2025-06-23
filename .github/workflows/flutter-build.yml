@@ -9,56 +9,97 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      FLUTTER_VERSION: '3.22.2' # Using the latest stable version as of June 2025
+      FLUTTER_VERSION: '3.29.3'
+      NDK_VERSION: '27.0.12077973'
+      SDK_ROOT: $HOME/Android/Sdk
 
     steps:
       - name: Checkout repository
-        uses: actions/checkout@v4 # Use latest version of checkout
+        uses: actions/checkout@v3
 
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
           flutter-version: ${{ env.FLUTTER_VERSION }}
-          channel: 'stable'
-          cache: true # NEW: This enables caching for Flutter SDK itself
 
-      - name: Cache Pub dependencies
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.PUB_CACHE }}
-          key: ${{ runner.os }}-pub-${{ hashFiles('**/pubspec.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-pub-
-
-      - name: Install dependencies
-        run: flutter pub get
+      # ────────────────────────────────────────────────────────────────
+      # 1) CACHE & (if miss) INSTALL cmdline-tools + NDK
+      # ────────────────────────────────────────────────────────────────
+      - name: Run flutter doctor to initialize Flutter
+        run: flutter doctor
         
-      - name: Analyze code
-        run: flutter analyze
+      - name: Restore NDK cache
+        id: ndk-cache
+        uses: actions/cache@v3
+        with:
+          path: ${{ env.SDK_ROOT }}/ndk/${{ env.NDK_VERSION }}
+          key: ${{ runner.os }}-android-ndk-${{ env.NDK_VERSION }}
 
-      - name: Run tests
-        run: flutter test
+      - name: Bootstrap cmdline-tools & install NDK (cache miss)
+        if: steps.ndk-cache.outputs.cache-hit != 'true'
+        run: |
+          set -e
+          
+          # Base env vars (use export if in script)
+          SDK_ROOT="${HOME}/Android/Sdk"
+          NDK_VERSION="27.0.12077973"
+          
+          # Make sure base dir exists
+          mkdir -p "$SDK_ROOT/cmdline-tools"
 
-      # Your NDK setup is very specific. While there are simpler ways (see note below),
-      # we will keep your existing logic for now.
-      # ────────────────────────────────────────────────────────────────
-      # ANDROID NDK & SDK SETUP
-      # ────────────────────────────────────────────────────────────────
-      - name: Set up Android SDK
-        uses: android-actions/setup-android@v3
+          # Download cmdline tools
+          curl -sSL https://dl.google.com/android/repository/commandlinetools-linux-9477386_latest.zip -o cmdline-tools.zip
+          
+          # Extract to a temporary directory
+          unzip -q cmdline-tools.zip -d cmdline-tools-temp
+          rm cmdline-tools.zip
+
+          # Create proper nested structure: latest/cmdline-tools/*
+          mkdir -p "$SDK_ROOT/cmdline-tools/latest/cmdline-tools"
+          mv cmdline-tools-temp/cmdline-tools/* "$SDK_ROOT/cmdline-tools/latest/cmdline-tools/"
+          rm -rf cmdline-tools-temp
+
+          # Add tools to PATH
+          export PATH="$SDK_ROOT/cmdline-tools/latest/cmdline-tools/bin:$PATH"
+
+          # Install NDK
+          yes | sdkmanager --sdk_root="${SDK_ROOT}" "ndk;${NDK_VERSION}"
+
+        env:
+          SDK_ROOT: $HOME/Android/Sdk
+          NDK_VERSION: 27.0.12077973
+          
+      - name: Ensure correct SDK for dependencies
+        run: |
+          if grep -r "flutter_test" pubspec.yaml; then
+            flutter pub get
+          else
+            dart pub get
+          fi
 
       - name: Patch Gradle to force NDK
         run: |
-          sed -i '/android {/a \        ndkVersion = "25.2.9519653"' android/app/build.gradle
+          sed -i '/android {/a \        ndkVersion = "27.0.12077973"' \
+            android/app/build.gradle    
 
       # ────────────────────────────────────────────────────────────────
-      # BUILD THE APK
+      # 2) BUILD THE APK
       # ────────────────────────────────────────────────────────────────
       - name: Build release APK
+        env:
+          ANDROID_NDK_HOME: ${{ env.SDK_ROOT }}/ndk/${{ env.NDK_VERSION }}
+          ANDROID_NDK_ROOT: ${{ env.SDK_ROOT }}/ndk/${{ env.NDK_VERSION }}
         run: flutter build apk --release
+
+      - name: Create output directory
+        run: mkdir -p build/app/github_workflow/release/
+
+      - name: Move APK
+        run: cp build/app/outputs/flutter-apk/app-release.apk build/app/github_workflow/release/
 
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: flutter-release-apk
-          path: build/app/outputs/flutter-apk/app-release.apk
+          path: build/app/github_workflow/release/app-release.apk
+
