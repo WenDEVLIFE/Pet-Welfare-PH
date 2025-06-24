@@ -9,16 +9,30 @@ import 'package:pet_welfrare_ph/src/model/ChatModel.dart';
 import '../../Animation/MessageShimmer.dart';
 import '../../utils/Route.dart';
 
-class ChatView extends StatelessWidget {
+class ChatView extends StatefulWidget { 
+  const ChatView({super.key});
+
+  @override
+  State<ChatView> createState() => _ChatViewState();
+}
+
+class _ChatViewState extends State<ChatView> {
+  
+  @override
+  void initState() {
+    super.initState();
+    Provider.of<MessageViewModel>(context, listen: false).initializeChats();
+  }
+  
   @override
   Widget build(BuildContext context) {
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
-    MessageViewModel messageViewModel = Provider.of<MessageViewModel>(context);
-
-    return Scaffold(
-      appBar: AppBar(
+    return Consumer<MessageViewModel>(
+      builder: (context, messageViewModel, child) {
+        return Scaffold(
+          appBar: AppBar(
         title: const Text(
           'Chats',
           style: TextStyle(
@@ -116,6 +130,8 @@ class ChatView extends StatelessWidget {
           ),
         ],
       ),
+    );
+      },
     );
   }
 }
