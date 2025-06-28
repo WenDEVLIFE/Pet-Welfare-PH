@@ -95,8 +95,7 @@ class MessageState extends State<MessageView> {
       ),
       body: Column(
         children: [
-          Expanded(
-            Consumer<MessageViewModel>(
+          Expanded(child:  Consumer<MessageViewModel>(
   builder: (context, vm, child) {
     final stream = vm.messagesStream;
 
