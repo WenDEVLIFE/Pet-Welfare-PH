@@ -15,4 +15,6 @@ class ChatModel{
     required this.senderID,
     required this.receiverID,
   });
+  
+  
 }

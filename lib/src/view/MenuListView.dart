@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:pet_welfrare_ph/src/view_model/MessageViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/MenuViewModel.dart';
 import '../widgets/LogoutDialog.dart';
 import '../model/MenuList.dart';
@@ -21,7 +22,7 @@ class MenuListWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
+  
     final MenuViewModel menuViewModel = Provider.of<MenuViewModel>(context, listen: false);
     return Column(
       children: [
@@ -73,8 +74,9 @@ class MenuListWidget extends StatelessWidget {
                       builder: (BuildContext context) {
                         return LogoutDialog(
                           onLogout: () async {
-                            Navigator.of(context).pop(); // Close the dialog
                             await SessionManager().clearUserInfo();
+                            Provider.of<MessageViewModel>(context, listen: false).clearChatData();
+                            Navigator.of(context).pop(); // Close the dialog
                             Navigator.pushNamed(context, AppRoutes.loginScreen);
                           },
                         );

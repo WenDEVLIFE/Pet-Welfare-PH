@@ -122,4 +122,19 @@ class MessageViewModel extends ChangeNotifier {
     selectedImagePath = '';
     notifyListeners();
   }
+  
+  // Clear messages
+  void clearChatData() {
+    _messages.clear();
+    _chats.clear();
+    filteredChats.clear();
+    ImageReceiver = '';
+    selectedImagePath = '';
+    receiverName = '';
+    uid = '';
+    messageController.clear();
+    searchMessageController.clear();
+
+    notifyListeners();
+  }
 }
