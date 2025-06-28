@@ -36,6 +36,7 @@ class MessageViewModel extends ChangeNotifier {
   Future<void> loadReceiver(String uid) async {
     try {
       this.uid = uid;
+      
 
 messagesStream = messageRepository.getMessage(uid);
 
@@ -55,13 +56,11 @@ messagesStream = messageRepository.getMessage(uid);
   }
 
   void listenToMessages() {
-    if (uid.isNotEmpty) {
-      messagesStream.listen((messages) {
-        _messages = messages;
-        notifyListeners();
-      });
-    }
-  }
+  messagesStream?.listen((messages) {
+    _messages = messages;
+    notifyListeners();
+  });
+}
 
   // Send a message to the user
   Future<void> sendMessage(String uid) async {

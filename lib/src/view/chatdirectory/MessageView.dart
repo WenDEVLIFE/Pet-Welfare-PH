@@ -226,8 +226,10 @@ class MessageState extends State<MessageView> {
           );
         }
       },
+      
     );
   },
+  ),
 ),
           Consumer<MessageViewModel>(
             builder: (context, messageViewModel, child) {
