@@ -127,16 +127,17 @@ messagesStream = messageRepository.getMessage(uid);
   
   // Clear messages
   void clearChatData() {
-    _messages.clear();
-    _chats.clear();
-    filteredChats.clear();
-    ImageReceiver = '';
-    selectedImagePath = '';
-    receiverName = '';
-    uid = '';
-    messageController.clear();
-    searchMessageController.clear();
+  _messages.clear();
+  _chats.clear();
+  filteredChats.clear();
+  ImageReceiver = '';
+  selectedImagePath = '';
+  receiverName = '';
+  uid = '';
+  messagesStream = null;
+  messageController.clear();
+  searchMessageController.clear();
+  notifyListeners();
+}
 
-    notifyListeners();
-  }
 }
