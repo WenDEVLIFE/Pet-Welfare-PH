@@ -96,22 +96,30 @@ class MessageState extends State<MessageView> {
       body: Column(
         children: [
           Expanded(
-            child: StreamBuilder<List<MessageModel>>(
-              stream: Provider.of<MessageViewModel>(context).messagesStream,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
-                  return Center(child: Text('Error: ${snapshot.error}'));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('No messages'));
-                } else {
-                  final messages = snapshot.data!;
-                  WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
-                  return ListView.builder(
-                    controller: _scrollController,
-                    itemCount: messages.length,
-                    itemBuilder: (context, index) {
+            Consumer<MessageViewModel>(
+  builder: (context, vm, child) {
+    final stream = vm.messagesStream;
+
+    if (stream == null) {
+      return const Center(child: CircularProgressIndicator()); // ✅ Show loading
+    }
+
+    return StreamBuilder<List<MessageModel>>(
+      stream: stream,
+      builder: (context, snapshot) {
+        if (snapshot.connectionState == ConnectionState.waiting) {
+          return const Center(child: CircularProgressIndicator());
+        } else if (snapshot.hasError) {
+          return Center(child: Text('Error: ${snapshot.error}'));
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+          return const Center(child: Text('No messages'));
+        } else {
+          final messages = snapshot.data!;
+          WidgetsBinding.instance.addPostFrameCallback((_) => _scrollToBottom());
+          return ListView.builder(
+            controller: _scrollController,
+            itemCount: messages.length,
+            itemBuilder: (context, index) {
                       final message = messages[index];
                       return Padding(
                         padding: const EdgeInsets.all(8.0),
@@ -215,11 +223,12 @@ class MessageState extends State<MessageView> {
                         ),
                       );
                     },
-                  );
-                }
-              },
-            ),
-          ),
+          );
+        }
+      },
+    );
+  },
+),
           Consumer<MessageViewModel>(
             builder: (context, messageViewModel, child) {
               return messageViewModel.selectedImagePath.isNotEmpty

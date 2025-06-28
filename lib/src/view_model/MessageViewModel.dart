@@ -28,7 +28,7 @@ class MessageViewModel extends ChangeNotifier {
   List<ChatModel> filteredChats = [];
 
   // Stream to listen for messages
-  Stream<List<MessageModel>> get messagesStream => messageRepository.getMessage(uid);
+  Stream<List<MessageModel>>? messagesStream;
 
   Stream<List<ChatModel>> get chatsStream => messageRepository.getChat();
 
@@ -36,6 +36,9 @@ class MessageViewModel extends ChangeNotifier {
   Future<void> loadReceiver(String uid) async {
     try {
       this.uid = uid;
+
+messagesStream = messageRepository.getMessage(uid);
+
       var profileData = await _loadprofilerespository.loadProfile2(uid).first;
       if (profileData != null) {
         receiverName = profileData['name'] ?? "";
