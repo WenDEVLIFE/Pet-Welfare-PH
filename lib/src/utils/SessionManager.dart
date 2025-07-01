@@ -31,11 +31,15 @@ class SessionManager {
   }
 
   Future<void> clearUserInfo() async {
-    await _auth.signOut();
-    final SharedPreferences prefs = await SharedPreferences.getInstance();
-    prefs.remove('email');
-    prefs.remove('role');
-    prefs.remove('name');
-    prefs.remove('uid');
+  try {
+    await _auth.signOut(); 
+  } catch (e) {
+    print("Sign out failed: $e");
   }
+
+  final SharedPreferences prefs = await SharedPreferences.getInstance();
+  await prefs.clear(); // clear all stored user data
+}
+
+
 }

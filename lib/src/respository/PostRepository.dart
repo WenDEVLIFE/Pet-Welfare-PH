@@ -1,5 +1,6 @@
 import 'dart:math';
 import 'dart:async';
+import 'package:rxdart/rxdart.dart';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -1450,40 +1451,41 @@ Future<void> editDetails(String selectedChip, Map<String, dynamic> petData, Stri
   // get the post owner post
 @override
 Stream<List<PostModel>> getMyPost() {
-  User? user = FirebaseAuth.instance.currentUser;
+  return FirebaseAuth.instance.authStateChanges().switchMap((user) {
+    if (user == null) {
+      Fluttertoast.showToast(msg: "User is not logged in.");
+      return Stream.value([]);
+    }
 
-  if (user == null) {
-    Fluttertoast.showToast(msg: "User is not logged in.");
-    return Stream.value([]);
-  }
+    final uid = user.uid;
 
-  String id = user.uid;
-
-  return _firestore
-      .collection('PostCollection')
-      .where('PostOwnerID', isEqualTo: id)
-      .snapshots()
-      .handleError((error) {
-        Fluttertoast.showToast(msg: "Error: Stream Error: $error");
-      })
-      .asyncMap((snapshot) async {
-        if (snapshot.docs.isEmpty) {
-          Fluttertoast.showToast(msg: "No posts found.");
-          return [];
-        }
-
-        List<PostModel> posts = [];
-        for (var doc in snapshot.docs) {
-          try {
-            final post = await PostModel.fromDocument(doc);
-            posts.add(post);
-          } catch (e) {
-            Fluttertoast.showToast(msg: "Error: Error parsing document ${doc.id}");
+    return _firestore
+        .collection('PostCollection')
+        .where('PostOwnerID', isEqualTo: uid)
+        .snapshots()
+        .handleError((error) {
+          Fluttertoast.showToast(msg: "Error: Stream Error: $error");
+        })
+        .asyncMap((snapshot) async {
+          if (snapshot.docs.isEmpty) {
+            return [];
           }
-        }
-        return posts;
-      });
+
+          List<PostModel> posts = [];
+          for (var doc in snapshot.docs) {
+            try {
+              final post = await PostModel.fromDocument(doc);
+              posts.add(post);
+            } catch (e) {
+              Fluttertoast.showToast(
+                  msg: "Error: Error parsing document ${doc.id}");
+            }
+          }
+          return posts;
+        });
+  });
 }
+
 
   @override
   Future<void> updatePetStatus(String postId, String category, String selectedStatus) async {

@@ -135,8 +135,6 @@ void onSearchChanged(String query) {
     searchProtectedPost(query);
   });
   
-  // more search post function here...
-  
 }
 
 
