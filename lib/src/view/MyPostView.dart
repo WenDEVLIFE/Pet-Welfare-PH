@@ -24,7 +24,7 @@ class ProfileState extends State<ProfileView> {
    @override
   void initState() {
      super.initState();
-     postViewModel = Provider.of<PostViewModel>(context, listen: false);
+     postViewModel = Provider.of<PostViewModel>(context, listen: true);
      postViewModel.listenToMyPost();
    }
 
