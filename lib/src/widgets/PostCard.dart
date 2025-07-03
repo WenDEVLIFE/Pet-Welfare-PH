@@ -6,6 +6,7 @@ import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:pet_welfrare_ph/src/view/editdirectory/EditPostView.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 import 'package:provider/provider.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../DialogView/ReportDialog.dart';
 import '../modal/ReactionModal.dart';
@@ -155,60 +156,59 @@ class _PostCardState extends State<PostCard> {
               ),
               const Spacer(),
               PopupMenuButton<String>(
-                itemBuilder: (context) {
-                  final currentUserId = Provider.of<PostViewModel>(context, listen: false).currentUserId;
-                  final isAdmin = postViewModel.role.toLowerCase() == 'admin' || postViewModel.role.toLowerCase()=="sub-admin";
-                  final isPostOwner = widget.post.postOwnerId == currentUserId;
+  onSelected: (value) {
+    final postViewModel = Provider.of<PostViewModel>(context, listen: false);
+    final currentUserId = postViewModel.currentUserId;
+    final role = postViewModel.role;
+    final isAdmin = role.toLowerCase() == 'admin' || role.toLowerCase() == 'sub-admin';
+    final isPostOwner = widget.post.postOwnerId == currentUserId;
 
-                  return [
-                    if (isAdmin || isPostOwner)
-                      PopupMenuItem(value: 'Edit', child: const Text('Edit'), onTap: (){
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditPostView(
-                              postId: widget.post.postId,
-                              category: widget.post.category,
-                            ),
-                          ),
-                        );
+    // 🔍 Debugging Toast
+    ToastComponent().showMessage(
+      Colors.blue,
+      'UID: $currentUserId\nRole: $role\nPostOwnerID: ${widget.post.postOwnerId}\nIsAdmin: $isAdmin\nIsPostOwner: $isPostOwner',
+    );
 
-                      },),
-                    if (isAdmin || isPostOwner)
-                      PopupMenuItem(value: 'Delete', child: const Text('Delete'), onTap: (){
+    if ((isAdmin || isPostOwner) && value == 'Edit') {
+      Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => EditPostView(
+            postId: widget.post.postId,
+            category: widget.post.category,
+          ),
+        ),
+      );
+    } else if ((isAdmin || isPostOwner) && value == 'Delete') {
+      postViewModel.deletePost(widget.post.category, context, widget.post.postId);
+      ToastComponent().showMessage(Colors.green, 'Post Deleted Successfully');
+    } else if (value == 'Message') {
+      final otherUserId = widget.post.postOwnerId;
+      Navigator.pushNamed(context, AppRoutes.message, arguments: {
+        'receiverID': otherUserId,
+      });
+    } else if (value == 'Report') {
+      showDialog(
+        context: context,
+        builder: (context) => ReportDialog(widget.post.postId),
+      );
+    }
+  },
+  itemBuilder: (context) {
+    final postViewModel = Provider.of<PostViewModel>(context, listen: false);
+    final currentUserId = postViewModel.currentUserId;
+    final isAdmin = postViewModel.role.toLowerCase() == 'admin' || postViewModel.role.toLowerCase() == "sub-admin";
+    final isPostOwner = widget.post.postOwnerId == currentUserId;
 
-                        // Delete the image to the database
-                        postViewModel.deletePost(widget.post.category,context, widget.post.postId);
-                        ToastComponent().showMessage(Colors.green, 'Post Deleted Successfully');
-                      },),
-                    if (!isPostOwner)
-                      PopupMenuItem(value: 'Message', child: const Text('Message') ,onTap: (){
-                        // Determine which ID is the other user (not current user)
-                        final otherUserId = currentUserId == widget.post.postOwnerId
-                            ? widget.post.postOwnerId
-                            : widget.post.postOwnerId;
-
-                        Navigator.pushNamed(context, AppRoutes.message, arguments: {
-                          'receiverID': otherUserId
-                        });
-                      },),
-                    PopupMenuItem(
-                      value: 'Report',
-                      child: const Text('Report'),
-                      onTap: () {
-                        Future.delayed(
-                          Duration.zero,
-                              () => showDialog(
-                            context: context,
-                            builder: (context) => ReportDialog(widget.post.postId),
-                          ),
-                        );
-                      },
-                    ),
-                  ];
-                },
-                icon: const Icon(Icons.more_vert),
-              ),
+    return [
+      if (isAdmin || isPostOwner) const PopupMenuItem(value: 'Edit', child: Text('Edit')),
+      if (isAdmin || isPostOwner) const PopupMenuItem(value: 'Delete', child: Text('Delete')),
+      if (!isPostOwner) const PopupMenuItem(value: 'Message', child: Text('Message')),
+      const PopupMenuItem(value: 'Report', child: Text('Report')),
+    ];
+  },
+  icon: const Icon(Icons.more_vert),
+),
             ],
           ),
           // --- Post Description ---
