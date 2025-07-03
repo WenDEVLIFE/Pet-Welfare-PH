@@ -163,36 +163,38 @@ class _PostCardState extends State<PostCard> {
     final isAdmin = role.toLowerCase() == 'admin' || role.toLowerCase() == 'sub-admin';
     final isPostOwner = widget.post.postOwnerId == currentUserId;
 
-    // 🔍 Debugging Toast
-    ToastComponent().showMessage(
-      Colors.blue,
-      'UID: $currentUserId\nRole: $role\nPostOwnerID: ${widget.post.postOwnerId}\nIsAdmin: $isAdmin\nIsPostOwner: $isPostOwner',
-    );
+    // 🛠 Show toast safely after popup menu closes
+    Future.delayed(Duration.zero, () {
+      ToastComponent().showMessage(
+        Colors.blue,
+        'UID: $currentUserId\nRole: $role\nPostOwnerID: ${widget.post.postOwnerId}\nIsAdmin: $isAdmin\nIsPostOwner: $isPostOwner',
+      );
 
-    if ((isAdmin || isPostOwner) && value == 'Edit') {
-      Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => EditPostView(
-            postId: widget.post.postId,
-            category: widget.post.category,
+      if ((isAdmin || isPostOwner) && value == 'Edit') {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => EditPostView(
+              postId: widget.post.postId,
+              category: widget.post.category,
+            ),
           ),
-        ),
-      );
-    } else if ((isAdmin || isPostOwner) && value == 'Delete') {
-      postViewModel.deletePost(widget.post.category, context, widget.post.postId);
-      ToastComponent().showMessage(Colors.green, 'Post Deleted Successfully');
-    } else if (value == 'Message') {
-      final otherUserId = widget.post.postOwnerId;
-      Navigator.pushNamed(context, AppRoutes.message, arguments: {
-        'receiverID': otherUserId,
-      });
-    } else if (value == 'Report') {
-      showDialog(
-        context: context,
-        builder: (context) => ReportDialog(widget.post.postId),
-      );
-    }
+        );
+      } else if ((isAdmin || isPostOwner) && value == 'Delete') {
+        postViewModel.deletePost(widget.post.category, context, widget.post.postId);
+        ToastComponent().showMessage(Colors.green, 'Post Deleted Successfully');
+      } else if (value == 'Message') {
+        final otherUserId = widget.post.postOwnerId;
+        Navigator.pushNamed(context, AppRoutes.message, arguments: {
+          'receiverID': otherUserId,
+        });
+      } else if (value == 'Report') {
+        showDialog(
+          context: context,
+          builder: (context) => ReportDialog(widget.post.postId),
+        );
+      }
+    });
   },
   itemBuilder: (context) {
     final postViewModel = Provider.of<PostViewModel>(context, listen: false);
