@@ -5,6 +5,7 @@ import 'package:sn_progress_dialog/enums/progress_types.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
 import '../utils/Route.dart';
 import '../widgets/NotificationListener.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class LoginViewModel extends ChangeNotifier {
   final TextEditingController emailController = TextEditingController();
@@ -25,53 +26,54 @@ class LoginViewModel extends ChangeNotifier {
   }
 
   Future<void> login(BuildContext context) async {
-    String email = emailController.text;
-    String password = passwordController.text;
+  String email = emailController.text;
+  String password = passwordController.text;
 
-    // Simple check for empty credentials before attempting login
-    if (email.isEmpty || password.isEmpty) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Please enter both email and password.')),
-      );
-      return;
-    }
-
-    try {
-      Map<String, dynamic>? userData = await loginRepository.login(email, password);
-
-      if (userData != null) {
-        print(userData);
-        // Save user info
-        await sessionManager.saveUserInfo(userData);
-
-        // If login is successful, navigate based on user role
-        if (userData['role'] == 'Admin' || userData['role'] == 'Sub-Admin') {
-          Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
-          clearTextFields();
-
-        } else {
-          Navigator.pushReplacementNamed(context, AppRoutes.user);
-          clearTextFields();
-        }
-
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Login successful!')),
-        );
-
-        NotificationListener1();
-      } else {
-        // Show error message if login failed
-        ScaffoldMessenger.of(context).showSnackBar(
-          const SnackBar(content: Text('Login failed. Please check your credentials.')),
-        );
-      }
-    } catch (e) {
-      // Handle any error that occurs during login
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('An error occurred. Please try again.')),
-      );
-    }
+  if (email.isEmpty || password.isEmpty) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Please enter both email and password.')),
+    );
+    return;
   }
+
+  try {
+    Map<String, dynamic>? userData = await loginRepository.login(email, password);
+
+    if (userData != null) {
+      print(userData);
+      await sessionManager.saveUserInfo(userData);
+
+      Fluttertoast.showToast(
+        msg: userData.toString(),
+        toastLength: Toast.LENGTH_LONG,
+        gravity: ToastGravity.BOTTOM,
+      );
+
+      if (userData['role'] == 'Admin' || userData['role'] == 'Sub-Admin') {
+        Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+        clearTextFields();
+      } else {
+        Navigator.pushReplacementNamed(context, AppRoutes.user);
+        clearTextFields();
+      }
+
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login successful!')),
+      );
+
+      NotificationListener1();
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(
+        const SnackBar(content: Text('Login failed. Please check your credentials.')),
+      );
+    }
+  } catch (e) {
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('An error occurred. Please try again.')),
+    );
+  }
+}
+
 
   void navigateToSelectView(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.selectScreen);
