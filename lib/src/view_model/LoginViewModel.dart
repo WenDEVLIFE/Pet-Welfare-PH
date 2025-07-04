@@ -42,12 +42,29 @@ class LoginViewModel extends ChangeNotifier {
     if (userData != null) {
       print(userData);
       await sessionManager.saveUserInfo(userData);
+    
 
       Fluttertoast.showToast(
         msg: userData.toString(),
         toastLength: Toast.LENGTH_LONG,
         gravity: ToastGravity.BOTTOM,
       );
+      
+      final sessionData = await sessionManager.getUserInfo();
+
+if (sessionData != null) {
+  Fluttertoast.showToast(
+    msg: sessionData.toString(), 
+    toastLength: Toast.LENGTH_LONG,
+    gravity: ToastGravity.BOTTOM,
+  );
+} else {
+  Fluttertoast.showToast(
+    msg: "Session data not found or corrupted.",
+    toastLength: Toast.LENGTH_LONG,
+    gravity: ToastGravity.BOTTOM,
+  );
+}
 
       if (userData['role'] == 'Admin' || userData['role'] == 'Sub-Admin') {
         Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
