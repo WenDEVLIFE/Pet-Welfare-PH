@@ -1034,6 +1034,8 @@ void onSearchChanged(String query) {
     _debounce?.cancel(); // Cancel the timer if it's active
     _postSubscription?.cancel();
     searchPostController.dispose();
+    currentUserId = '';
+    role = '';
     super.dispose();
   }
   
