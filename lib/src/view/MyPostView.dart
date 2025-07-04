@@ -10,6 +10,7 @@ import '../widgets/PetAdoptionCard.dart';
 import '../widgets/PetCareInsightCard.dart';
 import '../widgets/PetForRescueCard.dart';
 import '../utils/AppColors.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class ProfileView extends StatefulWidget {
   const ProfileView({Key? key}) : super(key: key);
@@ -67,11 +68,10 @@ class ProfileState extends State<ProfileView> {
                 final currentUserId = postViewModel.currentUserId;
     final role = postViewModel.role;
     final isAdmin = role.toLowerCase() == 'admin' || role.toLowerCase() == 'sub-admin';
-    final isPostOwner = widget.post.postOwnerId == currentUserId;
-
-                ToastComponent().showMessage(
+    
+                ToastComponent().showMessage(a
                  Colors.blue,
-                 'UID: $currentUserId\nRole: $role\nPostOwnerID: ${widget.post.postOwnerId}\nIsAdmin: $isAdmin\nIsPostOwner: $isPostOwner',
+                 'UID: $currentUserId\nRole: $role\nPostOwnerID: ${widget.post.postOwnerId}\nIsAdmin: $isAdmin',
                 );
 
                 // Use a helper method to return  the appropriate widget
