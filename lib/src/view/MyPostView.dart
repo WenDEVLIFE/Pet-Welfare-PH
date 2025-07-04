@@ -64,6 +64,15 @@ class ProfileState extends State<ProfileView> {
               itemBuilder: (context, index) {
                 final post = postViewModel.filterMyPost[index];
                 final category = post.category;
+                final currentUserId = postViewModel.currentUserId;
+    final role = postViewModel.role;
+    final isAdmin = role.toLowerCase() == 'admin' || role.toLowerCase() == 'sub-admin';
+    final isPostOwner = widget.post.postOwnerId == currentUserId;
+
+                ToastComponent().showMessage(
+                 Colors.blue,
+                 'UID: $currentUserId\nRole: $role\nPostOwnerID: ${widget.post.postOwnerId}\nIsAdmin: $isAdmin\nIsPostOwner: $isPostOwner',
+                );
 
                 // Use a helper method to return  the appropriate widget
                 return _buildPostCard(category, post, screenHeight, screenWidth);
