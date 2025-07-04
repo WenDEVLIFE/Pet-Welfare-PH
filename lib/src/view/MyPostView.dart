@@ -69,8 +69,12 @@ class ProfileState extends State<ProfileView> {
     final role = postViewModel.role;
     final isAdmin = role.toLowerCase() == 'admin' || role.toLowerCase() == 'sub-admin';
     
-    ToastComponent().showMessage('UID: $currentUserId\nRole: $role\nPostOwnerID: ${widget.post.postOwnerId}\nIsAdmin: $isAdmin');
-              
+    Fluttertoast.showToast(
+  msg: 'UID: $currentUserId\nRole: $role\nPostOwnerID: ${post.postOwnerId}\nIsAdmin: $isAdmin',
+  toastLength: Toast.LENGTH_SHORT,
+  gravity: ToastGravity.BOTTOM,
+);
+
                 // Use a helper method to return  the appropriate widget
                 return _buildPostCard(category, post, screenHeight, screenWidth);
               },
