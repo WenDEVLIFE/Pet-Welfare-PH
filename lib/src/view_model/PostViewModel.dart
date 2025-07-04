@@ -1,4 +1,6 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'dart:async';
@@ -101,14 +103,25 @@ class PostViewModel extends ChangeNotifier {
   }
 
   // initialize role and current user id
-  Future <void> loadData() async{
-     final sessionManager = SessionManager();
-      sessionManager.getUserInfo().then((userData) {
-       role = userData!['role'] ?? '';
-       currentUserId = userData!['uid'] ?? '';
-       notifyListeners();
-     });
-  }
+  Future<void> loadData() async {
+  FirebaseAuth.instance.authStateChanges().listen((user) async {
+    if (user != null) {
+      currentUserId = user.uid;
+
+      final sessionManager = SessionManager();
+      final userData = await sessionManager.getUserInfo();
+
+      role = userData?['role'] ?? '';
+      notifyListeners();
+    } else {
+      // Handle logout case
+      currentUserId = '';
+      role = '';
+      notifyListeners();
+    }
+  });
+}
+
 
 // debounce realtime logic < BUG FIXED CLIENT LAG WRONG RESULTS ON SEARCH >
 void onSearchChanged(String query) {
