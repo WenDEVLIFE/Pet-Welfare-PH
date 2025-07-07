@@ -2,19 +2,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:pet_welfrare_ph/src/utils/Route.dart';
-import 'package:pet_welfrare_ph/src/widgets/PetCareInsightCard.dart';
-import 'package:pet_welfrare_ph/src/widgets/PostCard.dart';
-import 'package:provider/provider.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
-import 'package:pet_welfrare_ph/src/model/PostModel.dart';
-import 'package:pet_welfrare_ph/src/modal/ReactionModal.dart';
+import 'package:pet_welfrare_ph/src/widgets/PetCareInsightCard.dart';
+import 'package:provider/provider.dart';
 
+import '../../Animation/CardShimmerWidget.dart';
 import '../../modal/SearchPetModal.dart';
 import '../../utils/AppColors.dart';
-import '../../utils/ReactionUtils.dart';
 import '../../widgets/SearchTextField.dart';
-import '../ViewImage.dart';
 
 class VetAndTravelView extends StatefulWidget {
   const VetAndTravelView({Key? key}) : super(key: key);
@@ -34,8 +29,6 @@ class VetAndTravelState extends State<VetAndTravelView> {
 
   @override
   Widget build(BuildContext context) {
-    PostViewModel postViewModel = Provider.of<PostViewModel>(context, listen: false);
-
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
@@ -54,21 +47,58 @@ class VetAndTravelState extends State<VetAndTravelView> {
                   postViewModel.searchVetAndTravelPost(searchText);
                 },
               ),
-          Expanded(
-              child: postViewModel.filterVetAndTravelPost.isEmpty
-              ? Center(child: Text('No ${postViewModel.searchPostController.text} pet care insights post found'))
-                  : ListView.builder(
-              itemCount: postViewModel.filterVetAndTravelPost.length,
-              itemBuilder: (context, index) {
-              var post = postViewModel.filterVetAndTravelPost[index];
+              Expanded(
+                child: Builder(
+                  builder: (context) {
+                    // Initial loading state
+                    if (postViewModel.isInitialLoading) {
+                      return ListView.builder(
+                        itemCount: 5,
+                        itemBuilder: (context, index) => PostCardSkeleton(
+                          screenHeight: screenHeight,
+                          screenWidth: screenWidth,
+                        ),
+                      );
+                    }
 
-              return PetCareInsightCard(
-                  post: post,
-                  screenHeight: screenHeight,
-                  screenWidth: screenWidth
-              );
+                    // Active searching state
+                    if (postViewModel.isSearching) {
+                      return ListView.builder(
+                        itemCount: 5,
+                        itemBuilder: (context, index) => PostCardSkeleton(
+                          screenHeight: screenHeight,
+                          screenWidth: screenWidth,
+                        ),
+                      );
+                    }
+
+                    // Empty states
+                    if (postViewModel.filterVetAndTravelPost.isEmpty) {
+                      if (postViewModel.searchPostController.text.isNotEmpty) {
+                        return Center(
+                          child: Text(
+                            'No "${postViewModel.searchPostController.text}" pet care insights found',
+                          ),
+                        );
+                      }
+                      return const Center(
+                        child: Text("No pet care insights found."),
+                      );
+                    }
+
+                    // Data display
+                    return ListView.builder(
+                      itemCount: postViewModel.filterVetAndTravelPost.length,
+                      itemBuilder: (context, index) {
+                        var post = postViewModel.filterVetAndTravelPost[index];
+                        return PetCareInsightCard(
+                            post: post,
+                            screenHeight: screenHeight,
+                            screenWidth: screenWidth);
+                      },
+                    );
                   },
-              ),
+                ),
               ),
             ],
           );
@@ -81,7 +111,7 @@ class VetAndTravelState extends State<VetAndTravelView> {
         activeBackgroundColor: AppColors.black,
         activeForegroundColor: AppColors.white,
         children: [
-          if (postViewModel.role.toLowerCase()!='admin') ...[
+          if (postViewModel.role.toLowerCase() != 'admin') ...[
             SpeedDialChild(
               label: 'Create Post',
               child: const Icon(Icons.create),
@@ -104,14 +134,14 @@ class VetAndTravelState extends State<VetAndTravelView> {
             },
           ),
           SpeedDialChild(
-            label: 'Create Post',
-            child: const Icon(Icons.create),
+            label: 'Reload the Pet Care Insights Posts',
+            child: const Icon(Icons.refresh),
             onTap: () {
-              postViewModel.navigatoToCreatePost(context);
+              postViewModel.listenToVetAndTravelPost();
             },
           ),
         ],
-      )
+      ),
     );
   }
 }

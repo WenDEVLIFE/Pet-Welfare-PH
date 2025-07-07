@@ -31,7 +31,18 @@ class PostViewModel extends ChangeNotifier {
 
   // globally hold subscription post on every tab.
   StreamSubscription? _postSubscription;
-  
+  StreamSubscription? _posSubscription;
+  StreamSubscription? _missingPostSubscription;
+  StreamSubscription? _foundPostSubscription;
+  StreamSubscription? _pawExperiencePostSubscription;
+  StreamSubscription? _protectedPostSubscription;
+  StreamSubscription? _communityPostSubscription;
+  StreamSubscription? _vetAndTravelPostSubscription;
+  StreamSubscription? _petAdoptPostSubscription;
+  StreamSubscription? _callforAidPostSubscription;
+  StreamSubscription? _petforRescuePostSubscription;
+  StreamSubscription? _myPostSubscription;
+
   List<PostModel> _posts = [];
   List<PostModel> filteredPost = [];
 
@@ -67,27 +78,33 @@ class PostViewModel extends ChangeNotifier {
 
   List<CommentModel> comments = [];
 
-
   final TextEditingController petNameController = TextEditingController();
 
   final PostRepository postRepository = PostRepositoryImpl();
 
   Stream<List<PostModel>> get posTream => postRepository.getPosts();
-  Stream<List<PostModel>> get missingPostStream => postRepository.getMissingPosts();
+  Stream<List<PostModel>> get missingPostStream =>
+      postRepository.getMissingPosts();
   Stream<List<PostModel>> get foundPostStream => postRepository.getFoundPost();
-  Stream<List<PostModel>> get pawExperiencePostStream => postRepository.getPawExperiencePost();
-  Stream<List<PostModel>> get protectedPostStream => postRepository.getProtectPetPost();
-  Stream<List<PostModel>> get communityPostStream => postRepository.getCommunityPost();
-  Stream<List<PostModel>> get vetAndTravelPostStream => postRepository.getVetAndTravelPost();
-  Stream<List<PostModel>> get petAdoptPostStream => postRepository.getPetAdoption();
-  Stream<List<PostModel>> get callforAidPostStream => postRepository.getCallforAid();
+  Stream<List<PostModel>> get pawExperiencePostStream =>
+      postRepository.getPawExperiencePost();
+  Stream<List<PostModel>> get protectedPostStream =>
+      postRepository.getProtectPetPost();
+  Stream<List<PostModel>> get communityPostStream =>
+      postRepository.getCommunityPost();
+  Stream<List<PostModel>> get vetAndTravelPostStream =>
+      postRepository.getVetAndTravelPost();
+  Stream<List<PostModel>> get petAdoptPostStream =>
+      postRepository.getPetAdoption();
+  Stream<List<PostModel>> get callforAidPostStream =>
+      postRepository.getCallforAid();
   Stream<List<PostModel>> get petForRescue => postRepository.getFindHome();
   Stream<List<PostModel>> get myPostStream => postRepository.getMyPost();
 
-  List<String> petStatusOptions =[];
+  List<String> petStatusOptions = [];
   String? selectedPetStatus;
 
- // Initialize the PostViewModel
+  // Initialize the PostViewModel
   PostViewModel() {
     searchPostController.addListener(() {
       searchPost(searchPostController.text);
@@ -104,52 +121,88 @@ class PostViewModel extends ChangeNotifier {
 
   // initialize role and current user id
   Future<void> loadData() async {
-  FirebaseAuth.instance.authStateChanges().listen((user) async {
-    if (user != null) {
-      currentUserId = user.uid;
+    FirebaseAuth.instance.authStateChanges().listen((user) async {
+      if (user != null) {
+        currentUserId = user.uid;
 
-      final sessionManager = SessionManager();
-      final userData = await sessionManager.getUserInfo();
+        final sessionManager = SessionManager();
+        final userData = await sessionManager.getUserInfo();
 
-      role = userData?['role'] ?? '';
-      notifyListeners();
-    } else {
-      // Handle logout case
-      currentUserId = '';
-      role = '';
-      notifyListeners();
-    }
-  });
-}
-
+        role = userData?['role'] ?? '';
+        notifyListeners();
+      } else {
+        // Handle logout case
+        currentUserId = '';
+        role = '';
+        notifyListeners();
+      }
+    });
+  }
 
 // debounce realtime logic < BUG FIXED CLIENT LAG WRONG RESULTS ON SEARCH >
-void onSearchChanged(String query) {
-  if (query.isEmpty) {
-    _debounce?.cancel();
-    _isSearching = false; 
-    
-    // more post function here...
-    
-    // protected post
-    searchProtectedPost(""); 
-    
-    return;
-  }
+  void onSearchChanged(String query) {
+    if (query.isEmpty) {
+      _debounce?.cancel();
+      _isSearching = false;
 
-  if (!_isSearching) {
-    _isSearching = true;
-    notifyListeners(); 
-  }
-  if (_debounce?.isActive ?? false) _debounce!.cancel();
-  
-  //search for protected post
-  _debounce = Timer(const Duration(milliseconds: 500), () {
-    searchProtectedPost(query);
-  });
-  
-}
+      // protected post
+      searchProtectedPost("");
+      // missing post
+      searchMissingPost("");
+      // found post
+      searchFoundPost("");
+      // paw experience post
+      searchPawExperience("");
+      // my post
+      searchMyPost("");
+      // post
+      searchPost("");
+      // pet for rescue post
+      searchPetForRescue("");
+      // community post
+      searchCommunityPost("");
+      // vet and travel post
+      searchVetAndTravelPost("");
+      // pet adopt post
+      searchPetAdoptPost("");
+      // call for aid post
+      searchCallforAidPost("");
 
+      return;
+    }
+
+    if (!_isSearching) {
+      _isSearching = true;
+      notifyListeners();
+    }
+    if (_debounce?.isActive ?? false) _debounce!.cancel();
+
+    //search for protected post
+    _debounce = Timer(const Duration(milliseconds: 500), () {
+      // protected post
+      searchProtectedPost(query);
+      // missing post
+      searchMissingPost(query);
+      // found post
+      searchFoundPost(query);
+      // paw experience post
+      searchPawExperience(query);
+      // my post
+      searchMyPost(query);
+      // post
+      searchPost(query);
+      // pet for rescue post
+      searchPetForRescue(query);
+      // community post
+      searchCommunityPost(query);
+      // vet and travel post
+      searchVetAndTravelPost(query);
+      // pet adopt post
+      searchPetAdoptPost(query);
+      // call for aid post
+      searchCallforAidPost(query);
+    });
+  }
 
   // this is for the set post
   void setPost(List<PostModel> posts, {bool notify = true}) {
@@ -241,7 +294,6 @@ void onSearchChanged(String query) {
     }
   }
 
-
   // check if user has react
   Future<bool> hasUserReacted(String postId) async {
     return await postRepository.hasUserReacted(postId);
@@ -272,11 +324,10 @@ void onSearchChanged(String query) {
   }
 
   // Add reaction
-  Future <void> addReaction(String postId, String reaction) async{
-   try{
-     await postRepository.addReaction(postId, reaction);
-   }
-    catch(e){
+  Future<void> addReaction(String postId, String reaction) async {
+    try {
+      await postRepository.addReaction(postId, reaction);
+    } catch (e) {
       throw Exception('Failed to add reaction: $e');
     }
   }
@@ -317,7 +368,8 @@ void onSearchChanged(String query) {
     }
   }
 
-  Future<void> editComment(String postId, String commentId, String newCommentText) async {
+  Future<void> editComment(
+      String postId, String commentId, String newCommentText) async {
     try {
       await postRepository.editComment(postId, commentId, newCommentText);
       notifyListeners();
@@ -326,52 +378,11 @@ void onSearchChanged(String query) {
     }
   }
 
-  Future <void> listenToPost() async {
-    _posts.clear();
-    filteredPost.clear();
-    posTream.listen((posts) {
-      _posts = posts;
-      filteredPost = posts;
-      notifyListeners();
-    });
-  }
-
-  // Listen to missing post
-  Future <void> listenToMissingPost() async {
-    missingPostStream.listen((missingPosts) {
-      missingPost = missingPosts;
-      filterMissingPost = missingPosts;
-      notifyListeners();
-    });
-  }
-
-  // Listen to found post
-  Future  <void> listenToFoundPost()  async {
-    foundPost.clear();
-    filterFoundPost.clear();
-    foundPostStream.listen((foundPosts) {
-      foundPost = foundPosts;
-      filterFoundPost = foundPosts;
-      notifyListeners();
-    });
-  }
-
-  // Listen to paw experience post
-  Future <void> listenToPawExperiencePost() async {
-    pawExperiencePost.clear();
-    filterPawExperiencePost.clear();
-    pawExperiencePostStream.listen((pawExperiencePosts) {
-      pawExperiencePost = pawExperiencePosts;
-      filterPawExperiencePost = pawExperiencePosts;
-      notifyListeners();
-    });
-  }
-
   // Listen to protected post < BUG FIXED CLIENT LAG>
   Future<void> listenToProtectedPost() async {
     _isInitialLoading = true;
     notifyListeners();
-    
+
     // avoid memory leaks
     await _postSubscription?.cancel();
 
@@ -388,86 +399,237 @@ void onSearchChanged(String query) {
     });
   }
 
+  Future<void> listenToPost() async {
+    _isInitialLoading = true;
+    notifyListeners();
+
+    await _posSubscription?.cancel();
+
+    _posts.clear();
+    filteredPost.clear();
+
+    _posSubscription = posTream.listen((posts) {
+      _posts = posts;
+      filteredPost = posts;
+
+      if (_isInitialLoading) {
+        _isInitialLoading = false;
+      }
+      notifyListeners();
+    });
+  }
+
+  // Listen to missing post
+  Future<void> listenToMissingPost() async {
+    _isInitialLoading = true;
+    notifyListeners();
+
+    await _missingPostSubscription?.cancel();
+
+    missingPost.clear();
+    filterMissingPost.clear();
+
+    _missingPostSubscription = missingPostStream.listen((missingPosts) {
+      missingPost = missingPosts;
+      filterMissingPost = missingPosts;
+
+      if (_isInitialLoading) {
+        _isInitialLoading = false;
+      }
+      notifyListeners();
+    });
+  }
+
+  // Listen to found post
+  Future<void> listenToFoundPost() async {
+    _isInitialLoading = true;
+    notifyListeners();
+
+    await _foundPostSubscription?.cancel();
+
+    foundPost.clear();
+    filterFoundPost.clear();
+
+    _foundPostSubscription = foundPostStream.listen((foundPosts) {
+      foundPost = foundPosts;
+      filterFoundPost = foundPosts;
+
+      if (_isInitialLoading) {
+        _isInitialLoading = false;
+      }
+      notifyListeners();
+    });
+  }
+
+  // Listen to paw experience post
+  Future<void> listenToPawExperiencePost() async {
+    _isInitialLoading = true;
+    notifyListeners();
+
+    await _pawExperiencePostSubscription?.cancel();
+
+    pawExperiencePost.clear();
+    filterPawExperiencePost.clear();
+
+    _pawExperiencePostSubscription =
+        pawExperiencePostStream.listen((pawExperiencePosts) {
+      pawExperiencePost = pawExperiencePosts;
+      filterPawExperiencePost = pawExperiencePosts;
+
+      if (_isInitialLoading) {
+        _isInitialLoading = false;
+      }
+      notifyListeners();
+    });
+  }
+
   // Listen to community post
-  Future <void> listenToCommunityPost() async{
+  Future<void> listenToCommunityPost() async {
+    _isInitialLoading = true;
+    notifyListeners();
+
+    await _communityPostSubscription?.cancel();
+
     communityPost.clear();
     filterCommunityPost.clear();
-    communityPostStream.listen((communityPosts) {
+
+    _communityPostSubscription = communityPostStream.listen((communityPosts) {
       communityPost = communityPosts;
       filterCommunityPost = communityPosts;
+
+      if (_isInitialLoading) {
+        _isInitialLoading = false;
+      }
       notifyListeners();
     });
   }
 
-  // Listen to vet and travel post
-  Future <void> listenToVetAndTravelPost() async {
+// Listen to vet and travel post
+  Future<void> listenToVetAndTravelPost() async {
+    _isInitialLoading = true;
+    notifyListeners();
+
+    await _vetAndTravelPostSubscription?.cancel();
+
     vetAndtravelPost.clear();
     filterVetAndTravelPost.clear();
-    vetAndTravelPostStream.listen((travelPosts) {
+
+    _vetAndTravelPostSubscription =
+        vetAndTravelPostStream.listen((travelPosts) {
       vetAndtravelPost = travelPosts;
       filterVetAndTravelPost = travelPosts;
+
+      if (_isInitialLoading) {
+        _isInitialLoading = false;
+      }
       notifyListeners();
     });
   }
 
-  // Listen to pet adopt post
-  Future <void> listenToPetAdoptPost() async {
+// Listen to pet adopt post
+  Future<void> listenToPetAdoptPost() async {
+    _isInitialLoading = true;
+    notifyListeners();
+
+    await _petAdoptPostSubscription?.cancel();
+
     petAdoptPost.clear();
     filterPetAdoptPost.clear();
-    petAdoptPostStream.listen((adoptpost) {
+
+    _petAdoptPostSubscription = petAdoptPostStream.listen((adoptpost) {
       petAdoptPost = adoptpost;
       filterPetAdoptPost = adoptpost;
+
+      if (_isInitialLoading) {
+        _isInitialLoading = false;
+      }
       notifyListeners();
     });
   }
 
-  // Listen to call for aid post
-  Future <void> listenToCallforAidPost() async {
+// Listen to call for aid post
+  Future<void> listenToCallforAidPost() async {
+    _isInitialLoading = true;
+    notifyListeners();
+
+    await _callforAidPostSubscription?.cancel();
+
     callforAidPost.clear();
     filterCallforAidPost.clear();
-    callforAidPostStream.listen((aidPost) {
+
+    _callforAidPostSubscription = callforAidPostStream.listen((aidPost) {
       callforAidPost = aidPost;
       filterCallforAidPost = aidPost;
+
+      if (_isInitialLoading) {
+        _isInitialLoading = false;
+      }
       notifyListeners();
     });
   }
 
-  // Listen to pet for rescue post
-  Future <void> listenToPetForRescuePost() async {
+// Listen to pet for rescue post
+  Future<void> listenToPetForRescuePost() async {
+    _isInitialLoading = true;
+    notifyListeners();
+
+    await _petforRescuePostSubscription?.cancel();
+
     petforRescuePost.clear();
     filterPetForRescuePost.clear();
-    petForRescue.listen((rescuePost) {
+
+    _petforRescuePostSubscription = petForRescue.listen((rescuePost) {
       petforRescuePost = rescuePost;
       filterPetForRescuePost = rescuePost;
+
+      if (_isInitialLoading) {
+        _isInitialLoading = false;
+      }
       notifyListeners();
     });
   }
 
-  // Listen to my post
+// Listen to my post
   Future<void> listenToMyPost() async {
+    _isInitialLoading = true;
+    notifyListeners();
+
+    await _myPostSubscription?.cancel();
+
     myPostlist.clear();
     filterMyPost.clear();
-    myPostStream.listen((myPosts) {
-      if (myPosts.isNotEmpty) {
+
+    _myPostSubscription = myPostStream.listen(
+      (myPosts) {
         myPostlist = myPosts;
         filterMyPost = myPosts;
-        notifyListeners();
-      } else {
-        print('No posts found in myPost stream.');
-      }
-    }).onError((error) {
-      print('Error listening to myPost stream: $error');
-    });
-  }
 
+        if (_isInitialLoading) {
+          _isInitialLoading = false;
+        }
+        notifyListeners();
+      },
+      onError: (error) {
+        print('Error listening to myPost stream: $error');
+        if (_isInitialLoading) {
+          _isInitialLoading = false;
+        }
+        notifyListeners();
+      },
+    );
+  }
 
   // search post
   void searchPost(String search) {
     if (search.isEmpty) {
       filteredPost = _posts;
     } else {
-      filteredPost = _posts.where((post) => post.tags.any((tag) => tag.name.toLowerCase().contains(search.toLowerCase()))
-          ||   post.postOwnerName.toLowerCase().contains(search)).toList();
+      filteredPost = _posts
+          .where((post) =>
+              post.tags.any((tag) =>
+                  tag.name.toLowerCase().contains(search.toLowerCase())) ||
+              post.postOwnerName.toLowerCase().contains(search))
+          .toList();
     }
     notifyListeners();
   }
@@ -507,21 +669,28 @@ void onSearchChanged(String query) {
     if (searchText.isEmpty) {
       filterFoundPost = foundPost;
     } else {
-      filterFoundPost = foundPost.where((post) =>
-      post.petName.toLowerCase().contains(searchText.toLowerCase()) ||
-          post.postOwnerName.toLowerCase().contains(searchText) ||
-          post.petType.toLowerCase().contains(searchText.toLowerCase()) ||
-          post.petBreed.toLowerCase().contains(searchText.toLowerCase()) ||
-          post.petGender.toLowerCase().contains(searchText.toLowerCase()) ||
-          post.petAge.toLowerCase().contains(searchText.toLowerCase()) ||
-          post.petColor.toLowerCase().contains(searchText.toLowerCase()) ||
-          post.petAddress.toLowerCase().contains(searchText.toLowerCase()) ||
-          post.petCollar.toLowerCase().contains(searchText.toLowerCase()) ||
-          post.regProCiBag.toLowerCase().contains(searchText.toLowerCase()) ||
-          post.date.toLowerCase().contains(searchText.toLowerCase()) ||
-          post.petSize.toLowerCase().contains(searchText.toLowerCase()) ||
-          post.PetType.toLowerCase().contains(searchText.toLowerCase())).toList();
+      filterFoundPost = foundPost
+          .where((post) =>
+              post.petName.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.postOwnerName.toLowerCase().contains(searchText) ||
+              post.petType.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.petBreed.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.petGender.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.petAge.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.petColor.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.petAddress
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.petCollar.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.regProCiBag
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.date.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.petSize.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.PetType.toLowerCase().contains(searchText.toLowerCase()))
+          .toList();
     }
+    _isSearching = false;
     notifyListeners();
   }
 
@@ -530,9 +699,14 @@ void onSearchChanged(String query) {
     if (search.isEmpty) {
       filterPawExperiencePost = pawExperiencePost;
     } else {
-      filterPawExperiencePost = pawExperiencePost.where((post) => post.tags.any((tag) => tag.name.toLowerCase().contains(search.toLowerCase()))
-          ||   post.postOwnerName.toLowerCase().contains(search)).toList();
+      filterPawExperiencePost = pawExperiencePost
+          .where((post) =>
+              post.tags.any((tag) =>
+                  tag.name.toLowerCase().contains(search.toLowerCase())) ||
+              post.postOwnerName.toLowerCase().contains(search))
+          .toList();
     }
+    _isSearching = false;
     notifyListeners();
   }
 
@@ -550,16 +724,19 @@ void onSearchChanged(String query) {
     notifyListeners();
   }
 
-
   // Community Post
   void searchCommunityPost(String search) {
     if (search.isEmpty) {
       filterCommunityPost.addAll(communityPost);
     } else {
-      filterCommunityPost.addAll(communityPost.where((post) =>
-          post.tags.any((tag) => tag.name.toLowerCase().contains(search.toLowerCase())) ||
-          post.postOwnerName.toLowerCase().contains(search)).toList());
+      filterCommunityPost.addAll(communityPost
+          .where((post) =>
+              post.tags.any((tag) =>
+                  tag.name.toLowerCase().contains(search.toLowerCase())) ||
+              post.postOwnerName.toLowerCase().contains(search))
+          .toList());
     }
+    _isSearching = false;
     notifyListeners();
   }
 
@@ -568,9 +745,14 @@ void onSearchChanged(String query) {
     if (search.isEmpty) {
       filterVetAndTravelPost = vetAndtravelPost;
     } else {
-      filterVetAndTravelPost = vetAndtravelPost.where((post) => post.tags.any((tag) => tag.name.toLowerCase().contains(search.toLowerCase()))
-          ||   post.postOwnerName.toLowerCase().contains(search) ).toList();
+      filterVetAndTravelPost = vetAndtravelPost
+          .where((post) =>
+              post.tags.any((tag) =>
+                  tag.name.toLowerCase().contains(search.toLowerCase())) ||
+              post.postOwnerName.toLowerCase().contains(search))
+          .toList();
     }
+    _isSearching = false;
     notifyListeners();
   }
 
@@ -579,15 +761,30 @@ void onSearchChanged(String query) {
     if (search.isEmpty) {
       filterPetAdoptPost = petAdoptPost;
     } else {
-     filterPetAdoptPost = petAdoptPost.where((post) => post.tags.any((tag) => tag.name.toLowerCase().contains(search.toLowerCase()))
-         || post.postOwnerName.toLowerCase().contains(search)
-         || post.petNameAdopt.toLowerCase().contains(search.toLowerCase()) || post.petBreedAdopt.toLowerCase().contains(search.toLowerCase())
-         || post.petAgeAdopt.toLowerCase().contains(search.toLowerCase()) || post.petGenderAdopt.toLowerCase().contains(search.toLowerCase()) ||
-         post.petColorAdopt.toLowerCase().contains(search.toLowerCase()) || post.petSizeAdopt.toLowerCase().contains(search.toLowerCase())
-         || post.petAddressAdopt.toLowerCase().contains(search.toLowerCase()) || post.regProCiBagAdopt.toLowerCase().contains(search.toLowerCase())
-          || post.dateAdopt.toLowerCase().contains(search.toLowerCase()) || post.petTypeAdopt.toLowerCase().contains(search.toLowerCase())
-     ).toList();
+      filterPetAdoptPost = petAdoptPost
+          .where((post) =>
+              post.tags.any((tag) =>
+                  tag.name.toLowerCase().contains(search.toLowerCase())) ||
+              post.postOwnerName.toLowerCase().contains(search) ||
+              post.petNameAdopt.toLowerCase().contains(search.toLowerCase()) ||
+              post.petBreedAdopt.toLowerCase().contains(search.toLowerCase()) ||
+              post.petAgeAdopt.toLowerCase().contains(search.toLowerCase()) ||
+              post.petGenderAdopt
+                  .toLowerCase()
+                  .contains(search.toLowerCase()) ||
+              post.petColorAdopt.toLowerCase().contains(search.toLowerCase()) ||
+              post.petSizeAdopt.toLowerCase().contains(search.toLowerCase()) ||
+              post.petAddressAdopt
+                  .toLowerCase()
+                  .contains(search.toLowerCase()) ||
+              post.regProCiBagAdopt
+                  .toLowerCase()
+                  .contains(search.toLowerCase()) ||
+              post.dateAdopt.toLowerCase().contains(search.toLowerCase()) ||
+              post.petTypeAdopt.toLowerCase().contains(search.toLowerCase()))
+          .toList();
     }
+    _isSearching = false;
     notifyListeners();
   }
 
@@ -596,10 +793,14 @@ void onSearchChanged(String query) {
     if (searchText.isEmpty) {
       filterPawExperiencePost = pawExperiencePost;
     } else {
-      filterPawExperiencePost = pawExperiencePost.where((post) =>
-         post.postOwnerName.toLowerCase().contains(searchText) ||
-          post.tags.any((tag) => tag.name.toLowerCase().contains(searchText.toLowerCase()))).toList();
+      filterPawExperiencePost = pawExperiencePost
+          .where((post) =>
+              post.postOwnerName.toLowerCase().contains(searchText) ||
+              post.tags.any((tag) =>
+                  tag.name.toLowerCase().contains(searchText.toLowerCase())))
+          .toList();
     }
+    _isSearching = false;
     notifyListeners();
   }
 
@@ -608,68 +809,154 @@ void onSearchChanged(String query) {
     if (searchText.isEmpty) {
       filterCallforAidPost = callforAidPost;
     } else {
-      filterCallforAidPost = callforAidPost.where((post) =>post.bankHolder.toLowerCase().contains(searchText.toLowerCase()) ||
-          post.postOwnerName.toLowerCase().contains(searchText) ||
-          post.tags.any((tag) => tag.name.toLowerCase().contains(searchText.toLowerCase())) || post.postDescription.toLowerCase().contains(searchText.toLowerCase()) ||
-          post.accountNumber.toLowerCase().contains(searchText.toLowerCase()) ||  post.estimatedAmount.toLowerCase().contains(searchText.toLowerCase())
-          ||  post.donationType.toLowerCase().contains(searchText.toLowerCase()) ||  post.donationType.toLowerCase().contains(searchText.toLowerCase())
-          ||  post.statusDonation.toLowerCase().contains(searchText.toLowerCase())
-      ).toList();
+      filterCallforAidPost = callforAidPost
+          .where((post) =>
+              post.bankHolder
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.postOwnerName.toLowerCase().contains(searchText) ||
+              post.tags.any((tag) =>
+                  tag.name.toLowerCase().contains(searchText.toLowerCase())) ||
+              post.postDescription
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.accountNumber
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.estimatedAmount
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.donationType
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.donationType
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.statusDonation
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()))
+          .toList();
     }
+    _isSearching = false;
     notifyListeners();
   }
 
   // Search Pet for Rescue Post
   void searchPetForRescue(String searchText) {
-
     if (searchText.isEmpty) {
       filterPetForRescuePost = petforRescuePost;
     } else {
-      filterPetForRescuePost = petforRescuePost.where((post) => post.tags.any((tag) => tag.name.toLowerCase().contains(searchText.toLowerCase())) ||
-          post.postOwnerName.toLowerCase().contains(searchText)
-          || post.rescuePetSize.toLowerCase().contains(searchText.toLowerCase()) || post.rescueStatus.toLowerCase().contains(searchText.toLowerCase())
-      ||post.rescueAddress.toLowerCase().contains(searchText.toLowerCase()) || post.rescuePetColor.toLowerCase().contains(searchText.toLowerCase())
-          || post.rescueBreed.toLowerCase().contains(searchText.toLowerCase()) || post.petType.toLowerCase().contains(searchText.toLowerCase())).toList();
+      filterPetForRescuePost = petforRescuePost
+          .where((post) =>
+              post.tags.any((tag) =>
+                  tag.name.toLowerCase().contains(searchText.toLowerCase())) ||
+              post.postOwnerName.toLowerCase().contains(searchText) ||
+              post.rescuePetSize
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.rescueStatus
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.rescueAddress
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.rescuePetColor
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.rescueBreed
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.petType.toLowerCase().contains(searchText.toLowerCase()))
+          .toList();
     }
+    _isSearching = false;
     notifyListeners();
-
   }
 
   // This will search user post
-  void searchMyPost(String searchText){
-     if (searchText.isEmpty) {
-       filterMyPost = myPostlist;
-     }
-      else {
-        filterMyPost = myPostlist.where((post) => post.tags.any((tag) => tag.name.toLowerCase().contains(searchText.toLowerCase())) ||
-            post.postOwnerName.toLowerCase().contains(searchText)
-            || post.rescuePetSize.toLowerCase().contains(searchText.toLowerCase()) || post.rescueStatus.toLowerCase().contains(searchText.toLowerCase())
-            ||post.rescueAddress.toLowerCase().contains(searchText.toLowerCase()) || post.rescuePetColor.toLowerCase().contains(searchText.toLowerCase())
-        || post.establisHment_Clinic_Name.toLowerCase().contains(searchText.toLowerCase()) || post.establismentRegion.toLowerCase().contains(searchText.toLowerCase())
-            || post.establismentProvinces.toLowerCase().contains(searchText.toLowerCase()) || post.establismentCity.toLowerCase().contains(searchText.toLowerCase())
-            || post.petNameAdopt.toLowerCase().contains(searchText.toLowerCase()) || post.petBreedAdopt.toLowerCase().contains(searchText.toLowerCase())
-            || post.petAgeAdopt.toLowerCase().contains(searchText.toLowerCase()) || post.petGenderAdopt.toLowerCase().contains(searchText.toLowerCase()) ||
-            post.petColorAdopt.toLowerCase().contains(searchText.toLowerCase()) || post.petSizeAdopt.toLowerCase().contains(searchText.toLowerCase())
-            || post.petAddressAdopt.toLowerCase().contains(searchText.toLowerCase()) || post.regProCiBagAdopt.toLowerCase().contains(searchText.toLowerCase())
-            || post.dateAdopt.toLowerCase().contains(searchText.toLowerCase()) || post.petTypeAdopt.toLowerCase().contains(searchText.toLowerCase())
-            || post.bankHolder.toLowerCase().contains(searchText.toLowerCase()) ||
-            post.accountNumber.toLowerCase().contains(searchText.toLowerCase()) ||  post.estimatedAmount.toLowerCase().contains(searchText.toLowerCase())
-            ||  post.donationType.toLowerCase().contains(searchText.toLowerCase()) ||  post.donationType.toLowerCase().contains(searchText.toLowerCase())
-            ||  post.statusDonation.toLowerCase().contains(searchText.toLowerCase())
-            || post.petName.toLowerCase().contains(searchText.toLowerCase()) ||
-            post.postOwnerName.toLowerCase().contains(searchText) ||
-            post.tags.any((tag) => tag.name.toLowerCase().contains(searchText.toLowerCase())) || post.postDescription.toLowerCase().contains(searchText.toLowerCase()) ||
-            post.petType.toLowerCase().contains(searchText.toLowerCase()) ||
-            post.petBreed.toLowerCase().contains(searchText.toLowerCase()) ||
-            post.petGender.toLowerCase().contains(searchText.toLowerCase()) ||
-            post.petAge.toLowerCase().contains(searchText.toLowerCase()) ||
-            post.petColor.toLowerCase().contains(searchText.toLowerCase()) ||
-            post.petAddress.toLowerCase().contains(searchText.toLowerCase()) ||
-            post.petCollar.toLowerCase().contains(searchText.toLowerCase()) ||
-            post.rescueBreed.toLowerCase().contains(searchText.toLowerCase()) || post.petType.toLowerCase().contains(searchText.toLowerCase())).toList();
-      }
+  void searchMyPost(String searchText) {
+    if (searchText.isEmpty) {
+      filterMyPost = myPostlist;
+    } else {
+      filterMyPost = myPostlist
+          .where((post) =>
+              post.tags.any((tag) =>
+                  tag.name.toLowerCase().contains(searchText.toLowerCase())) ||
+              post.postOwnerName.toLowerCase().contains(searchText) ||
+              post.rescuePetSize
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.rescueStatus
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.rescueAddress
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.rescuePetColor
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.establisHment_Clinic_Name
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.establismentRegion
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.establismentProvinces
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.establismentCity
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.petNameAdopt
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.petBreedAdopt
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.petAgeAdopt
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.petGenderAdopt
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.petColorAdopt
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.petSizeAdopt
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.petAddressAdopt
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.regProCiBagAdopt
+                  .toLowerCase()
+                  .contains(searchText.toLowerCase()) ||
+              post.dateAdopt.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.petTypeAdopt.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.bankHolder.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.accountNumber.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.estimatedAmount.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.donationType.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.donationType.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.statusDonation.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.petName.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.postOwnerName.toLowerCase().contains(searchText) ||
+              post.tags.any((tag) => tag.name.toLowerCase().contains(searchText.toLowerCase())) ||
+              post.postDescription.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.petType.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.petBreed.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.petGender.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.petAge.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.petColor.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.petAddress.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.petCollar.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.rescueBreed.toLowerCase().contains(searchText.toLowerCase()) ||
+              post.petType.toLowerCase().contains(searchText.toLowerCase()))
+          .toList();
+    }
+    _isSearching = false;
+    notifyListeners();
   }
-
 
   // This is for multiple search for pet adoption
   Future<void> startSearchPetAdoption(Map<String, dynamic> searchParams) async {
@@ -704,11 +991,13 @@ void onSearchChanged(String query) {
         if (value == null || value.isEmpty) continue;
 
         // Skip wrong breed type
-        if ((key == 'dogBreed' && petType != 'dog') || (key == 'catBreed' && petType != 'cat')) {
+        if ((key == 'dogBreed' && petType != 'dog') ||
+            (key == 'catBreed' && petType != 'cat')) {
           continue;
         }
 
-        final postValue = (postFields[key] ?? '').toString().toLowerCase().trim();
+        final postValue =
+            (postFields[key] ?? '').toString().toLowerCase().trim();
 
         print('🔎 Comparing "$postValue" with "$value" for key "$key"');
 
@@ -726,10 +1015,8 @@ void onSearchChanged(String query) {
     notifyListeners();
   }
 
-
   // This is for multiple search for found pets
-  Future <void> startSearchFoundPets(Map<String, dynamic> searchParams) async{
-
+  Future<void> startSearchFoundPets(Map<String, dynamic> searchParams) async {
     filterFoundPost = foundPost.where((post) {
       final postFields = {
         'petType': post.petType,
@@ -757,11 +1044,13 @@ void onSearchChanged(String query) {
         if (value == null || value.isEmpty) continue;
 
         // Skip wrong breed type
-        if ((key == 'dogBreed' && petType != 'dog') || (key == 'catBreed' && petType != 'cat')) {
+        if ((key == 'dogBreed' && petType != 'dog') ||
+            (key == 'catBreed' && petType != 'cat')) {
           continue;
         }
 
-        final postValue = (postFields[key] ?? '').toString().toLowerCase().trim();
+        final postValue =
+            (postFields[key] ?? '').toString().toLowerCase().trim();
 
         print('🔎 Comparing "$postValue" with "$value" for key "$key"');
 
@@ -775,11 +1064,10 @@ void onSearchChanged(String query) {
     }).toList();
     print('📦 Filtered posts: ${filterPetAdoptPost.length}');
     notifyListeners();
-
   }
 
   // This is for multiple search for missing pets
-  Future <void> startSearchMissingPets(Map<String, dynamic> searchParams) async{
+  Future<void> startSearchMissingPets(Map<String, dynamic> searchParams) async {
     filterMissingPost = missingPost.where((post) {
       final postFields = {
         'petType': post.petType,
@@ -807,11 +1095,13 @@ void onSearchChanged(String query) {
         if (value == null || value.isEmpty) continue;
 
         // Skip wrong breed type
-        if ((key == 'dogBreed' && petType != 'dog') || (key == 'catBreed' && petType != 'cat')) {
+        if ((key == 'dogBreed' && petType != 'dog') ||
+            (key == 'catBreed' && petType != 'cat')) {
           continue;
         }
 
-        final postValue = (postFields[key] ?? '').toString().toLowerCase().trim();
+        final postValue =
+            (postFields[key] ?? '').toString().toLowerCase().trim();
 
         print('🔎 Comparing "$postValue" with "$value" for key "$key"');
 
@@ -828,7 +1118,8 @@ void onSearchChanged(String query) {
     notifyListeners();
   }
 
-  Future<void> startSearchPetsForRescue(Map<String, dynamic> searchParams) async {
+  Future<void> startSearchPetsForRescue(
+      Map<String, dynamic> searchParams) async {
     filterPetForRescuePost = petforRescuePost.where((post) {
       final postFields = {
         'petType': post.rescuePetType,
@@ -853,11 +1144,13 @@ void onSearchChanged(String query) {
         if (value == null || value.isEmpty) continue;
 
         // Skip wrong breed type
-        if ((key == 'dogBreed' && petType != 'dog') || (key == 'catBreed' && petType != 'cat')) {
+        if ((key == 'dogBreed' && petType != 'dog') ||
+            (key == 'catBreed' && petType != 'cat')) {
           continue;
         }
 
-        final postValue = (postFields[key] ?? '').toString().toLowerCase().trim();
+        final postValue =
+            (postFields[key] ?? '').toString().toLowerCase().trim();
 
         print('🔎 Comparing "$postValue" with "$value" for key "$key"');
 
@@ -891,7 +1184,8 @@ void onSearchChanged(String query) {
     return isEqual;
   }
 
-  Future <void> startSearchPetCareInsights(Map<String, dynamic> searchParams) async {
+  Future<void> startSearchPetCareInsights(
+      Map<String, dynamic> searchParams) async {
     filterVetAndTravelPost = vetAndtravelPost.where((post) {
       final postFields = {
         'region': post.establismentRegion,
@@ -899,14 +1193,14 @@ void onSearchChanged(String query) {
         'city': post.establismentCity,
       };
 
-
       for (final entry in searchParams.entries) {
         final key = entry.key;
         final value = entry.value?.toString().toLowerCase().trim();
 
         if (value == null || value.isEmpty) continue;
 
-        final postValue = (postFields[key] ?? '').toString().toLowerCase().trim();
+        final postValue =
+            (postFields[key] ?? '').toString().toLowerCase().trim();
 
         print('🔎 Comparing "$postValue" with "$value" for key "$key"');
 
@@ -920,262 +1214,192 @@ void onSearchChanged(String query) {
     }).toList();
 
     notifyListeners();
-
   }
 
   // This will delete the post from the database
-  void deletePost(String category, BuildContext context, String postID) async {
-  PostModel? deletedPost;
-
-  switch (category) {
-    case 'Missing Pets':
-      deletedPost = missingPost.firstWhere((p) => p.postId == postID);
-      if (deletedPost != -1) {
-        missingPost.remove(deletedPost);
-        filterMissingPost.remove(deletedPost);
-      }
-      break;
-    case 'Found Pets':
-      deletedPost = foundPost.firstWhere((p) => p.postId == postID);
-      if (deletedPost != -1) {
-        foundPost.remove(deletedPost);
-        filterFoundPost.remove(deletedPost);
-      }
-      break;
-    case 'Paw Experience':
-      deletedPost = pawExperiencePost.firstWhere((p) => p.postId == postID);
-      if (deletedPost != -1) {
-        pawExperiencePost.remove(deletedPost);
-        filterPawExperiencePost.remove(deletedPost);
-      }
-      break;
-    case 'Protect Our Pets: Report Abuse':
-      deletedPost = protectedPost.firstWhere((p) => p.postId == postID);
-      if (deletedPost != -1) {
-        protectedPost.remove(deletedPost);
-        filterProtectedPost.remove(deletedPost);
-      }
-      break;
-    case 'Community':
-      final index = communityPost.indexWhere((p) => p.postId == postID);
-      if (index != -1) {
-        deletedPost = communityPost[index];
-        communityPost.removeAt(index);
-        filterCommunityPost.remove(deletedPost);
-      }
-      break;
-    case 'Pet Care Insights':
-      deletedPost = vetAndtravelPost.firstWhere((p) => p.postId == postID);
-      if (deletedPost != -1) {
-        vetAndtravelPost.remove(deletedPost);
-        filterVetAndTravelPost.remove(deletedPost);
-      }
-      break;
-    case 'Pet Adoption':
-      deletedPost = petAdoptPost.firstWhere((p) => p.postId == postID);
-      if (deletedPost != -1) {
-        petAdoptPost.remove(deletedPost);
-        filterPetAdoptPost.remove(deletedPost);
-      }
-      break;
-    case 'Call for Aid':
-      deletedPost = callforAidPost.firstWhere((p) => p.postId == postID);
-      if (deletedPost != -1) {
-        callforAidPost.remove(deletedPost);
-        filterCallforAidPost.remove(deletedPost);
-      }
-      break;
-    case 'Pets for Rescue':
-      deletedPost = petforRescuePost.firstWhere((p) => p.postId == postID);
-      if (deletedPost != -1) {
-        petforRescuePost.remove(deletedPost);
-        filterPetForRescuePost.remove(deletedPost);
-      }
-      break;
-    default:
-      deletedPost = myPostlist.firstWhere((p) => p.postId == postID);
-      if (deletedPost != -1) {
-        myPostlist.remove(deletedPost);
-        filterMyPost.remove(deletedPost);
-      }
-      print('Deleted from default/My Posts list.');
-      break;
-  }
-
-  if (deletedPost == null) {
-    print("Could not find post with ID $postID to delete locally.");
-    return;
-  }
-
-  notifyListeners();
-  ToastComponent().showMessage(AppColors.orange, 'Post removed.');
-
+  // This will delete the post from the database and update the UI in real-time
+void deletePost(String category, BuildContext context, String postID) async {
+  ProgressDialog pd = ProgressDialog(context: context);
+  pd.show(msg: "Deleting post...");
   try {
+    // 1. Delete the post from the Firestore database
     await postRepository.deletePost(category, postID);
-    print('Post successfully deleted from Firestore.');
-  } catch (e) {
-    print('Failed to delete post from Firestore: $e');
-    ToastComponent().showMessage(Colors.red, 'Error: Could not delete post.');
 
+    // 2. Remove the post from the correct local list based on its category
+    // This provides the instantaneous UI update.
     switch (category) {
+      case 'Protect Our Pets: Report Abuse':
+        protectedPost.removeWhere((post) => post.postId == postID);
+        filterProtectedPost.removeWhere((post) => post.postId == postID);
+        break;
       case 'Missing Pets':
-        missingPost.add(deletedPost);
-        filterMissingPost.add(deletedPost);
+        missingPost.removeWhere((post) => post.postId == postID);
+        filterMissingPost.removeWhere((post) => post.postId == postID);
         break;
       case 'Found Pets':
-        foundPost.add(deletedPost);
-        filterFoundPost.add(deletedPost);
+        foundPost.removeWhere((post) => post.postId == postID);
+        filterFoundPost.removeWhere((post) => post.postId == postID);
         break;
-      case 'Paw Experience':
-        pawExperiencePost.add(deletedPost);
-        filterPawExperiencePost.add(deletedPost);
+      case 'Pet for Adoption':
+        petAdoptPost.removeWhere((post) => post.postId == postID);
+        filterPetAdoptPost.removeWhere((post) => post.postId == postID);
         break;
-      case 'Protect Our Pets: Report Abuse':
-        protectedPost.add(deletedPost);
-        filterProtectedPost.add(deletedPost);
-        break;
-      case 'Community':
-        communityPost.add(deletedPost);
-        filterCommunityPost.add(deletedPost);
-        break;
-      case 'Pet Care Insights':
-        vetAndtravelPost.add(deletedPost);
-        filterVetAndTravelPost.add(deletedPost);
-        break;
-      case 'Pet Adoption':
-        petAdoptPost.add(deletedPost);
-        filterPetAdoptPost.add(deletedPost);
+      case 'Pet for Rescue':
+        petforRescuePost.removeWhere((post) => post.postId == postID);
+        filterPetForRescuePost.removeWhere((post) => post.postId == postID);
         break;
       case 'Call for Aid':
-        callforAidPost.add(deletedPost);
-        filterCallforAidPost.add(deletedPost);
+        callforAidPost.removeWhere((post) => post.postId == postID);
+        filterCallforAidPost.removeWhere((post) => post.postId == postID);
         break;
-      case 'Pets for Rescue':
-        petforRescuePost.add(deletedPost);
-        filterPetForRescuePost.add(deletedPost);
+      case 'Pet Care Insights':
+        vetAndtravelPost.removeWhere((post) => post.postId == postID);
+        filterVetAndTravelPost.removeWhere((post) => post.postId == postID);
         break;
+      case 'Paw-some Moments':
+        pawExperiencePost.removeWhere((post) => post.postId == postID);
+        filterPawExperiencePost.removeWhere((post) => post.postId == postID);
+        break;
+      case 'Community Announcements':
+        communityPost.removeWhere((post) => post.postId == postID);
+        filterCommunityPost.removeWhere((post) => post.postId == postID);
+        break;
+      // This covers the generic 'Pet Appreciation' and other posts
       default:
-        myPostlist.add(deletedPost);
-        filterMyPost.add(deletedPost);
-        break;
+        _posts.removeWhere((post) => post.postId == postID);
+        filteredPost.removeWhere((post) => post.postId == postID);
     }
+
+    // 3. Notify listeners to rebuild the UI with the updated list
     notifyListeners();
+    
+    ToastComponent().showMessage(Colors.green, 'Post Deleted Successfully');
+
+  } catch (e) {
+    print('Failed to delete post: $e');
+    ToastComponent().showMessage(Colors.red, 'Failed to delete post');
+  } finally {
+    // 4. Close the progress dialog
+    pd.close();
   }
 }
-  // load the the pet petOptionsStatus
-  Future <void> loadPetStatusOptions(String category) async {
 
-    if(category=='Missing Pets'){
+  // load the the pet petOptionsStatus
+  Future<void> loadPetStatusOptions(String category) async {
+    if (category == 'Missing Pets') {
       petStatusOptions = [
         'Still missing',
         'Adopted',
-         'Reunited with owner',
+        'Reunited with owner',
       ];
 
-      selectedPetStatus =  'Still missing';
+      selectedPetStatus = 'Still missing';
     }
-    if (category =='Found Pets'){
+    if (category == 'Found Pets') {
       petStatusOptions = [
         'Still roaming',
         'Reunited with owner',
         'Adopted',
       ];
 
-      selectedPetStatus =  'Still roaming';
+      selectedPetStatus = 'Still roaming';
     }
 
-    if(category =='Pet Adoption'){
+    if (category == 'Pet Adoption') {
       petStatusOptions = [
         'Still up for adoption',
         'Adopted',
       ];
 
-      selectedPetStatus =  'Still up for adoption';
+      selectedPetStatus = 'Still up for adoption';
     }
 
-    if(category =='Call for Aid'){
+    if (category == 'Call for Aid') {
       petStatusOptions = [
         'Ongoing',
         'Paused',
         'Fullfilled',
       ];
 
-      selectedPetStatus =  'Ongoing';
+      selectedPetStatus = 'Ongoing';
     }
-    if(category =='Protect Our Pets: Report Abuse'){
-
+    if (category == 'Protect Our Pets: Report Abuse') {
       petStatusOptions = [
         'Will investigate',
         'Ongoing Investigation',
-         'Case has been filled',
+        'Case has been filled',
         'Case has been resolved',
         'Acctions to be taken',
       ];
 
-      selectedPetStatus =  'Will investigate';
-
+      selectedPetStatus = 'Will investigate';
     }
-
 
     notifyListeners();
   }
 
   // This will update the post status
-  void updatePetStatus(String postId, BuildContext context, String category) async {
+  void updatePetStatus(
+      String postId, BuildContext context, String category) async {
     ProgressDialog pd = ProgressDialog(context: context);
     pd.show(msg: "Updating post status...");
-    try{
-      await postRepository.updatePetStatus(postId, category, selectedPetStatus!);
-      ToastComponent().showMessage(AppColors.orange, 'Status updated successfully');
+    try {
+      await postRepository.updatePetStatus(
+          postId, category, selectedPetStatus!);
+      ToastComponent()
+          .showMessage(AppColors.orange, 'Status updated successfully');
     } catch (e) {
       print('Failed to update post status: $e');
     } finally {
       pd.close();
     }
-
   }
 
   // This will update the post status
   void setSelectedPetStatus(String? newValue) {
-
     selectedPetStatus = newValue;
     notifyListeners();
-
   }
 
-  void navigatoToCreatePost(BuildContext context) async{
-
+  void navigatoToCreatePost(BuildContext context) async {
     bool isUserVerified = await postRepository.isUserVerified();
 
-     if(!isUserVerified) {
-       ToastComponent().showMessage(
-           Colors.red, 'Please verify your account to create a post');
+    if (!isUserVerified) {
+      ToastComponent().showMessage(
+          Colors.red, 'Please verify your account to create a post');
 
-       Fluttertoast.showToast(
-         msg: "Please verify your account to create a post",
-         toastLength: Toast.LENGTH_SHORT,
-         gravity: ToastGravity.BOTTOM,
-         backgroundColor: Colors.red,
-         textColor: Colors.white,
-         fontSize: 16.0,
-       );
-       return;
-     }
+      Fluttertoast.showToast(
+        msg: "Please verify your account to create a post",
+        toastLength: Toast.LENGTH_SHORT,
+        gravity: ToastGravity.BOTTOM,
+        backgroundColor: Colors.red,
+        textColor: Colors.white,
+        fontSize: 16.0,
+      );
+      return;
+    }
 
     Navigator.pushNamed(context, AppRoutes.createpost);
     notifyListeners();
-
   }
-  
+
   @override
   void dispose() {
     _debounce?.cancel(); // Cancel the timer if it's active
     _postSubscription?.cancel();
+    _missingPostSubscription?.cancel();
+    _foundPostSubscription?.cancel();
+    _pawExperiencePostSubscription?.cancel();
+    _protectedPostSubscription?.cancel();
+    _communityPostSubscription?.cancel();
+    _vetAndTravelPostSubscription?.cancel();
+    _petAdoptPostSubscription?.cancel();
+    _callforAidPostSubscription?.cancel();
+    _petforRescuePostSubscription?.cancel();
+    _myPostSubscription?.cancel();
     searchPostController.dispose();
     currentUserId = '';
     role = '';
     super.dispose();
   }
-  
 }
-

@@ -1,24 +1,23 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:pet_welfrare_ph/src/utils/Route.dart';
-import 'package:pet_welfrare_ph/src/widgets/PetForRescueCard.dart';
-import 'package:pet_welfrare_ph/src/widgets/ProtectPetCard.dart';
-import 'package:provider/provider.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
+import 'package:pet_welfrare_ph/src/widgets/PetForRescueCard.dart';
+import 'package:provider/provider.dart';
+
+import '../../Animation/CardShimmerWidget.dart';
 import '../../modal/SearchPetModal.dart';
 import '../../utils/AppColors.dart';
 import '../../widgets/SearchTextField.dart';
-
 
 class PetForRescueView extends StatefulWidget {
   const PetForRescueView({Key? key}) : super(key: key);
 
   @override
-  ProtectPetState createState() => ProtectPetState();
+  PetForRescueViewState createState() => PetForRescueViewState();
 }
 
-class ProtectPetState extends State<PetForRescueView> {
+class PetForRescueViewState extends State<PetForRescueView> {
   late PostViewModel postViewModel;
   @override
   void initState() {
@@ -29,8 +28,6 @@ class ProtectPetState extends State<PetForRescueView> {
 
   @override
   Widget build(BuildContext context) {
-    PostViewModel postViewModel = Provider.of<PostViewModel>(context, listen: false);
-
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
@@ -50,17 +47,54 @@ class ProtectPetState extends State<PetForRescueView> {
                   },
                 ),
                 Expanded(
-                  child: postViewModel.filterPetForRescuePost.isEmpty
-                      ? Center(child: Text('No ${postViewModel.searchPostController.text} pets for rescue found'))
-                      : ListView.builder(
-                    itemCount: postViewModel.filterPetForRescuePost.length,
-                    itemBuilder: (context, index) {
-                      var post = postViewModel.filterPetForRescuePost[index];
+                  child: Builder(
+                    builder: (context) {
+                      // Initial loading state
+                      if (postViewModel.isInitialLoading) {
+                        return ListView.builder(
+                          itemCount: 5,
+                          itemBuilder: (context, index) => PostCardSkeleton(
+                            screenHeight: screenHeight,
+                            screenWidth: screenWidth,
+                          ),
+                        );
+                      }
 
-                      return PetForRescueCard(
-                          post: post,
-                          screenHeight: screenHeight,
-                          screenWidth: screenWidth
+                      // Active searching state
+                      if (postViewModel.isSearching) {
+                        return ListView.builder(
+                          itemCount: 5,
+                          itemBuilder: (context, index) => PostCardSkeleton(
+                            screenHeight: screenHeight,
+                            screenWidth: screenWidth,
+                          ),
+                        );
+                      }
+                      
+                      // Empty states
+                      if (postViewModel.filterPetForRescuePost.isEmpty) {
+                        if (postViewModel.searchPostController.text.isNotEmpty) {
+                          return Center(
+                            child: Text(
+                              'No "${postViewModel.searchPostController.text}" pets for rescue found',
+                            ),
+                          );
+                        }
+                        return const Center(
+                          child: Text("No pets for rescue found."),
+                        );
+                      }
+
+                      // Data display
+                      return ListView.builder(
+                        itemCount: postViewModel.filterPetForRescuePost.length,
+                        itemBuilder: (context, index) {
+                          var post = postViewModel.filterPetForRescuePost[index];
+                          return PetForRescueCard(
+                              post: post,
+                              screenHeight: screenHeight,
+                              screenWidth: screenWidth);
+                        },
                       );
                     },
                   ),
@@ -69,14 +103,14 @@ class ProtectPetState extends State<PetForRescueView> {
             );
           },
         ),
-        floatingActionButton:  SpeedDial(
+        floatingActionButton: SpeedDial(
           icon: Icons.add,
           backgroundColor: AppColors.black,
           foregroundColor: AppColors.white,
           activeBackgroundColor: AppColors.black,
           activeForegroundColor: AppColors.white,
           children: [
-            if (postViewModel.role.toLowerCase()!='admin') ...[
+            if (postViewModel.role.toLowerCase() != 'admin') ...[
               SpeedDialChild(
                 label: 'Create Post',
                 child: const Icon(Icons.create),
@@ -106,7 +140,6 @@ class ProtectPetState extends State<PetForRescueView> {
               },
             ),
           ],
-        )
-    );
+        ));
   }
 }

@@ -2,17 +2,13 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:pet_welfrare_ph/src/utils/Route.dart';
-import 'package:provider/provider.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
-import 'package:pet_welfrare_ph/src/model/PostModel.dart';
-import 'package:pet_welfrare_ph/src/modal/ReactionModal.dart';
+import 'package:provider/provider.dart';
 
+import '../../Animation/CardShimmerWidget.dart';
 import '../../utils/AppColors.dart';
-import '../../utils/ReactionUtils.dart';
 import '../../widgets/PostCard.dart';
 import '../../widgets/SearchTextField.dart';
-import '../ViewImage.dart';
 
 class PawSomeView extends StatefulWidget {
   const PawSomeView({Key? key}) : super(key: key);
@@ -32,8 +28,6 @@ class PawSomeState extends State<PawSomeView> {
 
   @override
   Widget build(BuildContext context) {
-    PostViewModel postViewModel = Provider.of<PostViewModel>(context, listen: false);
-
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
@@ -53,16 +47,57 @@ class PawSomeState extends State<PawSomeView> {
                 },
               ),
               Expanded(
-                child: postViewModel.filterPawExperiencePost.isEmpty
-                    ? Center(child: Text('No ${postViewModel.searchPostController.text} paw-some experience post found'))
-                    : ListView.builder(
-                  itemCount: postViewModel.filterPawExperiencePost.length,
-                  itemBuilder: (context, index) {
-                    var post = postViewModel.filterPawExperiencePost[index];
-                    return PostCard(
-                      post: post,
-                      screenHeight: screenHeight,
-                      screenWidth: screenWidth,
+                child: Builder(
+                  builder: (context) {
+                    // Initial loading state
+                    if (postViewModel.isInitialLoading) {
+                      return ListView.builder(
+                        itemCount: 5,
+                        itemBuilder: (context, index) => PostCardSkeleton(
+                          screenHeight: screenHeight,
+                          screenWidth: screenWidth,
+                        ),
+                      );
+                    }
+
+                    // Active searching state
+                    if (postViewModel.isSearching) {
+                      return ListView.builder(
+                        itemCount: 5,
+                        itemBuilder: (context, index) => PostCardSkeleton(
+                          screenHeight: screenHeight,
+                          screenWidth: screenWidth,
+                        ),
+                      );
+                    }
+
+                    // Empty states
+                    if (postViewModel.filterPawExperiencePost.isEmpty) {
+                      if (postViewModel
+                          .searchPostController.text.isNotEmpty) {
+                        return Center(
+                          child: Text(
+                            'No "${postViewModel.searchPostController.text}" paw-some experience posts found',
+                          ),
+                        );
+                      }
+                      return const Center(
+                        child: Text("No paw-some experience posts found."),
+                      );
+                    }
+
+                    // Data display
+                    return ListView.builder(
+                      itemCount: postViewModel.filterPawExperiencePost.length,
+                      itemBuilder: (context, index) {
+                        var post =
+                            postViewModel.filterPawExperiencePost[index];
+                        return PostCard(
+                          post: post,
+                          screenHeight: screenHeight,
+                          screenWidth: screenWidth,
+                        );
+                      },
                     );
                   },
                 ),
@@ -71,14 +106,14 @@ class PawSomeState extends State<PawSomeView> {
           );
         },
       ),
-      floatingActionButton:  SpeedDial(
+      floatingActionButton: SpeedDial(
         icon: Icons.add,
         backgroundColor: AppColors.black,
         foregroundColor: AppColors.white,
         activeBackgroundColor: AppColors.black,
         activeForegroundColor: AppColors.white,
         children: [
-          if (postViewModel.role.toLowerCase()!='admin') ...[
+          if (postViewModel.role.toLowerCase() != 'admin') ...[
             SpeedDialChild(
               label: 'Create Post',
               child: const Icon(Icons.create),
@@ -88,14 +123,14 @@ class PawSomeState extends State<PawSomeView> {
             ),
           ],
           SpeedDialChild(
-            label: 'Reload the PawSome Post',
+            label: 'Reload the Paw-some Posts',
             child: const Icon(Icons.refresh),
             onTap: () {
-              postViewModel.listenToCommunityPost();
+              postViewModel.listenToPawExperiencePost();
             },
           ),
         ],
-      )
+      ),
     );
   }
 }

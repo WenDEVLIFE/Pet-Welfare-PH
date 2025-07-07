@@ -2,30 +2,22 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:pet_welfrare_ph/src/utils/Route.dart';
-import 'package:pet_welfrare_ph/src/view/ViewImage.dart';
-import 'package:pet_welfrare_ph/src/widgets/CallForAidCard.dart';
-import 'package:pet_welfrare_ph/src/widgets/CustomText.dart';
-import 'package:provider/provider.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
-import 'package:pet_welfrare_ph/src/model/PostModel.dart';
-import 'package:pet_welfrare_ph/src/modal/ReactionModal.dart';
+import 'package:pet_welfrare_ph/src/widgets/CallForAidCard.dart';
+import 'package:provider/provider.dart';
 
-import '../../modal/DonateModal.dart';
-import '../../modal/FormAdoptionModal.dart';
+import '../../Animation/CardShimmerWidget.dart';
 import '../../utils/AppColors.dart';
-import '../../utils/ReactionUtils.dart';
-import '../../view_model/ApplyAdoptionViewModel.dart';
 import '../../widgets/SearchTextField.dart';
 
 class CallOfAidView extends StatefulWidget {
   const CallOfAidView({Key? key}) : super(key: key);
 
   @override
-  AidState createState() => AidState();
+  CallOfAidViewState createState() => CallOfAidViewState();
 }
 
-class AidState extends State<CallOfAidView> {
+class CallOfAidViewState extends State<CallOfAidView> {
   late PostViewModel postViewModel;
   @override
   void initState() {
@@ -33,9 +25,11 @@ class AidState extends State<CallOfAidView> {
     postViewModel = Provider.of<PostViewModel>(context, listen: false);
     postViewModel.listenToCallforAidPost();
   }
+
   @override
   Widget build(BuildContext context) {
-    PostViewModel postViewModel = Provider.of<PostViewModel>(context, listen: false);
+    PostViewModel postViewModel =
+        Provider.of<PostViewModel>(context, listen: false);
 
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
@@ -56,32 +50,68 @@ class AidState extends State<CallOfAidView> {
                 },
               ),
               Expanded(
-                child: postViewModel.filterCallforAidPost.isEmpty
-                    ? Center(child: Text('No ${postViewModel.searchPostController.text} call of aid post found'))
-                    : ListView.builder(
-                  itemCount: postViewModel.filterCallforAidPost.length,
-                  itemBuilder: (context, index) {
-                    var post = postViewModel.filterCallforAidPost[index];
-                    return CallForAidCard(
-                        post: post,
+                child: Builder(builder: (context) {
+                  // Initial loading state
+                  if (postViewModel.isInitialLoading) {
+                    return ListView.builder(
+                      itemCount: 5,
+                      itemBuilder: (context, index) => PostCardSkeleton(
                         screenHeight: screenHeight,
-                        screenWidth: screenWidth
+                        screenWidth: screenWidth,
+                      ),
                     );
-                  },
-                ),
+                  }
+
+                  // Active searching state
+                  if (postViewModel.isSearching) {
+                    return ListView.builder(
+                      itemCount: 5,
+                      itemBuilder: (context, index) => PostCardSkeleton(
+                        screenHeight: screenHeight,
+                        screenWidth: screenWidth,
+                      ),
+                    );
+                  }
+
+                  // Empty states
+                  if (postViewModel.filterCallforAidPost.isEmpty) {
+                    if (postViewModel.searchPostController.text.isNotEmpty) {
+                      return Center(
+                        child: Text(
+                          'No "${postViewModel.searchPostController.text}" call for aid posts found',
+                        ),
+                      );
+                    }
+                    return const Center(
+                      child: Text("No call for aid posts found."),
+                    );
+                  }
+
+                  // Data display
+                  return ListView.builder(
+                    itemCount: postViewModel.filterCallforAidPost.length,
+                    itemBuilder: (context, index) {
+                      var post = postViewModel.filterCallforAidPost[index];
+                      return CallForAidCard(
+                          post: post,
+                          screenHeight: screenHeight,
+                          screenWidth: screenWidth);
+                    },
+                  );
+                }),
               ),
             ],
           );
         },
       ),
-      floatingActionButton:  SpeedDial(
+      floatingActionButton: SpeedDial(
         icon: Icons.add,
         backgroundColor: AppColors.black,
         foregroundColor: AppColors.white,
         activeBackgroundColor: AppColors.black,
         activeForegroundColor: AppColors.white,
         children: [
-          if (postViewModel.role.toLowerCase()!='admin') ...[
+          if (postViewModel.role.toLowerCase() != 'admin') ...[
             SpeedDialChild(
               label: 'Create Post',
               child: const Icon(Icons.create),
@@ -98,7 +128,7 @@ class AidState extends State<CallOfAidView> {
             },
           ),
         ],
-      )
+      ),
     );
   }
 }

@@ -2,19 +2,14 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:pet_welfrare_ph/src/utils/Route.dart';
-import 'package:pet_welfrare_ph/src/widgets/CustomText.dart';
+import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 import 'package:pet_welfrare_ph/src/widgets/MissingPetCard.dart';
 import 'package:provider/provider.dart';
-import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
-import 'package:pet_welfrare_ph/src/model/PostModel.dart';
-import 'package:pet_welfrare_ph/src/modal/ReactionModal.dart';
 
+import '../../Animation/CardShimmerWidget.dart';
 import '../../modal/SearchPetModal.dart';
 import '../../utils/AppColors.dart';
-import '../../utils/ReactionUtils.dart';
 import '../../widgets/SearchTextField.dart';
-import '../ViewImage.dart';
 
 class MissingPetView extends StatefulWidget {
   const MissingPetView({Key? key}) : super(key: key);
@@ -60,40 +55,69 @@ class MissingPetState extends State<MissingPetView> {
                 },
               ),
               Expanded(
-                child: viewModel.isSearching
-                    ? const Center(child: CircularProgressIndicator()) 
-                    : viewModel.filterMissingPost.isEmpty
-                        ? Center(
-                            child: Text( 
-                              viewModel.searchPostController.text.isEmpty
-                                  ? 'No missing pet posts available.'
-                                  : 'No results for "${viewModel.searchPostController.text}"',
-                            ),
-                          )
-                        : ListView.builder(
-                            itemCount: viewModel.filterMissingPost.length,
-                            itemBuilder: (context, index) {
-                              final post = viewModel.filterMissingPost[index];
-                              return MissingPetCard(
-                                post: post,
-                                screenHeight: screenHeight,
-                                screenWidth: screenWidth,
-                              );
-                            },
-                          ),
+                child: Builder(builder: (context) {
+                  // Initial loading state
+                  if (viewModel.isInitialLoading) {
+                    return ListView.builder(
+                      itemCount: 5,
+                      itemBuilder: (context, index) => PostCardSkeleton(
+                        screenHeight: screenHeight,
+                        screenWidth: screenWidth,
+                      ),
+                    );
+                  }
+
+                  // Active searching state
+                  if (viewModel.isSearching) {
+                    return ListView.builder(
+                      itemCount: 5,
+                      itemBuilder: (context, index) => PostCardSkeleton(
+                        screenHeight: screenHeight,
+                        screenWidth: screenWidth,
+                      ),
+                    );
+                  }
+
+                  // Empty states
+                  if (viewModel.filterMissingPost.isEmpty) {
+                    if (viewModel.searchPostController.text.isNotEmpty) {
+                      return Center(
+                        child: Text(
+                          'No results for "${viewModel.searchPostController.text}"',
+                        ),
+                      );
+                    }
+                    return const Center(
+                      child: Text("No missing pet posts found."),
+                    );
+                  }
+
+                  // Data display
+                  return ListView.builder(
+                    itemCount: viewModel.filterMissingPost.length,
+                    itemBuilder: (context, index) {
+                      final post = viewModel.filterMissingPost[index];
+                      return MissingPetCard(
+                        post: post,
+                        screenHeight: screenHeight,
+                        screenWidth: screenWidth,
+                      );
+                    },
+                  );
+                }),
               ),
             ],
           );
         },
       ),
-       floatingActionButton:SpeedDial(
+      floatingActionButton: SpeedDial(
         icon: Icons.add,
         backgroundColor: AppColors.black,
         foregroundColor: AppColors.white,
         activeBackgroundColor: AppColors.black,
         activeForegroundColor: AppColors.white,
         children: [
-          if (postViewModel.role.toLowerCase()!='admin') ...[
+          if (postViewModel.role.toLowerCase() != 'admin') ...[
             SpeedDialChild(
               label: 'Create Post',
               child: const Icon(Icons.create),

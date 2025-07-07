@@ -3,15 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
-import 'package:provider/provider.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
-import 'package:pet_welfrare_ph/src/modal/ReactionModal.dart';
+import 'package:provider/provider.dart';
 
+import '../../Animation/CardShimmerWidget.dart';
 import '../../utils/AppColors.dart';
-import '../../utils/ReactionUtils.dart';
 import '../../widgets/PostCard.dart';
 import '../../widgets/SearchTextField.dart';
-import '../ViewImage.dart';
 
 class CommunityView extends StatefulWidget {
   const CommunityView({Key? key}) : super(key: key);
@@ -21,14 +19,19 @@ class CommunityView extends StatefulWidget {
 }
 
 class CommunityState extends State<CommunityView> {
+  late PostViewModel postViewModel;
+
   @override
   void initState() {
     super.initState();
+    postViewModel = Provider.of<PostViewModel>(context, listen: false);
+    postViewModel.listenToCommunityPost();
   }
 
   @override
   Widget build(BuildContext context) {
-    PostViewModel postViewModel = Provider.of<PostViewModel>(context, listen: false);
+    PostViewModel postViewModel =
+        Provider.of<PostViewModel>(context, listen: false);
 
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
@@ -48,21 +51,57 @@ class CommunityState extends State<CommunityView> {
                   postViewModel.searchCommunityPost(searchText);
                 },
               ),
-          Expanded(
-          child: postViewModel.filterCommunityPost.isEmpty
-          ? Center(child: Text('No ${postViewModel.searchPostController.text} community post found'))
-              : ListView.builder(
-          itemCount: postViewModel.filterCommunityPost.length,
-          itemBuilder: (context, index) {
-          var post = postViewModel.filterCommunityPost[index];
-          return PostCard(
-              post: post,
-              screenHeight: screenHeight,
-              screenWidth: screenWidth
-          );
-                },
-                ),
-                ),
+              Expanded(
+                child: Builder(builder: (context) {
+                  // Initial loading state
+                  if (postViewModel.isInitialLoading) {
+                    return ListView.builder(
+                      itemCount: 5,
+                      itemBuilder: (context, index) => PostCardSkeleton(
+                        screenHeight: screenHeight,
+                        screenWidth: screenWidth,
+                      ),
+                    );
+                  }
+
+                  // Active searching state
+                  if (postViewModel.isSearching) {
+                    return ListView.builder(
+                      itemCount: 5,
+                      itemBuilder: (context, index) => PostCardSkeleton(
+                        screenHeight: screenHeight,
+                        screenWidth: screenWidth,
+                      ),
+                    );
+                  }
+
+                  // Empty states
+                  if (postViewModel.filterCommunityPost.isEmpty) {
+                    if (postViewModel.searchPostController.text.isNotEmpty) {
+                      return Center(
+                        child: Text(
+                          'No "${postViewModel.searchPostController.text}" community posts found',
+                        ),
+                      );
+                    }
+                    return const Center(
+                      child: Text("No community announcements found."),
+                    );
+                  }
+
+                  // Data display
+                  return ListView.builder(
+                    itemCount: postViewModel.filterCommunityPost.length,
+                    itemBuilder: (context, index) {
+                      var post = postViewModel.filterCommunityPost[index];
+                      return PostCard(
+                          post: post,
+                          screenHeight: screenHeight,
+                          screenWidth: screenWidth);
+                    },
+                  );
+                }),
+              ),
             ],
           );
         },
@@ -74,7 +113,7 @@ class CommunityState extends State<CommunityView> {
         activeBackgroundColor: AppColors.black,
         activeForegroundColor: AppColors.white,
         children: [
-          if(postViewModel.role.toLowerCase()=='admin') ...[
+          if (postViewModel.role.toLowerCase() == 'admin') ...[
             SpeedDialChild(
               label: 'Create Post',
               child: const Icon(Icons.create),
@@ -91,7 +130,7 @@ class CommunityState extends State<CommunityView> {
             },
           ),
         ],
-      )
+      ),
     );
   }
 }

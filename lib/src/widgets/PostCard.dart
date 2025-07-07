@@ -164,12 +164,7 @@ class _PostCardState extends State<PostCard> {
     final isPostOwner = widget.post.postOwnerId == currentUserId;
 
     // 🛠 Show toast safely after popup menu closes
-    Future.delayed(Duration.zero, () {
-      ToastComponent().showMessage(
-        Colors.blue,
-        'UID: $currentUserId\nRole: $role\nPostOwnerID: ${widget.post.postOwnerId}\nIsAdmin: $isAdmin\nIsPostOwner: $isPostOwner',
-      );
-
+    Future.delayed(Duration.zero, () async {
       if ((isAdmin || isPostOwner) && value == 'Edit') {
         Navigator.push(
           context,

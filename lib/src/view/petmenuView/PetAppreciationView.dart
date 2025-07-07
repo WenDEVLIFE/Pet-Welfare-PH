@@ -1,10 +1,11 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:pet_welfrare_ph/src/utils/Route.dart';
+import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 import 'package:pet_welfrare_ph/src/widgets/PostCard.dart';
 import 'package:provider/provider.dart';
-import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
+
+import '../../Animation/CardShimmerWidget.dart';
 import '../../utils/AppColors.dart';
 import '../../widgets/SearchTextField.dart';
 
@@ -26,7 +27,6 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
 
   @override
   Widget build(BuildContext context) {
-
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
@@ -45,33 +45,72 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
                   postViewModel.searchPost(searchText);
                 },
               ),
-          Expanded(
-          child: postViewModel.filteredPost.isEmpty
-          ? Center(child: Text('No ${postViewModel.searchPostController.text} pet appreciation post found'))
-              : ListView.builder(
-          itemCount: postViewModel.filteredPost.length,
-          itemBuilder: (context, index) {
-          var post = postViewModel.filteredPost[index];
-          return PostCard(
-          post: post,
-          screenHeight: screenHeight,
-          screenWidth: screenWidth,
-          );
-          },
-          ),
-          ),
+              Expanded(
+                child: Builder(
+                  builder: (context) {
+                    // Initial loading state
+                    if (postViewModel.isInitialLoading) {
+                      return ListView.builder(
+                        itemCount: 5,
+                        itemBuilder: (context, index) => PostCardSkeleton(
+                          screenHeight: screenHeight,
+                          screenWidth: screenWidth,
+                        ),
+                      );
+                    }
+
+                    // Active searching state
+                    if (postViewModel.isSearching) {
+                      return ListView.builder(
+                        itemCount: 5,
+                        itemBuilder: (context, index) => PostCardSkeleton(
+                          screenHeight: screenHeight,
+                          screenWidth: screenWidth,
+                        ),
+                      );
+                    }
+                    
+                    // Empty states
+                    if (postViewModel.filteredPost.isEmpty) {
+                      if (postViewModel.searchPostController.text.isNotEmpty) {
+                        return Center(
+                          child: Text(
+                            'No "${postViewModel.searchPostController.text}" pet appreciation posts found',
+                          ),
+                        );
+                      }
+                      return const Center(
+                        child: Text("No pet appreciation posts found."),
+                      );
+                    }
+
+                    // Data display
+                    return ListView.builder(
+                      itemCount: postViewModel.filteredPost.length,
+                      itemBuilder: (context, index) {
+                        var post = postViewModel.filteredPost[index];
+                        return PostCard(
+                          post: post,
+                          screenHeight: screenHeight,
+                          screenWidth: screenWidth,
+                        );
+                      },
+                    );
+                  },
+                ),
+              ),
             ],
           );
         },
       ),
-      floatingActionButton:  SpeedDial(
+      floatingActionButton: SpeedDial(
         icon: Icons.add,
         backgroundColor: AppColors.black,
         foregroundColor: AppColors.white,
         activeBackgroundColor: AppColors.black,
         activeForegroundColor: AppColors.white,
         children: [
-          if (postViewModel.role.toLowerCase()!='admin') ...[
+          if (postViewModel.role.toLowerCase() != 'admin') ...[
             SpeedDialChild(
               label: 'Create Post',
               child: const Icon(Icons.create),
@@ -84,7 +123,7 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
             label: 'Reload the Pet Appreciation Posts',
             child: const Icon(Icons.refresh),
             onTap: () {
-              postViewModel.listenToCommunityPost();
+              postViewModel.listenToPost();
             },
           ),
         ],
