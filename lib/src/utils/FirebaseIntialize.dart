@@ -65,13 +65,13 @@ class FirebaseRestAPI {
       // Get the current token
       String? fcmToken = await _firebaseMessaging.getToken();
 
-      if (user != null && fcmToken != null) {
+      if (user != null) {
         // Store the token in Firestore
         await _firestore.collection('Users').doc(user.uid).set({
           'fcmToken': fcmToken,
         }, SetOptions(merge: true));
         print("FCM Token stored successfully");
-        sendFCMNotification(fcmToken, "Test Notification", "This is a test notification");
+        sendFCMNotification(fcmToken!, "Test Notification", "This is a test notification");
       } else {
         print("User is not logged in or FCM token is null");
       }

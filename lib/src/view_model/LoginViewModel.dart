@@ -39,52 +39,46 @@ class LoginViewModel extends ChangeNotifier {
   try {
     Map<String, dynamic>? userData = await loginRepository.login(email, password);
 
-    if (userData != null) {
-      print(userData);
-      await sessionManager.saveUserInfo(userData);
-    
+    print(userData);
+    await sessionManager.saveUserInfo(userData!);
+  
 
-      Fluttertoast.showToast(
-        msg: userData.toString(),
-        toastLength: Toast.LENGTH_LONG,
-        gravity: ToastGravity.BOTTOM,
-      );
-      
-      final sessionData = await sessionManager.getUserInfo();
+    Fluttertoast.showToast(
+      msg: userData.toString(),
+      toastLength: Toast.LENGTH_LONG,
+      gravity: ToastGravity.BOTTOM,
+    );
+    
+    final sessionData = await sessionManager.getUserInfo();
 
 if (sessionData != null) {
-  Fluttertoast.showToast(
-    msg: sessionData.toString(), 
-    toastLength: Toast.LENGTH_LONG,
-    gravity: ToastGravity.BOTTOM,
-  );
+Fluttertoast.showToast(
+  msg: sessionData.toString(), 
+  toastLength: Toast.LENGTH_LONG,
+  gravity: ToastGravity.BOTTOM,
+);
 } else {
-  Fluttertoast.showToast(
-    msg: "Session data not found or corrupted.",
-    toastLength: Toast.LENGTH_LONG,
-    gravity: ToastGravity.BOTTOM,
-  );
+Fluttertoast.showToast(
+  msg: "Session data not found or corrupted.",
+  toastLength: Toast.LENGTH_LONG,
+  gravity: ToastGravity.BOTTOM,
+);
 }
 
-      if (userData['role'] == 'Admin' || userData['role'] == 'Sub-Admin') {
-        Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
-        clearTextFields();
-      } else {
-        Navigator.pushReplacementNamed(context, AppRoutes.user);
-        clearTextFields();
-      }
-
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login successful!')),
-      );
-
-      NotificationListener1();
+    if (userData['role'] == 'Admin' || userData['role'] == 'Sub-Admin') {
+      Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+      clearTextFields();
     } else {
-      ScaffoldMessenger.of(context).showSnackBar(
-        const SnackBar(content: Text('Login failed. Please check your credentials.')),
-      );
+      Navigator.pushReplacementNamed(context, AppRoutes.user);
+      clearTextFields();
     }
-  } catch (e) {
+
+    ScaffoldMessenger.of(context).showSnackBar(
+      const SnackBar(content: Text('Login successful!')),
+    );
+
+    NotificationListener1();
+    } catch (e) {
     ScaffoldMessenger.of(context).showSnackBar(
       const SnackBar(content: Text('An error occurred. Please try again.')),
     );

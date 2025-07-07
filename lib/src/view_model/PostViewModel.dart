@@ -924,19 +924,144 @@ void onSearchChanged(String query) {
   }
 
   // This will delete the post from the database
-  void deletePost(String category, BuildContext context, String postID) async{
-    try{
-      await postRepository.deletePost(category, postID);
-    } catch (e) {
-      print('Failed to delete post: $e');
+  void deletePost(String category, BuildContext context, String postID) async {
+  PostModel? deletedPost;
 
-    } finally {
-
-    }
-
-    notifyListeners();
+  switch (category) {
+    case 'Missing Pets':
+      deletedPost = missingPost.firstWhere((p) => p.postId == postID);
+      if (deletedPost != -1) {
+        missingPost.remove(deletedPost);
+        filterMissingPost.remove(deletedPost);
+      }
+      break;
+    case 'Found Pets':
+      deletedPost = foundPost.firstWhere((p) => p.postId == postID);
+      if (deletedPost != -1) {
+        foundPost.remove(deletedPost);
+        filterFoundPost.remove(deletedPost);
+      }
+      break;
+    case 'Paw Experience':
+      deletedPost = pawExperiencePost.firstWhere((p) => p.postId == postID);
+      if (deletedPost != -1) {
+        pawExperiencePost.remove(deletedPost);
+        filterPawExperiencePost.remove(deletedPost);
+      }
+      break;
+    case 'Protect Our Pets: Report Abuse':
+      deletedPost = protectedPost.firstWhere((p) => p.postId == postID);
+      if (deletedPost != -1) {
+        protectedPost.remove(deletedPost);
+        filterProtectedPost.remove(deletedPost);
+      }
+      break;
+    case 'Community':
+      final index = communityPost.indexWhere((p) => p.postId == postID);
+      if (index != -1) {
+        deletedPost = communityPost[index];
+        communityPost.removeAt(index);
+        filterCommunityPost.remove(deletedPost);
+      }
+      break;
+    case 'Pet Care Insights':
+      deletedPost = vetAndtravelPost.firstWhere((p) => p.postId == postID);
+      if (deletedPost != -1) {
+        vetAndtravelPost.remove(deletedPost);
+        filterVetAndTravelPost.remove(deletedPost);
+      }
+      break;
+    case 'Pet Adoption':
+      deletedPost = petAdoptPost.firstWhere((p) => p.postId == postID);
+      if (deletedPost != -1) {
+        petAdoptPost.remove(deletedPost);
+        filterPetAdoptPost.remove(deletedPost);
+      }
+      break;
+    case 'Call for Aid':
+      deletedPost = callforAidPost.firstWhere((p) => p.postId == postID);
+      if (deletedPost != -1) {
+        callforAidPost.remove(deletedPost);
+        filterCallforAidPost.remove(deletedPost);
+      }
+      break;
+    case 'Pets for Rescue':
+      deletedPost = petforRescuePost.firstWhere((p) => p.postId == postID);
+      if (deletedPost != -1) {
+        petforRescuePost.remove(deletedPost);
+        filterPetForRescuePost.remove(deletedPost);
+      }
+      break;
+    default:
+      deletedPost = myPostlist.firstWhere((p) => p.postId == postID);
+      if (deletedPost != -1) {
+        myPostlist.remove(deletedPost);
+        filterMyPost.remove(deletedPost);
+      }
+      print('Deleted from default/My Posts list.');
+      break;
   }
 
+  if (deletedPost == null) {
+    print("Could not find post with ID $postID to delete locally.");
+    return;
+  }
+
+  notifyListeners();
+  ToastComponent().showMessage(AppColors.orange, 'Post removed.');
+
+  try {
+    await postRepository.deletePost(category, postID);
+    print('Post successfully deleted from Firestore.');
+  } catch (e) {
+    print('Failed to delete post from Firestore: $e');
+    ToastComponent().showMessage(Colors.red, 'Error: Could not delete post.');
+
+    switch (category) {
+      case 'Missing Pets':
+        missingPost.add(deletedPost);
+        filterMissingPost.add(deletedPost);
+        break;
+      case 'Found Pets':
+        foundPost.add(deletedPost);
+        filterFoundPost.add(deletedPost);
+        break;
+      case 'Paw Experience':
+        pawExperiencePost.add(deletedPost);
+        filterPawExperiencePost.add(deletedPost);
+        break;
+      case 'Protect Our Pets: Report Abuse':
+        protectedPost.add(deletedPost);
+        filterProtectedPost.add(deletedPost);
+        break;
+      case 'Community':
+        communityPost.add(deletedPost);
+        filterCommunityPost.add(deletedPost);
+        break;
+      case 'Pet Care Insights':
+        vetAndtravelPost.add(deletedPost);
+        filterVetAndTravelPost.add(deletedPost);
+        break;
+      case 'Pet Adoption':
+        petAdoptPost.add(deletedPost);
+        filterPetAdoptPost.add(deletedPost);
+        break;
+      case 'Call for Aid':
+        callforAidPost.add(deletedPost);
+        filterCallforAidPost.add(deletedPost);
+        break;
+      case 'Pets for Rescue':
+        petforRescuePost.add(deletedPost);
+        filterPetForRescuePost.add(deletedPost);
+        break;
+      default:
+        myPostlist.add(deletedPost);
+        filterMyPost.add(deletedPost);
+        break;
+    }
+    notifyListeners();
+  }
+}
   // load the the pet petOptionsStatus
   Future <void> loadPetStatusOptions(String category) async {
 
