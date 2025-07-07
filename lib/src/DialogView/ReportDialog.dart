@@ -1,120 +1,122 @@
-
 import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
-import 'package:pet_welfrare_ph/src/widgets/CustomText.dart';
-
-import '../view_model/ReportViewModel.dart';
 import 'package:provider/provider.dart';
 
-import '../widgets/CustomButton.dart';
+import '../view_model/ReportViewModel.dart';
 
 class ReportDialog extends StatelessWidget {
   final String postId;
 
   ReportDialog(this.postId);
 
-
   @override
   Widget build(BuildContext context) {
-
-  final double screenHeight = MediaQuery.of(context).size.height;
-    final double screenWidth = MediaQuery.of(context).size.width;
     return Consumer<ReportViewModel>(builder: (context, reportViewModel, child) {
-        return AlertDialog(
-          title:  CustomText(
-            text: 'Report Post',
-            size:  25,
-            color: AppColors.black  ,
-            weight: FontWeight.w600,
-            align: TextAlign.start,
-            screenHeight: screenHeight,
-            alignment: Alignment.centerLeft,
-          ),
-          content: Column(
+      return AlertDialog(
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(16.0),
+        ),
+        title: const Text(
+          'Report Post',
+          style: TextStyle(fontWeight: FontWeight.bold),
+        ),
+        content: SingleChildScrollView(
+          child: Column(
             mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              CustomText(
-                  text: 'Please provide a reason for reporting this post.',
-                  size:  16,
-                  color: AppColors.black  ,
-                  weight: FontWeight.w600,
-                  align: TextAlign.start,
-                  screenHeight: screenHeight,
-                  alignment: Alignment.centerLeft,
-              ),
-              SizedBox(height: screenHeight * 0.02),
-              TextField(
-                controller: reportViewModel.reasonController,
-                decoration: const InputDecoration(
-                  hintText: 'Enter reason',
+              Text(
+                'Please state your reason and provide optional evidence for reporting this post.',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey.shade600,
                 ),
               ),
-              CustomText(
-                text: 'Select a file to upload',
-                size:  16,
-                color: AppColors.black  ,
-                weight: FontWeight.w600,
-                align: TextAlign.start,
-                screenHeight: screenHeight,
-                alignment: Alignment.centerLeft,
-              ),
-              Padding(
-                padding: const EdgeInsets.only(top: 16.0),
-                child: Center(
-                  child: ClipRRect(
-                    borderRadius: BorderRadius.circular(10.0),
-                    child: reportViewModel.filePath.isEmpty
-                        ? Image.asset(
-                      'assets/images/cat.jpg',
-                      width: screenWidth * 0.8,
-                      height: screenHeight * 0.4,
-                      fit: BoxFit.cover,
-                    )
-                        : Image.file(
-                      File(reportViewModel.filePath),
-                      width: screenWidth * 0.8,
-                      height: screenHeight * 0.4,
-                      fit: BoxFit.cover,
-                    ),
+              const SizedBox(height: 16),
+              TextField(
+                controller: reportViewModel.reasonController,
+                maxLines: 4,
+                minLines: 1,
+                decoration: InputDecoration(
+                  hintText: 'Enter reason here...',
+                  labelText: 'Reason',
+                  border: OutlineInputBorder(
+                    borderRadius: BorderRadius.circular(12.0),
                   ),
                 ),
               ),
-              SizedBox(height: screenHeight * 0.01),
-              Center(
-                child: CustomButton(
-                  hint: 'Upload Image',
-                  size: 16,
-                  color1: AppColors.orange,
-                  textcolor2: AppColors.white,
-                  onPressed: () {
-                    reportViewModel.picImagePicker();
-                  },
+              const SizedBox(height: 16),
+              GestureDetector(
+                onTap: () {
+                  reportViewModel.picImagePicker();
+                },
+                child: ClipRRect(
+                  borderRadius: BorderRadius.circular(12.0),
+                  child: Container(
+                    height: 160,
+                    width: double.infinity,
+                    decoration: BoxDecoration(
+                      color: Colors.grey.shade100,
+                      border: Border.all(color: Colors.grey.shade300),
+                      borderRadius: BorderRadius.circular(12.0),
+                    ),
+                    child: reportViewModel.filePath.isEmpty
+                        ? Center(
+                            child: Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Icon(
+                                  CupertinoIcons.photo_on_rectangle,
+                                  color: Colors.grey.shade500,
+                                  size: 40,
+                                ),
+                                const SizedBox(height: 8),
+                                Text(
+                                  'Tap to upload evidence',
+                                  style: TextStyle(color: Colors.grey.shade700),
+                                ),
+                              ],
+                            ),
+                          )
+                        : Image.file(
+                            File(reportViewModel.filePath),
+                            fit: BoxFit.cover,
+                            width: double.infinity,
+                          ),
+                  ),
                 ),
               ),
             ],
           ),
-          actions: [
-            TextButton(
-              onPressed: () {
-                reportViewModel.submitReport(postId,context);
-                Navigator.of(context).pop();
-              },
-              child: const Text('Submit'),
+        ),
+        actionsPadding:
+            const EdgeInsets.symmetric(horizontal: 16.0, vertical: 12.0),
+        actions: [
+          TextButton(
+            onPressed: () {
+              Navigator.of(context).pop();
+            },
+            child: const Text('Cancel'),
+          ),
+          ElevatedButton(
+            style: ElevatedButton.styleFrom(
+              backgroundColor: AppColors.orange,
+              foregroundColor: AppColors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(8.0),
+              ),
             ),
-            TextButton(
-              onPressed: () {
-                Navigator.of(context).pop();
-              },
-              child: const Text('Cancel'),
-            ),
-          ],
-        );
-      },
-    );
-
+            onPressed: () {
+              reportViewModel.submitReport(postId, context);
+              Navigator.of(context).pop();
+            },
+            child: const Text('Submit'),
+          ),
+        ],
+      );
+    });
   }
-
 }

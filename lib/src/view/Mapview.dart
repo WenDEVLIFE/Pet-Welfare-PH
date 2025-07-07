@@ -196,7 +196,7 @@ class MapViewState extends State<MapView> {
           SpeedDialChild(
             child: const Icon(Icons.near_me, color: AppColors.white),
             backgroundColor: AppColors.orange,
-            label: 'Click for nearby rescuer, shelter, clinic',
+            label: 'Click for nearby locations.',
             onTap: () {
               showDialog(context: context, builder: (context) => SelectRadiusWidget());
             },
