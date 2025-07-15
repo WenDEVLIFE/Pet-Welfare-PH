@@ -14,6 +14,7 @@ class SubscriptionModal extends StatefulWidget {
 
 class _SubscriptionModalState extends State<SubscriptionModal> {
   late SubscriptionViewModel subscriptionViewModel;
+  SubscriptionModel? _selectedSubscription;
 
   @override
   void initState() {
@@ -60,7 +61,7 @@ class _SubscriptionModalState extends State<SubscriptionModal> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    /// Section: Current Plan
+                    /// Current Subscription
                     const SizedBox(height: 12),
                     CustomText(
                       text: 'Your Current Subscription',
@@ -76,7 +77,7 @@ class _SubscriptionModalState extends State<SubscriptionModal> {
 
                     const SizedBox(height: 24),
 
-                    /// Section: Available Plans
+                    /// Available Subscriptions
                     CustomText(
                       text: 'Available Plans',
                       size: 18,
@@ -115,6 +116,25 @@ class _SubscriptionModalState extends State<SubscriptionModal> {
                         );
                       },
                     ),
+
+                    /// Subscribe Button
+                    if (_selectedSubscription != null)
+                      Padding(
+                        padding: const EdgeInsets.only(top: 20),
+                        child: ElevatedButton.icon(
+                          onPressed: () {
+                            // TODO: Handle subscription logic
+                            print("User selected plan: ${_selectedSubscription!.subscriptionName}");
+                          },
+                          icon: const Icon(Icons.check_circle),
+                          label: const Text("Subscribe to this Plan"),
+                          style: ElevatedButton.styleFrom(
+                            backgroundColor: AppColors.orange,
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            minimumSize: const Size.fromHeight(50),
+                          ),
+                        ),
+                      ),
                   ],
                 ),
               ),
@@ -125,7 +145,7 @@ class _SubscriptionModalState extends State<SubscriptionModal> {
     );
   }
 
-  /// Current Plan UI Card
+  /// Current Subscription Card
   Widget _buildCurrentPlanCard() {
     return Card(
       color: AppColors.orange,
@@ -147,11 +167,24 @@ class _SubscriptionModalState extends State<SubscriptionModal> {
     );
   }
 
-  /// Available Plans UI Card
+  /// Subscription Plan Card with selection logic
   Widget _buildSubscriptionCard(SubscriptionModel subscription) {
-    return Card(
-      elevation: 1,
-      shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(16)),
+    final isSelected = _selectedSubscription?.subscriptionName == subscription.subscriptionName;
+
+    return AnimatedContainer(
+      duration: const Duration(milliseconds: 250),
+      curve: Curves.easeInOut,
+      decoration: BoxDecoration(
+        color: isSelected ? AppColors.orange.withOpacity(0.1) : Colors.white,
+        border: Border.all(
+          color: isSelected ? AppColors.orange : Colors.grey.shade300,
+          width: isSelected ? 2 : 1,
+        ),
+        borderRadius: BorderRadius.circular(16),
+        boxShadow: isSelected
+            ? [BoxShadow(color: AppColors.orange.withOpacity(0.3), blurRadius: 10, offset: Offset(0, 4))]
+            : [],
+      ),
       child: ListTile(
         contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         leading: const Icon(Icons.stars_rounded, color: AppColors.orange, size: 30),
@@ -169,15 +202,23 @@ class _SubscriptionModalState extends State<SubscriptionModal> {
             ],
           ),
         ),
-        trailing: const Icon(Icons.arrow_forward_ios, size: 16),
+        trailing: AnimatedSwitcher(
+          duration: const Duration(milliseconds: 300),
+          transitionBuilder: (child, animation) => ScaleTransition(scale: animation, child: child),
+          child: isSelected
+              ? const Icon(Icons.check_circle_rounded, color: AppColors.orange, size: 28, key: ValueKey(true))
+              : const SizedBox(width: 28, key: ValueKey(false)),
+        ),
         onTap: () {
-          // Optional: handle plan tap
+          setState(() {
+            _selectedSubscription = subscription;
+          });
         },
       ),
     );
   }
 
-  /// Label + Value Row helper
+  /// Label & Value Row
   Widget _labelValueRow(String label, String value) {
     return Row(
       children: [
