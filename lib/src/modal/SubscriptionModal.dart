@@ -19,7 +19,8 @@ class _SubscriptionModalState extends State<SubscriptionModal> {
   @override
   void initState() {
     super.initState();
-    subscriptionViewModel = Provider.of<SubscriptionViewModel>(context, listen: false);
+    subscriptionViewModel =
+        Provider.of<SubscriptionViewModel>(context, listen: false);
     subscriptionViewModel.loadUserSubscription();
   }
 
@@ -29,7 +30,8 @@ class _SubscriptionModalState extends State<SubscriptionModal> {
     final screenHeight = MediaQuery.of(context).size.height;
 
     return Padding(
-      padding: EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+      padding:
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
         padding: const EdgeInsets.all(20),
         decoration: const BoxDecoration(
@@ -45,7 +47,12 @@ class _SubscriptionModalState extends State<SubscriptionModal> {
               children: [
                 Text(
                   "Subscriptions",
-                  style: theme.textTheme.headline6?.copyWith(fontWeight: FontWeight.bold),
+                  style: TextStyle(
+                    fontFamily: 'SmoochSans', // 👈 Your custom font family
+                    fontSize: 22,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black, // optional
+                  ),
                 ),
                 IconButton(
                   icon: const Icon(Icons.close),
@@ -57,7 +64,8 @@ class _SubscriptionModalState extends State<SubscriptionModal> {
 
             Expanded(
               child: SingleChildScrollView(
-                keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+                keyboardDismissBehavior:
+                    ScrollViewKeyboardDismissBehavior.onDrag,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -91,10 +99,15 @@ class _SubscriptionModalState extends State<SubscriptionModal> {
                     FutureBuilder<List<SubscriptionModel>>(
                       future: subscriptionViewModel.subscriptionsStream.first,
                       builder: (context, snapshot) {
-                        if (snapshot.connectionState == ConnectionState.waiting) {
-                          return const Center(child: CircularProgressIndicator());
-                        } else if (snapshot.hasError || !snapshot.hasData || snapshot.data!.isEmpty) {
-                          return const Center(child: Text('No subscriptions found.'));
+                        if (snapshot.connectionState ==
+                            ConnectionState.waiting) {
+                          return const Center(
+                              child: CircularProgressIndicator());
+                        } else if (snapshot.hasError ||
+                            !snapshot.hasData ||
+                            snapshot.data!.isEmpty) {
+                          return const Center(
+                              child: Text('No subscriptions found.'));
                         }
 
                         final subscriptions = snapshot.data!;
@@ -106,9 +119,11 @@ class _SubscriptionModalState extends State<SubscriptionModal> {
                               shrinkWrap: true,
                               physics: const NeverScrollableScrollPhysics(),
                               itemCount: viewModel.subscriptionsdata.length,
-                              separatorBuilder: (_, __) => const SizedBox(height: 12),
+                              separatorBuilder: (_, __) =>
+                                  const SizedBox(height: 12),
                               itemBuilder: (context, index) {
-                                final subscription = viewModel.subscriptionsdata[index];
+                                final subscription =
+                                    viewModel.subscriptionsdata[index];
                                 return _buildSubscriptionCard(subscription);
                               },
                             );
@@ -124,13 +139,15 @@ class _SubscriptionModalState extends State<SubscriptionModal> {
                         child: ElevatedButton.icon(
                           onPressed: () {
                             // TODO: Handle subscription logic
-                            print("User selected plan: ${_selectedSubscription!.subscriptionName}");
+                            print(
+                                "User selected plan: ${_selectedSubscription!.subscriptionName}");
                           },
                           icon: const Icon(Icons.check_circle),
                           label: const Text("Subscribe to this Plan"),
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppColors.orange,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12)),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(12)),
                             minimumSize: const Size.fromHeight(50),
                           ),
                         ),
@@ -156,11 +173,14 @@ class _SubscriptionModalState extends State<SubscriptionModal> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            _labelValueRow("Subscription Type", subscriptionViewModel.SubscriptionName),
+            _labelValueRow(
+                "Subscription Type", subscriptionViewModel.SubscriptionName),
             const SizedBox(height: 8),
-            _labelValueRow("Monthly Plan", "₱ ${subscriptionViewModel.SubscriptionPrice}"),
+            _labelValueRow(
+                "Monthly Plan", "₱ ${subscriptionViewModel.SubscriptionPrice}"),
             const SizedBox(height: 8),
-            _labelValueRow("Expires At", subscriptionViewModel.SubscriptionDuration),
+            _labelValueRow(
+                "Expires At", subscriptionViewModel.SubscriptionDuration),
           ],
         ),
       ),
@@ -169,7 +189,8 @@ class _SubscriptionModalState extends State<SubscriptionModal> {
 
   /// Subscription Plan Card with selection logic
   Widget _buildSubscriptionCard(SubscriptionModel subscription) {
-    final isSelected = _selectedSubscription?.subscriptionName == subscription.subscriptionName;
+    final isSelected = _selectedSubscription?.subscriptionName ==
+        subscription.subscriptionName;
 
     return AnimatedContainer(
       duration: const Duration(milliseconds: 250),
@@ -182,12 +203,19 @@ class _SubscriptionModalState extends State<SubscriptionModal> {
         ),
         borderRadius: BorderRadius.circular(16),
         boxShadow: isSelected
-            ? [BoxShadow(color: AppColors.orange.withOpacity(0.3), blurRadius: 10, offset: Offset(0, 4))]
+            ? [
+                BoxShadow(
+                    color: AppColors.orange.withOpacity(0.3),
+                    blurRadius: 10,
+                    offset: Offset(0, 4))
+              ]
             : [],
       ),
       child: ListTile(
-        contentPadding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
-        leading: const Icon(Icons.stars_rounded, color: AppColors.orange, size: 30),
+        contentPadding:
+            const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
+        leading:
+            const Icon(Icons.stars_rounded, color: AppColors.orange, size: 30),
         title: Text(
           subscription.subscriptionName,
           style: const TextStyle(fontSize: 18, fontWeight: FontWeight.bold),
@@ -204,9 +232,11 @@ class _SubscriptionModalState extends State<SubscriptionModal> {
         ),
         trailing: AnimatedSwitcher(
           duration: const Duration(milliseconds: 300),
-          transitionBuilder: (child, animation) => ScaleTransition(scale: animation, child: child),
+          transitionBuilder: (child, animation) =>
+              ScaleTransition(scale: animation, child: child),
           child: isSelected
-              ? const Icon(Icons.check_circle_rounded, color: AppColors.orange, size: 28, key: ValueKey(true))
+              ? const Icon(Icons.check_circle_rounded,
+                  color: AppColors.orange, size: 28, key: ValueKey(true))
               : const SizedBox(width: 28, key: ValueKey(false)),
         ),
         onTap: () {
@@ -224,7 +254,8 @@ class _SubscriptionModalState extends State<SubscriptionModal> {
       children: [
         Text(
           "$label: ",
-          style: const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
+          style:
+              const TextStyle(fontWeight: FontWeight.bold, color: Colors.white),
         ),
         Flexible(
           child: Text(
