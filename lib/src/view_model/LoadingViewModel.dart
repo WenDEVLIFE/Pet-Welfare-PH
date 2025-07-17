@@ -1,10 +1,11 @@
-import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pet_welfrare_ph/src/utils/SessionManager.dart';
-
 import '../utils/FirebaseIntialize.dart';
-import '../utils/Route.dart';
+import '../views/AdminNavigationWidget.dart';
+import '../views/UserNavigationComponent.dart';
+import '../views/Loginview.dart';
+import '../views/SplashView2.dart';
 
 class LoadingViewModel extends ChangeNotifier {
   bool _isLoading = false;
@@ -25,23 +26,32 @@ class LoadingViewModel extends ChangeNotifier {
     _isLoading = false;
     notifyListeners();
 
-    // Check if user is already logged in
     if (user != null) {
       print('User: $user');
 
       if (user['role'] == 'Admin' || user['role'] == 'Sub-Admin') {
-        Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const AdminNavigationWidget()),
+        );
       } else if (user['role'] == null) {
-        Navigator.pushReplacementNamed(context, AppRoutes.loginScreen);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const Loginview()),
+        );
       } else {
-        Navigator.pushReplacementNamed(context, AppRoutes.user);
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const UserNavigationComponent()),
+        );
       }
     } else {
-      // If user is not logged in, redirect to splash screen
-      Navigator.pushReplacementNamed(
+      Navigator.pushReplacement(
         context,
-        AppRoutes.splashscreen,
-        arguments: {'key': 'value'}, // Pass a map or any data
+        MaterialPageRoute(
+          builder: (_) => SplashView2(),
+          settings: RouteSettings(arguments: {'key': 'value'}),
+        ),
       );
     }
 
