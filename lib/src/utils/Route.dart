@@ -1,5 +1,7 @@
-
 import 'package:flutter/cupertino.dart';
+import 'package:pet_welfrare_ph/src/view_model/DashboardViewModel.dart';
+import 'package:provider/provider.dart';
+
 import 'package:pet_welfrare_ph/src/view/admindirectory/ReportView.dart';
 import 'package:pet_welfrare_ph/src/widgets/UserNavigationComponent.dart';
 import 'package:pet_welfrare_ph/src/view/admindirectory/AddSubscriptionView.dart';
@@ -72,7 +74,7 @@ class AppRoutes {
   static const String message = '/messageView';
   static const String editEstablishment = '/editEstablishment';
   static const String adminViewEstablishment = '/adminViewEstablishment';
-  static const String  viewEstablishment = '/viewEstablishment';
+  static const String viewEstablishment = '/viewEstablishment';
   static const String viewImageData = '/viewImageData';
   static const String createpost = '/createpost';
   static const String notification = '/notification';
@@ -80,42 +82,72 @@ class AppRoutes {
 
   // Assign routes to the screens
   static Map<String, WidgetBuilder> routes = {
-    loadingScreen: (context) => LoadingView(),// This is the loading screen
+    loadingScreen: (context) => LoadingView(), // This is the loading screen
     splashscreen: (context) => SplashView2(), // This is the splash screen
-    loginScreen: (context) => const Loginview(),  // This is the login screen
+    loginScreen: (context) => const Loginview(), // This is the login screen
     selectScreen: (context) => const SelectView(), // This is the select screen
-    furRegistrationScreen: (context) => const FurParentRegisterView(),  // This is the fur parent registration screen
-    shelterRegistrationScreen: (context) => const PetrShelterRegisterview(),  // This is the pet shelter registration screen
-    clinicRegistrationScreen: (context) => const VetClinicRegisterView(),  // This is the vet clinic registration screen
-    legalScreen: (context) => const LegalFirmRegisterView(), // This is the legal firm registration screen
-    uploadIDScreen: (context) => const UploadIDView(), //  This is the upload ID screen
+    furRegistrationScreen: (context) =>
+        const FurParentRegisterView(), // This is the fur parent registration screen
+    shelterRegistrationScreen: (context) =>
+        const PetrShelterRegisterview(), // This is the pet shelter registration screen
+    clinicRegistrationScreen: (context) =>
+        const VetClinicRegisterView(), // This is the vet clinic registration screen
+    legalScreen: (context) =>
+        const LegalFirmRegisterView(), // This is the legal firm registration screen
+    uploadIDScreen: (context) =>
+        const UploadIDView(), //  This is the upload ID screen
     otpScreen: (context) => const OTPView(), //  This is the OTP screen
-    user: (context) => const UserNavigationComponent(), //  This is the user navigation component
-    admin: (context) => const AdminNavigationWidget(), //  This is the admin navigation component
-    termsAndConditions: (context) => const TermsAndConditionView(), //  This is the terms and conditions
-    privacyPolicy: (context) => const Privacyview(), //  This is the privacy policy
-    changePassword: (context) => const ChangePasswordView(), //  This is the change password
+    user: (context) =>
+        const UserNavigationComponent(), //  This is the user navigation component
+    admin: (context) =>
+        const AdminNavigationWidget(), //  This is the admin navigation component
+    termsAndConditions: (context) =>
+        const TermsAndConditionView(), //  This is the terms and conditions
+    privacyPolicy: (context) =>
+        const Privacyview(), //  This is the privacy policy
+    changePassword: (context) =>
+        const ChangePasswordView(), //  This is the change password
     profile: (context) => const ProfileView(), //  This is the profile
-    dashboard: (context) => const DashboardView(), // This is the dashboard
+    dashboard: (context) => ChangeNotifierProvider(
+          create: (_) => DashboardViewModel(),
+          child: const DashboardView(),
+        ), // This is the dashboard
     homescreen: (context) => const HomeScreen(), // This is the home screen
-    userView: (context) => const UserView(), // This is where the admin can view the user
-    addAdmin: (context) => const AddAdminView(), // This is where the admin can add another admin
-    subscription : (context) => const SubscriptionView(), // // This is where the user can go to the subscription page
-    goToSubscription : (context) => const AddSubscriptionView(),// This is where the user can go to the add subscription page
-    viewUserData : (context) => const ViewUserDataPage(), // This is where the admin can view the user data
-    about : (context) => const AboutView(), // About page
-    viewUserInformation : (context) => const ViewUserDataView(), // This is where the user can view its status
-    changeID : (context) => const ChangeIDView(), // This is where the user can change its ID
-    shelterClinic : (context) => const UserEstablismentView(), // This is where the user can view the shelter clinic
-    addSherterClinic : (context) => const AddShelterClinic(), // This is where the user can add the shelter clinic
-    chatView : (context) => ChatView(), // This is where the user can chat
-    message: (context) => const MessageView(), // This is where the user can view the message
-    editEstablishment : (context) => const EditEstablishmentScreen(), // This is where the user can edit the establishment
-    adminViewEstablishment : (context) => const ApprovedShelterClinicView(), // This is where the admin can view the establishment
-    viewEstablishment : (context) => const ViewEstablishmentView(), // This is where the user can view the establishment
-    viewImageData : (context) => ViewImage(), // This is where the user can view the image data
-    createpost : (context) => CreatePostView(), // This is where the user can create a post
-    notification : (context) => const NotificationView(), // This is where the user can view the notification
-    reportView: (context) => const ReportView(), // This is where the admin can view report a post
+    userView: (context) =>
+        const UserView(), // This is where the admin can view the user
+    addAdmin: (context) =>
+        const AddAdminView(), // This is where the admin can add another admin
+    subscription: (context) =>
+        const SubscriptionView(), // // This is where the user can go to the subscription page
+    goToSubscription: (context) =>
+        const AddSubscriptionView(), // This is where the user can go to the add subscription page
+    viewUserData: (context) =>
+        const ViewUserDataPage(), // This is where the admin can view the user data
+    about: (context) => const AboutView(), // About page
+    viewUserInformation: (context) =>
+        const ViewUserDataView(), // This is where the user can view its status
+    changeID: (context) =>
+        const ChangeIDView(), // This is where the user can change its ID
+    shelterClinic: (context) =>
+        const UserEstablismentView(), // This is where the user can view the shelter clinic
+    addSherterClinic: (context) =>
+        const AddShelterClinic(), // This is where the user can add the shelter clinic
+    chatView: (context) => ChatView(), // This is where the user can chat
+    message: (context) =>
+        const MessageView(), // This is where the user can view the message
+    editEstablishment: (context) =>
+        const EditEstablishmentScreen(), // This is where the user can edit the establishment
+    adminViewEstablishment: (context) =>
+        const ApprovedShelterClinicView(), // This is where the admin can view the establishment
+    viewEstablishment: (context) =>
+        const ViewEstablishmentView(), // This is where the user can view the establishment
+    viewImageData: (context) =>
+        ViewImage(), // This is where the user can view the image data
+    createpost: (context) =>
+        CreatePostView(), // This is where the user can create a post
+    notification: (context) =>
+        const NotificationView(), // This is where the user can view the notification
+    reportView: (context) =>
+        const ReportView(), // This is where the admin can view report a post
   };
 }
