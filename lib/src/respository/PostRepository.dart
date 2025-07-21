@@ -1545,6 +1545,7 @@ Stream<List<PostModel>> getMyPost() {
     return false;
   }
 
+  // get the status real-time
   @override
   Stream<String> getStatus(String postId, String category) {
     if (category == 'Missing Pets' || category == 'Found Pets') {
