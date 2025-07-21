@@ -61,6 +61,7 @@ dependencies:
   cryptography: ^2.0.0
   googleapis_auth: ^1.0.0
   shimmer: ^3.0.0
+  flutter_dotenv: ^5.2.1
 
 dev_dependencies:
   flutter_test:
@@ -90,6 +91,7 @@ flutter:
     - assets/word/terms.txt
     - assets/key/
     - assets/key/serviceaccount.json
+    - .env
 
   fonts:
     - family: SmoochSans

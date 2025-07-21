@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:pet_welfrare_ph/src/utils/FirebaseIntialize.dart';
 import 'package:pet_welfrare_ph/src/utils/NotificationUtils.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
@@ -36,7 +37,10 @@ import 'package:pet_welfrare_ph/src/widgets/NotificationListener.dart' as custom
 void main() async {
   WidgetsFlutterBinding.ensureInitialized();
 
+
   try {
+    await dotenv.load(fileName: ".env");
+
     await FirebaseRestAPI.run();
     // Init notifications
     await NotificationUtils.initNotifications();
