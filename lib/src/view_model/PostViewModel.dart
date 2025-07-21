@@ -42,6 +42,7 @@ class PostViewModel extends ChangeNotifier {
   StreamSubscription? _callforAidPostSubscription;
   StreamSubscription? _petforRescuePostSubscription;
   StreamSubscription? _myPostSubscription;
+  StreamSubscription<String>? _statusSubscription;
 
   List<PostModel> _posts = [];
   List<PostModel> filteredPost = [];
@@ -103,6 +104,9 @@ class PostViewModel extends ChangeNotifier {
 
   List<String> petStatusOptions = [];
   String? selectedPetStatus;
+  Stream<String> retrievePetStatus = const Stream.empty();
+
+  final PostRepositoryImpl postRepositoryImpl = PostRepositoryImpl();
 
   // Initialize the PostViewModel
   PostViewModel() {
@@ -1285,57 +1289,48 @@ void deletePost(String category, BuildContext context, String postID) async {
 }
 
   // load the the pet petOptionsStatus
-  Future<void> loadPetStatusOptions(String category) async {
-    if (category == 'Missing Pets') {
-      petStatusOptions = [
-        'Still missing',
-        'Adopted',
-        'Reunited with owner',
-      ];
+  Future<void> loadPetStatusOptions(String category, String postId) async {
+    retrievePetStatus = postRepository.getStatus(postId, category);
 
-      selectedPetStatus = 'Still missing';
-    }
-    if (category == 'Found Pets') {
-      petStatusOptions = [
-        'Still roaming',
-        'Reunited with owner',
-        'Adopted',
-      ];
+    // Cancel previous subscription if any
+    _statusSubscription?.cancel();
 
-      selectedPetStatus = 'Still roaming';
-    }
-
-    if (category == 'Pet Adoption') {
-      petStatusOptions = [
-        'Still up for adoption',
-        'Adopted',
-      ];
-
-      selectedPetStatus = 'Still up for adoption';
-    }
-
-    if (category == 'Call for Aid') {
-      petStatusOptions = [
-        'Ongoing',
-        'Paused',
-        'Fullfilled',
-      ];
-
-      selectedPetStatus = 'Ongoing';
-    }
-    if (category == 'Protect Our Pets: Report Abuse') {
-      petStatusOptions = [
-        'Will investigate',
-        'Ongoing Investigation',
-        'Case has been filled',
-        'Case has been resolved',
-        'Acctions to be taken',
-      ];
-
-      selectedPetStatus = 'Will investigate';
-    }
-
-    notifyListeners();
+    _statusSubscription = retrievePetStatus.listen((status) {
+      if (category == 'Missing Pets') {
+        petStatusOptions = [
+          'Still missing',
+          'Adopted',
+          'Reunited with owner',
+        ];
+      } else if (category == 'Found Pets') {
+        petStatusOptions = [
+          'Still roaming',
+          'Reunited with owner',
+          'Adopted',
+        ];
+      } else if (category == 'Pet Adoption') {
+        petStatusOptions = [
+          'Still up for adoption',
+          'Adopted',
+        ];
+      } else if (category == 'Call for Aid') {
+        petStatusOptions = [
+          'Ongoing',
+          'Paused',
+          'Fullfilled',
+        ];
+      } else if (category == 'Protect Our Pets: Report Abuse') {
+        petStatusOptions = [
+          'Will investigate',
+          'Ongoing Investigation',
+          'Case has been filled',
+          'Case has been resolved',
+          'Acctions to be taken',
+        ];
+      }
+      selectedPetStatus = status;
+      notifyListeners();
+    });
   }
 
   // This will update the post status
@@ -1398,6 +1393,7 @@ void deletePost(String category, BuildContext context, String postID) async {
     _petforRescuePostSubscription?.cancel();
     _myPostSubscription?.cancel();
     searchPostController.dispose();
+    _statusSubscription?.cancel();
     currentUserId = '';
     role = '';
     super.dispose();

@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:http/http.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
 
 import '../utils/AppColors.dart';
@@ -32,7 +33,7 @@ class _PetStatusModalState extends State<PetStatusModal> {
     postId = widget.postId;
     category = widget.category;
     postViewModel = Provider.of<PostViewModel>(context, listen: false);
-    postViewModel.loadPetStatusOptions(category);
+    postViewModel.loadPetStatusOptions(category, postId);
   }
 
   @override

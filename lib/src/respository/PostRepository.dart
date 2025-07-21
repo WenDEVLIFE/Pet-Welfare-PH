@@ -102,6 +102,8 @@ abstract class PostRepository {
 
   Future <bool> isUserVerified();
 
+  Stream<String> getStatus(String postId, String category);
+
 }
 
 class PostRepositoryImpl implements PostRepository {
@@ -1541,6 +1543,45 @@ Stream<List<PostModel>> getMyPost() {
 
     // Return false if the document does not exist
     return false;
+  }
+
+  @override
+  Stream<String> getStatus(String postId, String category) {
+    if (category == 'Missing Pets' || category == 'Found Pets') {
+      return _firestore.collection('PetDetailsCollection').doc(postId).snapshots().map((snapshot) {
+        if (snapshot.exists) {
+          return snapshot.data()?['Status'] ?? 'Unknown';
+        } else {
+          return 'Post not found';
+        }
+      });
+    } else if (category == 'Pet Adoption') {
+      return _firestore.collection('AdoptionDetails').doc(postId).snapshots().map((snapshot) {
+        if (snapshot.exists) {
+          return snapshot.data()?['Status'] ?? 'Unknown';
+        } else {
+          return 'Post not found';
+        }
+      });
+    } else if (category == 'Protect Our Pets: Report Abuse') {
+      return _firestore.collection('PostCollection').doc(postId).snapshots().map((snapshot) {
+        if (snapshot.exists) {
+          return snapshot.data()?['Status'] ?? 'Unknown';
+        } else {
+          return 'Post not found';
+        }
+      });
+    } else if (category == 'Call for Aid') {
+      return _firestore.collection('DonationDetails').doc(postId).snapshots().map((snapshot) {
+        if (snapshot.exists) {
+          return snapshot.data()?['Status'] ?? 'Unknown';
+        } else {
+          return 'Post not found';
+        }
+      });
+    } else {
+      throw Exception('Invalid category');
+    }
   }
 
 
