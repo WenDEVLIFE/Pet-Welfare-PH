@@ -1,4 +1,5 @@
 import 'dart:convert';
+import 'package:flutter_dotenv/flutter_dotenv.dart';
 import 'package:http/http.dart' as http;
 import '../model/RegionModel.dart';
 import '../model/ProvinceModel.dart';
@@ -6,8 +7,8 @@ import '../model/CityModel.dart';
 import '../model/BarangayModel.dart';
 
 class LocationService {
-  final String geoUserName = 'wendevlife';
-  final String countryGeoId = '1694008'; // Philippines' GeoNames ID
+  final String geoUserName =  dotenv.env['GEONAMES_USERNAME'] ?? ''; // Replace with your GeoNames username
+  final String countryGeoId =  dotenv.env['COUNTRY_GEO_ID'] ?? ''; // GeoName ID for the Philippines
 
   Future<List<RegionModel>> fetchRegions() async {
     final url = 'http://api.geonames.org/childrenJSON?geonameId=$countryGeoId&username=$geoUserName';

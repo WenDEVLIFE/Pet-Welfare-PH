@@ -1,4 +1,6 @@
+import 'package:flutter_dotenv/flutter_dotenv.dart';
+
 class MapTilerKey{
-  static const String apikey ='q9wjSugaStSxVtFEN8FX';
+  static final String apikey = dotenv.env['MAPTILER_API_KEY'] ?? '';
   static const String styleUrl = 'https://api.maptiler.com/maps/streets-v2/style.json';
 }

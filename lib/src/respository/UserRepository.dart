@@ -13,6 +13,8 @@ import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
 import 'package:firebase_admin/firebase_admin.dart' as admin;
 
+import '../utils/FirebaseIntialize.dart';
+
 abstract class UserRepository {
   Future<bool> checkIfUserExists(String name, String email);
   Future<bool> checkValidateEmail(String email);
@@ -38,9 +40,12 @@ class UserRepositoryImpl implements UserRepository {
   // This will check if the username exists in the database
   Future<bool> checkIfUserExists(String name, String email) async {
 
+    String adminCreds = FirebaseRestAPI.adminEmail;
+    String adminPassword = FirebaseRestAPI.adminPassword;
+
     UserCredential userCredential = await _auth.signInWithEmailAndPassword(
-      email: 'admin@gmail.com',
-      password: '@WenDEVLIFE123',
+      email: adminCreds,
+      password: adminPassword,
     );
 
     User? user = userCredential.user;
