@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 
 import '../DialogView/ReportDialog.dart';
 import '../modal/FormAdoptionModal.dart';
+import '../modal/PetStatusModal.dart';
 import '../modal/ReactionModal.dart';
 import '../model/TagModel.dart';
 import '../utils/AppColors.dart';
@@ -33,11 +34,8 @@ class PetForRescueCard extends StatefulWidget {
     required this.screenWidth,
   }) : super(key: key);
 
-
-
   @override
   State<PetForRescueCard> createState() => PetForRescueCardState();
-
 }
 
 class PetForRescueCardState extends State<PetForRescueCard> {
@@ -51,8 +49,6 @@ class PetForRescueCardState extends State<PetForRescueCard> {
   bool hasReacted = false;
   late PostViewModel postViewModel;
 
-
-
   @override
   void initState() {
     super.initState();
@@ -62,6 +58,7 @@ class PetForRescueCardState extends State<PetForRescueCard> {
     screenWidth = widget.screenWidth;
     _loadData();
   }
+
   Future<void> _loadData() async {
     try {
       final results = await Future.wait([
@@ -133,7 +130,8 @@ class PetForRescueCardState extends State<PetForRescueCard> {
                   backgroundImage: CachedNetworkImageProvider(post.profileUrl),
                 ),
               ),
-              Expanded( // Use Expanded to take up remaining space
+              Expanded(
+                // Use Expanded to take up remaining space
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -166,49 +164,79 @@ class PetForRescueCardState extends State<PetForRescueCard> {
               ),
               PopupMenuButton<String>(
                 itemBuilder: (context) {
-                  final currentUserId = Provider.of<PostViewModel>(context, listen: false).currentUserId;
-                  final isAdmin = postViewModel.role.toLowerCase() == 'admin' || postViewModel.role.toLowerCase() == "sub-admin";
+                  final currentUserId =
+                      Provider.of<PostViewModel>(context, listen: false)
+                          .currentUserId;
+                  final isAdmin = postViewModel.role.toLowerCase() == 'admin' ||
+                      postViewModel.role.toLowerCase() == "sub-admin";
                   final isPostOwner = widget.post.postOwnerId == currentUserId;
 
                   return [
                     if (isAdmin || isPostOwner)
-                      PopupMenuItem(value: 'Edit', child: const Text('Edit'), onTap: (){
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditPostView(
-                              postId: widget.post.postId,
-                              category: widget.post.category,
+                      PopupMenuItem(
+                        value: 'Edit',
+                        child: const Text('Edit'),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditPostView(
+                                postId: widget.post.postId,
+                                category: widget.post.category,
+                              ),
                             ),
-                          ),
-                        );
-                      },),
+                          );
+                        },
+                      ),
                     if (isAdmin || isPostOwner)
-                      PopupMenuItem(value: 'Delete', child: const Text('Delete'), onTap: (){
-                        // Delete the image to the database
-                        postViewModel.deletePost(widget.post.category,context, widget.post.postId);
-                        ToastComponent().showMessage(Colors.green, 'Post Deleted Successfully');
-                      },),
+                      PopupMenuItem(
+                        value: 'Delete',
+                        child: const Text('Delete'),
+                        onTap: () {
+                          // Delete the image to the database
+                          postViewModel.deletePost(widget.post.category,
+                              context, widget.post.postId);
+                          ToastComponent().showMessage(
+                              Colors.green, 'Post Deleted Successfully');
+                        },
+                      ),
+                    PopupMenuItem(
+                      child: const Text('Update Status'),
+                      onTap: () {
+                        // This will view the update adoption
+                        showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (context) {
+                              return PetStatusModal(widget.post.postId, widget.post.category);
+                            });
+                      },
+                    ),
                     if (!isPostOwner)
-                      PopupMenuItem(value: 'Message', child: const Text('Message'), onTap: (){
-                        // Determine which ID is the other user (not current user)
-                        final otherUserId = currentUserId == widget.post.postOwnerId
-                            ? widget.post.postOwnerId
-                            : widget.post.postOwnerId;
+                      PopupMenuItem(
+                        value: 'Message',
+                        child: const Text('Message'),
+                        onTap: () {
+                          // Determine which ID is the other user (not current user)
+                          final otherUserId =
+                              currentUserId == widget.post.postOwnerId
+                                  ? widget.post.postOwnerId
+                                  : widget.post.postOwnerId;
 
-                        Navigator.pushNamed(context, AppRoutes.message, arguments: {
-                          'receiverID': otherUserId
-                        });
-                      },),
+                          Navigator.pushNamed(context, AppRoutes.message,
+                              arguments: {'receiverID': otherUserId});
+                        },
+                      ),
                     PopupMenuItem(
                       value: 'Report',
                       child: const Text('Report'),
                       onTap: () {
                         Future.delayed(
                           Duration.zero,
-                              () => showDialog(
+                          () => showDialog(
                             context: context,
-                            builder: (context) => ReportDialog(widget.post.postId),
+                            builder: (context) =>
+                                ReportDialog(widget.post.postId),
                           ),
                         );
                       },
@@ -247,9 +275,12 @@ class PetForRescueCardState extends State<PetForRescueCard> {
             stream: post.imageStream,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator()); // Show a loading indicator
+                return const Center(
+                    child:
+                        CircularProgressIndicator()); // Show a loading indicator
               } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}')); // Handle errors
+                return Center(
+                    child: Text('Error: ${snapshot.error}')); // Handle errors
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                 return const Center(child: Text('')); // Handle empty stream
               } else {
@@ -451,12 +482,13 @@ class PetForRescueCardState extends State<PetForRescueCard> {
                     ),
                     onPressed: _handleReaction,
                   ),
-                  Text('$reactionCount likes', style: const TextStyle(
-                    fontFamily: 'SmoochSans',
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  )),
+                  Text('$reactionCount likes',
+                      style: const TextStyle(
+                        fontFamily: 'SmoochSans',
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      )),
                 ],
               ),
               Row(
@@ -467,12 +499,13 @@ class PetForRescueCardState extends State<PetForRescueCard> {
                       postViewModel.showComments(context, post.postId);
                     },
                   ),
-                  Text('$commentCount comments', style: const TextStyle(
-                    fontFamily: 'SmoochSans',
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  )),
+                  Text('$commentCount comments',
+                      style: const TextStyle(
+                        fontFamily: 'SmoochSans',
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      )),
                 ],
               ),
               Row(
@@ -484,7 +517,9 @@ class PetForRescueCardState extends State<PetForRescueCard> {
                         context: context,
                         isScrollControlled: true,
                         builder: (context) {
-                          ApplyAdoptionViewModel applyAdoptionViewModel = Provider.of<ApplyAdoptionViewModel>(context, listen: false);
+                          ApplyAdoptionViewModel applyAdoptionViewModel =
+                              Provider.of<ApplyAdoptionViewModel>(context,
+                                  listen: false);
                           applyAdoptionViewModel.showReminders(context);
                           return FormAdoptionModal(post.postId);
                         },

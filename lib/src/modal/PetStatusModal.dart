@@ -33,7 +33,9 @@ class _PetStatusModalState extends State<PetStatusModal> {
     postId = widget.postId;
     category = widget.category;
     postViewModel = Provider.of<PostViewModel>(context, listen: false);
-    postViewModel.loadPetStatusOptions(category, postId);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      postViewModel.loadPetStatusOptions(category, postId);
+    });
   }
 
   @override
@@ -58,6 +60,7 @@ class _PetStatusModalState extends State<PetStatusModal> {
               Text(
                 category =='Missing Pets' ? 'Update Missing Pet Status' :
                 category == 'Found Pets' ? 'Update Found Pet Status' :
+                category == 'Pets For Rescue' ? 'Update Pet For Rescue' :
                 category == 'Pet Adoption' ? 'Update Pet Adoption Status' :
                 category =='Call for Aid' ? 'Update Call for Aid Status' :
                 category =='Protect Our Pets: Report Abuse' ? 'Update Report Abuse Status' :
@@ -89,14 +92,18 @@ class _PetStatusModalState extends State<PetStatusModal> {
                     screenHeight: screenHeight,
                     alignment: Alignment.centerLeft,
                   ),
-                  CustomDropDown<String?>(
-                    value: postViewModel.selectedPetStatus,
-                    items: postViewModel.petStatusOptions,
-                    onChanged: (String? newValue) {
-                      postViewModel.setSelectedPetStatus(newValue);
+                  Consumer<PostViewModel>(
+                    builder: (context, viewModel, child) {
+                      return CustomDropDown<String?>(
+                        value: viewModel.selectedPetStatus,
+                        items: viewModel.petStatusOptions,
+                        onChanged: (String? newValue) {
+                          viewModel.setSelectedPetStatus(newValue);
+                        },
+                        itemLabel: (String? value) => value!,
+                        hint: 'Select a Status Type',
+                      );
                     },
-                    itemLabel: (String? value) => value!,
-                    hint: 'Select a Status Type',
                   ),
                   SizedBox(height: screenHeight * 0.02),
                   Center(

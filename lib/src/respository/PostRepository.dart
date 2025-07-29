@@ -1548,7 +1548,7 @@ Stream<List<PostModel>> getMyPost() {
   // get the status real-time
   @override
   Stream<String> getStatus(String postId, String category) {
-    if (category == 'Missing Pets' || category == 'Found Pets') {
+    if (category == 'Missing Pets' || category == 'Found Pets' || category == 'Pets For Rescue') {
       return _firestore.collection('PetDetailsCollection').doc(postId).snapshots().map((snapshot) {
         if (snapshot.exists) {
           return snapshot.data()?['Status'] ?? 'Unknown';

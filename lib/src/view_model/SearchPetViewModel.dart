@@ -39,10 +39,9 @@ class SearchPetViewModel extends ChangeNotifier {
     'Pet Adoption',
     'Found Pets',
     'Missing Pets',
-    'Pets For Rescue',
-    'Pet Care Insights'
+    'Pets For Rescue'
   ];
-  String? selectedSearchType = 'Pet Adoption';
+  String? selectedSearchType = 'Pets For Rescue';
 
   // Add these fields
   RegionModel? selectedRegion;
@@ -544,25 +543,6 @@ class SearchPetViewModel extends ChangeNotifier {
       }
 
       await postViewModel.startSearchPetsForRescue(searchParams);
-    }
-
-    else if (selectedSearchType == 'Pet Care Insights') {
-      if (selectedRegion == null) {
-        ToastComponent().showMessage(Colors.red, 'Please select a region');
-        return;
-      }
-
-      if (selectedProvince == null) {
-        ToastComponent().showMessage(Colors.red, 'Please select a province');
-        return;
-      }
-
-      if (selectedCity == null) {
-        ToastComponent().showMessage(Colors.red, 'Please select a city');
-        return;
-      }
-
-      await postViewModel.startSearchPetCareInsights(searchParams);
     }
     else {
       ToastComponent().showMessage(Colors.red, 'Please select a search type');

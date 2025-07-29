@@ -20,7 +20,7 @@ jobs:
       - name: Set up Flutter
         uses: subosito/flutter-action@v2
         with:
-          flutter-version: ${{ env.FLUTTER_VERSION }}
+          flutter-version: ${{ .env.FLUTTER_VERSION }}
 
       # ────────────────────────────────────────────────────────────────
       # 1) CACHE & (if miss) INSTALL cmdline-tools + NDK
@@ -32,8 +32,8 @@ jobs:
         id: ndk-cache
         uses: actions/cache@v3
         with:
-          path: ${{ env.SDK_ROOT }}/ndk/${{ env.NDK_VERSION }}
-          key: ${{ runner.os }}-android-ndk-${{ env.NDK_VERSION }}
+          path: ${{ .env.SDK_ROOT }}/ndk/${{ .env.NDK_VERSION }}
+          key: ${{ runner.os }}-android-ndk-${{ .env.NDK_VERSION }}
 
       - name: Bootstrap cmdline-tools & install NDK (cache miss)
         if: steps.ndk-cache.outputs.cache-hit != 'true'
@@ -87,8 +87,8 @@ jobs:
       # ────────────────────────────────────────────────────────────────
       - name: Build release APK
         env:
-          ANDROID_NDK_HOME: ${{ env.SDK_ROOT }}/ndk/${{ env.NDK_VERSION }}
-          ANDROID_NDK_ROOT: ${{ env.SDK_ROOT }}/ndk/${{ env.NDK_VERSION }}
+          ANDROID_NDK_HOME: ${{ .env.SDK_ROOT }}/ndk/${{ .env.NDK_VERSION }}
+          ANDROID_NDK_ROOT: ${{ .env.SDK_ROOT }}/ndk/${{ .env.NDK_VERSION }}
         run: flutter build apk --release
 
       - name: Create output directory

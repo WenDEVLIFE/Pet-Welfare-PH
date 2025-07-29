@@ -122,7 +122,8 @@ class _PostCardState extends State<PostCard> {
                 padding: const EdgeInsets.all(10),
                 child: CircleAvatar(
                   radius: widget.screenHeight * 0.03,
-                  backgroundImage: CachedNetworkImageProvider(widget.post.profileUrl),
+                  backgroundImage:
+                      CachedNetworkImageProvider(widget.post.profileUrl),
                 ),
               ),
               Column(
@@ -156,56 +157,68 @@ class _PostCardState extends State<PostCard> {
               ),
               const Spacer(),
               PopupMenuButton<String>(
-  onSelected: (value) {
-    final postViewModel = Provider.of<PostViewModel>(context, listen: false);
-    final currentUserId = postViewModel.currentUserId;
-    final role = postViewModel.role;
-    final isAdmin = role.toLowerCase() == 'admin' || role.toLowerCase() == 'sub-admin';
-    final isPostOwner = widget.post.postOwnerId == currentUserId;
+                onSelected: (value) {
+                  final postViewModel =
+                      Provider.of<PostViewModel>(context, listen: false);
+                  final currentUserId = postViewModel.currentUserId;
+                  final role = postViewModel.role;
+                  final isAdmin = role.toLowerCase() == 'admin' ||
+                      role.toLowerCase() == 'sub-admin';
+                  final isPostOwner = widget.post.postOwnerId == currentUserId;
 
-    // 🛠 Show toast safely after popup menu closes
-    Future.delayed(Duration.zero, () async {
-      if ((isAdmin || isPostOwner) && value == 'Edit') {
-        Navigator.push(
-          context,
-          MaterialPageRoute(
-            builder: (context) => EditPostView(
-              postId: widget.post.postId,
-              category: widget.post.category,
-            ),
-          ),
-        );
-      } else if ((isAdmin || isPostOwner) && value == 'Delete') {
-        postViewModel.deletePost(widget.post.category, context, widget.post.postId);
-        ToastComponent().showMessage(Colors.green, 'Post Deleted Successfully');
-      } else if (value == 'Message') {
-        final otherUserId = widget.post.postOwnerId;
-        Navigator.pushNamed(context, AppRoutes.message, arguments: {
-          'receiverID': otherUserId,
-        });
-      } else if (value == 'Report') {
-        showDialog(
-          context: context,
-          builder: (context) => ReportDialog(widget.post.postId),
-        );
-      }
-    });
-  },
-  itemBuilder: (context) {
-    final postViewModel = Provider.of<PostViewModel>(context, listen: false);
-    final currentUserId = postViewModel.currentUserId;
-    final isAdmin = postViewModel.role.toLowerCase() == 'admin' || postViewModel.role.toLowerCase() == "sub-admin";
-    final isPostOwner = widget.post.postOwnerId == currentUserId;
+                  // 🛠 Show toast safely after popup menu closes
+                  Future.delayed(Duration.zero, () async {
+                    if ((isAdmin || isPostOwner) && value == 'Edit') {
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => EditPostView(
+                            postId: widget.post.postId,
+                            category: widget.post.category,
+                          ),
+                        ),
+                      );
+                    } else if ((isAdmin || isPostOwner) && value == 'Delete') {
+                      postViewModel.deletePost(
+                          widget.post.category, context, widget.post.postId);
+                      ToastComponent().showMessage(
+                          Colors.green, 'Post Deleted Successfully');
+                    } else if (value == 'Message') {
+                      final otherUserId = widget.post.postOwnerId;
+                      Navigator.pushNamed(context, AppRoutes.message,
+                          arguments: {
+                            'receiverID': otherUserId,
+                          });
+                    } else if (value == 'Report') {
+                      showDialog(
+                        context: context,
+                        builder: (context) => ReportDialog(widget.post.postId),
+                      );
+                    }
+                  });
+                },
+                itemBuilder: (context) {
+                  final postViewModel =
+                      Provider.of<PostViewModel>(context, listen: false);
+                  final currentUserId = postViewModel.currentUserId;
+                  final isAdmin = postViewModel.role.toLowerCase() == 'admin' ||
+                      postViewModel.role.toLowerCase() == "sub-admin";
+                  final isPostOwner = widget.post.postOwnerId == currentUserId;
 
-    return [
-      if (isAdmin || isPostOwner) const PopupMenuItem(value: 'Edit', child: Text('Edit')),
-      if (isAdmin || isPostOwner) const PopupMenuItem(value: 'Delete', child: Text('Delete')),
-      if (!isPostOwner) const PopupMenuItem(value: 'Message', child: Text('Message')),
-      const PopupMenuItem(value: 'Report', child: Text('Report')),
-    ];
-  },
-  icon: const Icon(Icons.more_vert),
-),
+                  return [
+                    if (isAdmin || isPostOwner)
+                      const PopupMenuItem(value: 'Edit', child: Text('Edit')),
+                    if (isAdmin || isPostOwner)
+                      const PopupMenuItem(
+                          value: 'Delete', child: Text('Delete')),
+                    if (!isPostOwner)
+                      const PopupMenuItem(
+                          value: 'Message', child: Text('Message')),
+                    const PopupMenuItem(value: 'Report', child: Text('Report')),
+                  ];
+                },
+                icon: const Icon(Icons.more_vert),
+              ),
             ],
           ),
           // --- Post Description ---
@@ -238,9 +251,12 @@ class _PostCardState extends State<PostCard> {
             stream: post.imageStream,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator()); // Show a loading indicator
+                return const Center(
+                    child:
+                        CircularProgressIndicator()); // Show a loading indicator
               } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}')); // Handle errors
+                return Center(
+                    child: Text('Error: ${snapshot.error}')); // Handle errors
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                 return const Center(child: Text('')); // Handle empty stream
               } else {
@@ -293,22 +309,29 @@ class _PostCardState extends State<PostCard> {
                 ),
                 onPressed: _handleReaction,
               ),
-              Text('$reactionCount likes', style: const TextStyle(
-            fontFamily: 'SmoochSans',
-            color: Colors.black,
-            fontSize: 16,
-            fontWeight: FontWeight.w600,
-            ),),
+              Text(
+                '$reactionCount likes',
+                style: const TextStyle(
+                  fontFamily: 'SmoochSans',
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
               IconButton(
                 icon: const Icon(Icons.comment),
-                onPressed: () => postViewModel.showComments(context, widget.post.postId),
+                onPressed: () =>
+                    postViewModel.showComments(context, widget.post.postId),
               ),
-              Text('$commentCount comments', style: const TextStyle(
-                fontFamily: 'SmoochSans',
-                color: Colors.black,
-                fontSize: 16,
-                fontWeight: FontWeight.w600,
-              ), ),
+              Text(
+                '$commentCount comments',
+                style: const TextStyle(
+                  fontFamily: 'SmoochSans',
+                  color: Colors.black,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
             ],
           ),
         ],

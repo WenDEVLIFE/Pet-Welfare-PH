@@ -163,7 +163,7 @@ class CreatePostView extends StatelessWidget {
                 itemLabel: (String value) => value,
                 hint: 'Select a category',
             ),
-            if (createPostViewModel.selectedChip == "Missing Pets" || createPostViewModel.selectedChip == "Found Pets" ||  createPostViewModel.selectedChip =="Pet Adoption") ...[
+            if (createPostViewModel.selectedChip == "Missing Pets" || createPostViewModel.selectedChip == "Pets For Rescue" || createPostViewModel.selectedChip == "Found Pets" ||  createPostViewModel.selectedChip =="Pet Adoption") ...[
               CustomText(
                 text: 'Pet Name',
                 size: 18,
@@ -614,128 +614,6 @@ class CreatePostView extends StatelessWidget {
                     SizedBox(height: screenHeight * 0.01),
                   ],
                 ),
-              ),
-            ],
-            if(createPostViewModel.selectedChip=='Pets For Rescue')...[
-              CustomText(
-                text: 'Select Pet Type',
-                size: 18,
-                color: Colors.black,
-                weight: FontWeight.w700,
-                align: TextAlign.left,
-                screenHeight: screenHeight,
-                alignment: Alignment.centerLeft,
-              ),
-              CustomDropDown(value: createPostViewModel.selectedPetType,
-                items: createPostViewModel.petTypes,
-                onChanged: (String? newValue) {
-                  createPostViewModel.setPetType(newValue);
-                },
-                itemLabel: (String value) => value,
-                hint: 'Select Pet Type',
-              ),
-              if (createPostViewModel.selectedPetType == 'Cat') ...[
-                const Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Cat Breed',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontFamily: 'SmoochSans',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-                CustomDropDown<Breed>(
-                  value: createPostViewModel.selectedCatBreed,
-                  items: createPostViewModel.catBreeds,
-                  onChanged: (Breed? newValue) {
-                    createPostViewModel.selectedCatBreed1(newValue);
-                  },
-                  itemLabel: (Breed value) => value.name,
-                  hint: 'Select Cat Breed',
-                ),
-              ],
-              if (createPostViewModel.selectedPetType == 'Dog') ...[
-                const Padding(
-                  padding: EdgeInsets.all(10.0),
-                  child: Align(
-                    alignment: Alignment.centerLeft,
-                    child: Text(
-                      'Dog Breed',
-                      style: TextStyle(
-                        color: Colors.black,
-                        fontSize: 18,
-                        fontFamily: 'SmoochSans',
-                        fontWeight: FontWeight.w600,
-                      ),
-                    ),
-                  ),
-                ),
-                CustomDropDown<Breed>(
-                  value: createPostViewModel.selectedDogBreed,
-                  items: createPostViewModel.dogBreeds,
-                  onChanged: (Breed? newValue) {
-                    createPostViewModel.selectedDogBreed2(newValue);
-                  },
-                  itemLabel: (Breed value) => value.name,
-                  hint: 'Select Dog Breed',
-                ),
-              ],
-              CustomText(
-                text: 'Pet Gender',
-                size: 18,
-                color: Colors.black,
-                weight: FontWeight.w700,
-                align: TextAlign.left,
-                screenHeight: screenHeight,
-                alignment: Alignment.centerLeft,
-              ),
-              CustomDropDown(value: createPostViewModel.selectedPetGender,
-                items: createPostViewModel.petGender,
-                onChanged: (String? newValue) {
-                  createPostViewModel.setPetGender(newValue);
-                },
-                itemLabel: (String value) => value,
-                hint: 'Select Pet Gender',
-              ),
-              CustomText(
-                text:  'Pet Size',
-                size: 18,
-                color: Colors.black,
-                weight: FontWeight.w700,
-                align: TextAlign.left,
-                screenHeight: screenHeight,
-                alignment: Alignment.centerLeft,
-              ),
-              CustomDropDown(value: createPostViewModel.selectedPetSize,
-                items: createPostViewModel.petSize,
-                onChanged: (String? newValue) {
-                  createPostViewModel.setPetSize(newValue);
-                },
-                itemLabel: (String value) => value,
-                hint: 'Select Pet Size',
-              ),
-              CustomText(
-                text:   'Colors or patterns',
-                size: 18,
-                color: Colors.black,
-                weight: FontWeight.w700,
-                align: TextAlign.left,
-                screenHeight: screenHeight,
-                alignment: Alignment.centerLeft,
-              ),
-              CustomDropDown(value: createPostViewModel.selectedColorPattern,
-                items: createPostViewModel.colorpatter,
-                onChanged: (String? newValue) {
-                  createPostViewModel.setColor(newValue);
-                },
-                itemLabel: (String value) => value,
-                hint: 'Select Colors or patterns',
               ),
             ],
                if (createPostViewModel.selectedChip == "Pet Adoption" || createPostViewModel.selectedChip == "Missing Pets" ||

@@ -496,6 +496,9 @@ class PostViewModel extends ChangeNotifier {
 
     communityPost.clear();
     filterCommunityPost.clear();
+    print('############################################################');
+    print('############      CURRENT ROLE: $role      ############');
+    print('############################################################');
 
     _communityPostSubscription = communityPostStream.listen((communityPosts) {
       communityPost = communityPosts;
@@ -1221,7 +1224,6 @@ class PostViewModel extends ChangeNotifier {
   }
 
   // This will delete the post from the database
-  // This will delete the post from the database and update the UI in real-time
 void deletePost(String category, BuildContext context, String postID) async {
   ProgressDialog pd = ProgressDialog(context: context);
   pd.show(msg: "Deleting post...");
@@ -1276,7 +1278,7 @@ void deletePost(String category, BuildContext context, String postID) async {
 
     // 3. Notify listeners to rebuild the UI with the updated list
     notifyListeners();
-    
+
     ToastComponent().showMessage(Colors.green, 'Post Deleted Successfully');
 
   } catch (e) {
@@ -1290,44 +1292,33 @@ void deletePost(String category, BuildContext context, String postID) async {
 
   // load the the pet petOptionsStatus
   Future<void> loadPetStatusOptions(String category, String postId) async {
-    retrievePetStatus = postRepository.getStatus(postId, category);
+    //====== BIGGEST PRINT SHOWING CATEGORY ======//
+    print('############################################################');
+    print('############   CURRENT CATEGORY: $category   ############');
+    print('############################################################');
+    //==============================================//
 
-    // Cancel previous subscription if any
     _statusSubscription?.cancel();
 
+    if (category == 'Missing Pets') {
+      petStatusOptions = ['Still missing', 'Adopted', 'Reunited with owner'];
+    } else if (category == 'Found Pets') {
+      petStatusOptions = ['Still roaming', 'Reunited with owner', 'Adopted'];
+    } else if (category == 'Pet Adoption') {
+      petStatusOptions = ['Still up for adoption', 'Adopted'];
+    } else if (category == 'Call for Aid') {
+      petStatusOptions = ['Ongoing', 'Paused', 'Fulfilled']; // Corrected spelling
+    } else if (category == 'Protect Our Pets: Report Abuse') {
+      petStatusOptions = ['Will investigate', 'Ongoing Investigation', 'Case has been filled', 'Case has been resolved', 'Actions to be taken']; // Corrected spelling
+    } else if (category == 'Pets For Rescue') {
+      petStatusOptions = ['Still roaming', 'Rescued', 'For Adoption'];
+    } else {
+      petStatusOptions = [];
+    }
+
+    Stream<String> retrievePetStatus = postRepository.getStatus(postId, category);
+
     _statusSubscription = retrievePetStatus.listen((status) {
-      if (category == 'Missing Pets') {
-        petStatusOptions = [
-          'Still missing',
-          'Adopted',
-          'Reunited with owner',
-        ];
-      } else if (category == 'Found Pets') {
-        petStatusOptions = [
-          'Still roaming',
-          'Reunited with owner',
-          'Adopted',
-        ];
-      } else if (category == 'Pet Adoption') {
-        petStatusOptions = [
-          'Still up for adoption',
-          'Adopted',
-        ];
-      } else if (category == 'Call for Aid') {
-        petStatusOptions = [
-          'Ongoing',
-          'Paused',
-          'Fullfilled',
-        ];
-      } else if (category == 'Protect Our Pets: Report Abuse') {
-        petStatusOptions = [
-          'Will investigate',
-          'Ongoing Investigation',
-          'Case has been filled',
-          'Case has been resolved',
-          'Acctions to be taken',
-        ];
-      }
       selectedPetStatus = status;
       notifyListeners();
     });

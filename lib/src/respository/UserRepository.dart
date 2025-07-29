@@ -114,8 +114,7 @@ Future<(bool, String?)> checkPasswordComplexity(String password) async {
   // This will register the user
   Future<void> registerUser(Map<String, dynamic> userData, BuildContext context, void Function() clearText) async {
     ProgressDialog pd = ProgressDialog(context: context);
-    pd.show(max: 100, msg: 'Registering User...');
-
+    pd.show(max: 100, msg: 'Creating Your Account...');
     try {
       // Extract user data
 
@@ -130,11 +129,6 @@ Future<(bool, String?)> checkPasswordComplexity(String password) async {
       var idType = userData['selectIDtype']!;
       final Function clearData = userData['clearData'];
       final Function clearFields = userData['clearFields'];
-
-      // Navigate to login screen
-      if (role != "Admin" && role != "Super-Admin") {
-        Navigator.pushReplacementNamed(context, AppRoutes.loginScreen);
-      }
 
       // Register user in Firebase Authentication
       UserCredential userCredential = await _auth.createUserWithEmailAndPassword(
@@ -198,6 +192,9 @@ Future<(bool, String?)> checkPasswordComplexity(String password) async {
 
         // Success message
         ToastComponent().showMessage(Colors.green, 'User registered successfully!');
+        if(context.mounted) { // Good practice to check if the context is still valid
+          Navigator.pushReplacementNamed(context, AppRoutes.loginScreen);
+        }
       }
       else{
         ToastComponent().showMessage(Colors.green, 'Admin added successfully!');

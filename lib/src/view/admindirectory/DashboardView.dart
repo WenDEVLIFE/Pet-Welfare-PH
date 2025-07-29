@@ -17,18 +17,17 @@ class DashboardView extends StatefulWidget {
 
 class DashboardViewState extends State<DashboardView> {
 
-  late DashboardViewModel dashboardViewModel;
   @override
   void initState() {
     super.initState();
-
-    dashboardViewModel = Provider.of<DashboardViewModel>(context, listen: false);
-
-    dashboardViewModel.initDashboard();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      Provider.of<DashboardViewModel>(context, listen: false).initDashboard();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
+    final dashboardViewModel = Provider.of<DashboardViewModel>(context);
 
     double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
@@ -39,27 +38,27 @@ class DashboardViewState extends State<DashboardView> {
           const DrawerHeaderWidget(),
           _buildDrawerItem(Icons.dashboard, 'Dashboard', () {
             Navigator.pop(context);
-            Navigator.pushReplacementNamed(context, AppRoutes.dashboard);
+            Navigator.pushNamed(context, AppRoutes.dashboard);
           }),
           _buildDrawerItem(Icons.verified_user_rounded, 'Users', () {
             Navigator.pop(context);
-            Navigator.pushReplacementNamed(context, AppRoutes.userView);
+            Navigator.pushNamed(context, AppRoutes.userView);
           }),
           _buildDrawerItem(Icons.home, 'Home', () {
             Navigator.pop(context);
-            Navigator.pushReplacementNamed(context, AppRoutes.homescreen);
+            Navigator.pushNamed(context, AppRoutes.homescreen);
           }),
           _buildDrawerItem(Icons.attach_money, 'Subscriptions', () {
             Navigator.pop(context);
-            Navigator.pushReplacementNamed(context, AppRoutes.subscription);
+            Navigator.pushNamed(context, AppRoutes.subscription);
           }),
           _buildDrawerItem(Icons.holiday_village_outlined, 'All Business', () {
             Navigator.pop(context);
-            Navigator.pushReplacementNamed(context, AppRoutes.adminViewEstablishment);
+            Navigator.pushNamed(context, AppRoutes.adminViewEstablishment);
           }),
           _buildDrawerItem(Icons.report_gmailerrorred_sharp, 'Reports', () {
             Navigator.pop(context);
-            Navigator.pushReplacementNamed(context, AppRoutes.reportView);
+            Navigator.pushNamed(context, AppRoutes.reportView);
           }),
           _buildDrawerItem(Icons.info, 'About us', () {
             Navigator.pop(context);
@@ -102,195 +101,113 @@ class DashboardViewState extends State<DashboardView> {
           'Dashboard',
           style: TextStyle(
             fontFamily: 'SmoochSans',
-            fontSize: 20,
-            fontWeight: FontWeight.w600,
+            fontSize: 24, // Slightly larger for better presence
+            fontWeight: FontWeight.bold, // Bolder
             color: Colors.white,
           ),
         ),
         backgroundColor: AppColors.orange,
+        elevation: 4, // Add a subtle shadow to the app bar
       ),
-      body: SingleChildScrollView(
-        child: Center(
-          child: Column(
-            children: <Widget>[
-              Padding(
-                padding: const EdgeInsets.all(20),
-                child: Column(
-                  children: <Widget>[
-                    const Text(
-                      'Welcome to the Dashboard',
-                      style: TextStyle(
-                        fontSize: 20,
-                        fontWeight: FontWeight.w600,
-                        fontFamily: 'SmoochSans',
-                      ),
-                    ),
-                    SizedBox(height: screenHeight * 0.02),
-                     Card(
-                      color: AppColors.orange,
-                      child: Column(
-                        children: <Widget>[
-                          ListTile(
-                            title: const Row(
-                              children: <Widget>[
-                                Icon(Icons.person, color: Colors.white),
-                                Text('Total Users',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w800,
-                                    fontFamily: 'SmoochSans',
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            subtitle: Text(dashboardViewModel.totalUser.toString(),
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w800,
-                                fontFamily: 'SmoochSans',
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: screenHeight * 0.02),
-                     Card(
-                      color: AppColors.orange,
-                      child: Column(
-                        children: <Widget>[
-                          ListTile(
-                            title: const Row(
-                              children: <Widget>[
-                                Icon(Icons.post_add, color: Colors.white),
-                                Text('Total Posts',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w800,
-                                    fontFamily: 'SmoochSans',
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            subtitle: Text(dashboardViewModel.totalPost.toString(),
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w800,
-                                fontFamily: 'SmoochSans',
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: screenHeight * 0.02),
-                     Card(
-                      color: AppColors.orange,
-                      child: Column(
-                        children: <Widget>[
-                          ListTile(
-                            title:  const Row(
-                              children: <Widget>[
-                                Icon(Icons.person_off, color: Colors.white),
-                                Text('Total Banned Users',
-                                  style: const TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w800,
-                                    fontFamily: 'SmoochSans',
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            subtitle: Text(dashboardViewModel.totalBannedUser.toString(),
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w800,
-                                fontFamily: 'SmoochSans',
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: screenHeight * 0.02),
-                    Card(
-                      color: AppColors.orange,
-                      child: Column(
-                        children: <Widget>[
-                          ListTile(
-                            title: const Row(
-                              children: <Widget>[
-                                Icon(Icons.verified_user_rounded, color: Colors.white),
-                                Text('Total Verified User',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w800,
-                                    fontFamily: 'SmoochSans',
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            subtitle: Text(dashboardViewModel.totalApprovedUser.toString(),
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w800,
-                                fontFamily: 'SmoochSans',
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: screenHeight * 0.02),
-                     Card(
-                      color: AppColors.orange,
-                      child: Column(
-                        children: <Widget>[
-                          ListTile(
-                            title: const Row(
-                              children: <Widget>[
-                                Icon(Icons.person_off_sharp, color: Colors.white),
-                                Text('Total Unverified User',
-                                  style: TextStyle(
-                                    fontSize: 16,
-                                    fontWeight: FontWeight.w800,
-                                    fontFamily: 'SmoochSans',
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              ],
-                            ),
-                            subtitle: Text(dashboardViewModel.totalPendingUser.toString(),
-                              style: const TextStyle(
-                                fontSize: 16,
-                                fontWeight: FontWeight.w800,
-                                fontFamily: 'SmoochSans',
-                                color: Colors.white,
-                              ),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                )
-              ),
-            ],
+      // Use a Consumer to rebuild the UI when data changes
+      body: Consumer<DashboardViewModel>(
+        builder: (context, viewModel, child) {
+          // Create a list of items to display in the grid
+          final List<Map<String, dynamic>> dashboardItems = [
+            {'title': 'Total Users', 'icon': Icons.person_outline, 'value': viewModel.totalUser, 'color': Colors.blue},
+            {'title': 'Total Posts', 'icon': Icons.post_add_outlined, 'value': viewModel.totalPost, 'color': Colors.green},
+            {'title': 'Banned Users', 'icon': Icons.block_flipped, 'value': viewModel.totalBannedUser, 'color': Colors.red},
+            {'title': 'Verified Users', 'icon': Icons.verified_user_outlined, 'value': viewModel.totalApprovedUser, 'color': Colors.teal},
+            {'title': 'Pending Users', 'icon': Icons.hourglass_top_outlined, 'value': viewModel.totalPendingUser, 'color': Colors.amber},
+          ];
+
+          return GridView.builder(
+            padding: const EdgeInsets.all(16.0), // Padding for the entire grid
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2, // 2 cards per row
+              crossAxisSpacing: 16.0, // Spacing between cards horizontally
+              mainAxisSpacing: 16.0, // Spacing between cards vertically
+              childAspectRatio: 1.0, // Makes the cards square
+            ),
+            itemCount: dashboardItems.length,
+            itemBuilder: (context, index) {
+              final item = dashboardItems[index];
+              return _buildDashboardCard(
+                title: item['title'],
+                icon: item['icon'],
+                value: item['value'],
+                color: item['color'],
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+
+  // The redesigned, modern dashboard card
+  Widget _buildDashboardCard({
+    required String title,
+    required IconData icon,
+    required Color color,
+    required int? value,
+  }) {
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12.0),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.grey.withOpacity(0.2),
+            spreadRadius: 2,
+            blurRadius: 8,
+            offset: const Offset(0, 4),
           ),
+        ],
+      ),
+      child: Padding(
+        padding: const EdgeInsets.all(16.0),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            // Icon with a colored background circle
+            CircleAvatar(
+              radius: 24,
+              backgroundColor: color.withOpacity(0.15),
+              child: Icon(icon, color: color, size: 28),
+            ),
+            // The main content: value and title
+            value == null
+                ? const Center(child: CircularProgressIndicator())
+                : Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  value.toString(),
+                  style: const TextStyle(
+                    fontSize: 32,
+                    fontWeight: FontWeight.bold,
+                    color: Colors.black87,
+                  ),
+                ),
+                const SizedBox(height: 4),
+                Text(
+                  title,
+                  style: const TextStyle(
+                    fontSize: 16,
+                    fontWeight: FontWeight.w500,
+                    color: Colors.black54,
+                  ),
+                ),
+              ],
+            ),
+          ],
         ),
       ),
     );
   }
 
-  // Reusable method for building drawer items
   // Reusable method for building drawer items
   Widget _buildDrawerItem(IconData icon, String title, VoidCallback onTap) {
     return ListTile(

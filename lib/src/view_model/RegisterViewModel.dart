@@ -128,6 +128,20 @@ if (!isValid) {
   return; 
 }
 
+    final String userRole = role == 'FurUser' ? 'Fur User' :
+    role == 'Pet Shelter' ? 'Pet Shelter' :
+    role == 'Pet Rescuer' ? 'Pet Rescuer' :
+    role == 'Animal Welfare Advocate' ? 'Animal Welfare Advocate' : 'Pet Lover';
+
+    Fluttertoast.showToast(
+      msg: "Proceeding as: $userRole",
+      toastLength: Toast.LENGTH_SHORT,
+      gravity: ToastGravity.CENTER,
+      timeInSecForIosWeb: 1,
+      backgroundColor: CupertinoColors.activeBlue, // Using a different color for info
+      textColor: CupertinoColors.white,
+      fontSize: 16.0,
+    );
 
     // Proceed with adding the user
     Navigator.pushNamed(context, AppRoutes.uploadIDScreen, arguments: {
@@ -138,7 +152,7 @@ if (!isValid) {
       'role': role == 'FurUser' ? 'Fur User' :
       role == 'Pet Shelter' ? 'Pet Shelter' :
       role == 'Pet Rescuer' ? 'Pet Rescuer' :
-      role == 'Animal Welfare Advocate' ? 'Animal Welfare Advocate' : '',
+      role == 'Animal Welfare Advocate' ? 'Animal Welfare Advocate' : 'Pet Lover',
       if (role == "Pet Rescuer" || role == "Pet Shelter") "address": addressController.text,
     });
   }

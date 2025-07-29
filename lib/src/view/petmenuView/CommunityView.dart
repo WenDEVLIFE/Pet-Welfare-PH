@@ -26,6 +26,7 @@ class CommunityState extends State<CommunityView> {
     super.initState();
     postViewModel = Provider.of<PostViewModel>(context, listen: false);
     postViewModel.listenToCommunityPost();
+    postViewModel.loadData();
   }
 
   @override
@@ -114,13 +115,20 @@ class CommunityState extends State<CommunityView> {
         activeForegroundColor: AppColors.white,
         children: [
           if (postViewModel.role.toLowerCase() == 'admin') ...[
-            SpeedDialChild(
-              label: 'Create Post',
-              child: const Icon(Icons.create),
-              onTap: () {
-                Navigator.pushNamed(context, AppRoutes.createpost);
-              },
-            ),
+            //======= PRINT STATEMENT ADDED HERE =======//
+                () {
+              print('======================================');
+              print('===== ROLE CHECK: USER IS ADMIN ======');
+              print('======================================');
+              return SpeedDialChild(
+                label: 'Create Post',
+                child: const Icon(Icons.create),
+                onTap: () {
+                  Navigator.pushNamed(context, AppRoutes.createpost);
+                },
+              );
+            }(),
+            //=========================================//
           ],
           SpeedDialChild(
             label: 'Reload the Community Posts',
