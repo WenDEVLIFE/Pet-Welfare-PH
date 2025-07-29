@@ -25,6 +25,7 @@ class FoundPetState extends State<FoundPetView> {
     super.initState();
     postViewModel = Provider.of<PostViewModel>(context, listen: false);
     postViewModel.listenToFoundPost();
+    postViewModel.loadData();
   }
 
   @override
@@ -113,7 +114,7 @@ class FoundPetState extends State<FoundPetView> {
         activeBackgroundColor: AppColors.black,
         activeForegroundColor: AppColors.white,
         children: [
-          if (postViewModel.role.toLowerCase() != 'admin') ...[
+          if (postViewModel.role != 'Admin') ...[
             SpeedDialChild(
               label: 'Create Post',
               child: const Icon(Icons.create),

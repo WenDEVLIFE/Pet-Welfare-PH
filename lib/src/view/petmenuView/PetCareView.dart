@@ -111,7 +111,7 @@ class VetAndTravelState extends State<VetAndTravelView> {
         activeBackgroundColor: AppColors.black,
         activeForegroundColor: AppColors.white,
         children: [
-          if (postViewModel.role.toLowerCase() != 'admin') ...[
+          if (postViewModel.role != 'Admin') ...[
             SpeedDialChild(
               label: 'Create Post',
               child: const Icon(Icons.create),

@@ -24,6 +24,7 @@ class PetAdoptionViewState extends State<PetAdoptionView> {
     super.initState();
     postViewModel = Provider.of<PostViewModel>(context, listen: false);
     postViewModel.listenToPetAdoptPost();
+    postViewModel.loadData();
   }
 
   @override
@@ -110,7 +111,7 @@ class PetAdoptionViewState extends State<PetAdoptionView> {
         activeBackgroundColor: AppColors.black,
         activeForegroundColor: AppColors.white,
         children: [
-          if (postViewModel.role.toLowerCase() != 'admin') ...[
+          if (postViewModel.role != 'Admin') ...[
             SpeedDialChild(
               label: 'Create Post',
               child: const Icon(Icons.create),

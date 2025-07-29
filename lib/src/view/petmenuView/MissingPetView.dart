@@ -32,6 +32,7 @@ class MissingPetState extends State<MissingPetView> {
       }
       postViewModel.listenToMissingPost();
     });
+    postViewModel.loadData();
   }
 
   @override
@@ -117,7 +118,7 @@ class MissingPetState extends State<MissingPetView> {
         activeBackgroundColor: AppColors.black,
         activeForegroundColor: AppColors.white,
         children: [
-          if (postViewModel.role.toLowerCase() != 'admin') ...[
+          if (postViewModel.role != 'Admin') ...[
             SpeedDialChild(
               label: 'Create Post',
               child: const Icon(Icons.create),

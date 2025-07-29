@@ -115,7 +115,6 @@ class CommunityState extends State<CommunityView> {
         activeForegroundColor: AppColors.white,
         children: [
           if (postViewModel.role.toLowerCase() == 'admin') ...[
-            //======= PRINT STATEMENT ADDED HERE =======//
                 () {
               print('======================================');
               print('===== ROLE CHECK: USER IS ADMIN ======');

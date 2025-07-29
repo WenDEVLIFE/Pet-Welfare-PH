@@ -23,6 +23,7 @@ class ProtectPetState extends State<ProtectPetView> {
     super.initState();
     postViewModel = Provider.of<PostViewModel>(context, listen: false);
     postViewModel.listenToProtectedPost();
+    postViewModel.loadData();
   }
 
   @override
@@ -110,7 +111,7 @@ class ProtectPetState extends State<ProtectPetView> {
           activeBackgroundColor: AppColors.black,
           activeForegroundColor: AppColors.white,
           children: [
-            if (postViewModel.role.toLowerCase() != 'admin') ...[
+            if (postViewModel.role != 'Admin') ...[
               SpeedDialChild(
                 label: 'Create Post',
                 child: const Icon(Icons.create),
