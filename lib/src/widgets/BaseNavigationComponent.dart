@@ -62,14 +62,47 @@ Widget build(BuildContext context) {
       },
     ),
     bottomNavigationBar: SafeArea(
-      child: CurvedNavigationBar(
-        backgroundColor: Colors.transparent, // Let SafeArea background show
-        color: AppColors.orange,
-        items: getNavBarItems(),
-        index: _currentIndex,
-        onTap: _onItemTapped,
-      ),
+  child: Container(
+    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+    decoration: BoxDecoration(
+      color: AppColors.orange,
+      borderRadius: BorderRadius.circular(24),
+      boxShadow: [
+        BoxShadow(
+          color: Colors.black.withOpacity(0.1),
+          blurRadius: 12,
+          offset: const Offset(0, 4),
+        ),
+      ],
     ),
+    child: CurvedNavigationBar(
+      height: 60,
+      backgroundColor: Colors.transparent,
+      color: Colors.transparent, // so container's style is used
+      buttonBackgroundColor: Colors.white,
+      animationDuration: const Duration(milliseconds: 300),
+      animationCurve: Curves.easeOutQuint,
+      index: _currentIndex,
+      onTap: _onItemTapped,
+      items: getNavBarItems()
+          .map(
+            (item) => Padding(
+              padding: const EdgeInsets.symmetric(vertical: 6),
+              child: IconTheme(
+                data: IconThemeData(
+                  size: 28,
+                  color: _currentIndex == getNavBarItems().indexOf(item)
+                      ? AppColors.orange
+                      : Colors.white,
+                ),
+                child: item,
+              ),
+            ),
+          )
+          .toList(),
+    ),
+  ),
+),
   );
 }
 
