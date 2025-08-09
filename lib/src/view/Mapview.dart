@@ -63,6 +63,7 @@ class MapViewState extends State<MapView> {
   void onMapCreated(MaplibreMapController controller) async {
     _mapViewModel.mapController = controller;
     _mapViewModel.initializeLoads();
+    await _mapViewModel.loadAndBindMarkers();
     if (mounted) {
       _mapViewModel.initializeClickMarkers(context);
     }

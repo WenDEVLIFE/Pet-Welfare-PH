@@ -418,6 +418,11 @@ class MapViewModel extends ChangeNotifier {
       notifyListeners();
     }
   }
+  Future<void> loadAndBindMarkers() async {
+      symbolIdToLostPet.clear();
+      symbolIdToFoundPet.clear();
+      await addLostAndFoundPetPins();
+  }
   // fetch lost and found pets
   Future<void> fetchLostAndFoundPets() async {
     lostPetsStream = postRepository.getMissingPosts();
