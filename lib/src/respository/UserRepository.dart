@@ -6,12 +6,9 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pet_welfrare_ph/src/model/UserModel.dart';
-import 'package:pet_welfrare_ph/src/utils/Route.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:sn_progress_dialog/progress_dialog.dart';
-import 'package:firebase_admin/firebase_admin.dart' as admin;
 
 import '../utils/FirebaseIntialize.dart';
 
@@ -60,7 +57,7 @@ class UserRepositoryImpl implements UserRepository {
            .where('Email', isEqualTo: email)
            .get();
 
-       return nameResult.docs.isNotEmpty || emailResult.docs.isNotEmpty;;
+       return nameResult.docs.isNotEmpty || emailResult.docs.isNotEmpty;
      } else {
        return false;
      }
@@ -192,9 +189,6 @@ Future<(bool, String?)> checkPasswordComplexity(String password) async {
 
         // Success message
         ToastComponent().showMessage(Colors.green, 'User registered successfully!');
-        if(context.mounted) { // Good practice to check if the context is still valid
-          Navigator.pushReplacementNamed(context, AppRoutes.loginScreen);
-        }
       }
       else{
         ToastComponent().showMessage(Colors.green, 'Admin added successfully!');

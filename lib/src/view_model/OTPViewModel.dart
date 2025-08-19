@@ -6,6 +6,7 @@ import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pet_welfrare_ph/src/services/YahooServices.dart';
 
 import '../respository/UserRepository.dart';
+import '../utils/Route.dart';
 
 class OTPViewModel extends ChangeNotifier {
   int time = 60;
@@ -70,6 +71,7 @@ class OTPViewModel extends ChangeNotifier {
       if (enteredOTP == otp.toString()) {
         // Register user
         _repository.registerUser(userData, context, clearData);
+        Navigator.pushReplacementNamed(context, AppRoutes.loginScreen);
       } else {
         Fluttertoast.showToast(
           msg: 'Invalid OTP',
