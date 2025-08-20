@@ -91,7 +91,7 @@ flutter:
     - assets/word/terms.txt
     - assets/key/
     - assets/key/serviceaccount.json
-    - .env
+    - env
 
   fonts:
     - family: SmoochSans
