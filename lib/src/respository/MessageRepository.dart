@@ -15,10 +15,10 @@ import 'package:rxdart/rxdart.dart';
 
 abstract class MessageRepository {
   Stream<List<MessageModel>> getMessage(String receiverId);
-  Future<void>sendMessage(Map<String, dynamic> message);
+
+  Future<void> sendMessage(Map<String, dynamic> message);
+
   Stream<List<ChatModel>> getChat();
-
-
 }
 
 class MessageRepositoryImpl implements MessageRepository {
@@ -29,43 +29,69 @@ class MessageRepositoryImpl implements MessageRepository {
   @override
   Stream<List<MessageModel>> getMessage(String receiverId) {
     return _auth.authStateChanges().switchMap((user) {
-      // If the user is logged out, return an empty list of messages
-      if (user == null) {
-        return Stream.value([]);
-      }
+      if (user == null) return Stream.value([]);
 
-      // If a user is logged in, create the Firestore query with their UID
       final String currentUserId = user.uid;
 
-    return _firestore
-        .collection('Chatrooms')
-        .where('participants', arrayContains: currentUserId)
-        .snapshots()
-        .asyncMap((querySnapshot) async {
-      List<MessageModel> messages = [];
+      // Find the chatroom first
+      return _firestore
+          .collection('Chatrooms')
+          .where('participants', arrayContains: currentUserId)
+          .snapshots()
+          .switchMap((querySnapshot) {
+        DocumentSnapshot? targetChatroom;
 
-      for (var doc in querySnapshot.docs) {
-        // Check if this chatroom involves the receiver we want
-        List<dynamic> participants = doc['participants'];
-        if (participants.contains(receiverId)) {
-          // Found the right chatroom - get its messages
-          QuerySnapshot messagesSnapshot = await doc.reference
-              .collection('Messages')
-              .orderBy('timestamp', descending: false)
-              .get();
+        for (var doc in querySnapshot.docs) {
+          final participants = (doc['participants'] as List?) ?? const [];
+          if (participants.contains(receiverId)) {
+            targetChatroom = doc;
+            break;
+          }
+        }
 
-          for (var messageDoc in messagesSnapshot.docs) {
-            MessageModel message = await MessageModel.fromDocumentSnapshotWithUserData(messageDoc);
-            messages.add(message);
+        if (targetChatroom == null) return Stream.value([]);
+
+        // ✅ Persistent cache for this subscription
+        final List<MessageModel> cache = [];
+
+        final messagesRef = targetChatroom!.reference
+            .collection('Messages')
+            .orderBy('timestamp', descending: false);
+
+        return messagesRef.snapshots().map((snap) {
+          for (final change in snap.docChanges) {
+            final id = change.doc.id;
+
+            if (change.type == DocumentChangeType.added) {
+              final msg =
+                  MessageModel.fromDocumentSnapshotWithUserDataSync(change.doc);
+              final insertAt =
+                  (change.newIndex >= 0 && change.newIndex <= cache.length)
+                      ? change.newIndex
+                      : cache.length;
+              cache.insert(insertAt, msg);
+            } else if (change.type == DocumentChangeType.modified) {
+              // Replace existing & keep order per newIndex
+              final existingIdx = cache.indexWhere((m) => m.id == id);
+              final msg =
+                  MessageModel.fromDocumentSnapshotWithUserDataSync(change.doc);
+              if (existingIdx != -1) {
+                cache.removeAt(existingIdx);
+              }
+              final insertAt =
+                  (change.newIndex >= 0 && change.newIndex <= cache.length)
+                      ? change.newIndex
+                      : cache.length;
+              cache.insert(insertAt, msg);
+            } else if (change.type == DocumentChangeType.removed) {
+              cache.removeWhere((m) => m.id == id);
+            }
           }
 
-          // We found the chatroom we want, no need to check others
-          break;
-        }
-      }
-
-      return messages;
-    });
+          // Return an immutable view
+          return List<MessageModel>.unmodifiable(cache);
+        });
+      });
     });
   }
 
@@ -79,21 +105,35 @@ class MessageRepositoryImpl implements MessageRepository {
       String? downloadUrl;
       String? fileName;
 
+      // 🖼 Upload image if exists
       if (message['image'] != null) {
         File imageFile = File(message['image']!);
         if (await imageFile.exists()) {
           Uint8List messageBytes = await imageFile.readAsBytes();
 
           fileName = DateTime.now().millisecondsSinceEpoch.toString();
-          Reference storageRef = _storage.ref().child('ChatMessage/$senderID/$fileName.jpg');
+          Reference storageRef =
+              _storage.ref().child('ChatMessage/$senderID/$fileName.jpg');
           UploadTask uploadTask = storageRef.putData(messageBytes);
           TaskSnapshot taskSnapshot = await uploadTask;
           downloadUrl = await taskSnapshot.ref.getDownloadURL();
         }
       }
 
-      // Check if a chatroom document already exists between the sender and receiver
-      QuerySnapshot querySnapshot = await _firestore.collection('Chatrooms')
+      // 🔍 Get sender & receiver user data
+      DocumentSnapshot senderDoc =
+          await _firestore.collection('Users').doc(senderID).get();
+      DocumentSnapshot receiverDoc =
+          await _firestore.collection('Users').doc(message['receiverID']).get();
+
+      String senderName = senderDoc['Name'] ?? '';
+      String senderProfileImage = senderDoc['ProfileUrl'] ?? '';
+      String receiverName = receiverDoc['Name'] ?? '';
+      String receiverProfileImage = receiverDoc['ProfileUrl'] ?? '';
+
+      // 🔍 Check if chatroom already exists
+      QuerySnapshot querySnapshot = await _firestore
+          .collection('Chatrooms')
           .where('participants', arrayContains: senderID)
           .orderBy('createdAt', descending: true)
           .get();
@@ -107,39 +147,77 @@ class MessageRepositoryImpl implements MessageRepository {
       }
 
       if (chatroomData != null) {
-        // Insert the message into the existing chatroom's nested collection
-        await _firestore.collection('Chatrooms').doc(chatroomData.id)
-            .collection('Messages').add({
+        // ✅ Existing chatroom
+        DocumentReference chatroomRef =
+            _firestore.collection('Chatrooms').doc(chatroomData.id);
+
+        // Create new message
+        DocumentReference msgRef = chatroomRef.collection('Messages').doc();
+
+        await msgRef.set({
           'senderID': senderID,
           'receiverID': message['receiverID'],
+          'senderName': senderName,
+          'senderProfileImage': senderProfileImage,
+          'receiverName': receiverName,
+          'receiverProfileImage': receiverProfileImage,
           'Message': message['content'],
           if (downloadUrl != null) 'ImageName': '$fileName.jpg',
           if (downloadUrl != null) 'imageUrl': downloadUrl,
-          'timestamp': FieldValue.serverTimestamp()
+          'timestamp': FieldValue.serverTimestamp(),
+          'status': 'sending',
+        });
+
+        // Update status → sent
+        await msgRef.update({'status': 'sent'});
+
+        // ✅ Update lastMessage in Chatroom
+        await chatroomRef.update({
+          'lastMessage':
+              message['content'].isNotEmpty ? message['content'] : '[Image]',
+          'lastMessageTime': FieldValue.serverTimestamp(),
+          'lastMessageSender': senderID,
+          'lastMessageSenderName': senderName,
+          'lastMessageSenderProfile': senderProfileImage,
         });
       } else {
-        // Create a new chatroom document
-        DocumentReference newChatroomDoc = await _firestore.collection('Chatrooms').add({
+        // ✅ New chatroom
+        DocumentReference newChatroomDoc =
+            await _firestore.collection('Chatrooms').add({
           'participants': [senderID, message['receiverID']],
           'senderID': senderID,
           'receiverID': message['receiverID'],
-          'lastMessage': message['content'],
-          if (downloadUrl != null) 'ImageName': '$fileName.jpg',
-          if (downloadUrl != null) 'imageUrl': downloadUrl,
+          'senderName': senderName,
+          'senderProfileImage': senderProfileImage,
+          'receiverName': receiverName,
+          'receiverProfileImage': receiverProfileImage,
+          'lastMessage':
+              message['content'].isNotEmpty ? message['content'] : '[Image]',
+          'lastMessageTime': FieldValue.serverTimestamp(),
+          'lastMessageSender': senderID,
+          'lastMessageSenderName': senderName,
+          'lastMessageSenderProfile': senderProfileImage,
           'createdAt': FieldValue.serverTimestamp()
         });
-        // Insert the message into the new chatroom's nested collection
-        await newChatroomDoc.collection('Messages').add({
+
+        DocumentReference msgRef = newChatroomDoc.collection('Messages').doc();
+
+        await msgRef.set({
           'senderID': senderID,
           'receiverID': message['receiverID'],
+          'senderName': senderName,
+          'senderProfileImage': senderProfileImage,
+          'receiverName': receiverName,
+          'receiverProfileImage': receiverProfileImage,
           'Message': message['content'],
           if (downloadUrl != null) 'ImageName': '$fileName.jpg',
           if (downloadUrl != null) 'imageUrl': downloadUrl,
-          'timestamp': FieldValue.serverTimestamp()
+          'timestamp': FieldValue.serverTimestamp(),
+          'status': 'sending',
         });
-      }
 
-      ToastComponent().showMessage(AppColors.orange, 'Message sent successfully');
+        await msgRef.update({'status': 'sent'});
+      }
     } catch (e) {
       throw Exception('Error sending message: $e');
     }
@@ -156,41 +234,40 @@ class MessageRepositoryImpl implements MessageRepository {
 
       // If a user is logged in, create the Firestore query with their UID
       final String currentUserId = user.uid;
-      
-    return _firestore.collection('Chatrooms')
-        .where('participants', arrayContains: currentUserId)
-        .snapshots()
-        .asyncMap((querySnapshot) async {
-      List<ChatModel> chatList = [];
-      for (var doc in querySnapshot.docs) {
-        var chatData = doc.data();
-        var senderID = chatData['senderID'];
-        var receiverID = chatData['receiverID'];
 
-        // Determine the other user's ID (the one who isn't the current user)
-        String otherUserId = (currentUserId == senderID) ? receiverID : senderID;
+      return _firestore
+          .collection('Chatrooms')
+          .where('participants', arrayContains: currentUserId)
+          .snapshots()
+          .asyncMap((querySnapshot) async {
+        List<ChatModel> chatList = [];
+        for (var doc in querySnapshot.docs) {
+          var chatData = doc.data();
+          var senderID = chatData['senderID'];
+          var receiverID = chatData['receiverID'];
 
-        // Get the other user's document
-        var otherUserDoc = await _firestore.collection('Users').doc(otherUserId).get();
+          // Determine the other user's ID (the one who isn't the current user)
+          String otherUserId =
+              (currentUserId == senderID) ? receiverID : senderID;
 
-        // Get the other user's name and profile picture
-        var otherUserName = otherUserDoc['Name'] ?? 'Unknown';
-        var otherUserProfile = otherUserDoc['ProfileUrl'] ?? '';
+          // Get the other user's document
+          var otherUserDoc =
+              await _firestore.collection('Users').doc(otherUserId).get();
 
-        chatList.add(ChatModel(
-            id: doc.id,
-            name: otherUserName,
-            profilepath: otherUserProfile,
-            lastMessage: chatData['lastMessage'] ?? '',
-            senderID: senderID,
-            receiverID: receiverID
-        ));
-      }
-      return chatList;
+          // Get the other user's name and profile picture
+          var otherUserName = otherUserDoc['Name'] ?? 'Unknown';
+          var otherUserProfile = otherUserDoc['ProfileUrl'] ?? '';
+
+          chatList.add(ChatModel(
+              id: doc.id,
+              name: otherUserName,
+              profilepath: otherUserProfile,
+              lastMessage: chatData['lastMessage'] ?? '',
+              senderID: senderID,
+              receiverID: receiverID));
+        }
+        return chatList;
       });
     });
   }
-
-
 }
-

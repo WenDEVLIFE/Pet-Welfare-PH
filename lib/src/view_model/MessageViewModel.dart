@@ -1,3 +1,5 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
@@ -16,18 +18,21 @@ class MessageViewModel extends ChangeNotifier {
   final TextEditingController searchMessageController = TextEditingController();
 
   String ImageReceiver = '';
-  String selectedImagePath= '';
+  String selectedImagePath = '';
   String receiverName = '';
+  String storedMessage = '';
   String uid = '';
 
   final MessageRepository messageRepository = MessageRepositoryImpl();
   final Loadprofilerespository _loadprofilerespository = LoadProfileImpl();
   final SessionManager sessionManager = SessionManager();
-  List<MessageModel> _messages = [];
+  List<MessageModel> _latestStreamMessages = [];
+
+  List<MessageModel> get messages => _latestStreamMessages;
   List<ChatModel> _chats = [];
   List<ChatModel> filteredChats = [];
 
-  // Stream to listen for messages
+  // Firestore message stream
   Stream<List<MessageModel>>? messagesStream;
 
   Stream<List<ChatModel>> get chatsStream => messageRepository.getChat();
@@ -36,16 +41,17 @@ class MessageViewModel extends ChangeNotifier {
   Future<void> loadReceiver(String uid) async {
     try {
       this.uid = uid;
-      
 
-messagesStream = messageRepository.getMessage(uid);
+      messagesStream = messageRepository.getMessage(uid);
+      listenToMessages(); // start listening
 
       var profileData = await _loadprofilerespository.loadProfile2(uid).first;
       if (profileData != null) {
         receiverName = profileData['name'] ?? "";
         ImageReceiver = profileData['profilepath'] ?? "";
 
-        ToastComponent().showMessage(Colors.green, 'Loaded Profile: $receiverName');
+        ToastComponent()
+            .showMessage(Colors.green, 'Loaded Profile: $receiverName');
         notifyListeners();
       } else {
         ToastComponent().showMessage(Colors.red, 'Profile data is null');
@@ -55,27 +61,41 @@ messagesStream = messageRepository.getMessage(uid);
     }
   }
 
+  // Firestore messages realtime
   void listenToMessages() {
-  messagesStream?.listen((messages) {
-    _messages = messages;
-    notifyListeners();
-  });
-}
+    messagesStream?.listen((messages) {
+      _latestStreamMessages = messages;
+      notifyListeners();
+    });
+  }
 
   // Send a message to the user
   Future<void> sendMessage(String uid) async {
-    if (messageController.text.isEmpty) {
+    if (messageController.text.isEmpty && selectedImagePath.isEmpty) {
       ToastComponent().showMessage(Colors.red, 'Message cannot be empty');
       return;
-    } else {
-      Map<String, dynamic> message = {
-        'receiverID': uid,
-        'content': messageController.text,
-        'image': selectedImagePath,
-      };
-      await messageRepository.sendMessage(message);
+    }
+
+    storedMessage = messageController.text;
+
+    try {
+
       messageController.clear();
       removeSelectedImage();
+
+      // Push message to Firestore
+      await messageRepository.sendMessage({
+        'receiverID': uid,
+        'content': storedMessage,
+        'image': selectedImagePath,
+        'status': 'sent',
+        'timestamp': FieldValue.serverTimestamp(),
+      });
+
+      // After sending, clear input
+      storedMessage = '';
+    } catch (e) {
+      ToastComponent().showMessage(Colors.red, 'Error sending: $e');
     }
   }
 
@@ -124,20 +144,19 @@ messagesStream = messageRepository.getMessage(uid);
     selectedImagePath = '';
     notifyListeners();
   }
-  
+
   // Clear messages
   void clearChatData() {
-  _messages.clear();
-  _chats.clear();
-  filteredChats.clear();
-  ImageReceiver = '';
-  selectedImagePath = '';
-  receiverName = '';
-  uid = '';
-  messagesStream = null;
-  messageController.clear();
-  searchMessageController.clear();
-  notifyListeners();
-}
-
+    messages.clear();
+    _chats.clear();
+    filteredChats.clear();
+    ImageReceiver = '';
+    selectedImagePath = '';
+    receiverName = '';
+    uid = '';
+    messagesStream = null;
+    messageController.clear();
+    searchMessageController.clear();
+    notifyListeners();
+  }
 }
