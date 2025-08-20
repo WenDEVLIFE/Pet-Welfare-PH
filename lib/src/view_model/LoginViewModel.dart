@@ -41,13 +41,6 @@ class LoginViewModel extends ChangeNotifier {
 
     print(userData);
     await sessionManager.saveUserInfo(userData!);
-  
-
-    Fluttertoast.showToast(
-      msg: userData.toString(),
-      toastLength: Toast.LENGTH_LONG,
-      gravity: ToastGravity.BOTTOM,
-    );
     
     final sessionData = await sessionManager.getUserInfo();
 
