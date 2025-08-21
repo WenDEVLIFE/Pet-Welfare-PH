@@ -11,6 +11,7 @@ import '../utils/SessionManager.dart';
 import '../view_model/EstablishmentViewModel.dart';
 import 'package:provider/provider.dart';
 
+// This is where the ApprovedShelterClinicView is defined, which displays all approved shelters and clinics.
 class ApprovedShelterClinicView extends StatefulWidget{
   const ApprovedShelterClinicView({Key? key}) : super(key: key);
 

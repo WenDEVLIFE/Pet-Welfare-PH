@@ -1,6 +1,3 @@
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:pet_welfrare_ph/src/widgets/CustomButton.dart';
@@ -8,21 +5,19 @@ import 'package:pet_welfrare_ph/src/widgets/CustomDropdown.dart';
 import 'package:pet_welfrare_ph/src/widgets/CustomText.dart';
 import 'package:pet_welfrare_ph/src/widgets/MapSearchTextField.dart';
 import 'package:provider/provider.dart';
-import 'dart:io';
 import '../../model/BarangayModel.dart';
 import '../../model/BreedModel.dart';
 import '../../model/CityModel.dart';
 import '../../model/ProvinceModel.dart';
 import '../../model/RegionModel.dart';
-import '../../services/MapTilerKey.dart';
 import '../../utils/AppColors.dart';
-import '../../utils/ToastComponent.dart';
 import '../../view_model/CreatePostViewModel.dart';
 import '../../widgets/CustomMapWidget.dart';
 import '../../widgets/CustomTextField.dart';
 import '../../widgets/ImageUploadWidget.dart';
 import '../../widgets/TagWidget.dart';
 
+// This is where the CreatePostView is defined. It allows users to create community posts with various categories and details.
 class CreatePostView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {

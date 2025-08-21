@@ -6,6 +6,7 @@ import 'package:provider/provider.dart';
 import '../utils/AppColors.dart';
 import '../widgets/CustomPasswordField.dart';
 
+// This is where the Change Password View is defined. It allows users to change their password.
 class ChangePasswordView extends StatefulWidget {
   const ChangePasswordView({Key? key}) : super(key: key);
 

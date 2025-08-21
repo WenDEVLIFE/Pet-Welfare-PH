@@ -5,8 +5,9 @@ import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 import 'package:pet_welfrare_ph/src/view_model/UserDataViewModel.dart';
 import 'package:provider/provider.dart';
 
+// This is where the ChangeIDView is defined. It allows users to change their ID by selecting an ID type and uploading images of the front and back of the ID.
 class ChangeIDView extends StatefulWidget {
-  const ChangeIDView({Key? key}) : super(key: key);
+  const ChangeIDView({super.key});
 
   @override
   IDState createState() => IDState();

@@ -15,8 +15,9 @@ import 'package:provider/provider.dart';
 import '../utils/SessionManager.dart';
 import '../widgets/MapSearchTextField.dart';
 
+// This is where the MapView is defined. It displays a map with markers and allows users to search for locations.
 class MapView extends StatefulWidget {
-  const MapView({Key? key}) : super(key: key);
+  const MapView({super.key});
 
   @override
   MapViewState createState() => MapViewState();
@@ -31,8 +32,14 @@ class MapViewState extends State<MapView> {
   @override
   void initState() {
     super.initState();
+
+    // Initialize the MapViewModel and set up the search controller
     _mapViewModel = Provider.of<MapViewModel>(context, listen: false);
+
+    // Set initial latitude and longitude
     _mapFuture = multipliAsync();
+
+    // load the search controller and set up a listener
     WidgetsBinding.instance.addPostFrameCallback((_) {
       _mapViewModel.searchController.addListener(() {
         _mapViewModel.setSearchText();
@@ -44,12 +51,15 @@ class MapViewState extends State<MapView> {
     });
   }
 
+  // load the role
   Future<void> multipliAsync() async {
     await Future.wait([
+      _loadMap(),
       LoadRole(),
     ]);
   }
 
+  // Load the user's role from session manager
   Future<void> LoadRole() async {
     final user = await sessionManager.getUserInfo();
     setState(() {
@@ -58,7 +68,7 @@ class MapViewState extends State<MapView> {
   }
 
 
-
+// Callback when the map is created
   void onMapCreated(MapLibreMapController controller) async {
     _mapViewModel.mapController = controller;
     await _mapViewModel.loadAndBindMarkers(); // Load markers
@@ -69,6 +79,7 @@ class MapViewState extends State<MapView> {
     }
   }
 
+  // Rebuild the map when dependencies change
   @override
   void didChangeDependencies() {
     super.didChangeDependencies();
@@ -78,6 +89,12 @@ class MapViewState extends State<MapView> {
     }
   }
 
+  Future<void> _loadMap() async {
+    await Future.delayed(const Duration(seconds: 3));
+  }
+
+
+  // Dispose of the search controller and reset the map view model
   @override
   void dispose() {
     _mapViewModel.searchController.removeListener(() {

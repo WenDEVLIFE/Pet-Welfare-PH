@@ -16,6 +16,7 @@ import '../../utils/ToastComponent.dart';
 import '../../view_model/EstablishmentViewModel.dart';
 import '../../widgets/CustomTextField.dart';
 
+// This is where the EditEstablishmentScreen is defined. It allows users to edit their business details such as name, description, address, phone number, email, and location on a map.
 class EditEstablishmentScreen extends StatefulWidget {
   const EditEstablishmentScreen({Key? key}) : super(key: key);
 

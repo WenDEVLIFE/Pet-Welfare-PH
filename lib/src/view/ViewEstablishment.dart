@@ -11,6 +11,7 @@ import '../utils/ImageUtils.dart';
 import '../utils/ToastComponent.dart';
 import '../view_model/EstablishmentViewModel.dart';
 
+// This is where the ViewEstablishmentView is defined. Which is used to view the details of an establishment.
 class ViewEstablishmentView extends StatefulWidget {
   const ViewEstablishmentView({super.key});
 

@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 import 'package:video_player/video_player.dart';
 import 'package:chewie/chewie.dart';
 
+// This is where the splash view is defined. It displays a video background with a welcome message and buttons for login and registration.
 class SplashView2 extends StatefulWidget {
   @override
   SplashViewState createState() => SplashViewState();
@@ -55,7 +56,7 @@ class SplashViewState extends State<SplashView2> {
               controller: chewieController!,
             ),
           ),
-          Container(color: AppColors.orange.withOpacity(0.8)),
+          Container(color: AppColors.orange.withValues(alpha: 150)),
           Center(
             child: Padding(
               padding: EdgeInsets.symmetric(horizontal: screenWidth * 0.04),

@@ -16,6 +16,7 @@ import '../widgets/CustomDropdown.dart';
 import '../widgets/CustomMapWidget.dart';
 import '../widgets/MapSearchTextField.dart';
 
+// This is where the Add Shelter Clinic page is defined. Where the user can add a new shelter or clinic.
 class AddShelterClinic extends StatefulWidget {
   const AddShelterClinic({Key? key}) : super(key: key);
 

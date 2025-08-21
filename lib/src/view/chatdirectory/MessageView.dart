@@ -1,19 +1,16 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:pet_welfrare_ph/src/utils/Route.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:pet_welfrare_ph/src/view_model/MessageViewModel.dart';
-import 'package:pet_welfrare_ph/src/widgets/CustomTextField.dart';
 import 'package:provider/provider.dart';
-import 'package:sn_progress_dialog/progress_dialog.dart';
 import '../../utils/AppColors.dart';
-import 'package:pet_welfrare_ph/src/model/MessageModel.dart';
 
-import 'dart:io';
 
+
+// This is where the MessageView is defined. It displays a chat interface for messaging between users.
 class MessageView extends StatefulWidget {
-  const MessageView({Key? key}) : super(key: key);
+  const MessageView({super.key});
 
   @override
   MessageState createState() => MessageState();
@@ -22,10 +19,7 @@ class MessageView extends StatefulWidget {
 class MessageState extends State<MessageView> {
   late Map<String, dynamic> listdata;
   late String userid;
-  int _prevMessageCount = 0;
-  int _unreadCount = 0;
   final FocusNode _focusNode = FocusNode();
-  bool _isAtBottom = true;
   int? expandedIndex;
 
   final ScrollController _scrollController = ScrollController();
@@ -215,7 +209,7 @@ class MessageState extends State<MessageView> {
                                     BoxConstraints(maxWidth: screenWidth * 0.7),
                                 decoration: BoxDecoration(
                                   color: isMe
-                                      ? AppColors.orange.withOpacity(0.9)
+                                      ? AppColors.orange.withValues(alpha: 0.9)
                                       : Colors.grey[200],
                                   borderRadius: BorderRadius.only(
                                     topLeft: const Radius.circular(16),

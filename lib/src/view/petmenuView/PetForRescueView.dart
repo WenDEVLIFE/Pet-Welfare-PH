@@ -10,8 +10,9 @@ import '../../modal/SearchPetModal.dart';
 import '../../utils/AppColors.dart';
 import '../../widgets/SearchTextField.dart';
 
+// This is where the PetForRescueView is defined. It displays a list of pets available for rescue and allows users to search for them.
 class PetForRescueView extends StatefulWidget {
-  const PetForRescueView({Key? key}) : super(key: key);
+  const PetForRescueView({super.key});
 
   @override
   PetForRescueViewState createState() => PetForRescueViewState();

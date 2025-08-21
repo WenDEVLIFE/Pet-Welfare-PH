@@ -3,6 +3,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 import 'package:pet_welfrare_ph/src/widgets/CustomText.dart';
 
+// This is view image page where the user can view images in a full-screen mode.
 class ViewImage extends StatefulWidget {
   @override
   _ViewImageState createState() => _ViewImageState();

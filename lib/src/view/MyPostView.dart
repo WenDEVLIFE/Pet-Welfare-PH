@@ -10,8 +10,8 @@ import '../widgets/PetAdoptionCard.dart';
 import '../widgets/PetCareInsightCard.dart';
 import '../widgets/PetForRescueCard.dart';
 import '../utils/AppColors.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
+// This is where the ProfileView is defined, which displays the user's posts.
 class ProfileView extends StatefulWidget {
   const ProfileView({Key? key}) : super(key: key);
 

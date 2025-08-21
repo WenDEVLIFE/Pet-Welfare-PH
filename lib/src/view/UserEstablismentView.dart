@@ -8,6 +8,7 @@ import '../widgets/SearchTextField.dart';
 import '../utils/AppColors.dart';
 import '../utils/Route.dart';
 
+// This is where the user establishment view page is defined. where the user can view, add, edit, and delete establishments.
 class UserEstablismentView extends StatefulWidget {
   const UserEstablismentView({Key? key}) : super(key: key);
 

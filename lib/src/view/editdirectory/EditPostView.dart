@@ -1,4 +1,3 @@
-import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
@@ -24,10 +23,12 @@ import '../../widgets/CustomMapWidget.dart';
 import '../../widgets/CustomTextField.dart';
 import '../../widgets/EditImageUploadWidget.dart';
 
+
+// This is where the EditPostView is defined. It allows users to edit an existing post with various fields and options.
 class EditPostView extends StatefulWidget{
   late String postId;
   late String category;
-  EditPostView({Key? key, required this.postId , required this.category}) : super(key: key);
+  EditPostView({super.key, required this.postId , required this.category});
 
   @override
   State<EditPostView> createState() => _EditPostViewState();

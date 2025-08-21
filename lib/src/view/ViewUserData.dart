@@ -1,7 +1,5 @@
-import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
@@ -9,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../DialogView/ChangeProfileDialog.dart';
 import '../view_model/UserDataViewModel.dart';
 
+// This is where the user data view page is defined. where the admin can view the user data
 class ViewUserDataView extends StatefulWidget {
   const ViewUserDataView({Key? key}) : super(key: key);
 
@@ -230,7 +229,7 @@ class _ViewUserDataState extends State<ViewUserDataView> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10.0),
                           child: Image.network(
-                            viewModel.idfrontpath ?? '',
+                            viewModel.idfrontpath,
                             width: screenWidth * 0.8,
                             height: screenHeight * 0.4,
                             fit: BoxFit.cover,
@@ -283,7 +282,7 @@ class _ViewUserDataState extends State<ViewUserDataView> {
                         child: ClipRRect(
                           borderRadius: BorderRadius.circular(10.0),
                           child: Image.network(
-                            viewModel.idbackpath ?? '',
+                            viewModel.idbackpath,
                             width: screenWidth * 0.8,
                             height: screenHeight * 0.4,
                             fit: BoxFit.cover,

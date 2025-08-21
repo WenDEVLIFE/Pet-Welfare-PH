@@ -2,10 +2,10 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pet_welfrare_ph/src/widgets/CustomTextField.dart';
 import 'package:provider/provider.dart';
-import '../utils/AppColors.dart';
 import '../view_model/LoginViewModel.dart';
 import '../widgets/CustomPasswordField.dart';
 
+//// This is where the LoginView is defined. It allows users to log in to the application.
 class Loginview extends StatefulWidget {
   const Loginview({Key? key}) : super(key: key);
 

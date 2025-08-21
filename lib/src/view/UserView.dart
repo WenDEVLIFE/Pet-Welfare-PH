@@ -11,7 +11,6 @@ import 'package:provider/provider.dart';
 
 import '../DialogView/BanDialogInformation.dart';
 import '../widgets/SearchTextField.dart';
-import 'ViewUserScreen.dart';
 
 class UserView extends StatefulWidget {
   const UserView({Key? key}) : super(key: key);
@@ -20,6 +19,7 @@ class UserView extends StatefulWidget {
   UserViewState createState() => UserViewState();
 }
 
+//  This is where the user view page is defined. where the admin can view all the users and their details.
 class UserViewState extends State<UserView> {
   final TextEditingController _searchController = TextEditingController();
   final List<String> _chipLabels = ['Verified User', 'Unverified User', 'Banned User', 'Admin & Sub Admin'];
@@ -57,7 +57,7 @@ class UserViewState extends State<UserView> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+    //double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(

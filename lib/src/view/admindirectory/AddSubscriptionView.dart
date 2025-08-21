@@ -1,14 +1,14 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:pet_welfrare_ph/src/view_model/AddAdminViewModel.dart';
 import 'package:pet_welfrare_ph/src/view_model/SubcriptionViewModel.dart';
 import 'package:provider/provider.dart';
 
 import '../../utils/AppColors.dart';
 import '../../widgets/CustomTextField.dart';
 
+// This is where the AddSubscriptionView is defined. It allows the admin to add a new subscription with its details.
 class AddSubscriptionView extends StatefulWidget {
-  const AddSubscriptionView({Key? key}) : super(key: key);
+  const AddSubscriptionView({super.key});
 
   @override
   AddAdminViewState createState() => AddAdminViewState();

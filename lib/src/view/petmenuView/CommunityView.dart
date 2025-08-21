@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -18,6 +17,7 @@ class CommunityView extends StatefulWidget {
   CommunityState createState() => CommunityState();
 }
 
+// This is where the CommunityView is defined, which displays community announcements and allows users to create posts if they are admins.
 class CommunityState extends State<CommunityView> {
   late PostViewModel postViewModel;
 

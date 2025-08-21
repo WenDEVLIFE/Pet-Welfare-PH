@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
+// THis is where the custom page view widget is defined. used to disable swipe gestures in a PageView.
 class CustomPageViewWidget extends StatelessWidget {
   final PageController controller;
   final ValueChanged<int> onPageChanged;

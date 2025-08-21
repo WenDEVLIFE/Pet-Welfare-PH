@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../model/NotificationModel.dart';
 import '../utils/AppColors.dart';
 
+// THIS IS WHERE THE NOTIFICATION VIEW IS DEFINED. which is used to display the notifications to the user.
 class NotificationView extends StatefulWidget {
   const NotificationView({Key? key}) : super(key: key);
 
@@ -19,7 +20,7 @@ class NotificationViewState extends State<NotificationView> {
   Widget build(BuildContext context) {
     final NotificationViewModel viewModel = Provider.of<NotificationViewModel>(context);
     final screenHeight = MediaQuery.of(context).size.height;
-    final screenWidth = MediaQuery.of(context).size.width;
+    //final screenWidth = MediaQuery.of(context).size.width;
     return Scaffold(
       appBar: AppBar(
         title: const Text(

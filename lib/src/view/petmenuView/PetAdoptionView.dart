@@ -10,8 +10,9 @@ import '../../Animation/CardShimmerWidget.dart';
 import '../../utils/AppColors.dart';
 import '../../widgets/SearchTextField.dart';
 
+// This is where the PetAdoptionView is defined. It displays a list of pet adoption posts and allows users to search for them.
 class PetAdoptionView extends StatefulWidget {
-  const PetAdoptionView({Key? key}) : super(key: key);
+  const PetAdoptionView({super.key});
 
   @override
   PetAdoptionViewState createState() => PetAdoptionViewState();

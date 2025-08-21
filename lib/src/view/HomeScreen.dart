@@ -11,6 +11,7 @@ import 'package:pet_welfrare_ph/src/view/petmenuView/PetForRescueView.dart';
 import 'package:pet_welfrare_ph/src/view/petmenuView/PetCareView.dart';
 import 'package:pet_welfrare_ph/src/view/petmenuView/PetAppreciationView.dart';
 
+// This is where the HomeScreen is defined. It contains a list of chips for different pet-related topics and a PageView to display the corresponding content.
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
 

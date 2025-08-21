@@ -8,6 +8,7 @@ import '../utils/Route.dart';
 import '../utils/SessionManager.dart';
 import 'package:provider/provider.dart';
 
+// This is where the menu list view is defined. where the user can see the list of menu items and navigate to different views.
 class MenuListWidget extends StatelessWidget {
   final List<MenuItem> menuItems = [
     MenuItem(icon: Icons.perm_device_information, title: 'User Information'),

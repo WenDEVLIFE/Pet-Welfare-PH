@@ -4,8 +4,10 @@ import 'package:flutter/services.dart';
 
 import '../utils/AppColors.dart';
 
+// This is where the privacy policy view is defined.
+// It loads the privacy policy text from an asset file and displays it in a scrollable view.
 class Privacyview extends StatefulWidget {
-  const Privacyview({Key? key}) : super(key: key);
+  const Privacyview({super.key});
 
   @override
   PrivacyState createState() => PrivacyState();

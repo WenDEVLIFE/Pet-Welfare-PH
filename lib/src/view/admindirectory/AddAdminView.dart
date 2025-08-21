@@ -7,8 +7,10 @@ import 'package:provider/provider.dart';
 
 import '../../utils/AppColors.dart';
 
+
+// This is where the AddAdminView is defined. It allows the admin to add a new user with their details.
 class AddAdminView extends StatefulWidget {
-  const AddAdminView({Key? key}) : super(key: key);
+  const AddAdminView({super.key});
 
   @override
   AddAdminViewState createState() => AddAdminViewState();

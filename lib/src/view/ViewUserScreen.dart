@@ -7,6 +7,7 @@ import 'package:provider/provider.dart';
 import '../utils/AppColors.dart';
 import '../DialogView/BanDialogForm.dart';
 
+// This is hwhere the user data view page is defined.
 class ViewUserDataPage extends StatefulWidget {
   const ViewUserDataPage({Key? key}) : super(key: key);
 

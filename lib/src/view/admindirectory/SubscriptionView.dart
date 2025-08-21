@@ -9,8 +9,9 @@ import 'package:provider/provider.dart';
 import '../../view_model/SubcriptionViewModel.dart';
 import '../../widgets/SearchTextField.dart';
 
+// This is where the SubscriptionView is defined. It displays a list of subscriptions and allows users to manage them.
 class SubscriptionView extends StatefulWidget {
-  const SubscriptionView({Key? key}) : super(key: key);
+  const SubscriptionView({super.key});
 
   @override
   SubscriptionState createState() => SubscriptionState();
@@ -27,7 +28,7 @@ class SubscriptionState extends State<SubscriptionView> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+    //double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(

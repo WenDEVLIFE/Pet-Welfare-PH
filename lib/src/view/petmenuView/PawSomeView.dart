@@ -1,5 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
@@ -11,7 +9,7 @@ import '../../widgets/PostCard.dart';
 import '../../widgets/SearchTextField.dart';
 
 class PawSomeView extends StatefulWidget {
-  const PawSomeView({Key? key}) : super(key: key);
+  const PawSomeView({super.key});
 
   @override
   PawSomeState createState() => PawSomeState();

@@ -7,7 +7,7 @@ import '../../utils/AppColors.dart';
 import '../../utils/Route.dart';
 import 'package:provider/provider.dart';
 
-// Dashboard View
+// Dashboard View where the admin can see an overview of the application, including total users, posts, and other statistics.
 class DashboardView extends StatefulWidget {
   const DashboardView({Key? key}) : super(key: key);
 
@@ -27,10 +27,10 @@ class DashboardViewState extends State<DashboardView> {
 
   @override
   Widget build(BuildContext context) {
-    final dashboardViewModel = Provider.of<DashboardViewModel>(context);
+    //final dashboardViewModel = Provider.of<DashboardViewModel>(context);
 
-    double screenWidth = MediaQuery.of(context).size.width;
-    double screenHeight = MediaQuery.of(context).size.height;
+    //double screenWidth = MediaQuery.of(context).size.width;
+    //double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
       drawer: NavigationDrawer(

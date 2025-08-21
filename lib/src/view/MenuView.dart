@@ -1,18 +1,16 @@
-import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/view_model/MenuViewModel.dart';
 import 'package:pet_welfrare_ph/src/widgets/CustomButton.dart';
-import 'package:pet_welfrare_ph/src/widgets/TermsAndConditionDialogWidget.dart';
 import '../utils/Route.dart';
 import '../widgets/AlertMenuDialog.dart';
 import 'MenuListView.dart';
 import '../utils/AppColors.dart';
-import '../utils/ImageUtils.dart';
 import 'package:provider/provider.dart';
 
+// This is where the menu view is defined. It displays the user's profile and a list of menu options.
 class MenuView extends StatefulWidget {
   const MenuView({Key? key}) : super(key: key);
 

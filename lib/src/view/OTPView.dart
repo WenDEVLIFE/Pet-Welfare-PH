@@ -5,8 +5,9 @@ import 'package:provider/provider.dart';
 import '../utils/AppColors.dart';
 import '../widgets/OTPFieldWidget.dart';
 
+// This is where the OTPView is defined. where the user can enter the OTP code sent to their email.
 class OTPView extends StatefulWidget {
-  const OTPView({Key? key}) : super(key: key);
+  const OTPView({super.key});
 
   @override
   RegisterState createState() => RegisterState();

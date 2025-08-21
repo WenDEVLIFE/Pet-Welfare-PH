@@ -5,6 +5,7 @@ import 'package:provider/provider.dart';
 
 import '../utils/AppColors.dart';
 
+// This is where the SelectView is defined. It allows users to select their user classification for registration.
 class SelectView extends StatefulWidget {
   const SelectView({Key? key}) : super(key: key);
 

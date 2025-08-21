@@ -4,6 +4,8 @@ import 'package:flutter/services.dart';
 
 import '../utils/AppColors.dart';
 
+// This is where the terms and conditions view is defined.
+// Where the terms and conditions text is loaded from an asset file and displayed in a scrollable view.
 class TermsAndConditionView extends StatefulWidget {
   const TermsAndConditionView({Key? key}) : super(key: key);
 

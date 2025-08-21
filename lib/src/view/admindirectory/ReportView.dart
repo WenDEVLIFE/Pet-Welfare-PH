@@ -2,13 +2,12 @@ import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 import '../../widgets/DrawerHeaderWidget.dart';
 import '../../widgets/LogoutDialog.dart';
-import '../../model/SubcriptionModel.dart';
 import '../../utils/Route.dart';
 import '../../utils/SessionManager.dart';
 import 'package:provider/provider.dart';
 import '../../view_model/SubcriptionViewModel.dart';
-import '../../widgets/SearchTextField.dart';
 
+// This is where the ReportView is defined. It displays a list of reports and allows users to navigate through different sections of the app.
 class ReportView extends StatefulWidget {
   const ReportView({Key? key}) : super(key: key);
 
@@ -25,7 +24,7 @@ class _ReportState extends State<ReportView> {
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+    //double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(

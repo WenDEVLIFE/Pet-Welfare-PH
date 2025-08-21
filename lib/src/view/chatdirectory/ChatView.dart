@@ -9,6 +9,7 @@ import 'package:pet_welfrare_ph/src/model/ChatModel.dart';
 import '../../Animation/MessageShimmer.dart';
 import '../../utils/Route.dart';
 
+// This is where the ChatView is defined. It displays a list of chat rooms and allows users to search for messages.
 class ChatView extends StatefulWidget { 
   const ChatView({super.key});
 

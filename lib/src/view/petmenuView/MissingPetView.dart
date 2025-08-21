@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -11,6 +10,7 @@ import '../../modal/SearchPetModal.dart';
 import '../../utils/AppColors.dart';
 import '../../widgets/SearchTextField.dart';
 
+// This is where the MissingPetView is defined. It displays a list of missing pet posts and allows users to search for them.
 class MissingPetView extends StatefulWidget {
   const MissingPetView({Key? key}) : super(key: key);
 

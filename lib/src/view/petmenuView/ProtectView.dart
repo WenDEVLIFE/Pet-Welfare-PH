@@ -1,7 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
-import 'package:pet_welfrare_ph/src/utils/Route.dart';
 import 'package:pet_welfrare_ph/src/widgets/ProtectPetCard.dart';
 import 'package:provider/provider.dart';
 import 'package:pet_welfrare_ph/src/view_model/PostViewModel.dart';
@@ -9,8 +8,9 @@ import '../../utils/AppColors.dart';
 import '../../widgets/SearchTextField.dart';
 import '../../Animation/CardShimmerWidget.dart';
 
+// This is where the ProtectPetView is defined. It displays a list of posts related to protecting pets and allows users to search for them.
 class ProtectPetView extends StatefulWidget {
-  const ProtectPetView({Key? key}) : super(key: key);
+  const ProtectPetView({super.key});
 
   @override
   ProtectPetState createState() => ProtectPetState();

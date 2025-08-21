@@ -5,6 +5,7 @@ import '../utils/AppColors.dart';
 import '../utils/ImageUtils.dart';
 import '../view_model/LoadingViewModel.dart';
 
+// This is where the LoadingView is defined, which shows a loading screen with a logo and a progress indicator.
 class LoadingView extends StatefulWidget {
   @override
   LoadingState createState() => LoadingState();

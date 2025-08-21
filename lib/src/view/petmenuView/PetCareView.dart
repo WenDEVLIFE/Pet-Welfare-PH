@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -11,8 +10,9 @@ import '../../modal/SearchPetModal.dart';
 import '../../utils/AppColors.dart';
 import '../../widgets/SearchTextField.dart';
 
+// This is where the VetAndTravelView is defined. It displays a list of pet care insights and allows users to search for them.
 class VetAndTravelView extends StatefulWidget {
-  const VetAndTravelView({Key? key}) : super(key: key);
+  const VetAndTravelView({super.key});
 
   @override
   VetAndTravelState createState() => VetAndTravelState();

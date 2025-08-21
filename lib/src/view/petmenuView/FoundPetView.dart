@@ -1,4 +1,3 @@
-import 'package:cached_network_image/cached_network_image.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
@@ -18,6 +17,7 @@ class FoundPetView extends StatefulWidget {
   FoundPetState createState() => FoundPetState();
 }
 
+// This is where the FoundPetView is defined, which displays found pet posts.
 class FoundPetState extends State<FoundPetView> {
   late PostViewModel postViewModel;
   @override

@@ -9,8 +9,9 @@ import '../../Animation/CardShimmerWidget.dart';
 import '../../utils/AppColors.dart';
 import '../../widgets/SearchTextField.dart';
 
+// This is where the PetAppreciateView is defined. It displays a list of pet appreciation posts and allows users to search for them.
 class PetAppreciateView extends StatefulWidget {
-  const PetAppreciateView({Key? key}) : super(key: key);
+  const PetAppreciateView({super.key});
 
   @override
   _PetAppreciateViewState createState() => _PetAppreciateViewState();
