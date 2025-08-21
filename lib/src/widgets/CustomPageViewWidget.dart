@@ -1,4 +1,3 @@
-
 import 'package:flutter/cupertino.dart';
 
 class CustomPageViewWidget extends StatelessWidget {
@@ -6,7 +5,8 @@ class CustomPageViewWidget extends StatelessWidget {
   final ValueChanged<int> onPageChanged;
   final List<Widget> children;
 
-  const CustomPageViewWidget({Key? key,
+  const CustomPageViewWidget({
+    Key? key,
     required this.controller,
     required this.onPageChanged,
     required this.children,
@@ -14,14 +14,11 @@ class CustomPageViewWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return PageView.builder(
+    return PageView(
       controller: controller,
       onPageChanged: onPageChanged,
-      itemCount: children.length,
-      itemBuilder: (context, index) {
-        return children[index];
-      },
-      physics: const NeverScrollableScrollPhysics(), // Disable swipe gesture
+      physics: const NeverScrollableScrollPhysics(),
+      children: children, // Disable swipe gesture
     );
   }
 }

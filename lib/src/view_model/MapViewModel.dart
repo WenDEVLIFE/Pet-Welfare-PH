@@ -1,7 +1,6 @@
 import 'dart:developer' as developer;
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:flutter/services.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
@@ -14,13 +13,12 @@ import 'package:pet_welfrare_ph/src/respository/LocationRespository.dart';
 import 'package:pet_welfrare_ph/src/services/OpenStreetMapService.dart';
 import 'package:pet_welfrare_ph/src/utils/GeoUtils.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
-import 'package:sn_progress_dialog/progress_dialog.dart';
 import '../modal/EstablishmentModal.dart';
 import '../model/EstablishmentModel.dart';
 import '../respository/PostRepository.dart';
 
 class MapViewModel extends ChangeNotifier {
-  MaplibreMapController? mapController;
+  MapLibreMapController? mapController;
 
   double lat = 14.5995;
   double long = 120.9842;
@@ -508,7 +506,9 @@ class MapViewModel extends ChangeNotifier {
   Future<void> refreshMarkers() async {
     if (mapController != null) {
       mapController!.clearSymbols();
-      await initializeLoads();
+      symbols.clear(); // Clear local symbol list
+      await initializeLoads(); // Reload all data and pins
+      await loadAndBindMarkers(); // Re-add all markers after data is loaded
       notifyListeners();
     }
   }
@@ -814,4 +814,5 @@ class MapViewModel extends ChangeNotifier {
     double newRadius = _circle!.options.circleRadius! + 500; // Increase radius by 500 meters
     await updateCircleRadius(newRadius);
   }
+
 }

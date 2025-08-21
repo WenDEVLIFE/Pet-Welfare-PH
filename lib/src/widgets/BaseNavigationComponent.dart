@@ -6,6 +6,8 @@ abstract class BaseNavigationWidget extends StatefulWidget {
   const BaseNavigationWidget({Key? key}) : super(key: key);
 }
 
+// This is the base class for the navigation component. it has the common functionality for all navigation components.
+// like creating a new page controller, handling the current index, and building the navigation bar items.
 abstract class BaseNavigationComponentState<T extends BaseNavigationWidget>
     extends State<T> {
   late PageController _pageController;
@@ -49,20 +51,20 @@ abstract class BaseNavigationComponentState<T extends BaseNavigationWidget>
 
   @override
   Widget build(BuildContext context) {
+    final children = getPageViewChildren()
+        .map((child) => AutomaticKeepAlive(child: child))
+        .toList();
+
     return Scaffold(
-      body: PageView.builder(
+      body: PageView(
         controller: _pageController,
         physics: const NeverScrollableScrollPhysics(),
-        // Disable swipe
         onPageChanged: (index) {
           setState(() {
             _currentIndex = index;
           });
         },
-        itemCount: getPageViewChildren().length,
-        itemBuilder: (context, index) {
-          return getPageViewChildren()[index];
-        },
+        children: children,
       ),
       bottomNavigationBar: SafeArea(
         child: CurvedNavigationBar(
@@ -75,5 +77,26 @@ abstract class BaseNavigationComponentState<T extends BaseNavigationWidget>
         ),
       ),
     );
+  }
+}
+
+// Helper widget for keep-alive
+class AutomaticKeepAlive extends StatefulWidget {
+  final Widget child;
+  const AutomaticKeepAlive({required this.child, Key? key}) : super(key: key);
+
+  @override
+  State<AutomaticKeepAlive> createState() => _AutomaticKeepAliveState();
+}
+
+class _AutomaticKeepAliveState extends State<AutomaticKeepAlive>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  Widget build(BuildContext context) {
+    super.build(context);
+    return widget.child;
   }
 }

@@ -1,13 +1,10 @@
 import 'dart:async';
 
-import 'package:async/async.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 import 'package:pet_welfrare_ph/src/utils/Route.dart';
-import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:pet_welfrare_ph/src/view_model/MapViewModel.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:pet_welfrare_ph/src/widgets/SelectRadiusWidget.dart';
@@ -36,15 +33,19 @@ class MapViewState extends State<MapView> {
     super.initState();
     _mapViewModel = Provider.of<MapViewModel>(context, listen: false);
     _mapFuture = multipliAsync();
-
-    _mapViewModel.searchController.addListener(() {
-      _mapViewModel.setSearchText();
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      _mapViewModel.searchController.addListener(() {
+        _mapViewModel.setSearchText();
+        _mapViewModel.initializeLoads();
+      });
+      setState(() {
+        _mapFuture = multipliAsync();
+      });
     });
   }
 
   Future<void> multipliAsync() async {
     await Future.wait([
-      _loadMap(),
       LoadRole(),
     ]);
   }
@@ -56,27 +57,40 @@ class MapViewState extends State<MapView> {
     });
   }
 
-  Future<void> _loadMap() async {
-    await Future.delayed(const Duration(seconds: 1));
-  }
 
-  void onMapCreated(MaplibreMapController controller) async {
+
+  void onMapCreated(MapLibreMapController controller) async {
     _mapViewModel.mapController = controller;
-    _mapViewModel.initializeLoads();
-    await _mapViewModel.loadAndBindMarkers();
+    await _mapViewModel.loadAndBindMarkers(); // Load markers
     if (mounted) {
+      setState(() {}); // Trigger UI update after markers are loaded
+      _mapViewModel.initializeLoads();
       _mapViewModel.initializeClickMarkers(context);
     }
   }
 
   @override
+  void didChangeDependencies() {
+    super.didChangeDependencies();
+    final mapViewModel = Provider.of<MapViewModel>(context, listen: false);
+    if (mapViewModel.mapController != null) {
+      mapViewModel.loadAndBindMarkers(); // Reload markers when dependencies change
+    }
+  }
+
+  @override
   void dispose() {
+    _mapViewModel.searchController.removeListener(() {
+    });
+    _mapViewModel.setSearchText();
+    _mapViewModel.initializeLoads();
+    _mapViewModel.removePins();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    double screenWidth = MediaQuery.of(context).size.width;
+    //double screenWidth = MediaQuery.of(context).size.width;
     double screenHeight = MediaQuery.of(context).size.height;
 
     return Scaffold(
@@ -109,7 +123,7 @@ class MapViewState extends State<MapView> {
                 } else if (snapshot.hasError) {
                   return const Center(child: Text('Error loading map'));
                 } else {
-                  return MaplibreMap(
+                  return MapLibreMap(
                     styleString: "${MapTilerKey.styleUrl}?key=${MapTilerKey.apikey}",
                     myLocationEnabled: true,
                     initialCameraPosition: CameraPosition(
@@ -219,7 +233,7 @@ class MapViewState extends State<MapView> {
               }
             },
           ),
-          if(role.toLowerCase() != 'fur user' || role.toLowerCase() !='pet lover') ...[
+          if(role.toLowerCase() != 'fur user' && role.toLowerCase() !='pet lover') ...[
             SpeedDialChild(
               child: const Icon(Icons.house, color: AppColors.white),
               backgroundColor: AppColors.orange,

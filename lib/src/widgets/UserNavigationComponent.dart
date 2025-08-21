@@ -8,6 +8,7 @@ import 'package:pet_welfrare_ph/src/view/MenuView.dart';
 
 import 'BaseNavigationComponent.dart';
 
+// This is where the user navigation component is defined.
 class UserNavigationComponent extends BaseNavigationWidget {
   const UserNavigationComponent({Key? key}) : super(key: key);
 
@@ -36,7 +37,7 @@ class _UserNavigationComponentState extends BaseNavigationComponentState<UserNav
       const HomeScreen(), // User Home
       const MapView(), // User Search
       const ProfileView(), // User Profile
-      ChatView(), // User Menu
+      const ChatView(), // User Menu
       const MenuView(), // User Notifications
     ];
   }

@@ -4,6 +4,7 @@ import 'package:flutter/services.dart';
 
 import '../utils/AppColors.dart';
 
+// This is the AboutView class that displays the terms and conditions of the application.
 class AboutView extends StatefulWidget {
   const AboutView({Key? key}) : super(key: key);
 
