@@ -22,12 +22,15 @@ import 'package:pet_welfrare_ph/src/utils/enum.dart';
 import 'package:pet_welfrare_ph/src/exceptions/firestore_exceptions.dart';
 
 abstract class PostRepository {
-  Future<void> uploadPost(String postText, List<File> images, String category, List<String> tags);
+  Future<void> uploadPost(
+      String postText, List<File> images, String category, List<String> tags);
+
   Stream<List<PostModel>> getPosts();
 
-  Future <void> uploadPetData(List<File> images, String selectedChip, Map<String, dynamic> petData, List<String> tags);
+  Future<void> uploadPetData(List<File> images, String selectedChip,
+      Map<String, dynamic> petData, List<String> tags);
 
-  Future <void> addReaction(String postId, String reaction);
+  Future<void> addReaction(String postId, String reaction);
 
   Future<bool> hasUserReacted(String postId);
 
@@ -41,19 +44,19 @@ abstract class PostRepository {
 
   Stream<List<CommentModel>> getComments(String postId);
 
-  Future <void> deleteComment(String postId, String commentId);
+  Future<void> deleteComment(String postId, String commentId);
 
   Future<int> getCommentCount(String postId);
 
-  Stream<List<PostModel>>getMissingPosts();
+  Stream<List<PostModel>> getMissingPosts();
 
-  Stream<List<PostModel>>getFoundPost();
+  Stream<List<PostModel>> getFoundPost();
 
-  Stream<List<PostModel>>getPawExperiencePost();
+  Stream<List<PostModel>> getPawExperiencePost();
 
-  Stream<List<PostModel>>getProtectPetPost();
+  Stream<List<PostModel>> getProtectPetPost();
 
-  Stream<List<PostModel>>getCommunityPost();
+  Stream<List<PostModel>> getCommunityPost();
 
   Stream<List<PostModel>> getVetAndTravelPost();
 
@@ -61,49 +64,59 @@ abstract class PostRepository {
 
   Stream<List<PostModel>> getFindHome();
 
-  Future <void> editComment(String postId, String commentId, String newCommentText);
+  Future<void> editComment(
+      String postId, String commentId, String newCommentText);
 
-  Future <void> uploadAdoption(List<File> images, String selectedChip, Map<String, dynamic> petData, List <String> tags);
+  Future<void> uploadAdoption(List<File> images, String selectedChip,
+      Map<String, dynamic> petData, List<String> tags);
 
   Stream<List<PostModel>> getPetAdoption();
 
-  Future<List<PostModel>> getNearbyFoundPets(double lat, double long, double radiusInK);
+  Future<List<PostModel>> getNearbyFoundPets(
+      double lat, double long, double radiusInK);
 
-  Future<List<PostModel>> getNearbyLostPets(double lat, double long, double radiusInK);
+  Future<List<PostModel>> getNearbyLostPets(
+      double lat, double long, double radiusInK);
 
-  Future <void> uploadDonation(List<File> images, String selectedChip, Map<String, dynamic> petData, List<String> tags);
+  Future<void> uploadDonation(List<File> images, String selectedChip,
+      Map<String, dynamic> petData, List<String> tags);
 
-  Future <void> uploadVetTravel(List<File> images, String selectedChip, Map<String, String> petData, List<String> tags);
+  Future<void> uploadVetTravel(List<File> images, String selectedChip,
+      Map<String, String> petData, List<String> tags);
 
-  Future <void> uploadPetRescue(List<File> images, String selectedChip, Map<String, String> petRescueData, List<String> tags);
+  Future<void> uploadPetRescue(List<File> images, String selectedChip,
+      Map<String, String> petRescueData, List<String> tags);
 
-  Future <void> uploadReportAbuse(List<File> images, String selectedChip, Map<String, String> petData, List<String> tags);
+  Future<void> uploadReportAbuse(List<File> images, String selectedChip,
+      Map<String, String> petData, List<String> tags);
 
-  Future <void> editDetails(String selectedChip, Map<String, dynamic> petData, String postID);
+  Future<void> editDetails(
+      String selectedChip, Map<String, dynamic> petData, String postID);
 
-  Future <void> addTag(String tag, String postID);
+  Future<void> addTag(String tag, String postID);
 
-  Future<void> removeTag (String tag, String postID);
+  Future<void> removeTag(String tag, String postID);
 
-  Future <void> deleteImage(String imageId, String url, String postId);
+  Future<void> deleteImage(String imageId, String url, String postId);
 
   Future<void> addImage(String postID, File image);
 
   Future<Map<String, dynamic>> getPostDetails(String postId, String category);
 
-  Stream  <List<ImageModel>> loadImage (String postId);
-  Stream <List<TagModel>> getTagData (String postId);
+  Stream<List<ImageModel>> loadImage(String postId);
+
+  Stream<List<TagModel>> getTagData(String postId);
 
   Future<void> deletePost(String category, String postId);
 
   Stream<List<PostModel>> getMyPost();
 
-  Future<void> updatePetStatus(String postId, String category, String selectedStatus);
+  Future<void> updatePetStatus(
+      String postId, String category, String selectedStatus);
 
-  Future <bool> isUserVerified();
+  Future<bool> isUserVerified();
 
   Stream<String> getStatus(String postId, String category);
-
 }
 
 class PostRepositoryImpl implements PostRepository {
@@ -112,13 +125,15 @@ class PostRepositoryImpl implements PostRepository {
   final FirebaseAuth _firebaseAuth = FirebaseAuth.instance;
 
   @override
-  Future<void> uploadPost(String postText, List<File> images, String category, List<String> tags) async {
+  Future<void> uploadPost(String postText, List<File> images, String category,
+      List<String> tags) async {
     User user = _firebaseAuth.currentUser!;
     String uuid = user.uid;
     var postID = Uuid().v4();
     try {
       // Create a new post document
-      DocumentReference postRef = _firestore.collection('PostCollection').doc(postID);
+      DocumentReference postRef =
+          _firestore.collection('PostCollection').doc(postID);
       await postRef.set({
         'PostID': postID,
         'PostOwnerID': uuid,
@@ -133,13 +148,12 @@ class PostRepositoryImpl implements PostRepository {
         for (String tag in tags) {
           DocumentReference tagRef = postRef.collection('TagsCollection').doc();
           batch.set(tagRef, {'tags': tag});
-
         }
-        await  batch.commit();
+        await batch.commit();
       }
 
-
-      DocumentReference notificationRef = _firestore.collection('NotificationCollection').doc();
+      DocumentReference notificationRef =
+          _firestore.collection('NotificationCollection').doc();
       await notificationRef.set({
         'notificationID': notificationRef.id,
         'userID': uuid,
@@ -149,11 +163,12 @@ class PostRepositoryImpl implements PostRepository {
         'isRead': false,
       });
 
-      if(images.isNotEmpty){
+      if (images.isNotEmpty) {
         // Upload images concurrently and store their URLs in the images sub-collection
         List<Future<void>> uploadTasks = images.map((File image) async {
           String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-          Reference storageRef = _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
+          Reference storageRef =
+              _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
           UploadTask uploadTask = storageRef.putFile(image);
           TaskSnapshot taskSnapshot = await uploadTask;
           String downloadUrl = await taskSnapshot.ref.getDownloadURL();
@@ -167,10 +182,9 @@ class PostRepositoryImpl implements PostRepository {
 
         // Wait for all uploads to complete
         await Future.wait(uploadTasks);
-      }
-
-      else{
-        ToastComponent().showMessage(AppColors.orange, 'Post added successfully without images');
+      } else {
+        ToastComponent().showMessage(
+            AppColors.orange, 'Post added successfully without images');
       }
     } catch (e) {
       throw Exception('Failed to upload post: $e');
@@ -180,25 +194,29 @@ class PostRepositoryImpl implements PostRepository {
   // Added get post
   @override
   Stream<List<PostModel>> getPosts() {
-    return _firestore.collection('PostCollection')
+    return _firestore
+        .collection('PostCollection')
         .where('Category', isEqualTo: 'Pet Appreciation')
         .snapshots()
         .asyncMap((snapshot) async {
-      List<Future<PostModel>> postFutures = snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
+      List<Future<PostModel>> postFutures =
+          snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
       return await Future.wait(postFutures);
     });
   }
 
   // Added upload pet data
   @override
-  Future<void> uploadPetData(List<File> images, String selectedChip, Map<String, dynamic> petData, List<String> tags) async {
+  Future<void> uploadPetData(List<File> images, String selectedChip,
+      Map<String, dynamic> petData, List<String> tags) async {
     User user = _firebaseAuth.currentUser!;
     String uuid = user.uid;
     var postID = Uuid().v4();
 
     try {
       // Create a new post document
-      DocumentReference postRef = _firestore.collection('PostCollection').doc(postID);
+      DocumentReference postRef =
+          _firestore.collection('PostCollection').doc(postID);
 
       String post = petData['post'];
       String petName = petData['pet_name'];
@@ -237,7 +255,8 @@ class PostRepositoryImpl implements PostRepository {
       }
 
       // Create a new document in PetDetailsCollection
-      DocumentReference petRef = _firestore.collection('PetDetailsCollection').doc(postID);
+      DocumentReference petRef =
+          _firestore.collection('PetDetailsCollection').doc(postID);
       await petRef.set({
         'PetName': petName,
         'PetType': petType,
@@ -255,13 +274,16 @@ class PostRepositoryImpl implements PostRepository {
         'Latitude': lat,
         'Date': date,
         'Longitude': long,
-        'Status': selectedChip == 'Missing Pets' ? 'Still missing' : 'Still roaming',
+        'Status':
+            selectedChip == 'Missing Pets' ? 'Still missing' : 'Still roaming',
       });
 
-      ToastComponent().showMessage(AppColors.orange, '$selectedChip data added successfully');
+      ToastComponent().showMessage(
+          AppColors.orange, '$selectedChip data added successfully');
 
       // Add notification
-      DocumentReference notificationRef = _firestore.collection('NotificationCollection').doc();
+      DocumentReference notificationRef =
+          _firestore.collection('NotificationCollection').doc();
       await notificationRef.set({
         'notificationID': notificationRef.id,
         'userID': uuid,
@@ -276,7 +298,9 @@ class PostRepositoryImpl implements PostRepository {
         List<Future<void>> uploadTasks = images.map((File image) async {
           try {
             String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-            Reference storageRef = _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
+            Reference storageRef = _firebaseStorage
+                .ref()
+                .child('PostFolder/$postID/$fileName.jpg');
             UploadTask uploadTask = storageRef.putFile(image);
             TaskSnapshot taskSnapshot = await uploadTask;
             String downloadUrl = await taskSnapshot.ref.getDownloadURL();
@@ -294,9 +318,9 @@ class PostRepositoryImpl implements PostRepository {
         // Wait for all uploads to complete
         await Future.wait(uploadTasks);
 
-        ToastComponent().showMessage(AppColors.orange, 'Pet data and images added successfully');
+        ToastComponent().showMessage(
+            AppColors.orange, 'Pet data and images added successfully');
       }
-
     } catch (e) {
       throw Exception('Failed to upload post: $e');
     }
@@ -304,14 +328,16 @@ class PostRepositoryImpl implements PostRepository {
 
   // Added upload pet data
   @override
-  Future<void> uploadAdoption(List<File> images, String selectedChip, Map<String, dynamic> petData, List<String> tags) async {
+  Future<void> uploadAdoption(List<File> images, String selectedChip,
+      Map<String, dynamic> petData, List<String> tags) async {
     User user = _firebaseAuth.currentUser!;
     String uuid = user.uid;
     var postID = Uuid().v4();
 
     try {
       // Create a new post document
-      DocumentReference postRef = _firestore.collection('PostCollection').doc(postID);
+      DocumentReference postRef =
+          _firestore.collection('PostCollection').doc(postID);
 
       String post = petData['post'];
       String petName = petData['pet_name'];
@@ -341,13 +367,13 @@ class PostRepositoryImpl implements PostRepository {
         for (String tag in tags) {
           DocumentReference tagRef = postRef.collection('TagsCollection').doc();
           batch.set(tagRef, {'tags': tag});
-
         }
-        await  batch.commit();
+        await batch.commit();
       }
 
       // Create a new document in PetDetailsCollection
-      DocumentReference petRef = _firestore.collection('AdoptionDetails').doc(postID);
+      DocumentReference petRef =
+          _firestore.collection('AdoptionDetails').doc(postID);
       await petRef.set({
         'PetName': petName,
         'PetType': petType,
@@ -365,7 +391,8 @@ class PostRepositoryImpl implements PostRepository {
         'Status': 'Still up for adoption',
       });
 
-      DocumentReference notificationRef = _firestore.collection('NotificationCollection').doc();
+      DocumentReference notificationRef =
+          _firestore.collection('NotificationCollection').doc();
       await notificationRef.set({
         'notificationID': notificationRef.id,
         'userID': uuid,
@@ -375,14 +402,16 @@ class PostRepositoryImpl implements PostRepository {
         'isRead': false,
       });
 
-      ToastComponent().showMessage(AppColors.orange, '$selectedChip data added successfully');
+      ToastComponent().showMessage(
+          AppColors.orange, '$selectedChip data added successfully');
 
       // Upload images concurrently and store their URLs in the images sub-collection
-      if(images.isNotEmpty){
+      if (images.isNotEmpty) {
         // Upload images concurrently and store their URLs in the images sub-collection
         List<Future<void>> uploadTasks = images.map((File image) async {
           String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-          Reference storageRef = _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
+          Reference storageRef =
+              _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
           UploadTask uploadTask = storageRef.putFile(image);
           TaskSnapshot taskSnapshot = await uploadTask;
           String downloadUrl = await taskSnapshot.ref.getDownloadURL();
@@ -398,7 +427,8 @@ class PostRepositoryImpl implements PostRepository {
         await Future.wait(uploadTasks);
       }
 
-      ToastComponent().showMessage(AppColors.orange, 'Adoption data added successfully');
+      ToastComponent()
+          .showMessage(AppColors.orange, 'Adoption data added successfully');
     } catch (e) {
       throw Exception('Failed to upload post: $e');
     }
@@ -412,7 +442,11 @@ class PostRepositoryImpl implements PostRepository {
 
     try {
       // Reference to the reaction document
-      DocumentReference reactionRef = _firestore.collection('PostCollection').doc(postId).collection('ReactionCollection').doc(userId);
+      DocumentReference reactionRef = _firestore
+          .collection('PostCollection')
+          .doc(postId)
+          .collection('ReactionCollection')
+          .doc(userId);
 
       // Check if the user has already reacted
       DocumentSnapshot reactionSnapshot = await reactionRef.get();
@@ -431,7 +465,8 @@ class PostRepositoryImpl implements PostRepository {
         });
       }
 
-      ToastComponent().showMessage(AppColors.orange, 'Reaction added successfully');
+      ToastComponent()
+          .showMessage(AppColors.orange, 'Reaction added successfully');
     } catch (e) {
       throw Exception('Failed to add reaction: $e');
     }
@@ -443,7 +478,11 @@ class PostRepositoryImpl implements PostRepository {
     User user = _firebaseAuth.currentUser!;
     String userId = user.uid;
 
-    DocumentReference reactionRef = _firestore.collection('PostCollection').doc(postId).collection('ReactionCollection').doc(userId);
+    DocumentReference reactionRef = _firestore
+        .collection('PostCollection')
+        .doc(postId)
+        .collection('ReactionCollection')
+        .doc(userId);
     DocumentSnapshot reactionSnapshot = await reactionRef.get();
 
     return reactionSnapshot.exists;
@@ -452,7 +491,11 @@ class PostRepositoryImpl implements PostRepository {
   // Added get reaction count function
   @override
   Future<int> getReactionCount(String postId) async {
-    QuerySnapshot reactionSnapshot = await _firestore.collection('PostCollection').doc(postId).collection('ReactionCollection').get();
+    QuerySnapshot reactionSnapshot = await _firestore
+        .collection('PostCollection')
+        .doc(postId)
+        .collection('ReactionCollection')
+        .get();
     return reactionSnapshot.docs.length;
   }
 
@@ -462,7 +505,11 @@ class PostRepositoryImpl implements PostRepository {
     User user = _firebaseAuth.currentUser!;
     String userId = user.uid;
 
-    DocumentReference reactionRef = _firestore.collection('PostCollection').doc(postId).collection('ReactionCollection').doc(userId);
+    DocumentReference reactionRef = _firestore
+        .collection('PostCollection')
+        .doc(postId)
+        .collection('ReactionCollection')
+        .doc(userId);
     await reactionRef.delete();
   }
 
@@ -472,7 +519,11 @@ class PostRepositoryImpl implements PostRepository {
     User user = _firebaseAuth.currentUser!;
     String userId = user.uid;
 
-    DocumentReference reactionRef = _firestore.collection('PostCollection').doc(postId).collection('ReactionCollection').doc(userId);
+    DocumentReference reactionRef = _firestore
+        .collection('PostCollection')
+        .doc(postId)
+        .collection('ReactionCollection')
+        .doc(userId);
     DocumentSnapshot reactionSnapshot = await reactionRef.get();
 
     if (reactionSnapshot.exists) {
@@ -484,7 +535,11 @@ class PostRepositoryImpl implements PostRepository {
 
   // Added get comment count function
   Future<int> getCommentCount(String postId) async {
-    QuerySnapshot commentSnapshot = await _firestore.collection('PostCollection').doc(postId).collection('CommentCollection').get();
+    QuerySnapshot commentSnapshot = await _firestore
+        .collection('PostCollection')
+        .doc(postId)
+        .collection('CommentCollection')
+        .get();
     return commentSnapshot.docs.length;
   }
 
@@ -500,7 +555,11 @@ class PostRepositoryImpl implements PostRepository {
       throw Exception('User not found');
     }
 
-    DocumentReference commentRef = _firestore.collection('PostCollection').doc(postId).collection('CommentCollection').doc();
+    DocumentReference commentRef = _firestore
+        .collection('PostCollection')
+        .doc(postId)
+        .collection('CommentCollection')
+        .doc();
 
     await commentRef.set({
       'UserId': userId,
@@ -508,8 +567,10 @@ class PostRepositoryImpl implements PostRepository {
       'Timestamp': FieldValue.serverTimestamp(),
     });
 
-    ToastComponent().showMessage(AppColors.orange, 'Comment added successfully');
+    ToastComponent()
+        .showMessage(AppColors.orange, 'Comment added successfully');
   }
+
   // Added get comments function
   @override
   Stream<List<CommentModel>> getComments(String postId) {
@@ -524,21 +585,32 @@ class PostRepositoryImpl implements PostRepository {
         .orderBy('Timestamp', descending: true)
         .snapshots()
         .asyncMap((snapshot) async {
-      List<Future<CommentModel>> commentFutures = snapshot.docs.map((doc) => CommentModel.fromDocument(doc)).toList();
+      List<Future<CommentModel>> commentFutures =
+          snapshot.docs.map((doc) => CommentModel.fromDocument(doc)).toList();
       return await Future.wait(commentFutures);
     });
   }
 
   // Added delete comment function
   @override
-  Future<void> deleteComment(String postId, String commentId) async{
-    return await _firestore.collection('PostCollection').doc(postId).collection('CommentCollection').doc(commentId).delete();
+  Future<void> deleteComment(String postId, String commentId) async {
+    return await _firestore
+        .collection('PostCollection')
+        .doc(postId)
+        .collection('CommentCollection')
+        .doc(commentId)
+        .delete();
   }
 
-
   // Added edit comment function
-  Future<void> editComment(String postId, String commentId, String newCommentText) async {
-    return await _firestore.collection('PostCollection').doc(postId).collection('CommentCollection').doc(commentId).update({
+  Future<void> editComment(
+      String postId, String commentId, String newCommentText) async {
+    return await _firestore
+        .collection('PostCollection')
+        .doc(postId)
+        .collection('CommentCollection')
+        .doc(commentId)
+        .update({
       'CommentText': newCommentText,
     });
   }
@@ -550,11 +622,13 @@ class PostRepositoryImpl implements PostRepository {
     if (user == null) {
       return Stream.value([]);
     }
-    return _firestore.collection('PostCollection')
+    return _firestore
+        .collection('PostCollection')
         .where('Category', isEqualTo: 'Missing Pets')
         .snapshots()
         .asyncMap((snapshot) async {
-      List<Future<PostModel>> postFutures = snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
+      List<Future<PostModel>> postFutures =
+          snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
       return await Future.wait(postFutures);
     });
   }
@@ -566,11 +640,13 @@ class PostRepositoryImpl implements PostRepository {
     if (user == null) {
       return Stream.value([]);
     }
-    return _firestore.collection('PostCollection')
+    return _firestore
+        .collection('PostCollection')
         .where('Category', isEqualTo: 'Found Pets')
         .snapshots()
         .asyncMap((snapshot) async {
-      List<Future<PostModel>> postFutures = snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
+      List<Future<PostModel>> postFutures =
+          snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
       return await Future.wait(postFutures);
     });
   }
@@ -582,11 +658,13 @@ class PostRepositoryImpl implements PostRepository {
     if (user == null) {
       return Stream.value([]);
     }
-    return _firestore.collection('PostCollection')
+    return _firestore
+        .collection('PostCollection')
         .where('Category', isEqualTo: 'Paw-some Experience')
         .snapshots()
         .asyncMap((snapshot) async {
-      List<Future<PostModel>> postFutures = snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
+      List<Future<PostModel>> postFutures =
+          snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
       return await Future.wait(postFutures);
     });
   }
@@ -598,11 +676,13 @@ class PostRepositoryImpl implements PostRepository {
     if (user == null) {
       return Stream.value([]);
     }
-    return _firestore.collection('PostCollection')
+    return _firestore
+        .collection('PostCollection')
         .where('Category', isEqualTo: 'Protect Our Pets: Report Abuse')
         .snapshots()
         .asyncMap((snapshot) async {
-      List<Future<PostModel>> postFutures = snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
+      List<Future<PostModel>> postFutures =
+          snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
       return await Future.wait(postFutures);
     });
   }
@@ -610,11 +690,13 @@ class PostRepositoryImpl implements PostRepository {
   // Added get community post
   @override
   Stream<List<PostModel>> getCommunityPost() {
-    return _firestore.collection('PostCollection')
+    return _firestore
+        .collection('PostCollection')
         .where('Category', isEqualTo: 'Community Announcement')
         .snapshots()
         .asyncMap((snapshot) async {
-      List<Future<PostModel>> postFutures = snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
+      List<Future<PostModel>> postFutures =
+          snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
       return await Future.wait(postFutures);
     });
   }
@@ -623,14 +705,16 @@ class PostRepositoryImpl implements PostRepository {
   @override
   Stream<List<PostModel>> getVetAndTravelPost() {
     User? user = FirebaseAuth.instance.currentUser;
-   if (user == null) {
+    if (user == null) {
       return Stream.value([]);
     }
-    return _firestore.collection('PostCollection')
+    return _firestore
+        .collection('PostCollection')
         .where('Category', isEqualTo: 'Pet Care Insights')
         .snapshots()
         .asyncMap((snapshot) async {
-      List<Future<PostModel>> postFutures = snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
+      List<Future<PostModel>> postFutures =
+          snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
       return await Future.wait(postFutures);
     });
   }
@@ -642,11 +726,13 @@ class PostRepositoryImpl implements PostRepository {
     if (user == null) {
       return Stream.value([]);
     }
-    return _firestore.collection('PostCollection')
+    return _firestore
+        .collection('PostCollection')
         .where('Category', isEqualTo: 'Pet Adoption')
         .snapshots()
         .asyncMap((snapshot) async {
-      List<Future<PostModel>> postFutures = snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
+      List<Future<PostModel>> postFutures =
+          snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
       return await Future.wait(postFutures);
     });
   }
@@ -658,11 +744,13 @@ class PostRepositoryImpl implements PostRepository {
     if (user == null) {
       return Stream.value([]);
     }
-    return _firestore.collection('PostCollection')
+    return _firestore
+        .collection('PostCollection')
         .where('Category', isEqualTo: 'Call for Aid')
         .snapshots()
         .asyncMap((snapshot) async {
-      List<Future<PostModel>> postFutures = snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
+      List<Future<PostModel>> postFutures =
+          snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
       return await Future.wait(postFutures);
     });
   }
@@ -674,19 +762,20 @@ class PostRepositoryImpl implements PostRepository {
     if (user == null) {
       return Stream.value([]);
     }
-    return _firestore.collection('PostCollection')
+    return _firestore
+        .collection('PostCollection')
         .where('Category', isEqualTo: 'Pets For Rescue')
         .snapshots()
         .asyncMap((snapshot) async {
-      List<Future<PostModel>> postFutures = snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
+      List<Future<PostModel>> postFutures =
+          snapshot.docs.map((doc) => PostModel.fromDocument(doc)).toList();
       return await Future.wait(postFutures);
     });
   }
 
-
-
   // get the nearby found pets
-  Future<List<PostModel>> getNearbyFoundPets(double lat, double long, double radiusInK) async {
+  Future<List<PostModel>> getNearbyFoundPets(
+      double lat, double long, double radiusInK) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user == null) {
@@ -696,17 +785,22 @@ class PostRepositoryImpl implements PostRepository {
       double radiusInKm = radiusInK;
 
       // Calculate the bounds for the query
-      double latDelta = radiusInKm / 111.0; // 1 degree of latitude is approximately 111 km
+      double latDelta =
+          radiusInKm / 111.0; // 1 degree of latitude is approximately 111 km
       double longDelta = radiusInKm / (111.0 * cos(lat * pi / 180.0));
 
       // Query Firestore for found pets within the bounds in PostCollection
-      QuerySnapshot postCollectionSnapshot = await _firestore.collection('PostCollection')
-          .where('Category', isEqualTo: 'Found Pets').get();
+      QuerySnapshot postCollectionSnapshot = await _firestore
+          .collection('PostCollection')
+          .where('Category', isEqualTo: 'Found Pets')
+          .get();
 
       // For each post, query the PetDetailsCollection to get the corresponding pet details
-      List<PostModel> foundPets = await Future.wait(postCollectionSnapshot.docs.map((doc) async {
+      List<PostModel> foundPets =
+          await Future.wait(postCollectionSnapshot.docs.map((doc) async {
         var post = await PostModel.fromDocument(doc);
-        var petDetailsSnapshot = await _firestore.collection('PetDetailsCollection')
+        var petDetailsSnapshot = await _firestore
+            .collection('PetDetailsCollection')
             .where('Category', isEqualTo: 'Found Pets')
             .where('Latitude', isGreaterThanOrEqualTo: lat - latDelta)
             .where('Latitude', isLessThanOrEqualTo: lat + latDelta)
@@ -731,7 +825,8 @@ class PostRepositoryImpl implements PostRepository {
 
   // get the nearby lost pets
   @override
-  Future<List<PostModel>> getNearbyLostPets(double lat, double long, double radiusInK) async{
+  Future<List<PostModel>> getNearbyLostPets(
+      double lat, double long, double radiusInK) async {
     try {
       User? user = FirebaseAuth.instance.currentUser;
       if (user == null) {
@@ -741,17 +836,22 @@ class PostRepositoryImpl implements PostRepository {
       double radiusInKm = radiusInK;
 
       // Calculate the bounds for the query
-      double latDelta = radiusInKm / 111.0; // 1 degree of latitude is approximately 111 km
+      double latDelta =
+          radiusInKm / 111.0; // 1 degree of latitude is approximately 111 km
       double longDelta = radiusInKm / (111.0 * cos(lat * pi / 180.0));
 
       // Query Firestore for found pets within the bounds in PostCollection
-      QuerySnapshot missingCollectionSnapshot = await _firestore.collection('PostCollection')
-          .where('Category', isEqualTo: 'Missing Pets').get();
+      QuerySnapshot missingCollectionSnapshot = await _firestore
+          .collection('PostCollection')
+          .where('Category', isEqualTo: 'Missing Pets')
+          .get();
 
       // For each post, query the PetDetailsCollection to get the corresponding pet details
-      List<PostModel> missingpets = await Future.wait(missingCollectionSnapshot.docs.map((doc) async {
+      List<PostModel> missingpets =
+          await Future.wait(missingCollectionSnapshot.docs.map((doc) async {
         var post = await PostModel.fromDocument(doc);
-        var petDetailsSnapshot = await _firestore.collection('PetDetailsCollection')
+        var petDetailsSnapshot = await _firestore
+            .collection('PetDetailsCollection')
             .where('Category', isEqualTo: 'Missing Pets')
             .where('Latitude', isGreaterThanOrEqualTo: lat - latDelta)
             .where('Latitude', isLessThanOrEqualTo: lat + latDelta)
@@ -776,15 +876,16 @@ class PostRepositoryImpl implements PostRepository {
 
   // Added upload donation function
   @override
-  Future<void> uploadDonation(List<File> images, String selectedChip, Map<String, dynamic> petData, List<String> tags) async {
+  Future<void> uploadDonation(List<File> images, String selectedChip,
+      Map<String, dynamic> petData, List<String> tags) async {
     User user = _firebaseAuth.currentUser!;
     String uuid = user.uid;
     var postID = Uuid().v4();
 
     try {
-
       // Create a new post document
-      DocumentReference postRef = _firestore.collection('PostCollection').doc(postID);
+      DocumentReference postRef =
+          _firestore.collection('PostCollection').doc(postID);
 
       String post = petData['post'];
       String bankName = petData['bank_type'];
@@ -808,13 +909,13 @@ class PostRepositoryImpl implements PostRepository {
         for (String tag in tags) {
           DocumentReference tagRef = postRef.collection('TagsCollection').doc();
           batch.set(tagRef, {'tags': tag});
-
         }
-        await  batch.commit();
+        await batch.commit();
       }
 
       // Create a new document in PetDetailsCollection
-      DocumentReference petRef = _firestore.collection('DonationDetails').doc(postID);
+      DocumentReference petRef =
+          _firestore.collection('DonationDetails').doc(postID);
       await petRef.set({
         'BankHolder': accountName,
         'BankName': bankName,
@@ -825,7 +926,8 @@ class PostRepositoryImpl implements PostRepository {
         'Status': 'Ongoing', // put paused and fullfilled
       });
 
-      DocumentReference notificationRef = _firestore.collection('NotificationCollection').doc();
+      DocumentReference notificationRef =
+          _firestore.collection('NotificationCollection').doc();
       await notificationRef.set({
         'notificationID': notificationRef.id,
         'userID': uuid,
@@ -835,13 +937,15 @@ class PostRepositoryImpl implements PostRepository {
         'isRead': false,
       });
 
-      ToastComponent().showMessage(AppColors.orange, '$selectedChip data added successfully');
+      ToastComponent().showMessage(
+          AppColors.orange, '$selectedChip data added successfully');
 
-      if(images.isNotEmpty){
+      if (images.isNotEmpty) {
         // Upload images concurrently and store their URLs in the images sub-collection
         List<Future<void>> uploadTasks = images.map((File image) async {
           String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-          Reference storageRef = _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
+          Reference storageRef =
+              _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
           UploadTask uploadTask = storageRef.putFile(image);
           TaskSnapshot taskSnapshot = await uploadTask;
           String downloadUrl = await taskSnapshot.ref.getDownloadURL();
@@ -857,7 +961,8 @@ class PostRepositoryImpl implements PostRepository {
         await Future.wait(uploadTasks);
       }
 
-      ToastComponent().showMessage(AppColors.orange, '$selectedChip data added successfully');
+      ToastComponent().showMessage(
+          AppColors.orange, '$selectedChip data added successfully');
     } catch (e) {
       throw Exception('Failed to upload post: $e');
     }
@@ -865,15 +970,16 @@ class PostRepositoryImpl implements PostRepository {
 
   // Added a function to upload vet travel
   @override
-  Future<void> uploadVetTravel(List<File> images, String selectedChip, Map<String, String> petData, List<String> tags) async {
+  Future<void> uploadVetTravel(List<File> images, String selectedChip,
+      Map<String, String> petData, List<String> tags) async {
     User user = _firebaseAuth.currentUser!;
     String uuid = user.uid;
     var postID = Uuid().v4();
 
     try {
       // Create a new post document
-      DocumentReference postRef = _firestore.collection('PostCollection').doc(
-          postID);
+      DocumentReference postRef =
+          _firestore.collection('PostCollection').doc(postID);
 
       String post = petData['post']!;
       String clinicName = petData['clinic_name']!;
@@ -897,14 +1003,13 @@ class PostRepositoryImpl implements PostRepository {
         for (String tag in tags) {
           DocumentReference tagRef = postRef.collection('TagsCollection').doc();
           batch.set(tagRef, {'tags': tag});
-
         }
-        await  batch.commit();
+        await batch.commit();
       }
 
       // Create a new document in PetDetailsCollection
-      DocumentReference petRef = _firestore.collection('VetTravelDetails').doc(
-          postID);
+      DocumentReference petRef =
+          _firestore.collection('VetTravelDetails').doc(postID);
       await petRef.set({
         'ClinicName': clinicName,
         'Region': region,
@@ -914,8 +1019,8 @@ class PostRepositoryImpl implements PostRepository {
         'Address': address,
       });
 
-      DocumentReference notificationRef = _firestore.collection(
-          'NotificationCollection').doc();
+      DocumentReference notificationRef =
+          _firestore.collection('NotificationCollection').doc();
       await notificationRef.set({
         'notificationID': notificationRef.id,
         'userID': uuid,
@@ -929,11 +1034,12 @@ class PostRepositoryImpl implements PostRepository {
           AppColors.orange, '$selectedChip data added successfully');
 
       // Upload images concurrently and store their URLs in the images sub-collection
-      if(images.isNotEmpty){
+      if (images.isNotEmpty) {
         // Upload images concurrently and store their URLs in the images sub-collection
         List<Future<void>> uploadTasks = images.map((File image) async {
           String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-          Reference storageRef = _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
+          Reference storageRef =
+              _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
           UploadTask uploadTask = storageRef.putFile(image);
           TaskSnapshot taskSnapshot = await uploadTask;
           String downloadUrl = await taskSnapshot.ref.getDownloadURL();
@@ -948,24 +1054,24 @@ class PostRepositoryImpl implements PostRepository {
         // Wait for all uploads to complete
         await Future.wait(uploadTasks);
       }
-      ToastComponent().showMessage(Colors.green, '$selectedChip data added successfully');
-    } catch(e) {
+      ToastComponent()
+          .showMessage(Colors.green, '$selectedChip data added successfully');
+    } catch (e) {
       throw Exception('Failed to upload post: $e');
     }
-
   }
 
   @override
-  Future<void> uploadPetRescue(List<File> images, String selectedChip, Map<String, String> petRescueData, List<String> tags) async {
-
+  Future<void> uploadPetRescue(List<File> images, String selectedChip,
+      Map<String, String> petRescueData, List<String> tags) async {
     User user = _firebaseAuth.currentUser!;
     String uuid = user.uid;
     var postID = Uuid().v4();
 
     try {
       // Create a new post document
-      DocumentReference postRef = _firestore.collection('PostCollection').doc(
-          postID);
+      DocumentReference postRef =
+          _firestore.collection('PostCollection').doc(postID);
 
       String post = petRescueData['post']!;
       String petType = petRescueData['pet_type']!;
@@ -989,14 +1095,13 @@ class PostRepositoryImpl implements PostRepository {
         for (String tag in tags) {
           DocumentReference tagRef = postRef.collection('TagsCollection').doc();
           batch.set(tagRef, {'tags': tag});
-
         }
-        await  batch.commit();
+        await batch.commit();
       }
 
       // Create a new document in PetDetailsCollection
-      DocumentReference petRef = _firestore.collection('PetRescueDetails').doc(
-          postID);
+      DocumentReference petRef =
+          _firestore.collection('PetRescueDetails').doc(postID);
       await petRef.set({
         'PetType': petType,
         'PetBreed': petBreed,
@@ -1004,11 +1109,12 @@ class PostRepositoryImpl implements PostRepository {
         'PetGender': petGender,
         'PetSize': petSize,
         'Address': address,
-        'Status': 'Still needing rescue', // still needing rescue, contained/temporarily fostered, rescued
+        'Status': 'Still needing rescue',
+        // still needing rescue, contained/temporarily fostered, rescued
       });
 
-      DocumentReference notificationRef = _firestore.collection(
-          'NotificationCollection').doc();
+      DocumentReference notificationRef =
+          _firestore.collection('NotificationCollection').doc();
       await notificationRef.set({
         'notificationID': notificationRef.id,
         'userID': uuid,
@@ -1023,12 +1129,9 @@ class PostRepositoryImpl implements PostRepository {
 
       // Upload images concurrently and store their URLs in the images sub-collection
       List<Future<void>> uploadTasks = images.map((File image) async {
-        String fileName = DateTime
-            .now()
-            .millisecondsSinceEpoch
-            .toString();
-        Reference storageRef = _firebaseStorage.ref().child(
-            'PostFolder/$postID/$fileName.jpg');
+        String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+        Reference storageRef =
+            _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
         UploadTask uploadTask = storageRef.putFile(image);
         TaskSnapshot taskSnapshot = await uploadTask;
         String downloadUrl = await taskSnapshot.ref.getDownloadURL();
@@ -1040,27 +1143,31 @@ class PostRepositoryImpl implements PostRepository {
       }).toList();
       // Wait for all uploads to complete
       await Future.wait(uploadTasks);
-      ToastComponent().showMessage(Colors.green, '$selectedChip data added successfully');
-    } catch(e) {
+      ToastComponent()
+          .showMessage(Colors.green, '$selectedChip data added successfully');
+    } catch (e) {
       throw Exception('Failed to upload post: $e');
     }
   }
 
   @override
-  Future<void> uploadReportAbuse(List<File> images, String selectedChip, Map<String, String> petData, List<String> tags) async {
+  Future<void> uploadReportAbuse(List<File> images, String selectedChip,
+      Map<String, String> petData, List<String> tags) async {
     User user = _firebaseAuth.currentUser!;
     String uuid = user.uid;
     var postID = Uuid().v4();
     try {
       // Create a new post document
-      DocumentReference postRef = _firestore.collection('PostCollection').doc(postID);
+      DocumentReference postRef =
+          _firestore.collection('PostCollection').doc(postID);
       await postRef.set({
         'PostID': postID,
         'PostOwnerID': uuid,
         'PostDescription': petData['post'],
         'Category': selectedChip,
         'Timestamp': FieldValue.serverTimestamp(),
-         'Status': 'Will investigate', // Will investigate, ongoing investigation, case has been filed, case has been resolved, actions to be taken, etc.)
+        'Status': 'Will investigate',
+        // Will investigate, ongoing investigation, case has been filed, case has been resolved, actions to be taken, etc.)
       });
 
       // Create a document for tag collection
@@ -1069,13 +1176,12 @@ class PostRepositoryImpl implements PostRepository {
         for (String tag in tags) {
           DocumentReference tagRef = postRef.collection('TagsCollection').doc();
           batch.set(tagRef, {'tags': tag});
-
         }
-        await  batch.commit();
+        await batch.commit();
       }
 
-
-      DocumentReference notificationRef = _firestore.collection('NotificationCollection').doc();
+      DocumentReference notificationRef =
+          _firestore.collection('NotificationCollection').doc();
       await notificationRef.set({
         'notificationID': notificationRef.id,
         'userID': uuid,
@@ -1085,42 +1191,44 @@ class PostRepositoryImpl implements PostRepository {
         'isRead': false,
       });
 
-     if(images.isNotEmpty){
-       // Upload images concurrently and store their URLs in the images sub-collection
-       List<Future<void>> uploadTasks = images.map((File image) async {
-         String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-         Reference storageRef = _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
-         UploadTask uploadTask = storageRef.putFile(image);
-         TaskSnapshot taskSnapshot = await uploadTask;
-         String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+      if (images.isNotEmpty) {
+        // Upload images concurrently and store their URLs in the images sub-collection
+        List<Future<void>> uploadTasks = images.map((File image) async {
+          String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+          Reference storageRef =
+              _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
+          UploadTask uploadTask = storageRef.putFile(image);
+          TaskSnapshot taskSnapshot = await uploadTask;
+          String downloadUrl = await taskSnapshot.ref.getDownloadURL();
 
-         // Add image URL to the images sub-collection
-         await postRef.collection('ImageCollection').add({
-           'FileUrl': downloadUrl,
-           'FileName': '$fileName.jpg',
-         });
-       }).toList();
+          // Add image URL to the images sub-collection
+          await postRef.collection('ImageCollection').add({
+            'FileUrl': downloadUrl,
+            'FileName': '$fileName.jpg',
+          });
+        }).toList();
 
-       // Wait for all uploads to complete
-       await Future.wait(uploadTasks);
-     }
-
+        // Wait for all uploads to complete
+        await Future.wait(uploadTasks);
+      }
     } catch (e) {
       throw Exception('Failed to upload post: $e');
     }
   }
 
-
   @override
-  Future<Map<String, dynamic>> getPostDetails(String postId, String category) async {
+  Future<Map<String, dynamic>> getPostDetails(
+      String postId, String category) async {
     try {
       // Fetch the main post details
-      DocumentSnapshot postSnapshot = await _firestore.collection('PostCollection').doc(postId).get();
+      DocumentSnapshot postSnapshot =
+          await _firestore.collection('PostCollection').doc(postId).get();
       if (!postSnapshot.exists) {
         throw Exception('Post with ID $postId not found in PostCollection.');
       }
 
-      Map<String, dynamic> postDetails = postSnapshot.data() as Map<String, dynamic>? ?? {};
+      Map<String, dynamic> postDetails =
+          postSnapshot.data() as Map<String, dynamic>? ?? {};
       if (postDetails.isEmpty) {
         throw Exception('Post data for ID $postId is empty.');
       }
@@ -1141,7 +1249,7 @@ class PostRepositoryImpl implements PostRepository {
       // Fetch additional details if a collection is determined
       if (collectionName != null) {
         DocumentSnapshot additionalDetailsSnapshot =
-        await _firestore.collection(collectionName).doc(postId).get();
+            await _firestore.collection(collectionName).doc(postId).get();
 
         if (additionalDetailsSnapshot.exists) {
           Map<String, dynamic> additionalDetails =
@@ -1185,166 +1293,193 @@ class PostRepositoryImpl implements PostRepository {
   }
 
   // Edit post in the database
-@override
-Future<void> editDetails(String selectedChip, Map<String, dynamic> petData, String postID) async {
-  final postType = PostType.fromString(selectedChip);
-  if (postType == PostType.unknown) {
-    throw DataUpdateException('Unknown post type provided: $selectedChip');
-  }
+  @override
+  Future<void> editDetails(
+      String selectedChip, Map<String, dynamic> petData, String postID) async {
+    final postType = PostType.fromString(selectedChip);
+    if (postType == PostType.unknown) {
+      throw DataUpdateException('Unknown post type provided: $selectedChip');
+    }
 
-  final batch = _firestore.batch();
+    final batch = _firestore.batch();
 
-  final postDocRef = _firestore.collection('PostCollection').doc(postID);
-  batch.update(postDocRef, {'PostDescription': petData['post']});
+    final postDocRef = _firestore.collection('PostCollection').doc(postID);
+    batch.update(postDocRef, {'PostDescription': petData['post']});
 
-  switch (postType) {
-    case PostType.petAppreciation:
-    case PostType.pawsomeExperience:
-    case PostType.protectOurPets:
-    case PostType.communityAnnouncement:
-      break;
+    switch (postType) {
+      case PostType.petAppreciation:
+      case PostType.pawsomeExperience:
+      case PostType.protectOurPets:
+      case PostType.communityAnnouncement:
+        break;
 
-    case PostType.missingPets:
-    case PostType.foundPets:
-      final detailsDocRef = _firestore.collection('PetDetailsCollection').doc(postID);
-      final updateData = {
-        'PetColor': petData['pet_color'],
-        'PetAge': petData['pet_age'],
-        'PetSize': petData['pet_size'],
-        'PetType': petData['pet_type'],
-        'PetGender': petData['pet_gender'],
-        'Region': petData['region'],
-        'Province': petData['province'],
-        'City': petData['city'],
-        'Latitude': petData['lat'],
-        'Longitude': petData['long'],
-        'Barangay': petData['barangay'],
-        'Address': petData['address'],
-      };
-      if (petData['pet_type'] == 'Cat' || petData['pet_type'] == 'Dog') {
-        updateData['PetBreed'] = petData['pet_breed'];
-      }
-      batch.update(detailsDocRef, updateData);
-      break;
-      
-    case PostType.petAdoption:
-      final adoptionDocRef = _firestore.collection('AdoptionDetails').doc(postID);
-      final updateData = {
-        'PetName': petData['pet_name'],
-        'PetColor': petData['pet_color'],
-        'PetAge': petData['pet_age'],
-        'PetSize': petData['pet_size'],
-        'PetGender': petData['pet_gender'],
-        'Region': petData['region'],
-        'Province': petData['province'],
-        'City': petData['city'],
-        'Barangay': petData['barangay'],
-        'Address': petData['address'],
-      };
-      if (petData['pet_type'] == 'Cat' || petData['pet_type'] == 'Dog') {
+      case PostType.missingPets:
+      case PostType.foundPets:
+        final detailsDocRef =
+            _firestore.collection('PetDetailsCollection').doc(postID);
+        final updateData = {
+          'PetColor': petData['pet_color'],
+          'PetAge': petData['pet_age'],
+          'PetSize': petData['pet_size'],
+          'PetType': petData['pet_type'],
+          'PetGender': petData['pet_gender'],
+          'Region': petData['region'],
+          'Province': petData['province'],
+          'City': petData['city'],
+          'Latitude': petData['lat'],
+          'Longitude': petData['long'],
+          'Barangay': petData['barangay'],
+          'Address': petData['address'],
+        };
+        if (petData['pet_type'] == 'Cat' || petData['pet_type'] == 'Dog') {
           updateData['PetBreed'] = petData['pet_breed'];
-      }
-      batch.update(adoptionDocRef, updateData);
-      break;
+        }
+        batch.update(detailsDocRef, updateData);
+        break;
 
-    case PostType.petsForRescue:
-      final rescueDocRef = _firestore.collection('PetRescueDetails').doc(postID);
-      final updateData = {
-        'PetColor': petData['pet_color'],
-        'PetSize': petData['pet_size'],
-        'PetGender': petData['pet_gender'],
-        'Address': petData['address'],
-        'PetBreed' : petData['pet_breed'],
-      };
-      batch.update(rescueDocRef, updateData);
-      break;
+      case PostType.petAdoption:
+        final adoptionDocRef =
+            _firestore.collection('AdoptionDetails').doc(postID);
+        final updateData = {
+          'PetName': petData['pet_name'],
+          'PetColor': petData['pet_color'],
+          'PetAge': petData['pet_age'],
+          'PetSize': petData['pet_size'],
+          'PetGender': petData['pet_gender'],
+          'Region': petData['region'],
+          'Province': petData['province'],
+          'City': petData['city'],
+          'Barangay': petData['barangay'],
+          'Address': petData['address'],
+        };
+        if (petData['pet_type'] == 'Cat' || petData['pet_type'] == 'Dog') {
+          updateData['PetBreed'] = petData['pet_breed'];
+        }
+        batch.update(adoptionDocRef, updateData);
+        break;
 
-    case PostType.petCareInsights:
-      final vetTravelDocRef = _firestore.collection('VetTravelDetails').doc(postID);
-      final updateData = {
-        'Region': petData['region'],
-        'Province': petData['province'],
-        'City': petData['city'],
-        'ClinicName': petData['clinic_name'],
-        'Barangay': petData['barangay'],
-        'Address': petData['address'],
-      };
-      batch.update(vetTravelDocRef, updateData);
-      break;
+      case PostType.petsForRescue:
+        final rescueDocRef =
+            _firestore.collection('PetRescueDetails').doc(postID);
+        final updateData = {
+          'PetColor': petData['pet_color'],
+          'PetSize': petData['pet_size'],
+          'PetGender': petData['pet_gender'],
+          'Address': petData['address'],
+          'PetBreed': petData['pet_breed'],
+        };
+        batch.update(rescueDocRef, updateData);
+        break;
 
-    case PostType.callForAid:
-      final donationDocRef = _firestore.collection('DonationDetails').doc(postID);
-      final updateData = {
-        'BankHolder': petData['account_name'],
-        'BankName': petData['bank_type'],
-        'AccountNumber': petData['account_number'],
-        'DonationType': petData['donation_type'],
-        'PurposeOfDonation': petData['purpose_of_donation'],
-        'EstimatedAmount': petData['amount'],
-      };
-      batch.update(donationDocRef, updateData);
-      break;
+      case PostType.petCareInsights:
+        final vetTravelDocRef =
+            _firestore.collection('VetTravelDetails').doc(postID);
+        final updateData = {
+          'Region': petData['region'],
+          'Province': petData['province'],
+          'City': petData['city'],
+          'ClinicName': petData['clinic_name'],
+          'Barangay': petData['barangay'],
+          'Address': petData['address'],
+        };
+        batch.update(vetTravelDocRef, updateData);
+        break;
 
-    default:
-    // handles the 'unknown' case.
-      throw DataUpdateException('Logic for $selectedChip not implemented.');
+      case PostType.callForAid:
+        final donationDocRef =
+            _firestore.collection('DonationDetails').doc(postID);
+        final updateData = {
+          'BankHolder': petData['account_name'],
+          'BankName': petData['bank_type'],
+          'AccountNumber': petData['account_number'],
+          'DonationType': petData['donation_type'],
+          'PurposeOfDonation': petData['purpose_of_donation'],
+          'EstimatedAmount': petData['amount'],
+        };
+        batch.update(donationDocRef, updateData);
+        break;
+
+      default:
+        // handles the 'unknown' case.
+        throw DataUpdateException('Logic for $selectedChip not implemented.');
+    }
+
+    try {
+      await batch.commit().timeout(const Duration(seconds: 15));
+    } on TimeoutException {
+      // This is the "network is slow" indicator
+      throw DataUpdateException(
+          'The network is slow, please try again in a moment.');
+    } on FirebaseException catch (e) {
+      // Handle specific Firestore errors
+      throw DataUpdateException('An error occurred while saving: ${e.code}');
+    } catch (e) {
+      // Handle any other unexpected errors
+      throw DataUpdateException(
+          'An unexpected error occurred. Please try again.');
+    }
   }
-
-  try {
-    await batch.commit().timeout(const Duration(seconds: 15));
-  } on TimeoutException {
-    // This is the "network is slow" indicator
-    throw DataUpdateException('The network is slow, please try again in a moment.');
-  } on FirebaseException catch (e) {
-    // Handle specific Firestore errors
-    throw DataUpdateException('An error occurred while saving: ${e.code}');
-  } catch (e) {
-    // Handle any other unexpected errors
-    throw DataUpdateException('An unexpected error occurred. Please try again.');
-  }
-}
 
   // Edit an add tags in the database
   @override
-  Future <void> addTag(String tag, String postID) async{
+  Future<void> addTag(String tag, String postID) async {
+    QuerySnapshot tagSnapshot = await _firestore
+        .collection('PostCollection')
+        .doc(postID)
+        .collection('TagsCollection')
+        .where('tag', isEqualTo: tag)
+        .get();
 
-     QuerySnapshot tagSnapshot = await _firestore.collection('PostCollection').doc(postID).collection('TagsCollection').where('tag', isEqualTo: tag).get();
-
-      if (tagSnapshot.docs.isEmpty) {
-        DocumentReference tagRef = _firestore.collection('PostCollection').doc(postID).collection('TagsCollection').doc();
-        await tagRef.set({
-          'tags': tag,
-        });
-        ToastComponent().showMessage(AppColors.orange, 'Tag added successfully');
-      } else {
-        throw Exception('Tag already exists');
-      }
-
+    if (tagSnapshot.docs.isEmpty) {
+      DocumentReference tagRef = _firestore
+          .collection('PostCollection')
+          .doc(postID)
+          .collection('TagsCollection')
+          .doc();
+      await tagRef.set({
+        'tags': tag,
+      });
+      ToastComponent().showMessage(AppColors.orange, 'Tag added successfully');
+    } else {
+      throw Exception('Tag already exists');
+    }
   }
 
   // remove an add tags in the database
   @override
-  Future <void> removeTag(String tag, String postID) async{
-    QuerySnapshot tagSnapshot = await _firestore.collection('PostCollection').doc(postID).collection('TagsCollection').where('tags', isEqualTo: tag).get();
+  Future<void> removeTag(String tag, String postID) async {
+    QuerySnapshot tagSnapshot = await _firestore
+        .collection('PostCollection')
+        .doc(postID)
+        .collection('TagsCollection')
+        .where('tags', isEqualTo: tag)
+        .get();
 
     if (tagSnapshot.docs.isNotEmpty) {
       for (QueryDocumentSnapshot doc in tagSnapshot.docs) {
         await doc.reference.delete();
       }
-      ToastComponent().showMessage(AppColors.orange, 'Tag removed successfully');
+      ToastComponent()
+          .showMessage(AppColors.orange, 'Tag removed successfully');
     } else {
       throw Exception('Tag not found');
     }
   }
 
-
   // Remove image from the database
   @override
   Future<void> deleteImage(String imageId, String url, String postId) {
-    return _firestore.collection('PostCollection').doc(postId).collection('ImageCollection').doc(imageId).delete().then((_) {
+    return _firestore
+        .collection('PostCollection')
+        .doc(postId)
+        .collection('ImageCollection')
+        .doc(imageId)
+        .delete()
+        .then((_) {
       // Remove the image from Firebase Storage
       Reference storageRef = _firebaseStorage.refFromURL(url);
-      ToastComponent().showMessage(AppColors.orange, 'Image deleted successfully');
+      ToastComponent()
+          .showMessage(AppColors.orange, 'Image deleted successfully');
       return storageRef.delete();
     }).catchError((error) {
       throw Exception('Failed to delete image: $error');
@@ -1354,9 +1489,11 @@ Future<void> editDetails(String selectedChip, Map<String, dynamic> petData, Stri
   // Remove image from the storage
   Future<void> removeImageStorage(String imageId) async {
     try {
-      Reference storageRef = _firebaseStorage.ref().child('PostFolder/$imageId');
+      Reference storageRef =
+          _firebaseStorage.ref().child('PostFolder/$imageId');
       await storageRef.delete();
-      ToastComponent().showMessage(AppColors.orange, 'Image removed successfully');
+      ToastComponent()
+          .showMessage(AppColors.orange, 'Image removed successfully');
     } catch (e) {
       throw Exception('Failed to remove image: $e');
     }
@@ -1366,18 +1503,24 @@ Future<void> editDetails(String selectedChip, Map<String, dynamic> petData, Stri
   Future<void> addImage(String postID, File image) async {
     try {
       String fileName = DateTime.now().millisecondsSinceEpoch.toString();
-      Reference storageRef = _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
+      Reference storageRef =
+          _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
       UploadTask uploadTask = storageRef.putFile(image);
       TaskSnapshot taskSnapshot = await uploadTask;
       String downloadUrl = await taskSnapshot.ref.getDownloadURL();
 
       // Add image URL to the images sub-collection
-      await _firestore.collection('PostCollection').doc(postID).collection('ImageCollection').add({
+      await _firestore
+          .collection('PostCollection')
+          .doc(postID)
+          .collection('ImageCollection')
+          .add({
         'FileUrl': downloadUrl,
         'FileName': '$fileName.jpg',
       });
 
-      ToastComponent().showMessage(AppColors.orange, 'Image added successfully');
+      ToastComponent()
+          .showMessage(AppColors.orange, 'Image added successfully');
     } catch (e) {
       throw Exception('Failed to upload image: $e');
     }
@@ -1386,7 +1529,6 @@ Future<void> editDetails(String selectedChip, Map<String, dynamic> petData, Stri
   // This will delete the post
   @override
   Future<void> deletePost(String category, String postId) async {
-
     // Trim and log the category for debugging
     category = category.trim().toLowerCase();
     print('Deleting post with category: $category');
@@ -1414,9 +1556,13 @@ Future<void> editDetails(String selectedChip, Map<String, dynamic> petData, Stri
           category == 'protect our pets: report abuse' ||
           category == 'community announcement') {
         await _firestore.collection('PostCollection').doc(postId).delete();
-      } else if (category == 'missing pets' || category.toLowerCase() == 'found pets') {
+      } else if (category == 'missing pets' ||
+          category.toLowerCase() == 'found pets') {
         await _firestore.collection('PostCollection').doc(postId).delete();
-        await _firestore.collection('PetDetailsCollection').doc(postId).delete();
+        await _firestore
+            .collection('PetDetailsCollection')
+            .doc(postId)
+            .delete();
       } else if (category == 'pet adoption') {
         await _firestore.collection('PostCollection').doc(postId).delete();
         await _firestore.collection('AdoptionDetails').doc(postId).delete();
@@ -1436,10 +1582,10 @@ Future<void> editDetails(String selectedChip, Map<String, dynamic> petData, Stri
         // Delete each document in the DonationCollection
         for (QueryDocumentSnapshot doc in donationSnapshot.docs) {
           await doc.reference.delete();
-            String imageUrl = doc['TransactionPath'];
-            Reference storageRef = _firebaseStorage.refFromURL(imageUrl);
-            await storageRef.delete();
-            await doc.reference.delete(); // Delete the document in Firestore
+          String imageUrl = doc['TransactionPath'];
+          Reference storageRef = _firebaseStorage.refFromURL(imageUrl);
+          await storageRef.delete();
+          await doc.reference.delete(); // Delete the document in Firestore
         }
         await _firestore.collection('PostCollection').doc(postId).delete();
       } else {
@@ -1451,48 +1597,43 @@ Future<void> editDetails(String selectedChip, Map<String, dynamic> petData, Stri
   }
 
   // get the post owner post
-@override
-Stream<List<PostModel>> getMyPost() {
-  return FirebaseAuth.instance.authStateChanges().switchMap((user) {
-    if (user == null) {
-      Fluttertoast.showToast(msg: "User is not logged in.");
-      return Stream.value([]);
-    }
+  @override
+  Stream<List<PostModel>> getMyPost() {
+    return FirebaseAuth.instance.authStateChanges().switchMap((user) {
+      if (user == null) {
+        Fluttertoast.showToast(msg: "User is not logged in.");
+        return Stream.value([]);
+      }
 
-    final uid = user.uid;
+      final uid = user.uid;
 
-    return _firestore
-        .collection('PostCollection')
-        .where('PostOwnerID', isEqualTo: uid)
-        .snapshots()
-        .handleError((error) {
-          Fluttertoast.showToast(msg: "Error: Stream Error: $error");
-        })
-        .asyncMap((snapshot) async {
-          if (snapshot.docs.isEmpty) {
-            return [];
-          }
+      return _firestore
+          .collection('PostCollection')
+          .where('PostOwnerID', isEqualTo: uid)
+          .snapshots()
+          .handleError((error) {
+        Fluttertoast.showToast(msg: "Error: Stream Error: $error");
+      }).asyncMap((snapshot) async {
+        if (snapshot.docs.isEmpty) return [];
 
-          List<PostModel> posts = [];
-          for (var doc in snapshot.docs) {
-            try {
-              final post = await PostModel.fromDocument(doc);
-              posts.add(post);
-            } catch (e) {
-              Fluttertoast.showToast(
-                  msg: "Error: Error parsing document ${doc.id}");
-            }
-          }
-          return posts;
-        });
-  });
-}
-
+        try {
+          return await Future.wait(
+            snapshot.docs.map((doc) => PostModel.fromDocument(doc)),
+          );
+        } catch (e) {
+          Fluttertoast.showToast(msg: "Error parsing posts: $e");
+          return [];
+        }
+      });
+    });
+  }
 
   @override
-  Future<void> updatePetStatus(String postId, String category, String selectedStatus) async {
+  Future<void> updatePetStatus(
+      String postId, String category, String selectedStatus) async {
     if (category == 'Missing Pets' || category == 'Found Pets') {
-      ToastComponent().showMessage(AppColors.orange, 'Status updated successfully');
+      ToastComponent()
+          .showMessage(AppColors.orange, 'Status updated successfully');
       return _firestore.collection('PetDetailsCollection').doc(postId).update({
         'Status': selectedStatus,
       });
@@ -1504,13 +1645,11 @@ Stream<List<PostModel>> getMyPost() {
       return _firestore.collection('PostCollection').doc(postId).update({
         'Status': selectedStatus,
       });
-    }
-    else if (category == 'Call for Aid') {
+    } else if (category == 'Call for Aid') {
       return _firestore.collection('DonationDetails').doc(postId).update({
         'Status': selectedStatus,
       });
-    }
-    else {
+    } else {
       throw Exception('Invalid category');
     }
   }
@@ -1521,10 +1660,8 @@ Stream<List<PostModel>> getMyPost() {
     String userId = user!.uid;
 
     // Get the document snapshot for the user
-    DocumentSnapshot documentSnapshot = await _firestore
-        .collection('Users')
-        .doc(userId)
-        .get();
+    DocumentSnapshot documentSnapshot =
+        await _firestore.collection('Users').doc(userId).get();
 
     // Check if the document exists and the status is "Pending"
     if (documentSnapshot.exists) {
@@ -1548,8 +1685,14 @@ Stream<List<PostModel>> getMyPost() {
   // get the status real-time
   @override
   Stream<String> getStatus(String postId, String category) {
-    if (category == 'Missing Pets' || category == 'Found Pets' || category == 'Pets For Rescue') {
-      return _firestore.collection('PetDetailsCollection').doc(postId).snapshots().map((snapshot) {
+    if (category == 'Missing Pets' ||
+        category == 'Found Pets' ||
+        category == 'Pets For Rescue') {
+      return _firestore
+          .collection('PetDetailsCollection')
+          .doc(postId)
+          .snapshots()
+          .map((snapshot) {
         if (snapshot.exists) {
           return snapshot.data()?['Status'] ?? 'Unknown';
         } else {
@@ -1557,7 +1700,11 @@ Stream<List<PostModel>> getMyPost() {
         }
       });
     } else if (category == 'Pet Adoption') {
-      return _firestore.collection('AdoptionDetails').doc(postId).snapshots().map((snapshot) {
+      return _firestore
+          .collection('AdoptionDetails')
+          .doc(postId)
+          .snapshots()
+          .map((snapshot) {
         if (snapshot.exists) {
           return snapshot.data()?['Status'] ?? 'Unknown';
         } else {
@@ -1565,7 +1712,11 @@ Stream<List<PostModel>> getMyPost() {
         }
       });
     } else if (category == 'Protect Our Pets: Report Abuse') {
-      return _firestore.collection('PostCollection').doc(postId).snapshots().map((snapshot) {
+      return _firestore
+          .collection('PostCollection')
+          .doc(postId)
+          .snapshots()
+          .map((snapshot) {
         if (snapshot.exists) {
           return snapshot.data()?['Status'] ?? 'Unknown';
         } else {
@@ -1573,7 +1724,11 @@ Stream<List<PostModel>> getMyPost() {
         }
       });
     } else if (category == 'Call for Aid') {
-      return _firestore.collection('DonationDetails').doc(postId).snapshots().map((snapshot) {
+      return _firestore
+          .collection('DonationDetails')
+          .doc(postId)
+          .snapshots()
+          .map((snapshot) {
         if (snapshot.exists) {
           return snapshot.data()?['Status'] ?? 'Unknown';
         } else {
@@ -1584,6 +1739,4 @@ Stream<List<PostModel>> getMyPost() {
       throw Exception('Invalid category');
     }
   }
-
-
 }

@@ -1,9 +1,6 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/scheduler.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:pet_welfrare_ph/src/modal/SubscriptionModal.dart';
 import 'package:pet_welfrare_ph/src/respository/LocationRespository.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
@@ -55,10 +52,8 @@ class MenuViewModel extends ChangeNotifier {
     isLocationEnabled = await locationRepository.checkIfUserPinExists();
 
     if (!isLocationEnabled) {
-      ToastComponent().showMessage(Colors.red, 'User pin does not exist');
       isLocationEnabled = false;
     } else {
-      ToastComponent().showMessage(Colors.red, 'User pin already exists');
       isLocationEnabled = true;
     }
   }

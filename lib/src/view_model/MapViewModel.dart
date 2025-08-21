@@ -218,22 +218,50 @@ class MapViewModel extends ChangeNotifier {
 
   // add lost and found pet pins
   Future<void> addLostAndFoundPetPins() async {
-    if (mapController == null || _isLoadingMarkers || lostpets.isEmpty) return;
+    if (mapController == null || _isLoadingMarkers) return;
 
     _isLoadingMarkers = true;
 
-    for (var pet in lostpets) {
-      symbols.add(SymbolOptions(
-        geometry: LatLng(pet.lat, pet.long),
-        iconImage: "custom_marker_lost",
-        iconSize: 1.5,
-        textField: '${pet.category} spotted',  // Adding a label for identification
-        textOffset: const Offset(0, 1.5),  // Adjust the offset to place the text below the icon
-      ));
+    // Clear old pins and maps
+    symbolIdToLostPet.clear();
+    symbolIdToFoundPet.clear();
+
+    // --- LOST PETS ---
+    if (lostpets.isNotEmpty) {
+      final lostSymbols = lostpets.map((pet) {
+        return SymbolOptions(
+          geometry: LatLng(pet.lat, pet.long),
+          iconImage: "custom_marker_lost",
+          iconSize: 1.5,
+          textField: '${pet.category} spotted',
+          textOffset: const Offset(0, 1.5),
+        );
+      }).toList();
+
+      final addedLostSymbols = await mapController!.addSymbols(lostSymbols);
+
+      for (int i = 0; i < addedLostSymbols.length; i++) {
+        symbolIdToLostPet[addedLostSymbols[i].id] = lostpets[i];
+      }
     }
 
-    if (symbols.isNotEmpty) {
-      await mapController!.addSymbols(symbols);
+    // --- FOUND PETS ---
+    if (foundpets.isNotEmpty) {
+      final foundSymbols = foundpets.map((pet) {
+        return SymbolOptions(
+          geometry: LatLng(pet.lat, pet.long),
+          iconImage: "custom_marker_found",
+          iconSize: 1.5,
+          textField: '${pet.category} spotted',
+          textOffset: const Offset(0, 1.5),
+        );
+      }).toList();
+
+      final addedFoundSymbols = await mapController!.addSymbols(foundSymbols);
+
+      for (int i = 0; i < addedFoundSymbols.length; i++) {
+        symbolIdToFoundPet[addedFoundSymbols[i].id] = foundpets[i];
+      }
     }
 
     _isLoadingMarkers = false;

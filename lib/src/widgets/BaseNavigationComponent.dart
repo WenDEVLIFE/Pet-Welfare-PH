@@ -6,7 +6,8 @@ abstract class BaseNavigationWidget extends StatefulWidget {
   const BaseNavigationWidget({Key? key}) : super(key: key);
 }
 
-abstract class BaseNavigationComponentState<T extends BaseNavigationWidget> extends State<T> {
+abstract class BaseNavigationComponentState<T extends BaseNavigationWidget>
+    extends State<T> {
   late PageController _pageController;
   int _currentIndex = 0;
 
@@ -17,6 +18,7 @@ abstract class BaseNavigationComponentState<T extends BaseNavigationWidget> exte
   }
 
   List<Widget> getNavBarItems();
+
   List<Widget> getPageViewChildren();
 
   Widget buildNavItem(int index, IconData icon, String label) {
@@ -46,64 +48,31 @@ abstract class BaseNavigationComponentState<T extends BaseNavigationWidget> exte
   }
 
   @override
-Widget build(BuildContext context) {
-  return Scaffold(
-    body: PageView.builder(
-      controller: _pageController,
-      physics: const NeverScrollableScrollPhysics(), 
-      onPageChanged: (index) {
-        setState(() {
-          _currentIndex = index;
-        });
-      },
-      itemCount: getPageViewChildren().length,
-      itemBuilder: (context, index) {
-        return getPageViewChildren()[index];
-      },
-    ),
-    bottomNavigationBar: SafeArea(
-  child: Container(
-    margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-    decoration: BoxDecoration(
-      color: AppColors.orange,
-      borderRadius: BorderRadius.circular(24),
-      boxShadow: [
-        BoxShadow(
-          color: Colors.black.withOpacity(0.1),
-          blurRadius: 12,
-          offset: const Offset(0, 4),
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: PageView.builder(
+        controller: _pageController,
+        physics: const NeverScrollableScrollPhysics(),
+        // Disable swipe
+        onPageChanged: (index) {
+          setState(() {
+            _currentIndex = index;
+          });
+        },
+        itemCount: getPageViewChildren().length,
+        itemBuilder: (context, index) {
+          return getPageViewChildren()[index];
+        },
+      ),
+      bottomNavigationBar: SafeArea(
+        child: CurvedNavigationBar(
+          backgroundColor: const Color.fromARGB(255, 245, 245, 245),
+          color: AppColors.orange,
+          items: getNavBarItems(),
+          index: _currentIndex,
+          onTap: _onItemTapped,
         ),
-      ],
-    ),
-    child: CurvedNavigationBar(
-      height: 60,
-      backgroundColor: Colors.transparent,
-      color: Colors.transparent, // so container's style is used
-      buttonBackgroundColor: Colors.white,
-      animationDuration: const Duration(milliseconds: 300),
-      animationCurve: Curves.easeOutQuint,
-      index: _currentIndex,
-      onTap: _onItemTapped,
-      items: getNavBarItems()
-          .map(
-            (item) => Padding(
-              padding: const EdgeInsets.symmetric(vertical: 6),
-              child: IconTheme(
-                data: IconThemeData(
-                  size: 28,
-                  color: _currentIndex == getNavBarItems().indexOf(item)
-                      ? AppColors.orange
-                      : Colors.white,
-                ),
-                child: item,
-              ),
-            ),
-          )
-          .toList(),
-    ),
-  ),
-),
-  );
-}
-
+      ),
+    );
+  }
 }
