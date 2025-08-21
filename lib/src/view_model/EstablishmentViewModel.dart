@@ -37,7 +37,7 @@ class EstablishmentViewModel extends ChangeNotifier {
   double newlat = 0.0;
   double newlong = 0.0;
 
-  MaplibreMapController? mapController;
+  MapLibreMapController? mapController;
   List<Map<String, dynamic>> searchResults = [];
 
   // OpenStreetMapService
@@ -157,7 +157,7 @@ class EstablishmentViewModel extends ChangeNotifier {
   }
 
   // Load custom marker image
-  Future<void> loadMarkerImage(MaplibreMapController controller) async {
+  Future<void> loadMarkerImage(MapLibreMapController controller) async {
     ByteData data = await rootBundle.load('assets/icon/location.png');
     Uint8List bytes = data.buffer.asUint8List();
     await controller.addImage("custom_marker", bytes);
@@ -283,6 +283,7 @@ class EstablishmentViewModel extends ChangeNotifier {
     }
     else {
       _addLocationRespository.updateLocation(data, context);
+      Navigator.pop(context);
       WidgetsBinding.instance.addPostFrameCallback((_) {
         notifyListeners();
       });

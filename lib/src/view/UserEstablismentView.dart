@@ -5,7 +5,6 @@ import 'package:pet_welfrare_ph/src/view_model/EstablishmentViewModel.dart';
 import 'package:provider/provider.dart';
 
 import '../widgets/SearchTextField.dart';
-import 'editdirectory/EditBusinessView.dart';
 import '../utils/AppColors.dart';
 import '../utils/Route.dart';
 
@@ -50,7 +49,7 @@ class EstablismentState extends State<UserEstablismentView> {
           CustomSearchTextField(
             controller: establishmentViewModel.searchController,
             screenHeight: screenHeight,
-            hintText: 'Search a subscription....',
+            hintText: 'Search a for establishment....',
             fontSize: 16,
             keyboardType: TextInputType.text,
             onChanged: (searchText) {

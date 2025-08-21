@@ -1,12 +1,8 @@
 import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
-import 'package:pet_welfrare_ph/src/DialogView/ChangeEstablishmentProfile.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 import 'package:provider/provider.dart';
 
@@ -16,7 +12,7 @@ import '../utils/ToastComponent.dart';
 import '../view_model/EstablishmentViewModel.dart';
 
 class ViewEstablishmentView extends StatefulWidget {
-  const ViewEstablishmentView({Key? key}) : super(key: key);
+  const ViewEstablishmentView({super.key});
 
   @override
   ViewEstablishmentScreenState createState() => ViewEstablishmentScreenState();
@@ -342,6 +338,7 @@ class ViewEstablishmentScreenState extends State<ViewEstablishmentView> {
                         'EstablishmentStatus': 'Denied',
                       };
                       viewModel.verifier(data, context);
+                      Navigator.of(context).pop();
                     },
                     style: ElevatedButton.styleFrom(
                       backgroundColor: AppColors.orange,

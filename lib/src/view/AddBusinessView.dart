@@ -2,10 +2,8 @@ import 'dart:io';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/foundation.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:maplibre_gl/maplibre_gl.dart';
-import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 import 'package:pet_welfrare_ph/src/view_model/EstablishmentViewModel.dart';
 import 'package:pet_welfrare_ph/src/widgets/CustomButton.dart';
 import 'package:pet_welfrare_ph/src/widgets/CustomText.dart';
@@ -14,7 +12,6 @@ import 'package:provider/provider.dart';
 
 import '../utils/AppColors.dart';
 import '../utils/ImageUtils.dart';
-import '../services/MapTilerKey.dart';
 import '../widgets/CustomDropdown.dart';
 import '../widgets/CustomMapWidget.dart';
 import '../widgets/MapSearchTextField.dart';
@@ -45,7 +42,7 @@ class _AddShelterClinicState extends State<AddShelterClinic> {
   Widget build(BuildContext context) {
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
-    final viewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
+    //final viewModel = Provider.of<EstablishmentViewModel>(context, listen: false);
 
     return Scaffold(
       appBar: AppBar(
@@ -307,6 +304,7 @@ class _AddShelterClinicState extends State<AddShelterClinic> {
                             onPressed: () {
                               // Add your insert function to database
                               viewModel.insertActionEvent(context);
+                              Navigator.of(context).pop();
                             },
                           ),
                         ),
