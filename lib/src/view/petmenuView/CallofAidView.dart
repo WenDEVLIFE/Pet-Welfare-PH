@@ -23,7 +23,7 @@ class CallOfAidViewState extends State<CallOfAidView> {
   void initState() {
     super.initState();
     postViewModel = Provider.of<PostViewModel>(context, listen: false);
-    postViewModel.listenToCallforAidPost();
+    postViewModel.initializeAllListeners();
     postViewModel.loadData();
   }
 
@@ -47,13 +47,13 @@ class CallOfAidViewState extends State<CallOfAidView> {
                 fontSize: 16,
                 keyboardType: TextInputType.text,
                 onChanged: (searchText) {
-                  postViewModel.searchCallforAidPost(searchText);
+                  postViewModel.onSearchChanged('Call for Aid', searchText);
                 },
               ),
               Expanded(
                 child: Builder(builder: (context) {
                   // Initial loading state
-                  if (postViewModel.isInitialLoading) {
+                  if (postViewModel.isCallForAidLoading) {
                     return ListView.builder(
                       itemCount: 5,
                       itemBuilder: (context, index) => PostCardSkeleton(
@@ -75,7 +75,7 @@ class CallOfAidViewState extends State<CallOfAidView> {
                   }
 
                   // Empty states
-                  if (postViewModel.filterCallforAidPost.isEmpty) {
+                  if (postViewModel.callForAidPosts.isEmpty) {
                     if (postViewModel.searchPostController.text.isNotEmpty) {
                       return Center(
                         child: Text(
@@ -90,9 +90,9 @@ class CallOfAidViewState extends State<CallOfAidView> {
 
                   // Data display
                   return ListView.builder(
-                    itemCount: postViewModel.filterCallforAidPost.length,
+                    itemCount: postViewModel.callForAidPosts.length,
                     itemBuilder: (context, index) {
-                      var post = postViewModel.filterCallforAidPost[index];
+                      var post = postViewModel.callForAidPosts[index];
                       return CallForAidCard(
                           post: post,
                           screenHeight: screenHeight,

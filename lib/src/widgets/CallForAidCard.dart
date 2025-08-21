@@ -29,38 +29,48 @@ class CallForAidCard extends StatefulWidget {
   final double screenWidth;
 
   const CallForAidCard({
-    Key? key,
+    super.key,
     required this.post,
     required this.screenHeight,
     required this.screenWidth,
-  }) : super(key: key);
+  });
 
   @override
   State<CallForAidCard> createState() => _CallForAidCardState();
-
 }
 
-class _CallForAidCardState extends State<CallForAidCard> {
-  late PostModel post;
+class _CallForAidCardState extends State<CallForAidCard>
+    with AutomaticKeepAliveClientMixin {
   late double screenHeight;
   late double screenWidth;
   String? userReaction;
   int reactionCount = 0;
   int commentCount = 0;
   bool isLoading = true;
-  bool hasReacted = false;
   late PostViewModel postViewModel;
+  late PageController _pageController;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
     super.initState();
-    post = widget.post;
     postViewModel = Provider.of<PostViewModel>(context, listen: false);
     screenHeight = widget.screenHeight;
     screenWidth = widget.screenWidth;
+    _pageController = PageController(keepPage: true);
     _loadData();
   }
+
+  @override
+  void dispose() {
+    _pageController.dispose();
+    super.dispose();
+  }
+
   Future<void> _loadData() async {
+    if (!mounted) return;
     try {
       final results = await Future.wait([
         postViewModel.getUserReaction(widget.post.postId),
@@ -68,25 +78,31 @@ class _CallForAidCardState extends State<CallForAidCard> {
         postViewModel.getCommentCount(widget.post.postId),
       ]);
 
-      setState(() {
-        userReaction = results[0] as String?;
-        reactionCount = (results[1] as int?)!;
-        commentCount = (results[2] as int?)!;
-        isLoading = false;
-      });
+      if (mounted) {
+        setState(() {
+          userReaction = results[0] as String?;
+          reactionCount = (results[1] as int?) ?? 0;
+          commentCount = (results[2] as int?) ?? 0;
+          isLoading = false;
+        });
+      }
     } catch (e) {
-      print("Error loading post data: $e");
-      setState(() => isLoading = false);
+      debugPrint("Error loading post data: $e");
+      if (mounted) {
+        setState(() => isLoading = false);
+      }
     }
   }
 
   Future<void> _handleReaction() async {
     if (userReaction != null) {
       await postViewModel.removeReaction(widget.post.postId);
-      setState(() {
-        userReaction = null;
-        reactionCount -= 1;
-      });
+      if (mounted) {
+        setState(() {
+          userReaction = null;
+          reactionCount -= 1;
+        });
+      }
     } else {
       showModalBottomSheet(
         context: context,
@@ -94,76 +110,76 @@ class _CallForAidCardState extends State<CallForAidCard> {
           return ReactionModal(
             onReactionSelected: (reaction) async {
               await postViewModel.addReaction(widget.post.postId, reaction);
-              setState(() {
-                userReaction = reaction;
-                reactionCount += 1;
-              });
-              Navigator.pop(context); // Close the modal after selecting
+              if (mounted) {
+                setState(() {
+                  userReaction = reaction;
+                  reactionCount += 1;
+                });
+              }
+              Navigator.pop(context);
             },
           );
         },
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     final formattedDate = postViewModel.formatTimestamp(widget.post.timestamp);
 
-    if (isLoading) {
-      return PostCardSkeleton(
-        screenHeight: widget.screenHeight,
-        screenWidth: widget.screenWidth,
-      );
-    }
     return Card(
       margin: const EdgeInsets.all(10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
+          // Header
           Row(
             children: [
               Padding(
                 padding: const EdgeInsets.all(10),
                 child: CircleAvatar(
                   radius: screenHeight * 0.03,
-                  backgroundImage: CachedNetworkImageProvider(post.profileUrl),
+                  backgroundImage: CachedNetworkImageProvider(widget.post.profileUrl),
                 ),
               ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: Text(
-                      post.postOwnerName,
-                      style: const TextStyle(
-                        fontFamily: 'SmoochSans',
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+              Expanded(
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Text(
+                        widget.post.postOwnerName,
+                        style: const TextStyle(
+                          fontFamily: 'SmoochSans',
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: Text(
-                      formattedDate,
-                      style: const TextStyle(
-                        fontFamily: 'SmoochSans',
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
+                    Padding(
+                      padding: const EdgeInsets.all(5),
+                      child: Text(
+                        formattedDate,
+                        style: const TextStyle(
+                          fontFamily: 'SmoochSans',
+                          color: Colors.black,
+                          fontSize: 16,
+                          fontWeight: FontWeight.w600,
+                        ),
                       ),
                     ),
-                  ),
-                ],
+                  ],
+                ),
               ),
-              const Spacer(),
               PopupMenuButton<String>(
                 itemBuilder: (context) {
-                  final currentUserId = Provider
-                      .of<PostViewModel>(context, listen: false)
-                      .currentUserId;
+                  final currentUserId =
+                      Provider.of<PostViewModel>(context, listen: false)
+                          .currentUserId;
                   final isAdmin = postViewModel.role.toLowerCase() == 'admin' ||
                       postViewModel.role.toLowerCase() == "sub-admin";
                   final isPostOwner = widget.post.postOwnerId == currentUserId;
@@ -171,140 +187,188 @@ class _CallForAidCardState extends State<CallForAidCard> {
                   return [
                     if (isAdmin || isPostOwner)
                       PopupMenuItem(
-                        value: 'Edit', child: const Text('Edit'), onTap: () {
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditPostView(
-                              postId: widget.post.postId,
-                              category: widget.post.category,
+                        value: 'Edit',
+                        child: const Text('Edit'),
+                        onTap: () =>
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditPostView(
+                                postId: widget.post.postId,
+                                category: widget.post.category,
+                              ),
                             ),
-                          ),
-                        );
-                      },),
-                    PopupMenuItem(child: const Text('Update Status'), onTap: (){
-                      // This will view the update adoption
-                      showModalBottomSheet(context: context, isScrollControlled: true, builder: (context) {
-                        return PetStatusModal(post.postId, post.category);
-                      });
-                    },),
+                          );
+                        }),
+                      ),
+                    PopupMenuItem(
+                      child: const Text('Update Status'),
+                      onTap: () =>
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                        showModalBottomSheet(
+                            context: context,
+                            isScrollControlled: true,
+                            builder: (context) {
+                              return PetStatusModal(
+                                onStatusUpdated: () {
+                                  setState(() {});
+                                },
+                                postId: widget.post.postId,
+                                category: widget.post.category,
+                              );
+                            });
+                      }),
+                    ),
                     if (isAdmin || isPostOwner)
-                      PopupMenuItem(child: const Text('View Submit Donations'), onTap: (){
-
-                        // This will view the submit adoption
-                        showModalBottomSheet(context: context, isScrollControlled: true, builder: (context) {
-                          return ViewDonationModal(postId: post.postId);
-                        });
-
-                      },),
+                      PopupMenuItem(
+                        child: const Text('View Submitted Donations'),
+                        onTap: () =>
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                          showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              builder: (context) {
+                                return ViewDonationModal(postId: widget.post.postId);
+                              });
+                        }),
+                      ),
                     if (isAdmin || isPostOwner)
-                      PopupMenuItem(value: 'Delete', child: const Text('Delete'), onTap: (){
-                        // Delete the image to the database
-                        postViewModel.deletePost(post.category, context, post.postId);
-                      },),
+                      PopupMenuItem(
+                        value: 'Delete',
+                        child: const Text('Delete'),
+                        onTap: () {
+                          postViewModel.deletePost(
+                              widget.post.category, context, widget.post.postId);
+                        },
+                      ),
                     if (!isPostOwner)
-                      PopupMenuItem(value: 'Message', child: const Text('Message'), onTap: (){
-                        // Determine which ID is the other user (not current user)
-                        final otherUserId = currentUserId == widget.post.postOwnerId
-                            ? widget.post.postOwnerId
-                            : widget.post.postOwnerId;
-
-                        Navigator.pushNamed(context, AppRoutes.message, arguments: {
-                          'receiverID': otherUserId
-                        });
-                      },),
+                      PopupMenuItem(
+                        value: 'Message',
+                        child: const Text('Message'),
+                        onTap: () =>
+                            WidgetsBinding.instance.addPostFrameCallback((_) {
+                          final otherUserId = widget.post.postOwnerId;
+                          Navigator.pushNamed(context, AppRoutes.message,
+                              arguments: {'receiverID': otherUserId});
+                        }),
+                      ),
                     PopupMenuItem(
                       value: 'Report',
                       child: const Text('Report'),
-                      onTap: () {
-                        Future.delayed(
-                          Duration.zero,
-                              () =>
-                              showDialog(
-                                context: context,
-                                builder: (context) =>
-                                    ReportDialog(widget.post.postId),
-                              ),
+                      onTap: () =>
+                          WidgetsBinding.instance.addPostFrameCallback((_) {
+                        showDialog(
+                          context: context,
+                          builder: (context) =>
+                              ReportDialog(widget.post.postId),
                         );
-                      },
+                      }),
                     ),
-
                   ];
                 },
                 icon: const Icon(Icons.more_vert),
               ),
             ],
           ),
+
+          // Description
           Padding(
             padding: const EdgeInsets.all(10),
             child: ExpandableText(
-              text: post.postDescription,
+              text: widget.post.postDescription,
             ),
           ),
+
+          // Tags Section
           StreamBuilder<List<TagModel>>(
-            stream: post.tagStream,
+            stream: widget.post.tagStream,
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator(); // Show a loading indicator while waiting for data
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}'); // Handle errors
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const SizedBox(); // Return an empty widget if no tags are available
-              } else {
-                final tags = snapshot.data!.map((tag) => tag.name).toList();
-                return Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: ExpandableTags(tags: tags),
-                );
+              final hasData = snapshot.hasData && snapshot.data!.isNotEmpty;
+              final isWaiting =
+                  snapshot.connectionState == ConnectionState.waiting;
+
+              if (!hasData && !isWaiting) {
+                return const SizedBox.shrink();
               }
+
+              return Container(
+                padding: const EdgeInsets.all(10.0),
+                constraints: const BoxConstraints(minHeight: 50),
+                child: Stack(
+                  alignment: Alignment.center,
+                  children: [
+                    ExpandableTags(
+                      tags: hasData
+                          ? snapshot.data!.map((tag) => tag.name).toList()
+                          : [],
+                    ),
+                    if (isWaiting) const CupertinoActivityIndicator(),
+                  ],
+                ),
+              );
             },
           ),
+
+          // Image Section
           StreamBuilder<List<String>>(
-            stream: post.imageStream,
+            stream: widget.post.imageStream,
             builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator()); // Show a loading indicator
-              } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}')); // Handle errors
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const Center(child: Text('')); // Handle empty stream
-              } else {
-                final imageUrls = snapshot.data!;
-                return SizedBox(
-                  height: screenHeight * 0.3,
-                  child: PageView.builder(
-                    itemCount: imageUrls.length,
-                    itemBuilder: (context, imageIndex) {
-                      return GestureDetector(
-                        onTap: () {
-                          Navigator.push(
-                            context,
-                            MaterialPageRoute(
-                              builder: (context) => ViewImage(),
-                              settings: RouteSettings(
-                                arguments: {
-                                  'imageUrls': imageUrls,
-                                  'initialIndex': imageIndex,
-                                },
-                              ),
+              final hasData = snapshot.hasData && snapshot.data!.isNotEmpty;
+              final isWaiting =
+                  snapshot.connectionState == ConnectionState.waiting;
+
+              if (!hasData && !isWaiting) {
+                return const SizedBox.shrink();
+              }
+
+              return SizedBox(
+                height: screenHeight * 0.3,
+                child: Stack(
+                  fit: StackFit.expand,
+                  alignment: Alignment.center,
+                  children: [
+                    Visibility(
+                      visible: hasData,
+                      child: PageView.builder(
+                        controller: _pageController,
+                        itemCount: hasData ? snapshot.data!.length : 0,
+                        itemBuilder: (context, imageIndex) {
+                          return GestureDetector(
+                            onTap: () {
+                              Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => ViewImage(),
+                                  settings: RouteSettings(
+                                    arguments: {
+                                      'imageUrls': snapshot.data!,
+                                      'initialIndex': imageIndex,
+                                    },
+                                  ),
+                                ),
+                              );
+                            },
+                            child: CachedNetworkImage(
+                              imageUrl: snapshot.data![imageIndex],
+                              fit: BoxFit.cover,
+                              placeholder: (context, url) =>
+                                  Container(color: Colors.grey[200]),
+                              errorWidget: (context, url, error) =>
+                                  const Icon(Icons.error),
                             ),
                           );
                         },
-                        child: Container(
-                          width: screenWidth * 0.8,
-                          height: screenHeight * 0.5,
-                          child: CachedNetworkImage(
-                            imageUrl: imageUrls[imageIndex],
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      );
-                    },
-                  ),
-                );
-              }
+                      ),
+                    ),
+                    if (isWaiting) const CupertinoActivityIndicator(),
+                  ],
+                ),
+              );
             },
           ),
+
+          // Details Expansion Tile
           ExpansionTile(
             iconColor: AppColors.black,
             collapsedIconColor: AppColors.black,
@@ -333,194 +397,135 @@ class _CallForAidCardState extends State<CallForAidCard> {
                       screenHeight: screenHeight,
                       alignment: Alignment.centerLeft,
                     ),
-                    CustomText(
-                      text: '${post.bankHolder}',
-                      size: 16,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: 'Bank Holder Name:',
-                      size: 20,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: '${post.bankHolder}',
-                      size: 16,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: 'Account Number:',
-                      size: 20,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: post.accountNumber,
-                      size: 16,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: 'Type of Donation:',
-                      size: 20,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: '${post.donationType}',
-                      size: 16,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: 'Purpose of Raising Funds:',
-                      size: 20,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: '${post.purposeOfDonation}',
-                      size: 16,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: 'Estimated Amount',
-                      size: 20,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: '₱ ${post.estimatedAmount}',
-                      size: 16,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: 'Status',
-                      size: 20,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
-                    CustomText(
-                      text: '${post.statusDonation}',
-                      size: 16,
-                      color: AppColors.black,
-                      weight: FontWeight.w700,
-                      align: TextAlign.left,
-                      screenHeight: screenHeight,
-                      alignment: Alignment.centerLeft,
-                    ),
+                    _buildDetailRow("Bank Holder Name:", widget.post.bankHolder),
+                    _buildDetailRow("Account Number:", widget.post.accountNumber),
+                    _buildDetailRow("Type of Donation:", widget.post.donationType),
+                    _buildDetailRow(
+                        "Purpose of Raising Funds:", widget.post.purposeOfDonation),
+                    _buildDetailRow(
+                        "Estimated Amount:", '₱ ${widget.post.estimatedAmount}'),
+                    _buildDetailRow("Status:", widget.post.statusDonation),
                   ],
                 ),
               ),
             ],
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  IconButton(
-                    icon: Icon(
-                      hasReacted
-                          ? ReactionUtils.getReactionIcon(userReaction!)
-                          : Icons.thumb_up_outlined,
-                      color: hasReacted ? ReactionUtils.getReactionColor(
-                          userReaction!) : null,
-                    ),
-                    onPressed: _handleReaction,
+
+          // Action Row
+          SizedBox(
+            height: 52,
+            child: Stack(
+              alignment: Alignment.center,
+              children: [
+                Visibility(
+                  visible: !isLoading,
+                  maintainState: true,
+                  maintainAnimation: true,
+                  maintainSize: true,
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    children: [
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: Icon(
+                              userReaction != null
+                                  ? ReactionUtils.getReactionIcon(userReaction!)
+                                  : Icons.thumb_up_outlined,
+                              color: userReaction != null
+                                  ? ReactionUtils.getReactionColor(
+                                      userReaction!)
+                                  : null,
+                            ),
+                            onPressed: _handleReaction,
+                          ),
+                          Text('$reactionCount likes',
+                              style: const TextStyle(
+                                fontFamily: 'SmoochSans',
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              )),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.comment),
+                            onPressed: () {
+                              postViewModel.showComments(context, widget.post.postId);
+                            },
+                          ),
+                          Text('$commentCount comments',
+                              style: const TextStyle(
+                                fontFamily: 'SmoochSans',
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              )),
+                        ],
+                      ),
+                      Row(
+                        children: [
+                          IconButton(
+                            icon: const Icon(Icons.volunteer_activism),
+                            onPressed: () {
+                              showModalBottomSheet(
+                                context: context,
+                                isScrollControlled: true,
+                                builder: (context) {
+                                  return DonateModal(widget.post.postId);
+                                },
+                              );
+                            },
+                          ),
+                          const Text('Donate',
+                              style: TextStyle(
+                                fontFamily: 'SmoochSans',
+                                color: Colors.black,
+                                fontSize: 16,
+                                fontWeight: FontWeight.w600,
+                              )),
+                        ],
+                      )
+                    ],
                   ),
-                  Text('$reactionCount likes', style: const TextStyle(
-                    fontFamily: 'SmoochSans',
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  )),
-                ],
-              ),
-              Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.comment),
-                    onPressed: () {
-                      postViewModel.showComments(context, post.postId);
-                    },
-                  ),
-                  Text('$commentCount comments', style: const TextStyle(
-                    fontFamily: 'SmoochSans',
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  )),
-                ],
-              ),
-              Row(
-                children: [
-                  IconButton(
-                    icon: const Icon(Icons.pets),
-                    onPressed: () {
-                      showModalBottomSheet(
-                        context: context,
-                        isScrollControlled: true,
-                        builder: (context) {
-                          return DonateModal(post.postId);
-                        },
-                      );
-                    },
-                  ),
-                  const Text('Donate', style: TextStyle(
-                    fontFamily: 'SmoochSans',
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  )),
-                ],
-              )
-            ],
+                ),
+                if (isLoading) const CupertinoActivityIndicator(),
+              ],
+            ),
           ),
         ],
       ),
     );
+  }
 
+  Widget _buildDetailRow(String title, String value) {
+    return Padding(
+      padding: const EdgeInsets.symmetric(vertical: 4.0),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        children: [
+          CustomText(
+            text: title,
+            size: 20,
+            color: AppColors.black,
+            weight: FontWeight.w700,
+            align: TextAlign.left,
+            screenHeight: screenHeight,
+            alignment: Alignment.centerLeft,
+          ),
+          CustomText(
+            text: value,
+            size: 16,
+            color: AppColors.black,
+            weight: FontWeight.normal,
+            align: TextAlign.left,
+            screenHeight: screenHeight,
+            alignment: Alignment.centerLeft,
+          ),
+        ],
+      ),
+    );
   }
 }

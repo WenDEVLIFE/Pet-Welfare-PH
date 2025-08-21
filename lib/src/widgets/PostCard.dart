@@ -34,24 +34,25 @@ class PostCard extends StatefulWidget {
   State<PostCard> createState() => _PostCardState();
 }
 
-class _PostCardState extends State<PostCard> {
+class _PostCardState extends State<PostCard>
+    with AutomaticKeepAliveClientMixin<PostCard> {
   String? userReaction;
   int reactionCount = 0;
   int commentCount = 0;
-  bool isLoading = true;
-  late PostModel post;
-
+  bool isMetaLoading = true; // renamed for clarity
   late PostViewModel postViewModel;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
     super.initState();
-    post = widget.post;
     postViewModel = Provider.of<PostViewModel>(context, listen: false);
-    _loadData();
+    _loadMeta();
   }
 
-  Future<void> _loadData() async {
+  Future<void> _loadMeta() async {
     try {
       final results = await Future.wait([
         postViewModel.getUserReaction(widget.post.postId),
@@ -59,24 +60,26 @@ class _PostCardState extends State<PostCard> {
         postViewModel.getCommentCount(widget.post.postId),
       ]);
 
+      if (!mounted) return;
       setState(() {
         userReaction = results[0] as String?;
-        reactionCount = (results[1] as int?)!;
-        commentCount = (results[2] as int?)!;
-        isLoading = false;
+        reactionCount = (results[1] as int?) ?? 0;
+        commentCount = (results[2] as int?) ?? 0;
+        isMetaLoading = false;
       });
-    } catch (e) {
-      print("Error loading post data: $e");
-      setState(() => isLoading = false);
+    } catch (_) {
+      if (!mounted) return;
+      setState(() => isMetaLoading = false);
     }
   }
 
   Future<void> _handleReaction() async {
     if (userReaction != null) {
       await postViewModel.removeReaction(widget.post.postId);
+      if (!mounted) return;
       setState(() {
         userReaction = null;
-        reactionCount -= 1;
+        reactionCount = (reactionCount - 1).clamp(0, 1 << 31);
       });
     } else {
       showModalBottomSheet(
@@ -85,11 +88,12 @@ class _PostCardState extends State<PostCard> {
           return ReactionModal(
             onReactionSelected: (reaction) async {
               await postViewModel.addReaction(widget.post.postId, reaction);
+              if (!mounted) return;
               setState(() {
                 userReaction = reaction;
                 reactionCount += 1;
               });
-              Navigator.pop(context); // Close the modal after selecting
+              Navigator.pop(context);
             },
           );
         },
@@ -97,25 +101,31 @@ class _PostCardState extends State<PostCard> {
     }
   }
 
+  Widget _skeletonBox({double width = 64, double height = 16}) {
+    return Container(
+      width: width,
+      height: height,
+      margin: const EdgeInsets.only(left: 6),
+      decoration: BoxDecoration(
+        color: Colors.black12,
+        borderRadius: BorderRadius.circular(6),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    super.build(context); // IMPORTANT for keep-alive
     final formattedDate = postViewModel.formatTimestamp(widget.post.timestamp);
     final screenHeight = widget.screenHeight;
     final screenWidth = widget.screenWidth;
-
-    if (isLoading) {
-      return PostCardSkeleton(
-        screenHeight: widget.screenHeight,
-        screenWidth: widget.screenWidth,
-      );
-    }
 
     return Card(
       margin: const EdgeInsets.all(10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          // --- Post Header ---
+          // --- Header ---
           Row(
             children: [
               Padding(
@@ -123,34 +133,30 @@ class _PostCardState extends State<PostCard> {
                 child: CircleAvatar(
                   radius: widget.screenHeight * 0.03,
                   backgroundImage:
-                      CachedNetworkImageProvider(widget.post.profileUrl),
+                  CachedNetworkImageProvider(widget.post.profileUrl),
                 ),
               ),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: Text(
-                      widget.post.postOwnerName,
-                      style: const TextStyle(
-                        fontFamily: 'SmoochSans',
-                        color: Colors.black,
-                        fontSize: 16,
-                        fontWeight: FontWeight.w600,
-                      ),
+                  const SizedBox(height: 6),
+                  Text(
+                    widget.post.postOwnerName,
+                    style: const TextStyle(
+                      fontFamily: 'SmoochSans',
+                      color: Colors.black,
+                      fontSize: 16,
+                      fontWeight: FontWeight.w600,
                     ),
                   ),
-                  Padding(
-                    padding: const EdgeInsets.all(5),
-                    child: Text(
-                      formattedDate,
-                      style: const TextStyle(
-                        fontFamily: 'SmoochSans',
-                        color: Colors.black,
-                        fontSize: 14,
-                        fontWeight: FontWeight.w500,
-                      ),
+                  const SizedBox(height: 2),
+                  Text(
+                    formattedDate,
+                    style: const TextStyle(
+                      fontFamily: 'SmoochSans',
+                      color: Colors.black54,
+                      fontSize: 13,
+                      fontWeight: FontWeight.w500,
                     ),
                   ),
                 ],
@@ -159,23 +165,24 @@ class _PostCardState extends State<PostCard> {
               PopupMenuButton<String>(
                 onSelected: (value) {
                   final postViewModel =
-                      Provider.of<PostViewModel>(context, listen: false);
+                  Provider.of<PostViewModel>(context, listen: false);
                   final currentUserId = postViewModel.currentUserId;
                   final role = postViewModel.role;
                   final isAdmin = role.toLowerCase() == 'admin' ||
                       role.toLowerCase() == 'sub-admin';
                   final isPostOwner = widget.post.postOwnerId == currentUserId;
 
-                  // 🛠 Show toast safely after popup menu closes
+                  // Show toast or navigate safely after the popup menu closes
                   Future.delayed(Duration.zero, () async {
                     if ((isAdmin || isPostOwner) && value == 'Edit') {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) => EditPostView(
-                            postId: widget.post.postId,
-                            category: widget.post.category,
-                          ),
+                          builder: (context) =>
+                              EditPostView(
+                                postId: widget.post.postId,
+                                category: widget.post.category,
+                              ),
                         ),
                       );
                     } else if ((isAdmin || isPostOwner) && value == 'Delete') {
@@ -199,7 +206,7 @@ class _PostCardState extends State<PostCard> {
                 },
                 itemBuilder: (context) {
                   final postViewModel =
-                      Provider.of<PostViewModel>(context, listen: false);
+                  Provider.of<PostViewModel>(context, listen: false);
                   final currentUserId = postViewModel.currentUserId;
                   final isAdmin = postViewModel.role.toLowerCase() == 'admin' ||
                       postViewModel.role.toLowerCase() == "sub-admin";
@@ -221,81 +228,99 @@ class _PostCardState extends State<PostCard> {
               ),
             ],
           ),
-          // --- Post Description ---
+
+          // --- Description ---
           Padding(
-            padding: const EdgeInsets.all(10),
-            child: ExpandableText(
-              text: post.postDescription,
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            child: ExpandableText(text: widget.post.postDescription),
+          ),
+
+          // --- Tags (reserve some height to avoid jumps) ---
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
+            child: StreamBuilder<List<TagModel>>(
+              stream: widget.post.tagStream,
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  // fixed-height placeholder to avoid layout shift
+                  return _skeletonBox(width: screenWidth * 0.5, height: 18);
+                }
+                if (!snapshot.hasData || snapshot.data!.isEmpty) {
+                  return const SizedBox(height: 0);
+                }
+                final tags = snapshot.data!.map((t) => t.name).toList();
+                return ExpandableTags(tags: tags);
+              },
             ),
           ),
-          // --- Tags ---
-          StreamBuilder<List<TagModel>>(
-            stream: post.tagStream,
+
+          // --- Images (ALWAYS reserve height) ---
+          StreamBuilder<List<String>>(
+            stream: widget.post.imageStream,
             builder: (context, snapshot) {
+              // While waiting for the stream, show a placeholder with the fixed height to prevent layout shifts.
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const CircularProgressIndicator(); // Show a loading indicator while waiting for data
-              } else if (snapshot.hasError) {
-                return Text('Error: ${snapshot.error}'); // Handle errors
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const SizedBox(); // Return an empty widget if no tags are available
-              } else {
-                final tags = snapshot.data!.map((tag) => tag.name).toList();
-                return Padding(
-                  padding: const EdgeInsets.all(10),
-                  child: ExpandableTags(tags: tags),
+                return SizedBox(
+                  height: screenHeight * 0.30,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: ClipRRect(
+                      borderRadius: BorderRadius.circular(8),
+                      child: Container(color: Colors.black12),
+                    ),
+                  ),
                 );
               }
-            },
-          ),
-          StreamBuilder<List<String>>(
-            stream: post.imageStream,
-            builder: (context, snapshot) {
-              if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(
-                    child:
-                        CircularProgressIndicator()); // Show a loading indicator
-              } else if (snapshot.hasError) {
-                return Center(
-                    child: Text('Error: ${snapshot.error}')); // Handle errors
-              } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                return const Center(child: Text('')); // Handle empty stream
-              } else {
-                final imageUrls = snapshot.data!;
-                return SizedBox(
-                  height: screenHeight * 0.3,
-                  child: PageView.builder(
-                    itemCount: imageUrls.length,
-                    itemBuilder: (context, imageIndex) {
-                      return GestureDetector(
+
+              // If there's an error, no data, or the list of image URLs is empty, show nothing.
+              if (snapshot.hasError || !snapshot.hasData ||
+                  snapshot.data!.isEmpty) {
+                return const SizedBox
+                    .shrink(); // Renders a widget with zero size.
+              }
+
+              // If we have a valid list of URLs, build the image viewer.
+              final imageUrls = snapshot.data!;
+              return SizedBox(
+                height: screenHeight * 0.30,
+                child: PageView.builder(
+                  itemCount: imageUrls.length,
+                  itemBuilder: (context, idx) {
+                    final url = imageUrls[idx];
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 10),
+                      child: GestureDetector(
                         onTap: () {
                           Navigator.push(
                             context,
                             MaterialPageRoute(
                               builder: (context) => ViewImage(),
-                              settings: RouteSettings(
-                                arguments: {
-                                  'imageUrls': imageUrls,
-                                  'initialIndex': imageIndex,
-                                },
-                              ),
+                              settings: RouteSettings(arguments: {
+                                'imageUrls': imageUrls,
+                                'initialIndex': idx,
+                              }),
                             ),
                           );
                         },
-                        child: Container(
-                          width: screenWidth * 0.8,
-                          height: screenHeight * 0.5,
+                        child: ClipRRect(
+                          borderRadius: BorderRadius.circular(8),
                           child: CachedNetworkImage(
-                            imageUrl: imageUrls[imageIndex],
+                            imageUrl: url,
                             fit: BoxFit.cover,
+                            placeholder: (c, _) =>
+                                Container(color: Colors.black12),
+                            errorWidget: (c, _, __) =>
+                                Container(color: Colors.black12),
                           ),
                         ),
-                      );
-                    },
-                  ),
-                );
-              }
+                      ),
+                    );
+                  },
+                ),
+              );
             },
           ),
+          // --- Reactions / Comments (placeholders but fixed size) ---
           Row(
             children: [
               IconButton(
@@ -309,13 +334,20 @@ class _PostCardState extends State<PostCard> {
                 ),
                 onPressed: _handleReaction,
               ),
-              Text(
-                '$reactionCount likes',
-                style: const TextStyle(
-                  fontFamily: 'SmoochSans',
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+              // likes text or placeholder (same height)
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 150),
+                child: isMetaLoading
+                    ? _skeletonBox(width: 80, height: 16)
+                    : Text(
+                  '$reactionCount likes',
+                  key: const ValueKey('likes'),
+                  style: const TextStyle(
+                    fontFamily: 'SmoochSans',
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
               IconButton(
@@ -323,13 +355,19 @@ class _PostCardState extends State<PostCard> {
                 onPressed: () =>
                     postViewModel.showComments(context, widget.post.postId),
               ),
-              Text(
-                '$commentCount comments',
-                style: const TextStyle(
-                  fontFamily: 'SmoochSans',
-                  color: Colors.black,
-                  fontSize: 16,
-                  fontWeight: FontWeight.w600,
+              AnimatedSwitcher(
+                duration: const Duration(milliseconds: 150),
+                child: isMetaLoading
+                    ? _skeletonBox(width: 110, height: 16)
+                    : Text(
+                  '$commentCount comments',
+                  key: const ValueKey('comments'),
+                  style: const TextStyle(
+                    fontFamily: 'SmoochSans',
+                    color: Colors.black,
+                    fontSize: 16,
+                    fontWeight: FontWeight.w600,
+                  ),
                 ),
               ),
             ],

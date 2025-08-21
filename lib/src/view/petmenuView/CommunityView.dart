@@ -25,7 +25,7 @@ class CommunityState extends State<CommunityView> {
   void initState() {
     super.initState();
     postViewModel = Provider.of<PostViewModel>(context, listen: false);
-    postViewModel.listenToCommunityPost();
+    postViewModel.initializeAllListeners();
     postViewModel.loadData();
   }
 
@@ -49,13 +49,13 @@ class CommunityState extends State<CommunityView> {
                 fontSize: 16,
                 keyboardType: TextInputType.text,
                 onChanged: (searchText) {
-                  postViewModel.searchCommunityPost(searchText);
+                  postViewModel.onSearchChanged('Community Announcements', searchText);
                 },
               ),
               Expanded(
                 child: Builder(builder: (context) {
                   // Initial loading state
-                  if (postViewModel.isInitialLoading) {
+                  if (postViewModel.isCommunityAnnouncementsLoading) {
                     return ListView.builder(
                       itemCount: 5,
                       itemBuilder: (context, index) => PostCardSkeleton(
@@ -77,7 +77,7 @@ class CommunityState extends State<CommunityView> {
                   }
 
                   // Empty states
-                  if (postViewModel.filterCommunityPost.isEmpty) {
+                  if (postViewModel.communityAnnouncementsPosts.isEmpty) {
                     if (postViewModel.searchPostController.text.isNotEmpty) {
                       return Center(
                         child: Text(
@@ -92,9 +92,9 @@ class CommunityState extends State<CommunityView> {
 
                   // Data display
                   return ListView.builder(
-                    itemCount: postViewModel.filterCommunityPost.length,
+                    itemCount: postViewModel.communityAnnouncementsPosts.length,
                     itemBuilder: (context, index) {
-                      var post = postViewModel.filterCommunityPost[index];
+                      var post = postViewModel.communityAnnouncementsPosts[index];
                       return PostCard(
                           post: post,
                           screenHeight: screenHeight,

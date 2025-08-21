@@ -22,7 +22,7 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
   void initState() {
     super.initState();
     postViewModel = Provider.of<PostViewModel>(context, listen: false);
-    postViewModel.listenToPost();
+    postViewModel.initializeAllListeners();
   }
 
   @override
@@ -42,14 +42,14 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
                 fontSize: 16,
                 keyboardType: TextInputType.text,
                 onChanged: (searchText) {
-                  postViewModel.searchPost(searchText);
+                  postViewModel.onSearchChanged('Pet Appreciation', searchText);
                 },
               ),
               Expanded(
                 child: Builder(
                   builder: (context) {
                     // Initial loading state
-                    if (postViewModel.isInitialLoading) {
+                    if (postViewModel.isPetAppreciationLoading) {
                       return ListView.builder(
                         itemCount: 5,
                         itemBuilder: (context, index) => PostCardSkeleton(
@@ -71,7 +71,7 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
                     }
                     
                     // Empty states
-                    if (postViewModel.filteredPost.isEmpty) {
+                    if (postViewModel.petAppreciationPosts.isEmpty) {
                       if (postViewModel.searchPostController.text.isNotEmpty) {
                         return Center(
                           child: Text(
@@ -86,9 +86,9 @@ class _PetAppreciateViewState extends State<PetAppreciateView> {
 
                     // Data display
                     return ListView.builder(
-                      itemCount: postViewModel.filteredPost.length,
+                      itemCount: postViewModel.petAppreciationPosts.length,
                       itemBuilder: (context, index) {
-                        var post = postViewModel.filteredPost[index];
+                        var post = postViewModel.petAppreciationPosts[index];
                         return PostCard(
                           post: post,
                           screenHeight: screenHeight,

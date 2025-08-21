@@ -5,7 +5,7 @@ import '../modal/PetStatusModal.dart';
 import '../modal/ReactionModal.dart';
 import '../model/PostModel.dart';
 import 'package:flutter/material.dart';
-import  'package:provider/provider.dart';
+import 'package:provider/provider.dart';
 
 import '../model/TagModel.dart';
 import '../utils/ReactionUtils.dart';
@@ -31,12 +31,9 @@ class ProtectPetCard extends StatefulWidget {
 
   @override
   State<ProtectPetCard> createState() => _ProtectPetCardState();
-
-
 }
 
 class _ProtectPetCardState extends State<ProtectPetCard> {
-  late PostModel post;
   late double screenHeight;
   late double screenWidth;
   String? userReaction;
@@ -49,12 +46,12 @@ class _ProtectPetCardState extends State<ProtectPetCard> {
   @override
   void initState() {
     super.initState();
-    post = widget.post;
     postViewModel = Provider.of<PostViewModel>(context, listen: false);
     screenHeight = widget.screenHeight;
     screenWidth = widget.screenWidth;
     _loadData();
   }
+
   Future<void> _loadData() async {
     try {
       final results = await Future.wait([
@@ -100,6 +97,7 @@ class _ProtectPetCardState extends State<ProtectPetCard> {
       );
     }
   }
+
   @override
   Widget build(BuildContext context) {
     final formattedDate = postViewModel.formatTimestamp(widget.post.timestamp);
@@ -121,7 +119,7 @@ class _ProtectPetCardState extends State<ProtectPetCard> {
                 padding: const EdgeInsets.all(10),
                 child: CircleAvatar(
                   radius: screenHeight * 0.03,
-                  backgroundImage: CachedNetworkImageProvider(post.profileUrl),
+                  backgroundImage: CachedNetworkImageProvider(widget.post.profileUrl),
                 ),
               ),
               Column(
@@ -130,7 +128,7 @@ class _ProtectPetCardState extends State<ProtectPetCard> {
                   Padding(
                     padding: const EdgeInsets.all(5),
                     child: Text(
-                      post.postOwnerName,
+                      widget.post.postOwnerName,
                       style: const TextStyle(
                         fontFamily: 'SmoochSans',
                         color: Colors.black,
@@ -156,79 +154,100 @@ class _ProtectPetCardState extends State<ProtectPetCard> {
               const Spacer(),
               PopupMenuButton<String>(
                 itemBuilder: (context) {
-                  final currentUserId = Provider.of<PostViewModel>(context, listen: false).currentUserId;
-                  final isAdmin = postViewModel.role.toLowerCase() == 'admin' || postViewModel.role.toLowerCase()=="sub-admin";
+                  final currentUserId =
+                      Provider.of<PostViewModel>(context, listen: false)
+                          .currentUserId;
+                  final isAdmin = postViewModel.role.toLowerCase() == 'admin' ||
+                      postViewModel.role.toLowerCase() == "sub-admin";
                   final isPostOwner = widget.post.postOwnerId == currentUserId;
-                  final isPetAdvocate = postViewModel.role.toLowerCase() == 'animal welfare advocate';
+                  final isPetAdvocate = postViewModel.role.toLowerCase() ==
+                      'animal welfare advocate';
 
                   return [
                     if (isAdmin || isPostOwner)
-                      PopupMenuItem(value: 'Edit', child: const Text('Edit'), onTap: (){
-                        Navigator.push(
-                          context,
-                          MaterialPageRoute(
-                            builder: (context) => EditPostView(
-                              postId: widget.post.postId,
-                              category: widget.post.category,
+                      PopupMenuItem(
+                        value: 'Edit',
+                        child: const Text('Edit'),
+                        onTap: () {
+                          Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => EditPostView(
+                                postId: widget.post.postId,
+                                category: widget.post.category,
+                              ),
                             ),
-                          ),
-                        );
-                      },),
-                    if (isPetAdvocate)
-                    PopupMenuItem(child: const Text('Update Case Status'), onTap: (){
-                      // This will view the update adoption
-                      showModalBottomSheet(context: context, isScrollControlled: true, builder: (context) {
-                        return PetStatusModal(post.postId, post.category);
-                      });
-                    },),
+                          );
+                        },
+                      ),
+                    if (isAdmin || isPetAdvocate)
+                      PopupMenuItem(
+                        child: const Text('Update Case Status'),
+                        onTap: () {
+                          // This will view the update adoption
+                          showModalBottomSheet(
+                              context: context,
+                              isScrollControlled: true,
+                              builder: (context) {
+                                return PetStatusModal(
+                                  onStatusUpdated: () {
+                                    setState(() {});
+                                  },
+                                  postId: widget.post.postId,
+                                  category: widget.post.category,
+                                );
+                              });
+                        },
+                      ),
                     if (isAdmin || isPostOwner)
-                      PopupMenuItem(value: 'Delete', child: const Text('Delete'), onTap: (){
-                        // Delete the image to the database
-                        postViewModel.deletePost(post.category, context, post.postId);
-                      },),
+                      PopupMenuItem(
+                        value: 'Delete',
+                        child: const Text('Delete'),
+                        onTap: () {
+                          // Delete the image to the database
+                          postViewModel.deletePost(
+                              widget.post.category, context, widget.post.postId);
+                        },
+                      ),
                     if (!isPostOwner)
-                      PopupMenuItem(value: 'Message', child: const Text('Message'), onTap: (){
-                        // Determine which ID is the other user (not current user)
-                        final otherUserId = currentUserId == widget.post.postOwnerId
-                            ? widget.post.postOwnerId
-                            : widget.post.postOwnerId;
+                      PopupMenuItem(
+                        value: 'Message',
+                        child: const Text('Message'),
+                        onTap: () {
+                          // Determine which ID is the other user (not current user)
+                          final otherUserId =
+                              currentUserId == widget.post.postOwnerId
+                                  ? widget.post.postOwnerId
+                                  : widget.post.postOwnerId;
 
-                        Navigator.pushNamed(context, AppRoutes.message, arguments: {
-                          'receiverID': otherUserId
-                        });
-                      },),
-                    PopupMenuItem<String>(
-                      value: 'Update Status',
-                      child: const Text('Update Status'),
-                      onTap: () {
-                        // Handle edit action
-                      },
-                    ),
+                          Navigator.pushNamed(context, AppRoutes.message,
+                              arguments: {'receiverID': otherUserId});
+                        },
+                      ),
                     PopupMenuItem(
                       value: 'Report',
                       child: const Text('Report'),
                       onTap: () {
                         Future.delayed(
                           Duration.zero,
-                              () => showDialog(
+                          () => showDialog(
                             context: context,
-                            builder: (context) => ReportDialog(widget.post.postId),
+                            builder: (context) =>
+                                ReportDialog(widget.post.postId),
                           ),
                         );
                       },
                     ),
-
                   ];
                 },
                 icon: const Icon(Icons.more_vert),
               ),
-
             ],
           ),
           Padding(
             padding: const EdgeInsets.all(10),
             child: Text(
-              'Case Status: ${post.caseStatus}',
+              'Case Status: ${widget.post.caseStatus}',
               style: const TextStyle(
                 fontFamily: 'SmoochSans',
                 color: Colors.black,
@@ -240,11 +259,11 @@ class _ProtectPetCardState extends State<ProtectPetCard> {
           Padding(
             padding: const EdgeInsets.all(10),
             child: ExpandableText(
-              text: post.postDescription,
+              text: widget.post.postDescription,
             ),
           ),
           StreamBuilder<List<TagModel>>(
-            stream: post.tagStream,
+            stream: widget.post.tagStream,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
                 return const CircularProgressIndicator(); // Show a loading indicator while waiting for data
@@ -262,12 +281,15 @@ class _ProtectPetCardState extends State<ProtectPetCard> {
             },
           ),
           StreamBuilder<List<String>>(
-            stream: post.imageStream,
+            stream: widget.post.imageStream,
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                return const Center(child: CircularProgressIndicator()); // Show a loading indicator
+                return const Center(
+                    child:
+                        CircularProgressIndicator()); // Show a loading indicator
               } else if (snapshot.hasError) {
-                return Center(child: Text('Error: ${snapshot.error}')); // Handle errors
+                return Center(
+                    child: Text('Error: ${snapshot.error}')); // Handle errors
               } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
                 return const Center(child: Text('')); // Handle empty stream
               } else {
@@ -323,12 +345,13 @@ class _ProtectPetCardState extends State<ProtectPetCard> {
                     ),
                     onPressed: _handleReaction,
                   ),
-                  Text('$reactionCount likes', style: const TextStyle(
-                    fontFamily: 'SmoochSans',
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  )),
+                  Text('$reactionCount likes',
+                      style: const TextStyle(
+                        fontFamily: 'SmoochSans',
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      )),
                 ],
               ),
               Row(
@@ -336,15 +359,16 @@ class _ProtectPetCardState extends State<ProtectPetCard> {
                   IconButton(
                     icon: const Icon(Icons.comment),
                     onPressed: () {
-                      postViewModel.showComments(context, post.postId);
+                      postViewModel.showComments(context, widget.post.postId);
                     },
                   ),
-                  Text('$commentCount comments', style: const TextStyle(
-                    fontFamily: 'SmoochSans',
-                    color: Colors.black,
-                    fontSize: 16,
-                    fontWeight: FontWeight.w600,
-                  )),
+                  Text('$commentCount comments',
+                      style: const TextStyle(
+                        fontFamily: 'SmoochSans',
+                        color: Colors.black,
+                        fontSize: 16,
+                        fontWeight: FontWeight.w600,
+                      )),
                 ],
               ),
             ],

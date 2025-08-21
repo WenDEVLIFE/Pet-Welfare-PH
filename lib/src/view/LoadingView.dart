@@ -15,13 +15,15 @@ class LoadingState extends State<LoadingView> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((_) {
-      Provider.of<LoadingViewModel>(context, listen: false).startLoading(context);
+      Provider.of<LoadingViewModel>(context, listen: false)
+          .startLoading(context);
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    final splashViewModel = Provider.of<LoadingViewModel>(context, listen: true);
+    final splashViewModel =
+        Provider.of<LoadingViewModel>(context, listen: true);
     final double screenWidth = MediaQuery.of(context).size.width;
     final double screenHeight = MediaQuery.of(context).size.height;
 
@@ -51,50 +53,53 @@ class LoadingState extends State<LoadingView> {
                   const SizedBox(height: 10),
                   splashViewModel.isLoading
                       ? const SizedBox(
-                    width: 80,
-                    height: 80,
-                    child: CircularProgressIndicator(
-                      color: Colors.white,
-                    ),
-                  )
+                          width: 80,
+                          height: 80,
+                          child: CircularProgressIndicator(
+                            color: Colors.white,
+                          ),
+                        )
                       : const SizedBox.shrink(),
                 ],
               ),
             ),
-            Padding(
-              padding: EdgeInsets.only(bottom: screenHeight * 0.02),
-              child: RichText(
-                textAlign: TextAlign.center,
-                text: const TextSpan(
-                  children: [
-                    TextSpan(
-                      text: 'PET ',
-                      style: TextStyle(
-                        fontSize: 40,
-                        color: Colors.white,
-                        fontFamily: 'SmoochSans',
-                        fontWeight: FontWeight.w700,
+            SafeArea(
+              // ✅ This ensures bottom text avoids nav bar
+              child: Padding(
+                padding: EdgeInsets.only(bottom: screenHeight * 0.02),
+                child: RichText(
+                  textAlign: TextAlign.center,
+                  text: const TextSpan(
+                    children: [
+                      TextSpan(
+                        text: 'PET ',
+                        style: TextStyle(
+                          fontSize: 40,
+                          color: Colors.white,
+                          fontFamily: 'SmoochSans',
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                    ),
-                    TextSpan(
-                      text: 'WELFARE ',
-                      style: TextStyle(
-                        fontSize: 40,
-                        color: Colors.white,
-                        fontFamily: 'SmoochSans',
-                        fontWeight: FontWeight.w700,
+                      TextSpan(
+                        text: 'WELFARE ',
+                        style: TextStyle(
+                          fontSize: 40,
+                          color: Colors.white,
+                          fontFamily: 'SmoochSans',
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                    ),
-                    TextSpan(
-                      text: 'PH',
-                      style: TextStyle(
-                        fontSize: 40,
-                        color: Colors.white,
-                        fontFamily: 'SmoochSans',
-                        fontWeight: FontWeight.w700,
+                      TextSpan(
+                        text: 'PH',
+                        style: TextStyle(
+                          fontSize: 40,
+                          color: Colors.white,
+                          fontFamily: 'SmoochSans',
+                          fontWeight: FontWeight.w700,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
               ),
             ),

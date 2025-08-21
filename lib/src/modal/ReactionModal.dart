@@ -63,11 +63,11 @@ class _ReactionModalState extends State<ReactionModal> with SingleTickerProvider
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                _buildReactionButton(Icons.thumb_up, 'like', Colors.blue, 'Like', sizes: 50.0),
-                _buildReactionButton(Icons.favorite, 'heart', Colors.red, 'Heart', sizes: 50.0),
-                _buildReactionButton(Icons.emoji_emotions, 'HAHA', Colors.yellow, 'HAHA', sizes: 50.0),
-                _buildReactionButton(Icons.sentiment_very_dissatisfied_sharp, 'angry', Colors.red, 'Angry', sizes: 50.0),
-                _buildReactionButton(Icons.sentiment_dissatisfied, 'sad', Colors.white, 'Sad', sizes: 50.0),
+                _buildReactionButton(Icons.thumb_up, 'like', Colors.blue, 'Like', sizes: 38.0),
+                _buildReactionButton(Icons.favorite, 'heart', Colors.red, 'Heart', sizes: 38.0),
+                _buildReactionButton(Icons.emoji_emotions, 'HAHA', Colors.yellow, 'HAHA', sizes: 38.0),
+                _buildReactionButton(Icons.sentiment_very_dissatisfied_sharp, 'angry', Colors.red, 'Angry', sizes: 38.0),
+                _buildReactionButton(Icons.sentiment_dissatisfied, 'sad', Colors.white, 'Sad', sizes: 38.0),
               ],
             ),
           ],

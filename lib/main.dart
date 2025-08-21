@@ -1,5 +1,6 @@
 import 'dart:async';
 
+import 'package:firebase_app_check/firebase_app_check.dart';
 import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
@@ -50,7 +51,12 @@ void main() async {
     await FirebaseRestAPI().initFirebaseMessage();
     await FirebaseRestAPI().retrieveAndStoreFCMToken();
     FirebaseMessaging.onBackgroundMessage(FirebaseRestAPI().firebaseMessagingBackgroundHandler);
-
+    await FirebaseAppCheck.instance.activate(
+      // Use Play Integrity for Android
+      androidProvider: AndroidProvider.playIntegrity,
+      // Use Device Check for iOS
+      appleProvider: AppleProvider.deviceCheck,
+    );
 
     runApp(const MyApp());
   } catch (e) {

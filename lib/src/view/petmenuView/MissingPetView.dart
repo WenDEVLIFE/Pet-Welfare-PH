@@ -25,13 +25,7 @@ class MissingPetState extends State<MissingPetView> {
   void initState() {
     super.initState();
     postViewModel = Provider.of<PostViewModel>(context, listen: false);
-
-    WidgetsBinding.instance.addPostFrameCallback((_) {
-      if (postViewModel.searchPostController.text.isNotEmpty) {
-        postViewModel.searchPostController.clear();
-      }
-      postViewModel.listenToMissingPost();
-    });
+    postViewModel.initializeAllListeners();
     postViewModel.loadData();
   }
 
@@ -52,13 +46,13 @@ class MissingPetState extends State<MissingPetView> {
                 fontSize: 16,
                 keyboardType: TextInputType.text,
                 onChanged: (searchText) {
-                  viewModel.searchMissingPost(searchText);
+                  postViewModel.onSearchChanged('Missing Pets', searchText);
                 },
               ),
               Expanded(
                 child: Builder(builder: (context) {
                   // Initial loading state
-                  if (viewModel.isInitialLoading) {
+                  if (viewModel.isPetMissingLoading) {
                     return ListView.builder(
                       itemCount: 5,
                       itemBuilder: (context, index) => PostCardSkeleton(
@@ -80,7 +74,7 @@ class MissingPetState extends State<MissingPetView> {
                   }
 
                   // Empty states
-                  if (viewModel.filterMissingPost.isEmpty) {
+                  if (viewModel.petMissingPosts.isEmpty) {
                     if (viewModel.searchPostController.text.isNotEmpty) {
                       return Center(
                         child: Text(
@@ -95,9 +89,9 @@ class MissingPetState extends State<MissingPetView> {
 
                   // Data display
                   return ListView.builder(
-                    itemCount: viewModel.filterMissingPost.length,
+                    itemCount: viewModel.petMissingPosts.length,
                     itemBuilder: (context, index) {
-                      final post = viewModel.filterMissingPost[index];
+                      final post = viewModel.petMissingPosts[index];
                       return MissingPetCard(
                         post: post,
                         screenHeight: screenHeight,

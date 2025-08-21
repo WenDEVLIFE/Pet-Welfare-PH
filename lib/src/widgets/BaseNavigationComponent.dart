@@ -67,7 +67,7 @@ abstract class BaseNavigationComponentState<T extends BaseNavigationWidget>
       bottomNavigationBar: SafeArea(
         child: CurvedNavigationBar(
           height: 60,
-          backgroundColor: const Color.fromARGB(255, 245, 245, 245),
+          backgroundColor: const Color.fromARGB(160, 245, 245, 245),
           color: AppColors.orange,
           items: getNavBarItems(),
           index: _currentIndex,

@@ -129,7 +129,9 @@ class PostRepositoryImpl implements PostRepository {
       List<String> tags) async {
     User user = _firebaseAuth.currentUser!;
     String uuid = user.uid;
-    var postID = Uuid().v4();
+    var postID = const Uuid().v4();
+    print("🚀 Starting post upload for user: $uuid in category: $category");
+
     try {
       // Create a new post document
       DocumentReference postRef =
@@ -141,15 +143,18 @@ class PostRepositoryImpl implements PostRepository {
         'Category': category,
         'Timestamp': FieldValue.serverTimestamp(),
       });
+      print("📄 Main post document created with ID: $postID");
 
       // Create a document for tag collection
-      WriteBatch batch = _firestore.batch();
       if (tags.isNotEmpty) {
+        WriteBatch batch = _firestore.batch();
+        print("🏷️ Preparing to commit ${tags.length} tags.");
         for (String tag in tags) {
           DocumentReference tagRef = postRef.collection('TagsCollection').doc();
           batch.set(tagRef, {'tags': tag});
         }
         await batch.commit();
+        print("✅ Tags committed successfully.");
       }
 
       DocumentReference notificationRef =
@@ -162,16 +167,20 @@ class PostRepositoryImpl implements PostRepository {
         'category': 'Donation',
         'isRead': false,
       });
+      print("🔔 Notification created successfully.");
 
       if (images.isNotEmpty) {
+        print("🖼️ Starting upload of ${images.length} images.");
         // Upload images concurrently and store their URLs in the images sub-collection
         List<Future<void>> uploadTasks = images.map((File image) async {
           String fileName = DateTime.now().millisecondsSinceEpoch.toString();
+          print("  - Uploading image: $fileName.jpg...");
           Reference storageRef =
               _firebaseStorage.ref().child('PostFolder/$postID/$fileName.jpg');
           UploadTask uploadTask = storageRef.putFile(image);
           TaskSnapshot taskSnapshot = await uploadTask;
           String downloadUrl = await taskSnapshot.ref.getDownloadURL();
+          print("  - ✅ Success! Got download URL for $fileName.jpg");
 
           // Add image URL to the images sub-collection
           await postRef.collection('ImageCollection').add({
@@ -182,11 +191,14 @@ class PostRepositoryImpl implements PostRepository {
 
         // Wait for all uploads to complete
         await Future.wait(uploadTasks);
+        print("🏁 All image uploads are complete.");
       } else {
+        print("ℹ️ Post added successfully without images.");
         ToastComponent().showMessage(
             AppColors.orange, 'Post added successfully without images');
       }
     } catch (e) {
+      print("❌ An error occurred during post upload: $e");
       throw Exception('Failed to upload post: $e');
     }
   }
@@ -692,7 +704,7 @@ class PostRepositoryImpl implements PostRepository {
   Stream<List<PostModel>> getCommunityPost() {
     return _firestore
         .collection('PostCollection')
-        .where('Category', isEqualTo: 'Community Announcement')
+        .where('Category', isEqualTo: 'Community Announcements')
         .snapshots()
         .asyncMap((snapshot) async {
       List<Future<PostModel>> postFutures =
@@ -1641,6 +1653,10 @@ class PostRepositoryImpl implements PostRepository {
       return _firestore.collection('AdoptionDetails').doc(postId).update({
         'Status': selectedStatus,
       });
+    } else if (category == 'Pets For Rescue') {
+      return _firestore.collection('PetRescueDetails').doc(postId).update({
+        'Status': selectedStatus,
+      });
     } else if (category == 'Protect Our Pets: Report Abuse') {
       return _firestore.collection('PostCollection').doc(postId).update({
         'Status': selectedStatus,
@@ -1685,11 +1701,21 @@ class PostRepositoryImpl implements PostRepository {
   // get the status real-time
   @override
   Stream<String> getStatus(String postId, String category) {
-    if (category == 'Missing Pets' ||
-        category == 'Found Pets' ||
-        category == 'Pets For Rescue') {
+    if (category == 'Missing Pets' || category == 'Found Pets') {
       return _firestore
           .collection('PetDetailsCollection')
+          .doc(postId)
+          .snapshots()
+          .map((snapshot) {
+        if (snapshot.exists) {
+          return snapshot.data()?['Status'] ?? 'Unknown';
+        } else {
+          return 'Post not found';
+        }
+      });
+    } else if (category == 'Pets For Rescue') {
+      return _firestore
+          .collection('PetRescueDetails')
           .doc(postId)
           .snapshots()
           .map((snapshot) {

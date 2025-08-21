@@ -24,7 +24,7 @@ class FoundPetState extends State<FoundPetView> {
   void initState() {
     super.initState();
     postViewModel = Provider.of<PostViewModel>(context, listen: false);
-    postViewModel.listenToFoundPost();
+    postViewModel.initializeAllListeners();
     postViewModel.loadData();
   }
 
@@ -48,13 +48,13 @@ class FoundPetState extends State<FoundPetView> {
                 fontSize: 16,
                 keyboardType: TextInputType.text,
                 onChanged: (searchText) {
-                  postViewModel.searchFoundPost(searchText);
+                  postViewModel.onSearchChanged('Found Pets', searchText);
                 },
               ),
               Expanded(
                 child: Builder(builder: (context) {
                   // Initial loading state
-                  if (postViewModel.isInitialLoading) {
+                  if (postViewModel.isPetFoundsLoading) {
                     return ListView.builder(
                       itemCount: 5,
                       itemBuilder: (context, index) => PostCardSkeleton(
@@ -76,7 +76,7 @@ class FoundPetState extends State<FoundPetView> {
                   }
 
                   // Empty states
-                  if (postViewModel.filterFoundPost.isEmpty) {
+                  if (postViewModel.petFoundsPosts.isEmpty) {
                     if (postViewModel.searchPostController.text.isNotEmpty) {
                       return Center(
                         child: Text(
@@ -91,9 +91,9 @@ class FoundPetState extends State<FoundPetView> {
 
                   // Data display
                   return ListView.builder(
-                    itemCount: postViewModel.filterFoundPost.length,
+                    itemCount: postViewModel.petFoundsPosts.length,
                     itemBuilder: (context, index) {
-                      var post = postViewModel.filterFoundPost[index];
+                      var post = postViewModel.petFoundsPosts[index];
 
                       return FoundPetCard(
                           post: post,

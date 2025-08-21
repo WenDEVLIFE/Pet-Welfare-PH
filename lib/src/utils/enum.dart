@@ -19,7 +19,7 @@ enum PostType {
         return PostType.pawsomeExperience;
       case 'Protect Our Pets: Report Abuse':
         return PostType.protectOurPets;
-      case 'Community Announcement':
+      case 'Community Announcements':
         return PostType.communityAnnouncement;
       case 'Missing Pets':
         return PostType.missingPets;

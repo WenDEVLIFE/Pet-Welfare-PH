@@ -24,7 +24,7 @@ class VetAndTravelState extends State<VetAndTravelView> {
   void initState() {
     super.initState();
     postViewModel = Provider.of<PostViewModel>(context, listen: false);
-    postViewModel.listenToVetAndTravelPost();
+    postViewModel.initializeAllListeners();
   }
 
   @override
@@ -44,14 +44,14 @@ class VetAndTravelState extends State<VetAndTravelView> {
                 fontSize: 16,
                 keyboardType: TextInputType.text,
                 onChanged: (searchText) {
-                  postViewModel.searchVetAndTravelPost(searchText);
+                  postViewModel.onSearchChanged('Pet Care Insights', searchText);
                 },
               ),
               Expanded(
                 child: Builder(
                   builder: (context) {
                     // Initial loading state
-                    if (postViewModel.isInitialLoading) {
+                    if (postViewModel.isPetCareInsightsLoading) {
                       return ListView.builder(
                         itemCount: 5,
                         itemBuilder: (context, index) => PostCardSkeleton(
@@ -73,7 +73,7 @@ class VetAndTravelState extends State<VetAndTravelView> {
                     }
 
                     // Empty states
-                    if (postViewModel.filterVetAndTravelPost.isEmpty) {
+                    if (postViewModel.petCareInsightsPosts.isEmpty) {
                       if (postViewModel.searchPostController.text.isNotEmpty) {
                         return Center(
                           child: Text(
@@ -88,9 +88,9 @@ class VetAndTravelState extends State<VetAndTravelView> {
 
                     // Data display
                     return ListView.builder(
-                      itemCount: postViewModel.filterVetAndTravelPost.length,
+                      itemCount: postViewModel.petCareInsightsPosts.length,
                       itemBuilder: (context, index) {
-                        var post = postViewModel.filterVetAndTravelPost[index];
+                        var post = postViewModel.petCareInsightsPosts[index];
                         return PetCareInsightCard(
                             post: post,
                             screenHeight: screenHeight,

@@ -9,16 +9,20 @@ import '../widgets/CustomDropdown.dart';
 import '../widgets/CustomText.dart';
 import 'package:provider/provider.dart';
 
-class PetStatusModal extends StatefulWidget{
-
+class PetStatusModal extends StatefulWidget {
   final String postId;
   final String category;
+  final Function()? onStatusUpdated;
 
-  PetStatusModal(this.postId, this.category);
+  const PetStatusModal({
+    super.key,
+    required this.postId,
+    required this.category,
+    this.onStatusUpdated,
+  });
 
-   @override
+  @override
   _PetStatusModalState createState() => _PetStatusModalState();
-
 }
 
 class _PetStatusModalState extends State<PetStatusModal> {
@@ -58,13 +62,20 @@ class _PetStatusModalState extends State<PetStatusModal> {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                category =='Missing Pets' ? 'Update Missing Pet Status' :
-                category == 'Found Pets' ? 'Update Found Pet Status' :
-                category == 'Pets For Rescue' ? 'Update Pet For Rescue' :
-                category == 'Pet Adoption' ? 'Update Pet Adoption Status' :
-                category =='Call for Aid' ? 'Update Call for Aid Status' :
-                category =='Protect Our Pets: Report Abuse' ? 'Update Report Abuse Status' :
-                'Update Pet Status' ,
+                category == 'Missing Pets'
+                    ? 'Update Missing Pet Status'
+                    : category == 'Found Pets'
+                        ? 'Update Found Pet Status'
+                        : category == 'Pets For Rescue'
+                            ? 'Update Pet For Rescue'
+                            : category == 'Pet Adoption'
+                                ? 'Update Pet Adoption Status'
+                                : category == 'Call for Aid'
+                                    ? 'Update Call for Aid Status'
+                                    : category ==
+                                            'Protect Our Pets: Report Abuse'
+                                        ? 'Update Report Abuse Status'
+                                        : 'Update Pet Status',
                 style: const TextStyle(
                   fontWeight: FontWeight.bold,
                   fontSize: 18,
@@ -112,8 +123,16 @@ class _PetStatusModalState extends State<PetStatusModal> {
                       size: 16,
                       color1: AppColors.orange,
                       textcolor2: AppColors.white,
-                      onPressed: () {
-                        postViewModel.updatePetStatus(postId, context, category);
+                      onPressed: () async {
+                        bool success = await postViewModel.updatePetStatus(
+                            postId, context, category);
+
+                        // Only call the callback and close the modal if the update was successful
+                        if (success && mounted) {
+                          widget.onStatusUpdated?.call();
+                          Navigator.of(context).pop();
+                        }
+                        // If it fails, the modal stays open for the user to try again.
                       },
                     ),
                   ),
@@ -125,5 +144,4 @@ class _PetStatusModalState extends State<PetStatusModal> {
       ),
     );
   }
-  
 }

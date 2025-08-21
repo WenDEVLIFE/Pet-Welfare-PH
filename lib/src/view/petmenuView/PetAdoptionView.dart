@@ -23,7 +23,7 @@ class PetAdoptionViewState extends State<PetAdoptionView> {
   void initState() {
     super.initState();
     postViewModel = Provider.of<PostViewModel>(context, listen: false);
-    postViewModel.listenToPetAdoptPost();
+    postViewModel.initializeAllListeners();
     postViewModel.loadData();
   }
 
@@ -44,14 +44,14 @@ class PetAdoptionViewState extends State<PetAdoptionView> {
                 fontSize: 16,
                 keyboardType: TextInputType.text,
                 onChanged: (searchText) {
-                  postViewModel.searchPetAdoptPost(searchText);
+                  postViewModel.onSearchChanged('Pet Adoption', searchText);
                 },
               ),
               Expanded(
                 child: Builder(
                   builder: (context) {
                     // Initial loading state
-                    if (postViewModel.isInitialLoading) {
+                    if (postViewModel.isPetAdoptionLoading) {
                       return ListView.builder(
                         itemCount: 5,
                         itemBuilder: (context, index) => PostCardSkeleton(
@@ -73,7 +73,7 @@ class PetAdoptionViewState extends State<PetAdoptionView> {
                     }
 
                     // Empty states
-                    if (postViewModel.filterPetAdoptPost.isEmpty) {
+                    if (postViewModel.petAdoptionPosts.isEmpty) {
                       if (postViewModel.searchPostController.text.isNotEmpty) {
                         return Center(
                           child: Text(
@@ -88,9 +88,9 @@ class PetAdoptionViewState extends State<PetAdoptionView> {
 
                     // Data display
                     return ListView.builder(
-                      itemCount: postViewModel.filterPetAdoptPost.length,
+                      itemCount: postViewModel.petAdoptionPosts.length,
                       itemBuilder: (context, index) {
-                        var post = postViewModel.filterPetAdoptPost[index];
+                        var post = postViewModel.petAdoptionPosts[index];
                         return PetAdoptionCard(
                             post: post,
                             screenHeight: screenHeight,

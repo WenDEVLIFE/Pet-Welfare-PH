@@ -23,7 +23,7 @@ class PetForRescueViewState extends State<PetForRescueView> {
   void initState() {
     super.initState();
     postViewModel = Provider.of<PostViewModel>(context, listen: false);
-    postViewModel.listenToPetForRescuePost();
+    postViewModel.initializeAllListeners();
     postViewModel.loadData();
   }
 
@@ -44,14 +44,14 @@ class PetForRescueViewState extends State<PetForRescueView> {
                   fontSize: 16,
                   keyboardType: TextInputType.text,
                   onChanged: (searchText) {
-                    postViewModel.searchPetForRescue(searchText);
+                    postViewModel.onSearchChanged('Pets For Rescue', searchText);
                   },
                 ),
                 Expanded(
                   child: Builder(
                     builder: (context) {
                       // Initial loading state
-                      if (postViewModel.isInitialLoading) {
+                      if (postViewModel.isPetForRescueLoading) {
                         return ListView.builder(
                           itemCount: 5,
                           itemBuilder: (context, index) => PostCardSkeleton(
@@ -73,7 +73,7 @@ class PetForRescueViewState extends State<PetForRescueView> {
                       }
                       
                       // Empty states
-                      if (postViewModel.filterPetForRescuePost.isEmpty) {
+                      if (postViewModel.petForRescuePosts.isEmpty) {
                         if (postViewModel.searchPostController.text.isNotEmpty) {
                           return Center(
                             child: Text(
@@ -88,9 +88,9 @@ class PetForRescueViewState extends State<PetForRescueView> {
 
                       // Data display
                       return ListView.builder(
-                        itemCount: postViewModel.filterPetForRescuePost.length,
+                        itemCount: postViewModel.petForRescuePosts.length,
                         itemBuilder: (context, index) {
-                          var post = postViewModel.filterPetForRescuePost[index];
+                          var post = postViewModel.petForRescuePosts[index];
                           return PetForRescueCard(
                               post: post,
                               screenHeight: screenHeight,

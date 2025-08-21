@@ -22,7 +22,7 @@ class ProtectPetState extends State<ProtectPetView> {
   void initState() {
     super.initState();
     postViewModel = Provider.of<PostViewModel>(context, listen: false);
-    postViewModel.listenToProtectedPost();
+    postViewModel.initializeAllListeners();
     postViewModel.loadData();
   }
 
@@ -45,14 +45,14 @@ class ProtectPetState extends State<ProtectPetView> {
                   fontSize: 16,
                   keyboardType: TextInputType.text,
                   onChanged: (searchText) {
-                    postViewModel.onSearchChanged(searchText);
+                    postViewModel.onSearchChanged('Protect Our Pets: Report Abuse', searchText);
                   },
                 ),
                 Expanded(
                   child: Builder(
                     builder: (context) {
                       // initial loading state
-                      if (postViewModel.isInitialLoading) {
+                      if (postViewModel.isProtectOurPetsLoading) {
                         return ListView.builder(
                           itemCount: 5,
                           itemBuilder: (context, index) => PostCardSkeleton(
@@ -72,7 +72,7 @@ class ProtectPetState extends State<ProtectPetView> {
                           ),
                         );
                       }
-                      if (postViewModel.filterProtectedPost.isEmpty) {
+                      if (postViewModel.protectOurPetsPosts.isEmpty) {
                         if (postViewModel
                             .searchPostController.text.isNotEmpty) {
                           return Center(
@@ -88,9 +88,9 @@ class ProtectPetState extends State<ProtectPetView> {
                       }
 
                       return ListView.builder(
-                        itemCount: postViewModel.filterProtectedPost.length,
+                        itemCount: postViewModel.protectOurPetsPosts.length,
                         itemBuilder: (context, index) {
-                          var post = postViewModel.filterProtectedPost[index];
+                          var post = postViewModel.protectOurPetsPosts[index];
                           return ProtectPetCard(
                               post: post,
                               screenHeight: screenHeight,

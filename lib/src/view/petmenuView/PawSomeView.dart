@@ -23,7 +23,7 @@ class PawSomeState extends State<PawSomeView> {
   void initState() {
     super.initState();
     postViewModel = Provider.of<PostViewModel>(context, listen: false);
-    postViewModel.listenToPawExperiencePost();
+    postViewModel.initializeAllListeners();
     postViewModel.loadData();
   }
 
@@ -44,14 +44,14 @@ class PawSomeState extends State<PawSomeView> {
                 fontSize: 16,
                 keyboardType: TextInputType.text,
                 onChanged: (searchText) {
-                  postViewModel.searchPawSome(searchText);
+                  postViewModel.onSearchChanged('Paw-some Experience', searchText);
                 },
               ),
               Expanded(
                 child: Builder(
                   builder: (context) {
                     // Initial loading state
-                    if (postViewModel.isInitialLoading) {
+                    if (postViewModel.isPawsomeExperienceLoading) {
                       return ListView.builder(
                         itemCount: 5,
                         itemBuilder: (context, index) => PostCardSkeleton(
@@ -89,10 +89,10 @@ class PawSomeState extends State<PawSomeView> {
 
                     // Data display
                     return ListView.builder(
-                      itemCount: postViewModel.filterPawExperiencePost.length,
+                      itemCount: postViewModel.pawsomeExperiencePosts.length,
                       itemBuilder: (context, index) {
                         var post =
-                            postViewModel.filterPawExperiencePost[index];
+                            postViewModel.pawsomeExperiencePosts[index];
                         return PostCard(
                           post: post,
                           screenHeight: screenHeight,
