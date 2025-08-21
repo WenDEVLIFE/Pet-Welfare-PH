@@ -97,7 +97,6 @@ class MyApp extends StatelessWidget {
         child: Stack(
           children: [
             MaterialApp(
-              key: GlobalKey(),
               debugShowCheckedModeBanner: false,
               initialRoute: AppRoutes.loadingScreen,
               routes: AppRoutes.routes,
