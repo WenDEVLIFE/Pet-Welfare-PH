@@ -197,19 +197,6 @@ class _ReportState extends State<ReportView> {
               },
             ),
           ), */
-          Align(
-            alignment: Alignment.bottomRight,
-            child: Padding(
-              padding: const EdgeInsets.all(16.0),
-              child: FloatingActionButton(
-                onPressed: () {
-                  Provider.of<SubscriptionViewModel>(context, listen: false).addSubscriptionRoute(context);
-                },
-                backgroundColor: AppColors.orange,
-                child: const Icon(Icons.add, color: AppColors.white),
-              ),
-            ),
-          ),
         ],
       ),
     );
