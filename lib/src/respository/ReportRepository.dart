@@ -7,14 +7,20 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pet_welfrare_ph/src/utils/ToastComponent.dart';
 
+import '../model/ReportModel.dart';
+
 abstract class ReportRepository {
   Future <void> submitReport(Map<String, dynamic> reportData, Function clearCallback);
+
+  Stream <List<ReportModel>> loadReports();
 
 }
 
 class ReportRepositoryImpl implements ReportRepository {
   final FirebaseAuth firebaseAuth = FirebaseAuth.instance;
   final FirebaseFirestore firebaseFirestore = FirebaseFirestore.instance;
+
+  // Submit the report
   @override
   Future<void> submitReport(Map<String, dynamic> reportData, Function clearCallback) async {
 
@@ -64,6 +70,27 @@ class ReportRepositoryImpl implements ReportRepository {
       ToastComponent().showMessage(Colors.red, 'You have already reported this post.');
     }
 
+  }
+
+  // Load the reports
+  @override
+  Stream<List<ReportModel>> loadReports() {
+
+    return firebaseFirestore.collection('ReportCollection')
+        .orderBy('timestamp', descending: true)
+        .snapshots()
+        .map((snapshot) {
+          return snapshot.docs.map((doc) {
+            return ReportModel(
+              id: doc.id,
+              description: doc['Reason'],
+              filePath: doc['FilePath'] ?? '',
+              timestamp: doc['timestamp'] != null
+                  ? (doc['timestamp'] as Timestamp).toDate().toString()
+                  : '',
+            );
+          }).toList();
+        });
   }
 
 }

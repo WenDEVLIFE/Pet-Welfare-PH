@@ -8,6 +8,7 @@ import 'package:sn_progress_dialog/progress_dialog.dart';
 class ReportViewModel extends ChangeNotifier {
   final TextEditingController reasonController = TextEditingController();
   final ReportRepository reportRepository = ReportRepositoryImpl();
+  final ReportRepositoryImpl reportRepositoryImpl = ReportRepositoryImpl();
 
   String filePath = '';
   final ImagePicker imagePicker = ImagePicker();
@@ -46,6 +47,16 @@ class ReportViewModel extends ChangeNotifier {
       }
     });
 
+  }
+
+
+  Future <void> loadReports() async {
+    try {
+
+    } catch (e) {
+      print('Error loading reports: $e');
+      ToastComponent().showMessage(Colors.red, 'Failed to load reports.');
+    }
   }
 
 }
