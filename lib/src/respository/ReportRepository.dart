@@ -93,6 +93,7 @@ class ReportRepositoryImpl implements ReportRepository {
         });
   }
 
+  // Delete a report
   Future <void> deleteReport(String reportId) async {
     try {
       await firebaseFirestore.collection('ReportCollection').doc(reportId).delete();

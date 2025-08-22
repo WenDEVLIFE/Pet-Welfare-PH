@@ -1,11 +1,11 @@
 buildscript {
-    ext.kotlin_version = '2.0.20' // Ensure the Kotlin version is compatible
+    ext.kotlin_version = '2.1.0' // Ensure the Kotlin version is compatible
     repositories {
         google()
         mavenCentral()
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:8.3.2'
+        classpath 'com.android.tools.build:gradle:8.6.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
         classpath 'com.google.gms:google-services:4.4.2'
 
@@ -27,7 +27,7 @@ subprojects {
         if (project.plugins.hasPlugin("com.android.application") ||
                 project.plugins.hasPlugin("com.android.library")) {
             project.android {
-                compileSdkVersion 35
+                compileSdkVersion 36
                 buildToolsVersion "34.0.0"
             }
         }

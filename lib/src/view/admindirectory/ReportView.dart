@@ -1,11 +1,15 @@
 import 'package:flutter/material.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
+import 'package:pet_welfrare_ph/src/view_model/ReportViewModel.dart';
+import '../../model/ReportModel.dart';
 import '../../widgets/DrawerHeaderWidget.dart';
 import '../../widgets/LogoutDialog.dart';
 import '../../utils/Route.dart';
 import '../../utils/SessionManager.dart';
 import 'package:provider/provider.dart';
 import '../../view_model/SubcriptionViewModel.dart';
+import '../../widgets/ReportCard.dart';
+import '../../widgets/SearchTextField.dart';
 
 // This is where the ReportView is defined. It displays a list of reports and allows users to navigate through different sections of the app.
 class ReportView extends StatefulWidget {
@@ -16,10 +20,13 @@ class ReportView extends StatefulWidget {
 }
 
 class _ReportState extends State<ReportView> {
+  late ReportViewModel reportViewModel;
 
   @override
   void initState() {
     super.initState();
+    reportViewModel = Provider.of<ReportViewModel>(context, listen: false);
+    reportViewModel.loadReports();
   }
 
   @override
@@ -107,96 +114,41 @@ class _ReportState extends State<ReportView> {
       body: Column(
         children: [
           SizedBox(height: screenHeight * 0.005),
-           /*CustomSearchTextField(
-          controller: _subscriptionViewModel.searchController,
+           CustomSearchTextField(
+          controller: reportViewModel.searchController,
             screenHeight: screenHeight,
             hintText: 'Search a subscription....',
             fontSize: 16,
             keyboardType: TextInputType.text,
             onChanged: (searchText) {
-             // _subscriptionViewModel.filterSubscriptions(searchText);
+             reportViewModel.filterReports(searchText);
             },
           ),
           SizedBox(height: screenHeight * 0.005),
-           Expanded(
-            child: FutureBuilder<List<SubscriptionModel>>(
-              future: _subscriptionViewModel.subscriptionsStream.first,
+          // In lib/src/view/admindirectory/ReportView.dart
+
+          Expanded(
+            child: FutureBuilder<List<ReportModel>>(
+              future: reportViewModel.reportStream.first,
               builder: (context, snapshot) {
                 if (snapshot.connectionState == ConnectionState.waiting) {
                   return const Center(child: CircularProgressIndicator());
                 } else if (snapshot.hasError) {
-                  return const Center(child: Text('No subscriptions found'));
+                  return const Center(child: Text('No reports found'));
                 } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('No subscriptions available'));
+                  return const Center(child: Text('No reports available'));
                 } else {
-                  final subscriptions = snapshot.data!;
-                  _subscriptionViewModel.setSubscriptions(subscriptions);
-                  return Consumer<SubscriptionViewModel>(
-                    builder: (context, viewModel, child) {
-                      return Container(
-                        padding: const EdgeInsets.symmetric(horizontal: 10.0),
-                        child: ListView.builder(
-                          itemCount: viewModel.subscriptionsdata.length,
-                          itemBuilder: (context, index) {
-                            SubscriptionModel subscription = viewModel.subscriptionsdata[index];
-                            return Card(
-                              color: AppColors.orange,
-                              child: ListTile(
-                                title: Text(subscription.subscriptionName,
-                                  style: const TextStyle(
-                                    fontSize: 18,
-                                    fontWeight: FontWeight.w800,
-                                    fontFamily: 'SmoochSans',
-                                    color: Colors.white,
-                                  ),
-                                ),
-                                subtitle: Column(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Text('Duration: ${subscription.subscriptionDuration} days',
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w800,
-                                        fontFamily: 'SmoochSans',
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    Text('Amount: ₱ ${subscription.subscriptionAmount}',
-                                      style: const TextStyle(
-                                        fontSize: 16,
-                                        fontWeight: FontWeight.w800,
-                                        fontFamily: 'SmoochSans',
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                                trailing: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    IconButton(
-                                      icon: const Icon(Icons.edit, color: Colors.white),
-                                      onPressed: () => _editSubscription(context, subscription, subscription.uid),
-                                    ),
-                                    IconButton(
-                                      icon: const Icon(Icons.delete, color: Colors.white),
-                                      onPressed: () {
-                                        viewModel.deleteSubscription(context, subscription.uid);
-                                      },
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            );
-                          },
-                        ),
-                      );
+                  final reports = snapshot.data!;
+                  return ListView.builder(
+                    itemCount: reports.length,
+                    itemBuilder: (context, index) {
+                      return ReportCard(model: reports[index]);
                     },
                   );
                 }
               },
             ),
-          ), */
+          ),
         ],
       ),
     );
