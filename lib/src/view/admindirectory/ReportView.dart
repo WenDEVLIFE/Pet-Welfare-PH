@@ -117,7 +117,7 @@ class _ReportState extends State<ReportView> {
            CustomSearchTextField(
           controller: reportViewModel.searchController,
             screenHeight: screenHeight,
-            hintText: 'Search a subscription....',
+            hintText: 'Search a report....',
             fontSize: 16,
             keyboardType: TextInputType.text,
             onChanged: (searchText) {
@@ -128,27 +128,31 @@ class _ReportState extends State<ReportView> {
           // In lib/src/view/admindirectory/ReportView.dart
 
           Expanded(
-            child: FutureBuilder<List<ReportModel>>(
-              future: reportViewModel.reportStream.first,
-              builder: (context, snapshot) {
-                if (snapshot.connectionState == ConnectionState.waiting) {
-                  return const Center(child: CircularProgressIndicator());
-                } else if (snapshot.hasError) {
+            child: Consumer<ReportViewModel>(
+              builder: (context, viewModel, _) {
+                final reports = viewModel.filteredReports.isNotEmpty || viewModel.searchController.text.isNotEmpty
+                    ? viewModel.filteredReports
+                    : viewModel.reports;
+                if (reports.isEmpty) {
                   return const Center(child: Text('No reports found'));
-                } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
-                  return const Center(child: Text('No reports available'));
-                } else {
-                  final reports = snapshot.data!;
-                  return ListView.builder(
-                    itemCount: reports.length,
-                    itemBuilder: (context, index) {
-                      return ReportCard(model: reports[index]);
-                    },
-                  );
                 }
+                return ListView.builder(
+                  itemCount: reports.length,
+                  itemBuilder: (context, index) {
+                    return ReportCard(
+                      model: reports[index],
+                      onDelete: () {
+                        viewModel.deleteReport(reports[index].id);
+                        ScaffoldMessenger.of(context).showSnackBar(
+                          const SnackBar(content: Text('Report deleted successfully')),
+                        );
+                      },
+                    );
+                  },
+                );
               },
             ),
-          ),
+          )
         ],
       ),
     );

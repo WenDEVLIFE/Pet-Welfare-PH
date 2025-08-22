@@ -41,12 +41,23 @@ class _ReportCardState extends State<ReportCard> {
             if (widget.model.filePath.isNotEmpty)
               Image.network(widget.model.filePath, fit: BoxFit.cover),
             SizedBox(height: screenHeight * 0.01),
+            Text(
+              'Report Reason:',
+              style: const TextStyle(
+                fontSize: 16,
+                color: Colors.black,
+                fontWeight: FontWeight.w600,
+              ),
+              maxLines: _expanded ? null : _maxLines,
+              overflow: _expanded ? TextOverflow.visible : TextOverflow.ellipsis,
+            ),
+            SizedBox(height: screenHeight * 0.03),
             Align(
               alignment: Alignment.centerLeft,
               child: LayoutBuilder(
                 builder: (context, constraints) {
                   final span = TextSpan(
-                    text: 'Reason: ${widget.model.description}',
+                    text: ' ${widget.model.description}',
                     style: const TextStyle(
                       fontSize: 16,
                       color: Colors.black,
@@ -65,7 +76,7 @@ class _ReportCardState extends State<ReportCard> {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        'Reason: ${widget.model.description}',
+                        '${widget.model.description}',
                         style: const TextStyle(
                           fontSize: 16,
                           color: Colors.black,

@@ -69,13 +69,14 @@ class ReportViewModel extends ChangeNotifier {
     }
   }
 
+  // Filter reports based on the search query
   Future<void> filterReports(String query) async {
     try {
       if (query.isEmpty) {
         filteredReports = reports;
       } else {
         filteredReports = reports.where((report) {
-          return report.description.toLowerCase().contains(query.toLowerCase());
+          return report.description.toLowerCase().contains(query.toLowerCase())|| report.id.toLowerCase().contains(query.toLowerCase());
         }).toList();
       }
       notifyListeners();
@@ -83,6 +84,16 @@ class ReportViewModel extends ChangeNotifier {
       print('Error filtering reports: $e');
       ToastComponent().showMessage(Colors.red, 'Failed to filter reports.');
     }
+  }
+
+  // Delete a report by ID
+  void deleteReport(String id) {
+    reportRepositoryImpl.deleteReport(id).then((_) {
+      ToastComponent().showMessage(Colors.green, 'Report deleted successfully.');
+      notifyListeners();
+    }).catchError((error) {
+      ToastComponent().showMessage(Colors.red, 'Failed to delete report: $error');
+    });
   }
 
 }
