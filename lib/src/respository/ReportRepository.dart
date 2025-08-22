@@ -93,4 +93,15 @@ class ReportRepositoryImpl implements ReportRepository {
         });
   }
 
+  Future <void> deleteReport(String reportId) async {
+    try {
+      await firebaseFirestore.collection('ReportCollection').doc(reportId).delete();
+      print('Report deleted successfully.');
+      ToastComponent().showMessage(Colors.green, 'Report deleted successfully.');
+    } catch (e) {
+      print('Error deleting report: $e');
+      ToastComponent().showMessage(Colors.red, 'Failed to delete report.');
+    }
+  }
+
 }
