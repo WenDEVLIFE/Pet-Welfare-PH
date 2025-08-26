@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pet_welfrare_ph/src/utils/SessionManager.dart';
 import 'package:pet_welfrare_ph/src/view_model/DashboardViewModel.dart';
 import '../../widgets/DrawerHeaderWidget.dart';
@@ -16,7 +17,7 @@ class DashboardView extends StatefulWidget {
 }
 
 class DashboardViewState extends State<DashboardView> {
-
+  DateTime? _lastPressed;
   @override
   void initState() {
     super.initState();
@@ -32,7 +33,17 @@ class DashboardViewState extends State<DashboardView> {
     //double screenWidth = MediaQuery.of(context).size.width;
     //double screenHeight = MediaQuery.of(context).size.height;
 
-    return Scaffold(
+    return WillPopScope(
+      onWillPop: () async {
+        final now = DateTime.now();
+        if (_lastPressed == null || now.difference(_lastPressed!) > const Duration(seconds: 2)) {
+          _lastPressed = now;
+          Fluttertoast.showToast(msg: 'Press back again to exit');
+          return false;
+        }
+        return true;
+      },
+      child: Scaffold(
       drawer: NavigationDrawer(
         children: [
           const DrawerHeaderWidget(),
@@ -142,6 +153,7 @@ class DashboardViewState extends State<DashboardView> {
           );
         },
       ),
+    ),
     );
   }
 

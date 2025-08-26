@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:pet_welfrare_ph/src/utils/AppColors.dart';
 import 'package:pet_welfrare_ph/src/view/petmenuView/CallofAidView.dart';
 import 'package:pet_welfrare_ph/src/view/petmenuView/CommunityView.dart';
@@ -20,6 +21,7 @@ class HomeScreen extends StatefulWidget {
 }
 
 class HomeState extends State<HomeScreen> {
+  DateTime? _lastPressed;
   final List<String> _chipLabels = [
     'Pet Appreciation', 'Missing Pets', 'Found Pets',
     'Pets For Rescue', 'Call for Aid', 'Paw-some Experience',
@@ -43,7 +45,17 @@ class HomeState extends State<HomeScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
+    return WillPopScope(
+        onWillPop: () async {
+          final now = DateTime.now();
+          if (_lastPressed == null || now.difference(_lastPressed!) > const Duration(seconds: 2)) {
+            _lastPressed = now;
+            Fluttertoast.showToast(msg: 'Press back again to exit');
+            return false;
+          }
+          return true;
+        },
+    child: Scaffold(
       appBar: AppBar(
         title: const Text(
           'Home',
@@ -108,6 +120,7 @@ class HomeState extends State<HomeScreen> {
           ),
         ],
       ),
+    ),
     );
   }
 }
