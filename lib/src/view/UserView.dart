@@ -38,9 +38,9 @@ class UserViewState extends State<UserView> {
     _searchController.addListener(() {
       _userViewModel.filterUser(_searchController.text);
     });
+    _userViewModel.filterByStatus(_selectedIndex); // <-- Add this line
     getAdminData();
   }
-
   Future<void> getAdminData() async {
     user = await sessionManager.getUserInfo();
     role = user['role'];
@@ -136,13 +136,14 @@ class UserViewState extends State<UserView> {
         backgroundColor: AppColors.orange,
         iconTheme: const IconThemeData(color: Colors.white),
       ),
-      body: Column(
+      body:
+          SafeArea(child: Column(
         children: [
           SizedBox(height: screenHeight * 0.005),
           CustomSearchTextField(
             controller: _searchController,
             screenHeight: screenHeight,
-            hintText: 'Search a subscription....',
+            hintText: 'Search a user....',
             fontSize: 16,
             keyboardType: TextInputType.text,
             onChanged: (searchText) {
@@ -312,6 +313,7 @@ class UserViewState extends State<UserView> {
           ),
         ],
       ),
+          ),
     );
   }
 

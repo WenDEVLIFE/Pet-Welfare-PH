@@ -39,7 +39,23 @@ class _ReportCardState extends State<ReportCard> {
             ),
             SizedBox(height: screenHeight * 0.01),
             if (widget.model.filePath.isNotEmpty)
-              Image.network(widget.model.filePath, fit: BoxFit.cover),
+              Image.network(
+                widget.model.filePath,
+                fit: BoxFit.cover,
+                loadingBuilder: (context, child, loadingProgress) {
+                  if (loadingProgress == null) return child;
+                  return Center(
+                    child: CircularProgressIndicator(),
+                  );
+                },
+                errorBuilder: (context, error, stackTrace) => Center(
+                  child: Icon(Icons.broken_image, color: Colors.grey),
+                ),
+              )
+            else
+              Center(
+                child: CircularProgressIndicator(),
+              ),
             SizedBox(height: screenHeight * 0.01),
             Text(
               'Report Reason:',
