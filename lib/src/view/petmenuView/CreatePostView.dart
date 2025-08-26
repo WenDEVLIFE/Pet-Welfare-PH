@@ -67,7 +67,7 @@ class CreatePostView extends StatelessWidget {
         ],
         backgroundColor: AppColors.orange,
       ),
-      body: SingleChildScrollView(
+      body: SafeArea(child: SingleChildScrollView(
         child: Column(
           children: [
             CustomText(
@@ -151,12 +151,12 @@ class CreatePostView extends StatelessWidget {
               alignment: Alignment.centerLeft,
             ),
             CustomDropDown(value: createPostViewModel.selectedChip,
-                items: createPostViewModel.chipLabels1,
-                onChanged: (String? newValue) {
-                  createPostViewModel.setSelectRole(newValue!);
-                },
-                itemLabel: (String value) => value,
-                hint: 'Select a category',
+              items: createPostViewModel.chipLabels1,
+              onChanged: (String? newValue) {
+                createPostViewModel.setSelectRole(newValue!);
+              },
+              itemLabel: (String value) => value,
+              hint: 'Select a category',
             ),
             if (createPostViewModel.selectedChip == "Missing Pets" || createPostViewModel.selectedChip == "Pets For Rescue" || createPostViewModel.selectedChip == "Found Pets" ||  createPostViewModel.selectedChip =="Pet Adoption") ...[
               CustomText(
@@ -196,26 +196,26 @@ class CreatePostView extends StatelessWidget {
                 hint: 'Select Pet Type',
               ),
               if(createPostViewModel.selectedPetType =='Cat' || createPostViewModel.selectedPetType =='Dog') ...[
-                 if(createPostViewModel.selectedPetType =='Missing Pets' || createPostViewModel.selectedPetType =='Found Pets') ...[
-                   CustomText(
-                     text: 'Pet Collar',
-                     size: 18,
-                     color: Colors.black,
-                     weight: FontWeight.w700,
-                     align: TextAlign.left,
-                     screenHeight: screenHeight,
-                     alignment: Alignment.centerLeft,
-                   ),
-                   CustomDropDown(value: createPostViewModel.selectedCollar,
-                     items: createPostViewModel.collarList,
-                     onChanged: (String? newValue) {
-                       createPostViewModel.setCollarType(newValue);
-                     },
-                     itemLabel: (String value) => value,
-                     hint: 'Select Pet Collar',
-                   ),
-                 ],
-                 ],
+                if(createPostViewModel.selectedPetType =='Missing Pets' || createPostViewModel.selectedPetType =='Found Pets') ...[
+                  CustomText(
+                    text: 'Pet Collar',
+                    size: 18,
+                    color: Colors.black,
+                    weight: FontWeight.w700,
+                    align: TextAlign.left,
+                    screenHeight: screenHeight,
+                    alignment: Alignment.centerLeft,
+                  ),
+                  CustomDropDown(value: createPostViewModel.selectedCollar,
+                    items: createPostViewModel.collarList,
+                    onChanged: (String? newValue) {
+                      createPostViewModel.setCollarType(newValue);
+                    },
+                    itemLabel: (String value) => value,
+                    hint: 'Select Pet Collar',
+                  ),
+                ],
+              ],
               CustomText(
                 text: 'Pet Age',
                 size: 18,
@@ -336,50 +336,50 @@ class CreatePostView extends StatelessWidget {
                   hint: 'Select Dog Breed',
                 ),
               ],
-               if (createPostViewModel.selectedChip == "Missing Pets" || createPostViewModel.selectedChip == "Found Pets") ...[
-                 CustomText(
-                   text:   createPostViewModel.selectedChip == "Missing Pets"
-                       ? 'Select the date the pet went missing'
-                       : createPostViewModel.selectedChip == "Found Pets"
-                       ? 'Select the date the pet was found'
-                       : 'Select the date the pet was found',
-                   size: 18,
-                   color: Colors.black,
-                   weight: FontWeight.w700,
-                   align: TextAlign.left,
-                   screenHeight: screenHeight,
-                   alignment: Alignment.centerLeft,
-                 ),
-                 Padding(
-                   padding: const EdgeInsets.all(10.0),
-                   child: TextField(
-                     controller: createPostViewModel.dateController,
-                     readOnly: true,
-                     onTap: () async {
-                       final DateTime? date = await showDatePicker(
-                         context: context,
-                         initialDate: DateTime.now(),
-                         firstDate: DateTime(2000),
-                         lastDate: DateTime(2100),
-                       );
-                       if (date != null) {
-                         createPostViewModel.dateController.text = date.toLocal().toString().split(' ')[0];
-                       }
-                     },
-                     decoration: InputDecoration(
-                       hintText: 'Select a date...',
-                       hintStyle: const TextStyle(
-                         color: Colors.black,
-                       ),
-                       border: OutlineInputBorder(
-                         borderRadius: BorderRadius.circular(10),
-                         borderSide: const BorderSide(color: Colors.transparent, width: 2),
-                       ),
-                       contentPadding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 0),
-                     ),
-                   ),
-                 ),
-               ],
+              if (createPostViewModel.selectedChip == "Missing Pets" || createPostViewModel.selectedChip == "Found Pets") ...[
+                CustomText(
+                  text:   createPostViewModel.selectedChip == "Missing Pets"
+                      ? 'Select the date the pet went missing'
+                      : createPostViewModel.selectedChip == "Found Pets"
+                      ? 'Select the date the pet was found'
+                      : 'Select the date the pet was found',
+                  size: 18,
+                  color: Colors.black,
+                  weight: FontWeight.w700,
+                  align: TextAlign.left,
+                  screenHeight: screenHeight,
+                  alignment: Alignment.centerLeft,
+                ),
+                Padding(
+                  padding: const EdgeInsets.all(10.0),
+                  child: TextField(
+                    controller: createPostViewModel.dateController,
+                    readOnly: true,
+                    onTap: () async {
+                      final DateTime? date = await showDatePicker(
+                        context: context,
+                        initialDate: DateTime.now(),
+                        firstDate: DateTime(2000),
+                        lastDate: DateTime(2100),
+                      );
+                      if (date != null) {
+                        createPostViewModel.dateController.text = date.toLocal().toString().split(' ')[0];
+                      }
+                    },
+                    decoration: InputDecoration(
+                      hintText: 'Select a date...',
+                      hintStyle: const TextStyle(
+                        color: Colors.black,
+                      ),
+                      border: OutlineInputBorder(
+                        borderRadius: BorderRadius.circular(10),
+                        borderSide: const BorderSide(color: Colors.transparent, width: 2),
+                      ),
+                      contentPadding: const EdgeInsets.symmetric(horizontal: 10.0, vertical: 0),
+                    ),
+                  ),
+                ),
+              ],
               Padding(
                 padding: const EdgeInsets.all(10.0),
                 child: Column(
@@ -473,14 +473,14 @@ class CreatePostView extends StatelessWidget {
                       padding: const EdgeInsets.all(8.0),
                       child: Column(
                         children: [
-                        MapSearchTextField(
+                          MapSearchTextField(
                             controller: createPostViewModel.searchController,
                             focusNode: createPostViewModel.focusNode,
                             onSearch: createPostViewModel.searchLocation,
                             onClear: createPostViewModel.clearSearch,
                             hintText: 'Search your address...',
 
-                        ),
+                          ),
                           if (createPostViewModel.showDropdown)
                             Consumer<CreatePostViewModel>(
                               builder: (context, viewModel, child) {
@@ -611,39 +611,39 @@ class CreatePostView extends StatelessWidget {
                 ),
               ),
             ],
-               if (createPostViewModel.selectedChip == "Pet Adoption" || createPostViewModel.selectedChip == "Missing Pets" ||
-                   createPostViewModel.selectedChip == "Found Pets" ||createPostViewModel.selectedChip == "Pets For Rescue" ||
-                   createPostViewModel.selectedChip == "Pet Care Insights" ) ...[
-                 CustomText(
-                   text: createPostViewModel.selectedChip == "Missing Pets"
-                       ? 'Enter the Street Address, Building, House No for missing pet'
-                       : createPostViewModel.selectedChip == "Found Pets"
-                       ? 'Enter the Street Address, Building, House No for found pet'
-                       : createPostViewModel.selectedChip == "Pet Adoption"
-                       ? 'Enter the Street Address, Building, House No for pet adoption'
-                       : createPostViewModel.selectedChip == "Pet Care Insights"
-                       ? 'Enter the Street Address, Building, House No for pet insights'
-                       : createPostViewModel.selectedChip == "Pets For Rescue"
-                       ? 'Enter the Street Address, Building, House No for pet rescue'
-                       : 'Enter the Street Address, Building, House No',
+            if (createPostViewModel.selectedChip == "Pet Adoption" || createPostViewModel.selectedChip == "Missing Pets" ||
+                createPostViewModel.selectedChip == "Found Pets" ||createPostViewModel.selectedChip == "Pets For Rescue" ||
+                createPostViewModel.selectedChip == "Pet Care Insights" ) ...[
+              CustomText(
+                text: createPostViewModel.selectedChip == "Missing Pets"
+                    ? 'Enter the Street Address, Building, House No for missing pet'
+                    : createPostViewModel.selectedChip == "Found Pets"
+                    ? 'Enter the Street Address, Building, House No for found pet'
+                    : createPostViewModel.selectedChip == "Pet Adoption"
+                    ? 'Enter the Street Address, Building, House No for pet adoption'
+                    : createPostViewModel.selectedChip == "Pet Care Insights"
+                    ? 'Enter the Street Address, Building, House No for pet insights'
+                    : createPostViewModel.selectedChip == "Pets For Rescue"
+                    ? 'Enter the Street Address, Building, House No for pet rescue'
+                    : 'Enter the Street Address, Building, House No',
 
-                   size: 18,
-                   color: Colors.black,
-                   weight: FontWeight.w700,
-                   align: TextAlign.left,
-                   screenHeight: screenHeight,
-                   alignment: Alignment.centerLeft,
-                 ),
-                 Padding(padding: const EdgeInsets.all(10.0),
-                   child:CustomTextField(
-                     controller: createPostViewModel.address,
-                     screenHeight: screenHeight,
-                     hintText: 'Enter Street Address, Building, House No and etc...',
-                     fontSize: 16,
-                     keyboardType: TextInputType.text,
-                   ),
-                 ),
-                 ],
+                size: 18,
+                color: Colors.black,
+                weight: FontWeight.w700,
+                align: TextAlign.left,
+                screenHeight: screenHeight,
+                alignment: Alignment.centerLeft,
+              ),
+              Padding(padding: const EdgeInsets.all(10.0),
+                child:CustomTextField(
+                  controller: createPostViewModel.address,
+                  screenHeight: screenHeight,
+                  hintText: 'Enter Street Address, Building, House No and etc...',
+                  fontSize: 16,
+                  keyboardType: TextInputType.text,
+                ),
+              ),
+            ],
             if(createPostViewModel.selectedChip == 'Call for Aid')...[
               const Padding(
                 padding: EdgeInsets.all(10.0),
@@ -776,20 +776,20 @@ class CreatePostView extends StatelessWidget {
               ),
             ],
             Center(
-              child: CustomButton(
+                child: CustomButton(
                   hint: 'Post Now',
                   size: 18,
                   color1: AppColors.orange,
                   textcolor2: Colors.white,
-                onPressed: () async {
-                createPostViewModel.postNow(context);
-                },
-              )
+                  onPressed: () async {
+                    createPostViewModel.postNow(context);
+                  },
+                )
             ),
             SizedBox(height: screenHeight * 0.02),
           ],
         ),
-      ),
+      ),),
     );
   }
 }

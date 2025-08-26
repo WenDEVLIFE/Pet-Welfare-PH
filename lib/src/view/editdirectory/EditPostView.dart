@@ -120,7 +120,7 @@ class _EditPostViewState extends State<EditPostView> {
           } else if (snapshot.hasError) {
             return Center(child: Text('Error: ${snapshot.error}'));
           } else {
-            return SingleChildScrollView(
+            return SafeArea(child: SingleChildScrollView(
               child: Column(
                 children: [
                   CustomText(
@@ -176,57 +176,57 @@ class _EditPostViewState extends State<EditPostView> {
                       ),
                     ),
                   ),
-              StreamBuilder<List<ImageModel>>(
-                stream: createPostViewModel.imageStream, // Use the image stream here
-                builder: (context, snapshot) {
-                  if (snapshot.connectionState == ConnectionState.waiting) {
-                    return Center(child: CircularProgressIndicator());
-                  } else if (snapshot.hasError) {
-                    return Center(child: Text('Error: ${snapshot.error}'));
-                  }  else {
-                    return EditImageUploadWidget(
-                      screenWidth: screenWidth,
-                      screenHeight: screenHeight,
-                      images: snapshot.data!.map((image) => image.url).toList(), // Map the stream data to a list of URLs
-                      onPickImage: () async {
-                        await createPostViewModel.insertSelectedImage(postId);
-                      },
-                      onRemoveImage: (url) async {
+                  StreamBuilder<List<ImageModel>>(
+                    stream: createPostViewModel.imageStream, // Use the image stream here
+                    builder: (context, snapshot) {
+                      if (snapshot.connectionState == ConnectionState.waiting) {
+                        return Center(child: CircularProgressIndicator());
+                      } else if (snapshot.hasError) {
+                        return Center(child: Text('Error: ${snapshot.error}'));
+                      }  else {
+                        return EditImageUploadWidget(
+                          screenWidth: screenWidth,
+                          screenHeight: screenHeight,
+                          images: snapshot.data!.map((image) => image.url).toList(), // Map the stream data to a list of URLs
+                          onPickImage: () async {
+                            await createPostViewModel.insertSelectedImage(postId);
+                          },
+                          onRemoveImage: (url) async {
 
-                        String imageId = snapshot.data!.firstWhere((image) => image.url == url).id.toString();
-                        createPostViewModel.removeImageData(
-                          imageId,
-                          url,
-                          postId,
+                            String imageId = snapshot.data!.firstWhere((image) => image.url == url).id.toString();
+                            createPostViewModel.removeImageData(
+                              imageId,
+                              url,
+                              postId,
+                            );
+                          },
                         );
-                      },
-                    );
-                  }
-                },
-              ),
-                  Padding(padding: const EdgeInsets.all(10.0),
-                      child:TextField(
-                    controller:createPostViewModel.tagController,
-                    decoration: InputDecoration(
-                      labelText: 'Enter a tag',
-                      suffixIcon: IconButton(
-                        icon: const Icon(Icons.add),
-                        onPressed: () {
-                          if (createPostViewModel.tagController.text.trim().isNotEmpty) {
-                            createPostViewModel.addTag(createPostViewModel.tagController.text.trim());
-                            createPostViewModel.tagController.clear();
-                          }
-                        },
-                      ),
-                    ),
-                    onSubmitted: (value) {
-                      if (value.trim().isNotEmpty) {
-                        createPostViewModel.addTag(value.trim());
-                        createPostViewModel.tagController.clear();
                       }
                     },
-                  ), // Title for tags
-               ),
+                  ),
+                  Padding(padding: const EdgeInsets.all(10.0),
+                    child:TextField(
+                      controller:createPostViewModel.tagController,
+                      decoration: InputDecoration(
+                        labelText: 'Enter a tag',
+                        suffixIcon: IconButton(
+                          icon: const Icon(Icons.add),
+                          onPressed: () {
+                            if (createPostViewModel.tagController.text.trim().isNotEmpty) {
+                              createPostViewModel.addTag(createPostViewModel.tagController.text.trim());
+                              createPostViewModel.tagController.clear();
+                            }
+                          },
+                        ),
+                      ),
+                      onSubmitted: (value) {
+                        if (value.trim().isNotEmpty) {
+                          createPostViewModel.addTag(value.trim());
+                          createPostViewModel.tagController.clear();
+                        }
+                      },
+                    ), // Title for tags
+                  ),
                   CustomText(
                     text: 'Your Tags',
                     size: 18,
@@ -335,18 +335,18 @@ class _EditPostViewState extends State<EditPostView> {
                       screenHeight: screenHeight,
                       alignment: Alignment.centerLeft,
                     ),
-                   Consumer<CreatePostViewModel>(
-                      builder: (context, viewModel, child){
-                        return CustomDropDown(value: createPostViewModel.selectedPetGender,
-                          items: createPostViewModel.petGender,
-                          onChanged: (String? newValue) async {
-                            await createPostViewModel.setPetGender(newValue);
-                          },
-                          itemLabel: (String value) => value,
-                          hint: 'Select Pet Gender',
-                        );
-                      }
-                   ),
+                    Consumer<CreatePostViewModel>(
+                        builder: (context, viewModel, child){
+                          return CustomDropDown(value: createPostViewModel.selectedPetGender,
+                            items: createPostViewModel.petGender,
+                            onChanged: (String? newValue) async {
+                              await createPostViewModel.setPetGender(newValue);
+                            },
+                            itemLabel: (String value) => value,
+                            hint: 'Select Pet Gender',
+                          );
+                        }
+                    ),
                     CustomText(
                       text:  'Pet Size',
                       size: 18,
@@ -1078,27 +1078,28 @@ class _EditPostViewState extends State<EditPostView> {
                       ),
                     ),
                   ],
-Consumer<CreatePostViewModel>(
-  builder: (context, createPostViewModel, child) {
-    final bool isCurrentlySaving = createPostViewModel.isSaving;
-    return Center(
-      child: CustomButton(
-        hint: 'Save Edit',
-        size: 18,
-        color1: isCurrentlySaving ? Colors.grey : AppColors.orange,
-        textcolor2: Colors.white,
-        onPressed: isCurrentlySaving 
-            ? null 
-            : () {
-                createPostViewModel.editNow(context, category);
-              },
-            ),
-           );
-          },
-        ),
+                  Consumer<CreatePostViewModel>(
+                    builder: (context, createPostViewModel, child) {
+                      final bool isCurrentlySaving = createPostViewModel.isSaving;
+                      return Center(
+                        child: CustomButton(
+                          hint: 'Save Edit',
+                          size: 18,
+                          color1: isCurrentlySaving ? Colors.grey : AppColors.orange,
+                          textcolor2: Colors.white,
+                          onPressed: isCurrentlySaving
+                              ? null
+                              : () {
+                            createPostViewModel.editNow(context, category);
+                          },
+                        ),
+                      );
+                    },
+                  ),
                   SizedBox(height: screenHeight * 0.02),
                 ],
               ),
+            ),
             );
           }
         },

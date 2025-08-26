@@ -1668,6 +1668,7 @@ Future<void> editNow(BuildContext context, String category) async {
     selectedDogBreed = null;
 
     tagsList = [];
+    tags = [];
 
     imagesList = [];
  notifyListeners();
